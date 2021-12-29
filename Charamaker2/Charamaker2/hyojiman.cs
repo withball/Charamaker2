@@ -1,0 +1,1678 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+using Vortice.Direct2D1;
+using Vortice.DirectWrite;
+using Vortice.DXGI;
+using Vortice;
+using Vortice.Multimedia;
+using System.Numerics;
+using Vortice.Mathematics;
+using Charamaker2.Character;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.IO;
+
+namespace Charamaker2
+{
+    /// <summary>
+    /// hyojimanが受け入れられる描画器の基底クラス
+    /// </summary>
+    [Serializable]
+    abstract public class drawings 
+    {
+        /// <summary>
+        /// x,y,z。zは描画順
+        /// </summary>
+        public float x,y,z;
+        /// <summary>
+        /// 基底のコンストラクタ
+        /// </summary>
+        /// <param name="xx">始点のx</param>
+        /// <param name="yy">始点のy</param>
+        /// <param name="zz">描画順z</param>
+        public drawings(float xx,float yy,float zz) { x = xx;y = yy;z = zz; }
+        /// <summary>
+        /// コピーするときのコンストラクタ
+        /// </summary>
+        /// <param name="d">コピー元</param>
+        public drawings(drawings d) { x = d.x; y = d.y; z = d.z; }
+        /// <summary>
+        /// 空のコンストラクタ
+        /// </summary>
+        public drawings() { }
+        /// <summary>
+        /// 書くときに呼び出されるメソッド
+        /// </summary>
+        /// <param name="hyo">書くhyojiman</param>
+        /// <param name="cl">描画で変化があるならその時の時間の速さ。</param>
+        /// <returns>描画したか</returns>
+        abstract public bool draw(hyojiman hyo,float cl);
+        /// <summary>
+        /// 表示マンに追加する
+        /// </summary>
+        /// <param name="hyo">追加するやーつ</param>
+        /// <returns>追加できたか</returns>
+        public bool add(hyojiman hyo) 
+        {
+            return hyo.addpicture(this);
+        }
+        /// <summary>
+        /// 表示マンから削除する
+        /// </summary>
+        /// <param name="hyo">削除するやつ</param>
+        /// <returns>削除できたか</returns>
+        public bool remove(hyojiman hyo)
+        {
+            return hyo.removepicture(this);
+        }
+        /// <summary>
+        /// コピーするためのメソッド
+        /// </summary>
+        /// <param name="d">コピー元</param>
+        public void copy(drawings d) 
+        {
+            x = d.x;
+            y = d.y;
+            z = d.z;
+        }
+    }
+    /// <summary>
+    /// 画像一枚のクラス
+    /// </summary>
+    [Serializable]
+    public class picture:drawings
+    {
+
+      /// <summary>
+      /// 幅と高さ
+      /// </summary>
+        public float w, h;
+        /// <summary>
+        /// 画像の中の中心点
+        /// </summary>
+        public float tx, ty;
+        /// <summary>
+        /// 画像の中心点xを返す。
+        /// </summary>
+        public float TX { get { if (mir) return w - tx; else return tx; } }
+        /// <summary>
+        /// 画像の中心点yを返す
+        /// </summary>
+        public float TY { get { return ty; } }
+
+        /// <summary>
+        /// ラヂアン
+        /// </summary>
+        protected double rad;
+        /// <summary>
+        /// 画像を反転させる
+        /// </summary>
+        public bool mir;
+        
+        private string pretex;
+        /// <summary>
+        /// 不透明度。0＜＝＜＝1
+        /// </summary>
+        public float OPA { get { return opa; } set { if (value > 1) opa = 1; else if (value < 0) opa = 0; else opa = value; } }
+        protected float opa;
+        /// <summary>
+        /// テクスチャーの名前。texturesになければ無になる。"nothing"と指定しても無になる
+        /// </summary>
+        public string texname;
+        /// <summary>
+        /// 角度。-Pi＜＝＜＝Pi
+        /// </summary>
+        public double RAD { get { return rad; } set { rad = Math.Atan2(Math.Sin(rad), Math.Cos(rad)); float x = gettx(), y = getty(); rad = value; settxy(x, y); rad = Math.Atan2(Math.Sin(rad), Math.Cos(rad)); } }
+        /// <summary>
+        /// テクスチャーの塊
+        /// </summary>
+        public Dictionary<string, string> textures = new Dictionary<string, string>();
+        /// <summary>
+        /// ピクチャーを作るためのコンストラクタ
+        /// </summary>
+        /// <param name="xx">左上のx座標</param>
+        /// <param name="yy">左上のy座標</param>
+        /// <param name="zz">z</param>
+        /// <param name="ww">幅</param>
+        /// <param name="hh">高さ</param>
+        /// <param name="ttx">中心x点</param>
+        /// <param name="tty">中心y点</param>
+        /// <param name="sita">ラディアン角度</param>
+        /// <param name="mirror">反転しているか</param>
+        /// <param name="opacity">不透明度</param>
+        /// <param name="tex">テクスチャーの名前</param>
+        /// <param name="texture">テクスチャーの辞書</param>
+        public picture(float xx, float yy, float zz, float ww, float hh, float ttx, float tty, double sita, bool mirror, float opacity, string tex, Dictionary<string, string> texture):base(xx,yy,zz)
+        {
+          
+            w = ww;
+            h = hh;
+            tx = ttx;
+            ty = tty;
+            rad = sita;
+            mir = mirror;
+            OPA = opacity;
+            texname = tex;
+            textures = new Dictionary<string, string>(texture);
+        }
+        /// <summary>
+        /// ピクチャーをコピーするときのコンストラクタ
+        /// </summary>
+        /// <param name="p">コピー元</param>
+        public picture(picture p):base(p)
+        {
+            w = p.w;
+            h = p.h;
+            tx = p.tx;
+            ty = p.ty;
+            rad = p.rad;
+            mir = p.mir;
+            opa = p.OPA;
+            texname = p.texname;
+           
+            textures = new Dictionary<string, string>(p.textures);
+        }
+        /// <summary>
+        /// 空のコンストラクタ
+        /// </summary>
+        public picture() { }
+        /// <summary>
+        /// 図形上の一点のx座標を取得する(回転の影響を考慮してるってこと)
+        /// </summary>
+        /// <param name="ww">左上を0としたときの図形の点の位置</param>
+        /// <param name="hh">左上を0としたときの図形の点の位置</param>
+        /// <returns>返されるのはx座標の値</returns>
+        public float getcx(float ww, float hh)
+        {
+            float W; if (mir) W = w - ww; else W = ww;
+            float H; if (mir && 1 == 0) H = h - hh; else H = hh;
+            float rx = x + W * (float)Math.Cos(rad) - H * (float)Math.Sin(rad);
+            return rx;
+        }
+        /// <summary>
+        /// 図形上の一点のy座標を取得する(回転の影響を考慮してるってこと)
+        /// </summary>
+        /// <param name="ww">左上を0としたときの図形の点の位置</param>
+        /// <param name="hh">左上を0としたときの図形の点の位置</param>
+        /// <returns>返されるのはy座標の値</returns>
+        public float getcy(float ww, float hh)
+        {
+            float W; if (mir) W = w - ww; else W = ww;
+            float H; if (mir && 1 == 0) H = h - hh; else H = hh;
+            float ry = y + W * (float)Math.Sin(rad) + H * (float)Math.Cos(rad);
+            return ry;
+        }
+        /// <summary>
+        /// 中心点のx座標を返す。
+        /// </summary>
+        /// <returns>x座標</returns>
+        public float gettx()
+        {
+
+            return x + TX * (float)Math.Cos(rad) - TY * (float)Math.Sin(rad);
+
+        }
+        /// <summary>
+        /// 中心点のy座標を返す。
+        /// </summary>
+        /// <returns>y座標</returns>
+        public float getty()
+        {
+            return y + TX * (float)Math.Sin(rad) + TY * (float)Math.Cos(rad);
+
+        }
+        /// <summary>
+        /// 中心をxy座標にセットする。
+        /// </summary>
+        /// <param name="xx">セットするx座標</param>
+        /// <param name="yy">セットするy座標</param>
+        public void settxy(float xx, float yy)
+        {
+            x = xx - TX * (float)Math.Cos(rad) + TY * (float)Math.Sin(rad);
+            y = yy - TX * (float)Math.Sin(rad) - TY * (float)Math.Cos(rad);
+        }
+        /// <summary>
+        /// 画像上の任意の一点をxy座標にセットする
+        /// </summary>
+        /// <param name="xx">セットするx座標</param>
+        /// <param name="yy">セットするy座標</param>
+        /// <param name="cx">画像上のwの点</param>
+        /// <param name="cy">画像上のhの点</param>
+        public void setcxy(float xx, float yy, float cx, float cy)
+        {
+            x += xx - getcx(cx, cy);
+            y += yy - getcy(cx, cy);
+        }
+        /// <summary>
+        /// 回転している方向に移動する奴
+        /// </summary>
+        /// <param name="dx">x方向の移動量</param>
+        /// <param name="dy">y方向の移動量</param>
+        public void wowidouxy(float dx, float dy)
+        {
+            settxy(gettx() + dx * (float)Math.Cos(rad) - dy * (float)Math.Sin(rad),
+         getty() + dx * (float)Math.Sin(rad) + dy * (float)Math.Cos(rad));
+        }
+        /// <summary>
+        /// 書くときに呼び出されるメソッド。画面外にある場合は描画されない
+        /// </summary>
+        /// <param name="hyo">書くhyojiman</param>
+        /// <param name="cl">描画で変化があるならその時の時間の速さ。</param>
+        /// <returns>描画したか</returns>
+        public override bool draw(hyojiman hyo,float cl) 
+        {
+            if (hyo == null) return false ;
+            
+            if (this.OPA > 0 &&
+                Math.Abs((getcx(w / 2, h / 2)) - (hyo.ww / 2 + hyo.camx)) * 2 <= hyo.ww + Math.Abs(w * Math.Cos(RAD)) + Math.Abs(h * Math.Sin(RAD)) &&
+                Math.Abs((getcy(w / 2, h / 2)) - (hyo.wh / 2 + hyo.camy))*2 <= hyo.wh  + Math.Abs(w * Math.Sin(RAD)) + Math.Abs(h * Math.Cos(RAD)) 
+                )
+            {
+               
+                var p = this;
+                if (p.textures.ContainsKey(p.texname) && p.textures[p.texname] != "nothing")
+                {
+                    var bitmap = fileman.ldtex(p.textures[p.texname]);
+                    if (bitmap != null)
+                    {
+
+
+                        var a = Matrix3x2.CreateRotation((float)p.RAD, new Vector2((p.x * hyo.bairitu - hyo.camx * hyo.bairitu) + (p.tx * 0) * hyo.bairitu, (p.y * hyo.bairitu - hyo.camy * hyo.bairitu) + (p.ty * 0) * hyo.bairitu));
+                        if (p.mir)
+                        {
+                            a = Matrix3x2.Multiply(new Matrix3x2(-1, 0, 0, 1, 0, 0), a);
+                            a = Matrix3x2.Multiply(Matrix3x2.CreateTranslation(-(p.x + p.w / 2 - hyo.camx) * 2 * hyo.bairitu, 0), a);
+
+
+                        }
+                        if (p.w < 0)
+                        {
+                            a = Matrix3x2.Multiply(new Matrix3x2(-1, 0, 0, 1, 0, 0), a);
+
+                            a = Matrix3x2.Multiply(Matrix3x2.CreateTranslation(-(p.x + p.w / 2 - hyo.camx) * 2 * hyo.bairitu, 0), a);
+
+
+                        }
+
+                        if (p.h < 0)
+                        {
+                            a = Matrix3x2.Multiply(Matrix3x2.CreateScale(1, -1), a);
+
+                            a = Matrix3x2.Multiply(Matrix3x2.CreateTranslation(0, -(p.y + p.h / 2 - hyo.camy) * 2 * hyo.bairitu), a);
+
+
+                        }
+                        hyo.render.Transform = a;
+
+
+
+
+
+                        var btmpos = new RawRectF((p.x * hyo.bairitu - hyo.camx * hyo.bairitu), (p.y * hyo.bairitu - hyo.camy * hyo.bairitu), (p.x * hyo.bairitu + p.w * hyo.bairitu - hyo.camx * hyo.bairitu), (p.y * hyo.bairitu + p.h * hyo.bairitu - hyo.camy * hyo.bairitu));
+                        var bitmon = new RawRectF(0, 0, bitmap.Size.Width, bitmap.Size.Height);
+                        hyo.render.DrawBitmap(bitmap, btmpos, this.OPA, BitmapInterpolationMode.Linear, bitmon);
+
+                        // Console.WriteLine(p.textures[p.texname]+" asffffffffffffff   " +btmpos.ToString());
+                    }
+                    return true;
+                }
+                
+               
+            }
+            else
+            {
+
+            }
+            return false;
+        }
+        /// <summary>
+        /// コピーするためのメソッド
+        /// </summary>
+        /// <param name="p">コピー元</param>
+        public void copy(picture p)
+        {
+            base.copy(p);
+            w = p.w;
+            h = p.h;
+            tx = p.tx;
+            ty = p.ty;
+            rad = p.rad;
+            mir = p.mir;
+            opa = p.OPA;
+            texname = p.texname;
+
+            textures = new Dictionary<string, string>(p.textures);
+        }
+    }
+    /// <summary>
+    /// 内部にdrawingを格納し、背景画像として描画するクラス
+    /// </summary>
+    [Serializable]
+    public class haikeidraws
+    {
+        /// <summary>
+        /// x,y方向のスクロール割合
+        /// </summary>
+        public float x,y;
+        /// <summary>
+        /// 描く奴
+        /// </summary>
+        public drawings d;
+        /// <summary>
+        /// スクロール割合をかけ合わせた奴
+        /// </summary>
+        public float kakesc { get {return (x * y); } }
+        /// <summary>
+        /// スクロール割合の小さい方
+        /// </summary>
+        public float minsc { get { return Math.Min(x , y); } }
+        /// <summary>
+        /// コンストラクタだよ
+        /// </summary>
+        /// <param name="scrollwariaix">x方向のスクロール割合</param>
+        /// <param name="scrollwariaiy">y方向のスクロール割合</param>
+        /// <param name="dd">なにかdrawings</param>
+        public haikeidraws(float scrollwariaix, float scrollwariaiy, drawings dd ) 
+        {
+            d = dd;
+            x = scrollwariaix;
+            y = scrollwariaiy;
+
+            //z = scroll;
+        }
+        /// <summary>
+        /// 空のコンストラクタ
+        /// </summary>
+        public haikeidraws() { }
+
+        /// <summary>
+        ///コピーするためのコンストラクタ
+        /// </summary>
+        public haikeidraws(haikeidraws h) 
+        {
+            x = h.x;
+            y = h.y;
+            d =(drawings)Activator.CreateInstance(h.d.GetType(),h.d);
+
+        }
+        /// <summary>
+        /// 描くためのメソッド
+        /// </summary>
+        /// <param name="hyo">描画する表示マン</param>
+        /// <param name="cl">クロック</param>
+        /// <returns></returns>
+        virtual public bool draw(hyojiman hyo,float cl) 
+        {
+
+            if (hyo == null)
+            {
+                d.draw(hyo,cl);
+                return false;
+            }
+            float tx = hyo.camx,ty=hyo.camy;
+            hyo.camx *= x;
+            hyo.camy *= y;
+            var res = d.draw(hyo,cl);
+            hyo.camx = tx;
+            hyo.camy = ty;
+            return res;
+        }
+    }
+    /// <summary>
+    /// 時間経過で消える背景
+    /// </summary>
+    [Serializable]
+    public class timehaikeidraws:haikeidraws
+    {
+        float timer = 0;
+        /// <summary>
+        /// コンストラクタだよ
+        /// </summary>
+        /// <param name="time">持続時間</param>
+        /// <param name="scrollwariaix">x方向のスクロール割合</param>
+        /// <param name="scrollwariaiy">y方向のスクロール割合</param>
+        /// <param name="dd">なにかdrawings</param>
+        public timehaikeidraws(float time,float scrollwariaix, float scrollwariaiy, drawings dd):base(scrollwariaix,scrollwariaiy,dd)
+        {
+            timer = time;
+        }
+        /// <summary>
+        /// 空のコンストラクタ
+        /// </summary>
+        public timehaikeidraws() { }
+        override public bool draw(hyojiman hyo, float cl)
+        {
+            timer -= cl;
+        
+            if(timer<=0)hyo.removehaikeipicture(this);
+            return base.draw(hyo, cl);
+        }
+
+        /// <summary>
+        ///コピーするためのコンストラクタ
+        /// </summary>
+        public timehaikeidraws(timehaikeidraws h):base(h)
+        {
+            timer = h.timer;
+
+        }
+    }
+
+    /// <summary>
+    /// 画面を描画したり、音を出したり、そういうのを行う
+    /// </summary>
+    [Serializable]
+    public class hyojiman
+    {
+        /// <summary>
+        /// レンダーの描画を開始する。enddrawの間に描画を記述する
+        /// </summary>
+        public void begindraw()
+        {
+            render.BeginDraw();
+        }
+
+        /// <summary>
+        /// レンダーの描画を終了するbegindrawの間に描画を記述する。
+        /// </summary>
+        public void enddraw()
+        {
+            render.EndDraw();
+        }
+        protected List<string> otos = new List<string>();
+        protected List<float> otovols = new List<float>();
+        protected string bgm = "";
+        protected bool butu = false;
+        /// <summary>
+        /// 音を出す。通信や、リプレイの保存をするならばこれを使わなくてはならない。
+        /// filemanのものとほぼ同じである。
+        /// </summary>
+        /// <param name="otoe">.\oto\*.wav</param>
+        /// <param name="vol">この音のボリューム</param>
+        public void playoto(string otoe, float vol = 1)
+        {
+            otos.Add(otoe);
+            otovols.Add(vol);
+        }
+        /// <summary>
+        /// bgmを開始する。リプレイの保存をするならばこれを使わなくてはならない。
+        /// filemanのものとほぼ同じである。
+        /// </summary>
+        /// <param name="bgme">.\oto\bgm\*.wav</param>
+        /// <param name="butugiri"></param>
+        public void playbgm(string bgme ="", bool butugiri = false)
+        {
+            bgm = bgme;
+            butu = butugiri;
+        }
+        /// <summary>
+        /// 背景をどれだけぼかすか。スクロール割合0.1につき一回このぼかしが入る。
+        /// </summary>
+        public float haikeibokasi = 0.04f;
+        /// <summary>
+        /// 描画物体のリスト
+        /// </summary>
+        public List<drawings> pics = new List<drawings>();
+        /// <summary>
+        /// 背景描画物体のリスト
+        /// </summary>
+        public List<haikeidraws> haikeipics = new List<haikeidraws>();
+        /// <summary>
+        /// エフェクトのリスト
+        /// </summary>
+        [NonSerialized]
+        public List<effectchara> effects = new List<effectchara>();
+
+        /// <summary>
+        /// 画面左上のカメラ座標
+        /// </summary>
+        public float camx = 0,camy = 0;
+        /// <summary>
+        /// 背景色
+        /// </summary>
+        public float HR = 0, HG = 0.8f, HB = 0.9f;
+        bool resetpicsman;
+        bool resethaikeipicsman;
+        /// <summary>
+        /// 拡大率
+        /// </summary>
+        public float bairitu = 1;
+        /// <summary>
+        /// いろいろ載せられるタグ。
+        /// </summary>
+        public string tag = "";
+        /// <summary>
+        /// 謎の変数
+        /// </summary>
+        int skipn = 0;
+        /// <summary>
+        /// レンダー
+        /// </summary>
+        [NonSerialized]
+        public ID2D1RenderTarget render;
+        /// <summary>
+        /// ウィンドウの座標での幅
+        /// </summary>
+        public float ww { get { return render.PixelSize.Width / bairitu; } }
+        /// <summary>
+        /// ウィンドウの座標での高さ
+        /// </summary>
+        public float wh { get { return render.PixelSize.Height / bairitu; } }
+        /// <summary>
+        /// 表示マンのコンストラクタ
+        /// </summary>
+        /// <param name="ren"></param>
+        public hyojiman(ID2D1RenderTarget ren)
+        {
+            reset();
+            render = ren;
+        }
+        /// <summary>
+        /// コピーのためのコンストラクタ
+        /// </summary>
+        /// <param name="h">コピー元</param>
+        public hyojiman(hyojiman h)
+        {
+            pics = new List<drawings>(h.pics);
+            haikeipics = new List<haikeidraws>(h.haikeipics);
+            effects = new List<effectchara>(h.effects);
+            otos = new List<string>(h.otos);
+            otovols = new List<float>(h.otovols);
+            bgm = h.bgm;
+            butu = h.butu;
+            tag = h.tag;
+
+            haikeibokasi = h.haikeibokasi;
+            camx = h.camx;
+            camy = h.camy;
+            HR = h.HR; HG = h.HG; HB = h.HB;
+            resethaikeipicsman = h.resethaikeipicsman;
+            resetpicsman = h.resetpicsman;
+            bairitu = h.bairitu;
+            skipn = h.skipn;
+            render = h.render;
+        }
+        /// <summary>
+        /// 通信を受け取ったときにコピーするためのメソッド。
+        /// </summary>
+        /// <param name="moto">コピー元</param>
+        public void tusinhyoji(hyojiman moto)
+        {
+            pics = moto.pics;
+            haikeipics = moto.haikeipics;
+            otos = moto.otos;
+            otovols = moto.otovols;
+            bgm = moto.bgm;
+            butu = moto.butu;
+            tag = moto.tag;
+            haikeibokasi = moto.haikeibokasi;
+            camx = moto.camx;
+            camy = moto.camy;
+            HR = moto.HR; HG = moto.HG; HB = moto.HB;
+            resethaikeipicsman = moto.resethaikeipicsman;
+            resetpicsman = moto.resetpicsman;
+         
+        }
+        /// <summary>
+        /// ちょっと変なコピー。hyojiを行う前に分裂させ、1フレーム限りのエフェクト(UIとか)を乗せてhyojiしたのちnisehyojiし通信するとよき
+        /// </summary>
+        /// <param name="moto">コピー元</param>
+        public void copy(hyojiman moto)
+        {
+            var mmm = new List<effectchara>(moto.effects);
+            foreach (var a in mmm) a.sinu(moto);
+
+            pics = new List<drawings>(moto.pics);
+            haikeipics = new List<haikeidraws>(moto.haikeipics);
+
+            foreach (var a in mmm) a.add();
+
+            effects = new List<effectchara>();
+            foreach (var a in moto.effects)
+            {
+                Activator.CreateInstance(a.GetType(),a, true, this);
+            }
+            otos = new List<string>(moto.otos);
+            otovols = new List<float>(moto.otovols);
+            bgm = moto.bgm;
+            butu = moto.butu;
+            tag = moto.tag;
+
+            haikeibokasi = moto.haikeibokasi;
+            camx = moto.camx;
+            camy = moto.camy;
+            HR = moto.HR; HG = moto.HG; HB = moto.HB;
+            resethaikeipicsman = moto.resethaikeipicsman;
+            resetpicsman = moto.resetpicsman;
+            bairitu = moto.bairitu;
+            skipn = moto.skipn;
+        }
+        /// <summary>
+        /// 空のコンストラクタ
+        /// </summary>
+        public hyojiman() { }
+        /// <summary>
+        /// エフェクトのフレームだけ行う
+        /// </summary>
+        /// <param name="cl">クロック</param>
+        public void nisehyoji(float cl = 1)
+        {
+            for (int i = effects.Count() - 1; i >= 0; i--)
+            {
+                effects[i].frame();
+            }
+        }
+        /// <summary>
+        /// 表示を行う
+        /// </summary>
+        /// <param name="cl">クロック</param>
+        /// <param name="begin">描画開始をするか</param>
+        /// <param name="end">描画終了をするか</param>
+        /// <param name="doEffectframe">エフェクトのフレームを行うか</param>
+        /// <param name="playotonkesi">音を再生した後その情報を消すか(録画を再生するときのみfalseで)</param>
+        public void hyoji(float cl = 1, bool begin = true, bool end = true,bool doEffectframe=true,bool playotonkesi=true)
+        {
+            for (int i = 0; i < otos.Count; i++)
+            {
+                fileman.playoto(otos[i], otovols[i]);
+            }
+            
+                if (bgm != "") fileman.playbgm(bgm, butu);
+            if (playotonkesi)
+            {
+                bgm = "";
+                otos.Clear();
+                otovols.Clear();
+            }
+
+           
+            if(doEffectframe)
+            for (int i = effects.Count() - 1; i >= 0; i--)
+            {
+                effects[i].frame(cl);
+            }
+
+            if (resetpicsman || 1 == 1)
+            {
+                resetpicsman = false;
+                //       pics = new List<picture>(pictures.Keys);
+                //     pics.Sort((a, b) => (int)(-a.z + b.z));
+               picssort();
+            }
+            if (resethaikeipicsman || 1 == 1)
+            {
+                resethaikeipicsman = false;
+                //       pics = new List<picture>(pictures.Keys);
+                //     pics.Sort((a, b) => (int)(-a.z + b.z));
+                haikeisort();
+            }
+            //   render.Factory.ReloadSystemMetrics();
+            skipn += 1;
+            if (skipn >= 2)
+            {
+                /*   
+                   for (int i = messages.Count() - 1; i >= 0; i--)
+                   {
+                       messages[i].susumukun();
+                   }
+                   skipn = 0;
+                   return;*/
+                skipn = 0;
+            }
+            if (begin)
+            {
+                render.BeginDraw();
+                render.Clear(new Color4(HR, HG, HB, 1));
+            }
+
+            float kugiriman = 0f;
+            //   Console.WriteLine(pictures.Count + " pics count" + haikeipictures.Count());
+            var haikeislb = render.CreateSolidColorBrush(new Color4(HR, HG, HB, haikeibokasi));
+            for (int i = haikeipics.Count() - 1; i >= 0; i--)
+            {
+
+
+                while (haikeipics[i].minsc >= kugiriman && kugiriman < 1)
+                {
+                    render.Transform = Matrix3x2.CreateTranslation(0, 0);
+                    kugiriman += 0.1f;
+
+                    render.FillRectangle(new System.Drawing.RectangleF(0, 0, ww * bairitu, wh * bairitu), haikeislb);
+
+                }
+                haikeipics[i].draw(this, cl);
+            }
+            //  Console.WriteLine("asfn"+kugiriman);
+            render.Transform = Matrix3x2.CreateTranslation(0, 0);
+            render.FillRectangle(new RawRectF(0, 0, ww * bairitu, wh * bairitu), haikeislb);
+            haikeislb.Dispose();
+
+
+
+            int cou = 0;
+            for (int i = pics.Count() - 1; i >= 0; i--)
+            {
+                if (cou > 900) break;
+
+                if (pics[i].draw(this, cl)) cou++;
+
+
+
+
+            }
+            render.Transform = Matrix3x2.CreateTranslation(0, 0);
+
+
+            if (end)
+            {
+                render.EndDraw();
+            }
+
+
+        }
+
+
+
+        /// <summary>
+        /// picsの並び順を整えたいときにどうぞ
+        /// </summary>
+        public void resetpics()
+        {
+            resetpicsman = true;
+
+
+        }
+
+        /// <summary>
+        /// 背景の並び順を整えたいときにどうぞ
+        /// </summary>
+        public void resethaikeipics()
+        {
+            resethaikeipicsman = true;
+
+
+        }
+
+
+
+        /// <summary>
+        /// リセットするメソッド。
+        /// これよりfileman.gethyojimanのほうがいいよ
+        /// </summary>
+        public void reset()
+        {
+
+            for (int i = pics.Count() - 1; i >= 0; i--)
+            {
+                removepicture(pics[i]);
+            }
+            for (int i = haikeipics.Count() - 1; i >= 0; i--)
+            {
+                removehaikeipicture(haikeipics[i]);
+            }
+            effects.Clear();
+            bgm = "";
+            butu = false;
+            otos.Clear();
+            otovols.Clear();
+            haikeipics.Clear();
+            pics.Clear();
+            camx = 0;
+            camy = 0;
+        }
+        /// <summary>
+        /// drawingsを追加する
+        /// </summary>
+        /// <param name="p">なんでも</param>
+        /// <returns>追加ができたかどうか</returns>
+        public bool addpicture(drawings p)
+        {
+            resetpics();
+            if (!pics.Contains(p))
+            {
+
+                pics.Add(p);
+                return true;
+            }
+            return false;
+        }
+        /// <summary>
+        /// drawingsを削除する
+        /// </summary>
+        /// <param name="p">なんでも</param>
+        /// <returns>削除できたかどうか</returns>
+        public bool removepicture(drawings p)
+        {
+
+            return pics.Remove(p);
+
+
+        }
+        /// <summary>
+        /// 背景を追加する
+        /// </summary>
+        /// <param name="p">なんでも</param>
+        /// <returns>追加できたかどうか</returns>
+        public bool addhaikeipicture(haikeidraws p)
+        {
+
+
+            resethaikeipics();
+            if (!haikeipics.Contains(p))
+            {
+                haikeipics.Add(p);
+                return true;
+            }
+            return false;
+
+        }
+        /// <summary>
+        /// 背景を削除する
+        /// </summary>
+        /// <param name="p">なんでも</param>
+        /// <returns>削除できたかどうか</returns>
+        public bool removehaikeipicture(haikeidraws p)
+        {
+
+           return haikeipics.Remove(p);
+
+        }
+        /// <summary>
+        /// timソートでpicsを整理する
+        /// </summary>
+        private void picssort()
+        {
+
+            if (pics.Count <= 0) return;
+            List<List<drawings>> sorts = new List<List<drawings>>();
+            int si = pics.Count();
+            int i, p, q;
+            drawings temp;
+            int tsi = 0;
+            while (true)
+            {
+                sorts.Add(new List<drawings>());
+                for (i = 0; i < 64; i++)
+                {
+                    if (tsi * 64 + i >= si)
+                    {
+                        break;
+                    }
+                    sorts[tsi].Add(pics[tsi * 64 + i]);
+
+                }
+
+                if (tsi * 64 + i >= si)
+                {
+
+                    break;
+                }
+                tsi++;
+
+
+            }
+
+            for (i = 0; i <= tsi; i++)
+            {
+
+                for (p = 1; p < sorts[i].Count; p++)
+                {
+
+                    temp = sorts[i][p];
+                    if (sorts[i][p - 1].z < temp.z)
+                    {
+                        q = p;
+                        do
+                        {
+                            sorts[i][q] = sorts[i][q - 1];
+                            q--;
+                        } while (q > 0 && sorts[i][q - 1].z < temp.z);
+                        sorts[i][q] = temp;
+                    }
+                }
+
+            }
+
+            while (sorts.Count > 1)
+            {
+                p = 1;
+                while (p < sorts.Count)
+                {
+                    i = 0; q = 0;
+                    //マージ
+
+
+                    while (i < sorts[p - 1].Count)
+                    {
+                        if (sorts[p - 1][i].z < sorts[p][q].z)
+                        {
+                            sorts[p - 1].Insert(i, sorts[p][q]);
+                            i++;
+                            q++;
+                        }
+                        else
+                        {
+                            i++;
+                        }
+                        if (q >= sorts[p].Count) break;
+                    }
+                    while (q < sorts[p].Count)
+                    {
+                        sorts[p - 1].Add(sorts[p][q]);
+                        q++;
+                    }
+                    //戦後処理
+                    sorts.RemoveAt(p);
+                    if (sorts.Count() - 1 == p)
+                    {
+                    }
+                    else p++;
+                }
+
+
+            }
+            pics = sorts[0];
+        }
+        /// <summary>
+        /// timソートで背景を整理する
+        /// </summary>
+        private void haikeisort()
+        {
+            if (haikeipics.Count <= 0) return;
+            List<List<haikeidraws>> sorts = new List<List<haikeidraws>>();
+            int si = haikeipics.Count();
+            int i, p, q;
+            int tsi = 0;
+            haikeidraws temp;
+            while (true)
+            {
+                sorts.Add(new List<haikeidraws>());
+                for (i = 0; i < 64; i++)
+                {
+                    if (tsi * 64 + i >= si)
+                    {
+                        break;
+                    }
+                    sorts[tsi].Add(haikeipics[tsi * 64 + i]);
+
+                }
+
+                if (tsi * 64 + i >= si)
+                {
+
+                    break;
+                }
+                tsi++;
+
+
+            }
+
+            for (i = 0; i <= tsi; i++)
+            {
+
+                for (p = 1; p < sorts[i].Count; p++)
+                {
+
+                    temp = sorts[i][p];
+                    if (sorts[i][p - 1].x * sorts[i][p - 1].y < temp.x * temp.y)
+                    {
+                        q = p;
+                        do
+                        {
+                            sorts[i][q] = sorts[i][q - 1];
+                            q--;
+                        } while (q > 0 && sorts[i][q - 1].x * sorts[i][q - 1].y < temp.x * temp.y);
+                        sorts[i][q] = temp;
+                    }
+                }
+
+            }
+
+            while (sorts.Count > 1)
+            {
+                p = 1;
+                while (p < sorts.Count)
+                {
+                    i = 0; q = 0;
+                    //マージ
+
+
+                    while (i < sorts[p - 1].Count)
+                    {
+                        if (sorts[p - 1][i].x * sorts[p - 1][i].y < sorts[p][q].x * sorts[p][q].y)
+                        {
+                            sorts[p - 1].Insert(i, sorts[p][q]);
+                            i++;
+                            q++;
+                        }
+                        else
+                        {
+                            i++;
+                        }
+                        if (q >= sorts[p].Count) break;
+                    }
+                    while (q < sorts[p].Count)
+                    {
+                        sorts[p - 1].Add(sorts[p][q]);
+                        q++;
+                    }
+                    //戦後処理
+                    sorts.RemoveAt(p);
+                    if (sorts.Count() - 1 == p)
+                    {
+                    }
+                    else p++;
+                }
+
+
+            }
+            haikeipics = sorts[0];
+        }
+        /// <summary>
+        /// 指定ポイントに触れているピクチャーのリストを返す
+        /// </summary>
+        /// <param name="x">ポイントのx座標</param>
+        /// <param name="y">ポイントのy座標</param>
+        /// <param name="s">ピクチャーをどの図形で見るか</param>
+        /// <returns>ピクチャーのリスト</returns>
+        public List<picture> picturegets(float x,float y,Shapes.Shape s)
+        {
+            var res = new List<picture>();
+            foreach (var a in pics) 
+            {
+                if (a.GetType() == typeof(picture) || a.GetType().IsSubclassOf(typeof(picture))) 
+                {
+                    var b = (picture)a;
+                    s.w = b.w;
+                    s.h = b.h;
+                    s.rad += b.RAD;
+                    s.setcxy(b.getcx(b.w / 2, b.h / 2), b.getcy(b.w / 2, b.h / 2), b.w / 2, b.h / 2);
+                    if (s.onhani(x, y)) { res.Add(b); }
+                    s.rad -= b.RAD;
+                }
+            }
+            return res;
+        }
+        /// <summary>
+        /// 表示マンをバイト列に変換する
+        /// </summary>
+        /// <param name="hyo">変換する表示マン</param>
+        /// <returns>バイト列</returns>
+        static public byte[] andbyte(hyojiman hyo)
+        {
+            if (hyo != null)
+            {
+                try
+                {
+                    BinaryFormatter binaryFormatter = new BinaryFormatter();
+                    using (MemoryStream ms = new MemoryStream())
+                    {
+                        if (ms != null && binaryFormatter != null)
+                        {
+                            binaryFormatter.Serialize(ms, hyo);
+                          
+                            return ms.ToArray();
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("hyo to byte error" + e.ToString());
+                }
+            }
+            return null;
+        }
+        /// <summary>
+        /// バイト列を表示マンに変換する
+        /// </summary>
+        /// <param name="hyo">変換するバイト列</param>
+        /// <returns>表示マン</returns>
+        static public hyojiman andbyte(byte[] hyo)
+        {
+            if (hyo != null)
+            {
+              //  ulong sum = 0;
+                //        foreach (var a in hyo) Console.Write(" + " + a + " + ");
+                //    Console.WriteLine(hyo.Length+" kitaze: " +hyo[0] + " " + hyo[hyo.Length - 1]);
+                try
+                {
+                    BinaryFormatter binaryFormatter = new BinaryFormatter();
+                    using (MemoryStream ms = new MemoryStream(hyo))
+                    {
+                        if (ms != null && binaryFormatter != null)
+                        {
+                            //  Console.WriteLine(ms.ToString() + " asf " + binaryFormatter.ToString());
+                            var a = binaryFormatter.Deserialize(ms);
+                            //   Console.WriteLine("uuh"+a.ToString());
+                            if (a != null)
+                                return (hyojiman)a;
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("sajudfhasuipop" + e.ToString());
+                }
+            }
+            return null;
+        }
+
+    }
+    /// <summary>
+    /// 文字を書くためのクラス
+    /// </summary>
+    [Serializable]
+    public class message : drawings
+    {
+        /// <summary>
+        /// 何文字の幅か
+        /// </summary>
+        protected int nmoji;
+        /// <summary>
+        /// 文字数で表す文字列の中心
+        /// </summary>
+        protected int tyusin;
+        /// <summary>
+        /// 文字のサイズ
+        /// </summary>
+        protected float size;
+        /// <summary>
+        /// RGBでしかない
+        /// </summary>
+        protected float R, G, B;
+        /// <summary>
+        /// 表示するテキスト
+        /// </summary>
+        public string text;
+        /// <summary>
+        /// 1文字表示するのに必要なクロック
+        /// </summary>
+        protected float speed;
+        /// <summary>
+        /// 持続時間
+        /// </summary>
+        protected float time;
+        /// <summary>
+        /// タイマーでしかない
+        /// </summary>
+        protected float timer;
+        /// <summary>
+        /// 強調するか
+        /// </summary>
+        protected bool kyotyou;
+
+
+      /// <summary>
+      /// 表示マンに乗っているか
+      /// </summary>
+      /// <param name="hyojiman">その表示マン</param>
+      /// <returns>乗っているか</returns>
+        public bool onhyoji(hyojiman hyojiman) {return hyojiman.pics.Contains(this);  }
+        /// <summary>
+        /// 死ぬべきか
+        /// </summary>
+        public bool sinderu { get { if (time >= 0) return timer > time + text.Length * speed; return false; } }
+        /// <summary>
+        /// 合計の表示時間
+        /// </summary>
+        public float TIMEA { get { if (time >= 0) return time + text.Length * speed; return text.Length * speed; } }
+        /// <summary>
+        /// 文字のサイズ
+        /// </summary>
+        public float SIZE { get { return size; } }
+        /// <summary>
+        /// バイト的なカウント
+        /// </summary>
+        protected float w = 1;
+        /// <summary>
+        /// 横幅の長さ
+        /// </summary>
+        public float W { get { return size / 2 * w; } }
+        /// <summary>
+        /// 最大であろう横幅の長さ
+        /// </summary>
+        public float WWW { get { return size / 2 * nmoji; } }
+
+        /// <summary>
+        /// \nや文字幅オーバーとかで分割された列
+        /// </summary>
+        protected List<string> sts = new List<string>();
+        /// <summary>
+        /// その行のバイト的なカウントを取る
+        /// </summary>
+        /// <param name="gyo">n行目</param>
+        /// <returns>カウント</returns>
+        public float stsw(int gyo)
+        {
+            if (gyo >= 0 && gyo < sts.Count)
+            {
+                Encoding e = Encoding.GetEncoding("shift_jis");
+                char[] chars = new char[sts[gyo].Count()];
+
+                for (int t = 0; t < sts[gyo].Count(); t++)
+                {
+                    chars[t] = sts[gyo][t];
+                }
+
+                return e.GetByteCount(chars, 0, sts[gyo].Count()) * size / 2;
+            }
+            return 0;
+        }
+        
+        /// <summary>
+        /// 文字列の高さ
+        /// </summary>
+        public float H { get { return size * sts.Count; } }
+        
+        protected float sitazoroeman {get{ return size * (sts.Count - 1); } }
+        /// <summary>
+        /// 文字を書き始めるx
+        /// </summary>
+        public float mx { get { return x - size * 0.32f * tyusin; } }
+        /// <summary>
+        /// 文字を書き始めるy
+        /// </summary>
+        public float my { get { return y; } }
+        /// <summary>
+        /// 不透明度
+        /// </summary>
+        public float opa { get { return _opa;  }set { _opa = value;if (_opa < 0) _opa = 0; if (_opa > 1) _opa = 1; } }
+        /// <summary>
+        /// 角度
+        /// </summary>
+        public double rad { get { return _rad; } set { _rad = value; _rad = Math.Atan2(Math.Sin(_rad), Math.Cos(_rad)); } }
+        float _opa = 1;
+        double _rad = 0;
+        /// <summary>
+        /// 反転するか
+        /// </summary>
+        public bool mirror = false;
+        /// <summary>
+        /// なぜだか倍率
+        /// </summary>
+        public float baix=1, baiy = 1;
+        /// <summary>
+        /// 下でそろえる
+        /// </summary>
+        public bool sita = false;
+        /// <summary>
+        /// メッセージをつくる
+        /// </summary>
+        /// <param name="x">開始x座標</param>
+        /// <param name="y">開始y座標</param>
+        /// <param name="ookisa">フォントの大きさ</param>
+        /// <param name="mojisuu">文字数の幅(日本語はちょっとデカい)</param>
+        /// <param name="tyusindoko">中心の文字数</param>
+        /// <param name="hyojispeed">文字が表示されるに当たって必要なクロック数</param>
+        /// <param name="hyojitime">文字が完全に表示されたのちに表示される時間</param>
+        /// <param name="textt"></param>
+        /// <param name="RR"></param>
+        /// <param name="GG"></param>
+        /// <param name="BB"></param>
+        /// <param name="kyotyousuru"></param>
+        /// <param name="z"></param>
+        /// <param name="sitazoroe"></param>
+        public message(float x, float y, float ookisa, int mojisuu, int tyusindoko, float hyojispeed, float hyojitime, string textt, float RR = 0, float GG = 0, float BB = 0, bool kyotyousuru = true,float z=1000000000,bool sitazoroe=false):base(x,y,z)
+        {
+            sita = sitazoroe;
+            
+            size = ookisa;
+            nmoji = mojisuu;
+            tyusin = tyusindoko;
+            speed = hyojispeed;
+            time = hyojitime;
+            R = RR;
+            G = GG;
+            B = BB;
+            text = textt;
+            timer = 0;
+            kyotyou = kyotyousuru;
+         
+           
+        }
+       /// <summary>
+       /// コピーのコンストラクタ
+       /// </summary>
+       /// <param name="m"></param>
+        public message(message m):base(m)
+        {
+          
+            size = m.size;
+            nmoji = m.nmoji;
+            tyusin = m.tyusin;
+            speed = m.speed;
+            time = m.time;
+            R = m.R;
+            G = m.G;
+            B = m.B;
+            text = m.text;
+            timer = 0;
+            sita = m.sita;
+        }
+        /// <summary>
+        /// フェードインアウトの最大の不透明度を設定する
+        /// </summary>
+        /// <param name="opa"></param>
+        public void setmaxopa(float opa) 
+        {
+            maxopa = opa;
+            if (maxopa < 0) maxopa = 0;
+
+            if (maxopa > 1) maxopa = 1;
+        }
+        /// <summary>
+        /// フェードアウトを設定する
+        /// </summary>
+        /// <param name="start">開始時間</param>
+        /// <param name="length">長さ</param>
+        public void setfadeout(float start, float length = 0)
+        {
+            outstart = start;
+            outlength = length;
+        }
+        float outstart = -1, outlength = -1, inlength = -1,instart=-1;
+        private float maxopa = 1;
+        /// <summary>
+        /// フェードインを設定する
+        /// </summary>
+        /// <param name="length">長さ</param>
+        /// <param name="start">開始時間</param>
+        public void setfadein(float length,float start=0)
+        {
+            inlength = length;
+            instart = start;
+        }
+        /// <summary>
+        /// 一時的に死なないようにする
+        /// </summary>
+        public void sinanu()
+        {
+            if (timer > text.Length * speed) timer = text.Length * speed;
+        }
+        /// <summary>
+        /// テキストを作り出す
+        /// </summary>
+        /// <returns>生成された奴</returns>
+        public string textoraa()
+        {
+            if (nmoji < 0) return "";
+            int kazu = text.Length;
+            if (speed > 0)
+            {
+                kazu = (int)(timer / speed);
+            }
+            if (kazu > text.Length) kazu = text.Length;
+            sts.Clear();
+            float cou = 0;
+            string temp = "";
+            bool auted = false;
+            for (int i = 0; i < kazu; i++)
+            {
+                bool gooon = false;
+
+                if (text[i] == '\n'&&!auted)
+                {
+                    sts.Add(temp);
+                    cou = 0;
+                    temp = "";
+                }
+                else
+                {
+                    auted = false;
+                    Encoding e = Encoding.GetEncoding("shift_jis");
+                  
+                    char[] chars = new char[1];
+                    chars[0] = text[i];
+                    var temmp = e.GetByteCount(chars, 0, 1);
+                    if (temmp > 1)
+                    {
+                        if (cou + temmp * 0.9f <= nmoji)
+                        {
+                            cou += temmp * 0.9f;
+                            temp += text[i];
+                        }
+                        else 
+                        {
+                            gooon = true;
+                            i--;
+                        }
+                    }
+                    else
+                    {
+                        if (cou + temmp  <= nmoji)
+                        {
+                            cou += temmp ;
+                            temp += text[i];
+                        }
+                        else
+                        {
+                            gooon = true;
+                            i--;
+                        }
+                    }
+
+                   
+                    //cou += 1;
+                }
+                if (cou > nmoji||gooon)
+                {
+                    auted = true;
+                    sts.Add(temp);
+                    cou = 0;
+                    temp = "";
+                }
+            }
+            sts.Add(temp);
+            float hi = (float)tyusin / (float)nmoji;
+            w = 1;
+            for (int i = 0; i < sts.Count(); i++)
+            {
+                if (sts[i] != "")
+                {
+                    cou = 0;
+                    Encoding e = Encoding.GetEncoding("shift_jis");
+                    char[] chars = new char[sts[i].Count()];
+
+                    for (int t = 0; t < sts[i].Count(); t++)
+                    {
+                        chars[t] = sts[i][t];
+                    }
+
+                    cou += e.GetByteCount(chars, 0, sts[i].Count());
+                    if (w < cou) w = cou;
+                    float tya = ((nmoji - cou) * (hi));
+                    // Console.WriteLine(tya + " tyaaa "+ nmoji +" tamukenkayo "+cou+" "+ hi+" "+tyusin);
+                    for (int t = 0; t < tya; t++)
+                    {
+
+                        if (sts[i].Count() > 0)
+                        {
+                            sts[i] = sts[i].Insert(0, " ");
+                        }
+                    }
+                }
+            }
+            string res = "";
+
+
+            for (int i = 0; i < sts.Count(); i++)
+            {
+                // Console.WriteLine(sts[i]);
+                res += sts[i] + Environment.NewLine;
+                if (!(i == sts.Count() - 1 && sts[i] == "")) { }
+
+            }
+            //h -= size / 2;
+
+            return res;
+        }
+        public override bool draw(hyojiman hyo,float cl)
+        {
+
+            byoga(hyo,cl);
+            return true;
+        }
+        /// <summary>
+        /// タイマーを進めるだけ
+        /// </summary>
+        /// <param name="hyo"></param>
+        /// <param name="cl"></param>
+        public void susumukun(hyojiman hyo,float cl = 1)
+        {
+            timer += cl;
+            if (sinderu) remove(hyo);
+        }
+        public void byoga(hyojiman hyo, float cl = 1)
+        {
+
+         var render = hyo.render;
+            float bairitu = hyo.bairitu;
+            timer += cl;
+
+
+            Vortice.DirectWrite.FontStyle style;
+
+            if (kyotyou) style = Vortice.DirectWrite.FontStyle.Oblique;
+            else style = Vortice.DirectWrite.FontStyle.Normal;
+
+            float si = size * bairitu;
+            if (si <= 1) si = 1;
+            var fa = Vortice.DirectWrite.DWrite.DWriteCreateFactory<IDWriteFactory>();
+            var fom = fa.CreateTextFormat("MS UI Gothic", FontWeight.Light, style, si);
+            
+            if (inlength > 0 )
+            {
+             
+                if (instart < timer)
+                {
+                    _opa = maxopa*(timer-instart) / inlength;
+                }
+                else 
+                {
+                    _opa = 0;
+                }
+              //  Console.WriteLine(opa + " :dwad: " + timer + " :dawf: " + instart);
+            }
+           if (outstart > 0 && outlength > 0)
+            {
+                if (timer > outstart + outlength)
+                {
+                    _opa = 0;
+                    remove(hyo);
+                    //改善点だけどまあいいケルジャクソン
+                }
+                else if(outstart<=timer)
+                {
+                    _opa = maxopa - maxopa*(timer - outstart) / outlength;
+                }
+            }
+         //   Console.WriteLine(opa + " :dwad: " + timer + " :dawf: " + instart);
+            {
+                var a = Matrix3x2.CreateRotation((float)rad, new Vector2((x* hyo.bairitu - hyo.camx * hyo.bairitu) , (y * hyo.bairitu - hyo.camy * hyo.bairitu)));
+                if (mirror)
+                {
+                    a = Matrix3x2.Multiply(new Matrix3x2(-1, 0, 0, 1, 0, 0), a);
+                    a = Matrix3x2.Multiply(Matrix3x2.CreateTranslation(-(x  - hyo.camx) * 2 * hyo.bairitu, 0), a);
+
+
+                }
+                if (baix != 0 && baiy != 0)
+                {
+                    a = Matrix3x2.Multiply(Matrix3x2.CreateTranslation(new Vector2((mx - hyo.camx) * bairitu * (1 - baix), (my - hyo.camy) * bairitu * (1 - baiy)
+                     )), a);
+                    a = Matrix3x2.Multiply(Matrix3x2.CreateScale(baix, baiy), a);
+                  
+                }
+               
+                hyo.render.Transform = a;
+
+
+            }
+            var slb = render.CreateSolidColorBrush(new Color4(R, G, B, opa));
+            string text = textoraa();
+            float yyy = 0;
+            if (sita) yyy = sitazoroeman;
+            render.DrawText(text, fom,
+                         new RawRectF((mx - hyo.camx) * bairitu, (my - hyo.camy - yyy) * bairitu,
+                         (mx + WWW * 2 - hyo.camx) * bairitu, (my + H - hyo.camy - yyy) * bairitu), slb);
+            if (sinderu) remove(hyo);
+            fa.Dispose();
+            fom.Dispose();
+            slb.Dispose();
+
+        }
+
+        /// <summary>
+        /// 縁取りを適用したメッセージ群を作り出す
+        /// </summary>
+        /// <param name="sabun">どのぐらいずらすか</param>
+        /// <param name="hyo">追加先の表示マン</param>
+        /// <param name="x">x</param>
+        /// <param name="y">y</param>
+        /// <param name="ookisam">文字の大きさ</param>
+        /// <param name="mojisuu">文字数</param>
+        /// <param name="tyusindoko">中心</param>
+        /// <param name="hyojispeed">1文字表示に必要な時間</param>
+        /// <param name="hyojitime">表示する時間</param>
+        /// <param name="textt">テキスト</param>
+        /// <param name="RR">R</param>
+        /// <param name="GG">G</param>
+        /// <param name="BB">B</param>
+        /// <param name="kyoutyousuru">強調するか</param>
+        /// <param name="z">z</param>
+        /// <param name="addin">表示マンに追加するか</param>
+        /// <param name="sitazoroe">下でそろえるか</param>
+        /// <param name="R2">後ろのR,-1で自動</param>
+        /// <param name="G2">後ろのG,-1で自動</param>
+        /// <param name="B2">後ろのB,-1で自動</param>
+        /// <returns></returns>
+        public static List<message> hutidorin(float sabun , hyojiman hyo, float x, float y, float ookisam, int mojisuu, int tyusindoko,float  hyojispeed, float hyojitime, string textt,float RR=0
+            ,float  GG=0,float BB=0,bool kyoutyousuru=true,float z=(float)1E+09,bool addin=true,bool sitazoroe=false,float R2=-1, float G2 = -1, float B2 = -1) 
+        {
+            var res = new List<message>();
+            float R = 1, G = 1, B = 1;
+            if (RR > 0.5) R = 0;
+            if (GG > 0.5) G = 0;
+            if (BB > 0.5) B = 0;
+
+            if (R2 != -1) R = R2;
+            if (G2 != -1) G = G2;
+            if (B2 != -1) B = B2;
+            res.Add(new message(x, y, ookisam, mojisuu, tyusindoko, hyojispeed, hyojitime, textt, RR, GG, BB, kyoutyousuru, z, sitazoroe));
+            res.Add(new message(x + sabun, y, ookisam, mojisuu, tyusindoko, hyojispeed, hyojitime, textt, R, G, B, kyoutyousuru, z, sitazoroe));
+            res.Add(new message(x-sabun, y, ookisam, mojisuu, tyusindoko, hyojispeed, hyojitime, textt, R, G, B, kyoutyousuru, z,  sitazoroe));
+            res.Add(new message(x, y+sabun, ookisam, mojisuu, tyusindoko, hyojispeed, hyojitime, textt, R, G, B, kyoutyousuru, z,  sitazoroe));
+            res.Add(new message(x, y-sabun, ookisam, mojisuu, tyusindoko, hyojispeed, hyojitime, textt, R, G, B, kyoutyousuru, z,  sitazoroe));
+            if (addin) 
+            {
+                foreach(var a in res)
+                hyo.addpicture(a);
+            }
+            return res;
+        }
+        /// <summary>
+        /// コピーするためのメソッド
+        /// </summary>
+        /// <param name="m">コピー元</param>
+        public void copy(message m)
+        {
+            base.copy(m);
+            size = m.size;
+            nmoji = m.nmoji;
+            tyusin = m.tyusin;
+            speed = m.speed;
+            time = m.time;
+            R = m.R;
+            G = m.G;
+            B = m.B;
+            text = m.text;
+            timer = 0;
+            sita = m.sita;
+        }
+    }
+
+
+}
