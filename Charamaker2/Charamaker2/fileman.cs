@@ -896,35 +896,49 @@ namespace Charamaker2
             m.addmoves(new texpropman(200, "a", 471, 0.5f));
             m.addmoves(new moveman(1, true));
             m.addmoves(new idouman(200, 0, 0, 360 / 100));
-       
 
-          
-            string[] filesM = System.IO.Directory.GetFiles(@".\motion", "*.c2m", System.IO.SearchOption.AllDirectories);
-            string[] filesO = System.IO.Directory.GetFiles(@".\oto", "*.wav", System.IO.SearchOption.AllDirectories);
 
-            string[] filesT = System.IO.Directory.GetFiles(@".\tex", "*.bmp", System.IO.SearchOption.AllDirectories);
-            string[] filesC = System.IO.Directory.GetFiles(@".\character", "*.c2c", System.IO.SearchOption.AllDirectories);
-            for (int i = 0; i < filesM.Count();i++) 
+
+
+
+
+            if (Directory.Exists(@".\motion")) 
             {
-                Console.WriteLine(filesM[i]);
-                loadmotion(filesM[i].Replace(@".\motion\", @""));
+                string[] filesM = System.IO.Directory.GetFiles(@".\motion", "*.c2m", System.IO.SearchOption.AllDirectories);
+                for (int i = 0; i < filesM.Count(); i++)
+                {
+                    Console.WriteLine(filesM[i]);
+                    loadmotion(filesM[i].Replace(@".\motion\", @""));
+                } 
             }
-            for (int i = 0; i < filesO.Count(); i++)
+            if (Directory.Exists(@".\oto"))
             {
-                Console.WriteLine(filesO[i]);
-                loadoto(filesO[i].Replace(@".\oto\", @""));
+                string[] filesO = System.IO.Directory.GetFiles(@".\oto", "*.wav", System.IO.SearchOption.AllDirectories);
+                for (int i = 0; i < filesO.Count(); i++)
+                {
+                    Console.WriteLine(filesO[i]);
+                    loadoto(filesO[i].Replace(@".\oto\", @""));
+                }
             }
-            for (int i = 0; i < filesT.Count(); i++)
+            if (Directory.Exists(@".\tex"))
             {
+                string[] filesT = System.IO.Directory.GetFiles(@".\tex", "*.bmp", System.IO.SearchOption.AllDirectories);
+                for (int i = 0; i < filesT.Count(); i++)
+                {
 
-                Console.WriteLine(filesT[i]);
-                ldtex(filesT[i].Replace(@".\tex\", @""));
+                    Console.WriteLine(filesT[i]);
+                    ldtex(filesT[i].Replace(@".\tex\", @""));
+                }
             }
-            for (int i = 0; i < filesC.Count(); i++)
+            if (Directory.Exists(@".\character"))
             {
+                string[] filesC = System.IO.Directory.GetFiles(@".\character", "*.c2c", System.IO.SearchOption.AllDirectories);
+                for (int i = 0; i < filesC.Count(); i++)
+                {
 
-                Console.WriteLine(filesC[i]);
-                loadcharacter(filesC[i].Replace(@".\character\", @""));
+                    Console.WriteLine(filesC[i]);
+                    loadcharacter(filesC[i].Replace(@".\character\", @""));
+                }
             }
           
             
