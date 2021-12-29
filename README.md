@@ -26,6 +26,10 @@ https://github.com/amerkoleci/Vortice.Windows
 だいたいはサンプルに描いてるのがすべてなのでSampleを見てください<br>
 filemanのセッティングアップからhyojimanをmakeして.inputinをMouseDownとかに接続します<br>
 あとはお好みでEntityとかSceneとかを作ればいいと思います。<br>
-RReaseの中身を自分のプログラムのReleaseにコピーしてCharamaker2.exeを参照に追加し、更に同梱されてるSystem.Runtime.CompilerServices.Unsafe.dllも参照に追加すればおｋです。<br>
+ビルドした中身を自分のプログラムのReleaseにコピーしてCharamaker2.exeを参照に追加し、更に同梱されてるSystem.Runtime.CompilerServices.Unsafe.dllも参照に追加すればおｋです。<br>
 また含まれているリソースは全て著作権は私のものです。再配布さえしなければ好きに使って構いません。
 
+# Build
+
+Charamaker2.slnを開きます。おそらく依存関係が解決できないと思うのでVorticeとかいろいろnugetでインストールします。必要なバージョンが変でコンソールからバージョン指定しないといけないものもあるので注意してください。そんでビルドできたら万々歳ですね。<br>
+だいたいこんな感じ.pngみたいになったら成功です。そこにRReaseやsampleの中身をコピペしてやれば大体できます。
