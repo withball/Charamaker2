@@ -8,6 +8,9 @@
 ・bmp画像の集合体Characterとそれを動かすmotionの作成
 ・Shapeを用いたあたり判定の作成
 
+# License
+ 
+"Charamaker2" is under [MIT license](https://en.wikipedia.org/wiki/MIT_License).
 # Features
 C#でゲームと言えばUnityですがあちらは複雑すぎて理解ができませでした。そんな私が作ったものなので、私と波長が合う人はわかりやすいと思います。ゲーム制作がほとんどソースコードで完結するのもGoodだと思います。
 
@@ -18,3 +21,4 @@ https://github.com/amerkoleci/Vortice.Windows
 # Usage
 
 Sampleを見てください
+Releaseの中身を自分のプログラムのReleaseにコピーしてCharamaker2.exeを参照に追加すればおｋです。
