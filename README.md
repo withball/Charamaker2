@@ -21,4 +21,4 @@ https://github.com/amerkoleci/Vortice.Windows
 # Usage
 
 Sampleを見てください
-Releaseの中身を自分のプログラムのReleaseにコピーしてCharamaker2.exeを参照に追加すればおｋです。
+Releaseの中身を自分のプログラムのReleaseにコピーしてCharamaker2.exeを参照に追加し、更に同梱されてるSystem.Runtime.CompilerServices.Unsafe.dllも参照に追加すればおｋです。
