@@ -17,9 +17,11 @@ C#でゲームと言えばUnityですがあちらは複雑すぎて理解がで�
 ゲーム制作がほとんどソースコードで完結するのもGoodだと思います。
 
 # Requirement
-Vortice 
+Vortice 各種
 https://github.com/amerkoleci/Vortice.Windows
-
+Microsoft.CodeAnalysys 各種
+SharpGen.Runtime +.COM
+System.Runtime.CompilerServices.Unsafe 
 # Usage
 
 基本はWindowsFormで行います。<br>
