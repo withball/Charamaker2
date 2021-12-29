@@ -756,16 +756,25 @@ namespace Charamaker2.Character
         /// <summary>
         /// 特定のタイプのムーブを全てのモーションから消すE:
         /// </summary>
-        /// <param name="t"></param>
+        /// <param name="t">消すmoveのタイプ</param>
         public void removemoves(Type t)
         {
             foreach (var a in motions) a.removemoves(t);
         }
 
     }
+    /// <summary>
+    /// カメラを自動的に追跡してくれるキャラクター。effectcharaのついてくキャラをこいつにして追跡する節をcoreにするといい感じ。
+    /// </summary>
     [Serializable]
     public class camchara : effectchara
-    {
+    {/// <summary>
+    /// 普通のコンストラクタ
+    /// </summary>
+    /// <param name="timer">持続時間</param>
+    /// <param name="dx">coreのdx</param>
+    /// <param name="dy">coreのdy</param>
+    /// <param name="hyo">追跡する表示マン</param>
         public camchara(float timer, float dx, float dy, hyojiman hyo) : base()
         {
             hyojiman = hyo;
@@ -782,11 +791,14 @@ namespace Charamaker2.Character
             hyojiman.effects.Add(this);
             frame();
         }
-        public camchara(camchara eff, bool addy = true, hyojiman hyo = null) : base(eff, addy, hyo)
-        {
-          
-        }
+    /// <summary>
+    /// 空のコンストラクタ
+    /// </summary>
         public camchara() { }
+        /// <summary>
+        /// フレーム処理
+        /// </summary>
+        /// <param name="cl">クロック</param>
         public override void frame(float cl=1)
         {
             base.frame(cl);
@@ -794,17 +806,50 @@ namespace Charamaker2.Character
         }
 
     }
+    /// <summary>
+    /// エッフェクト。フレーム処理はhyojiman側で行われる。
+    /// </summary>
     [Serializable]
     public class effectchara : character
     {
-        //フレームはひょじまんに寄与
+        /// <summary>
+        /// 残り生存時間
+        /// </summary>
         public float time = 0;
+        /// <summary>
+        /// くっつくキャラクター
+        /// </summary>
         public character on = null;
-        public string onsetu;
+        /// <summary>
+        /// くっつく節""でキャラクターそのものにくっつく
+        /// </summary>
+        public string onsetu="";
         bool kaitable = false;
+        /// <summary>
+        /// 自分を保持してるキャラクター
+        /// </summary>
         protected hyojiman hyojiman;
+        /// <summary>
+        /// 表示マン中に自分が存在していないフラグ
+        /// </summary>
         public bool sinderu { get { return !hyojiman.effects.Contains(this); } }
-        public bool timelimited { get { return !(time > 0); } }
+        /// <summary>
+        /// 普通のコンストラクタ
+        /// </summary>
+        /// <param name="hyo">追加する表示マン</param>
+        /// <param name="timer">生存時間</param>
+        /// <param name="xx">左上x座標</param>
+        /// <param name="yy">左上y座標</param>
+        /// <param name="ww">幅</param>
+        /// <param name="hh">高さ</param>
+        /// <param name="ttx">中心x座標</param>
+        /// <param name="tty">中心y座標</param>
+        /// <param name="rrad">ラディアン角度</param>
+        /// <param name="cor">核となる節</param>
+        /// <param name="tuiteku">ついていくキャラクター。nullでついていかない</param>
+        /// <param name="tuisetu">ついていく節の名前""でキャラクター本体</param>
+        /// <param name="kaitenawaseru">このキャラクターの回転を合わせるか</param>
+        /// <param name="addy">hyojimanにaddしてしまうか</param>
         public effectchara(hyojiman hyo, float timer, float xx, float yy, float ww, float hh, float ttx, float tty, double rrad, setu cor, character tuiteku = null, string tuisetu = "", bool kaitenawaseru = false, bool addy = true) : base(xx, yy, ww, hh, ttx, tty, rrad, cor)
         {
             hyojiman = hyo;
@@ -814,12 +859,21 @@ namespace Charamaker2.Character
             kaitable = kaitenawaseru;
             if (addy) add();
         }
+        /// <summary>
+        /// 表示マンに追加するメソッド
+        /// </summary>
         virtual public void add()
         {
             resethyoji(hyojiman);
             if (!hyojiman.effects.Contains(this))
                 hyojiman.effects.Add(this);
         }
+        /// <summary>
+        /// コピーするためのコンストラクタ
+        /// </summary>
+        /// <param name="eff">コピー元</param>
+        /// <param name="addy">表示マンに追加するか</param>
+        /// <param name="hyo">nullならコピー元の表示マンに</param>
         public effectchara(effectchara eff, bool addy = true, hyojiman hyo = null) : base(eff)
         {
             time = eff.time;
@@ -831,6 +885,16 @@ namespace Charamaker2.Character
             else hyojiman = hyo;
             if (addy) add();
         }
+        /// <summary>
+        /// キャラクターをエフェクトに変換するためのコンストラクタ
+        /// </summary>
+        /// <param name="hyo">追加する表示マン</param>
+        /// <param name="timee">生存時間</param>
+        /// <param name="c">素となるキャラクター</param>
+        /// <param name="onn">ついていくキャラクター。nullでついていかない</param>
+        /// <param name="tuisetu">ついていく節の名前""でキャラクター本体</param>
+        /// <param name="kaitenawaseru">このキャラクターの回転を合わせるか</param>
+        /// <param name="addy">hyojimanにaddしてしまうか</param>
         public effectchara(hyojiman hyo, float timee, character c, character onn = null, string tuisetu = "", bool addy = true, bool kaitenawaseru = false) : base(c)
         {
             hyojiman = hyo;
@@ -841,10 +905,17 @@ namespace Charamaker2.Character
             if (addy) add();
 
         }
+        /// <summary>
+        /// 空のコンストラクタ
+        /// </summary>
         public effectchara() : base()
         {
 
         }
+        /// <summary>
+        /// フレーム処理。表示マンが行ってくれる
+        /// </summary>
+        /// <param name="cl"></param>
         public override void frame(float cl=1)
         {
             base.frame(cl);
@@ -888,6 +959,10 @@ namespace Charamaker2.Character
                 sinu(hyojiman);
             }
         }
+        /// <summary>
+        /// hyoujimanからも削除し、消えるためのメソッド
+        /// </summary>
+        /// <param name="hyojiman"></param>
         public override void sinu(hyojiman hyojiman)
         {
             base.sinu(hyojiman);
@@ -896,20 +971,42 @@ namespace Charamaker2.Character
         }
 
     }
+    /// <summary>
+    /// エフェクトの背景版
+    /// </summary>
     [Serializable]
     public class haikeieff:effectchara
     {
+        /// <summary>
+        /// キャラクターを背景のエフェクトにするメソッド
+        /// </summary>
+        /// <param name="hyo">追加する表示マン</param>
+        /// <param name="time">生存時間</param>
+        /// <param name="scrolx">スクロール割合x</param>
+        /// <param name="scroly">スクロール割合y</param>
+        /// <param name="c">素となるキャラクター</param>
+        /// <param name="addin">追加するか</param>
         public haikeieff(hyojiman hyo, float time, float scrolx, float scroly, character c,bool addin=false) : base(hyo, time, c,addy:addin) 
         {
             scx = scrolx;
             scy = scroly;
         }
+        /// <summary>
+        /// コピーするためのコンストラクタ
+        /// </summary>
+        /// <param name="eff">コピー元</param>
+        /// <param name="addy">表示マンに追加するか</param>
+        /// <param name="hyo">nullならコピー元の表示マンに</param>
         public haikeieff(haikeieff eff, bool addy = true, hyojiman hyo = null) : base(eff,addy,hyo)
         {
             scx = eff.scx;
             scy = eff.scy;
         }
+        /// <summary>
+        /// 空のコンストラクタ
+        /// </summary>
         public haikeieff() { }
+       
         public override void add()
         {
             addtohaikei(scx,scy, hyojiman);
@@ -923,6 +1020,12 @@ namespace Charamaker2.Character
         }
         float scx, scy;
         List<haikeidraws> ds = new List<haikeidraws>();
+        /// <summary>
+        /// 背景に追加するためのメソッド
+        /// </summary>
+        /// <param name="scrollx">スクロール割合x</param>
+        /// <param name="scrolly">スクロール割合y</param>
+        /// <param name="hyojiman">追加する表示マン</param>
         public void addtohaikei(float scrollx, float scrolly, hyojiman hyojiman)
         {
            // Console.WriteLine("asuhjasdighbasdoimnh");
@@ -938,6 +1041,10 @@ namespace Charamaker2.Character
 
             }
         }
+        /// <summary>
+        /// sinuの背景版
+        /// </summary>
+        /// <param name="hyojiman">削除する表示マン</param>
         public void sinuhaikei(hyojiman hyojiman)
         {
            
@@ -949,14 +1056,35 @@ namespace Charamaker2.Character
             ds.Clear();
         }
     }
+    /// <summary>
+    /// いい感じにセリフを表示するためのクラス。使うに堪えない
+    /// </summary>
     [Serializable]
     public class serif : effectchara
     {
 
        public message m;
+        /// <summary>
+        /// メッセージの方のタイマー
+        /// </summary>
         public float TIMEA{get{ return m.TIMEA; } }
+        /// <summary>
+        /// サイズと高さ
+        /// </summary>
        protected float size,takasa;
-        public serif(hyojiman hyo,float time, character tuiteku ,int habamoji,float speed,string text,float scale=1,float takaa=1) : base(hyo,100,tuiteku.x,tuiteku.y,0,0,0,0,0,new setu("window",0,0,new picture(0,-10000,2000,0,0,0,0,0,false,1,"def",new Dictionary<string, string> { {"def", "serifwindow" } }),new List<setu>()),tuiteku )
+      /// <summary>
+      /// 普通のコンストラクタ
+      /// </summary>
+      /// <param name="hyo">追加する表示マン</param>
+      /// <param name="time">生存時間</param>
+      /// <param name="tuiteku">ついていくキャラクター</param>
+      /// <param name="habamoji">文字の幅</param>
+      /// <param name="speed">一文字が表示されるために必要な時間</param>
+      /// <param name="text">セリフの内容</param>
+      /// <param name="scale">文字の大きさ（基本はキャラクターの大きさに依存）</param>
+      /// <param name="takaa">セリフが表示される高さ</param>
+      /// <param name="textuer">ウィンドウのテクスチャー</param>
+        public serif(hyojiman hyo,float time, character tuiteku ,int habamoji,float speed,string text,float scale=1,float takaa=1,string textuer="serifwindow") : base(hyo,100,tuiteku.x,tuiteku.y,0,0,0,0,0,new setu("window",0,0,new picture(0,-10000,2000,0,0,0,0,0,false,1,"def",new Dictionary<string, string> { {"def", textuer } }),new List<setu>()),tuiteku )
         {
             
             takasa = takaa;
@@ -967,16 +1095,28 @@ namespace Charamaker2.Character
             hyo.addpicture(m);
           
         }
-       
+       /// <summary>
+       /// コピーするためのコンストラクタ
+       /// </summary>
+       /// <param name="eff">コピー元</param>
+       /// <param name="addy">追加するか</param>
+       /// <param name="hyo">追加する表示マン(nullならコピー元のを使う)</param>
         public serif(serif eff, bool addy = true, hyojiman hyo = null) : base(eff, addy, hyo)
         {
             m = new message(m);
             size = eff.size;
         }
+        /// <summary>
+        /// カラコン
+        /// </summary>
         public serif() : base()
         {
 
         }
+        /// <summary>
+        /// フレーム処理。文字に応じてウィンドウの幅を変えたり
+        /// </summary>
+        /// <param name="cl">クロック</param>
         public override void frame(float cl=1)
         {
             base.frame(cl);

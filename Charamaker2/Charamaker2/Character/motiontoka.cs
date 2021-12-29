@@ -6,16 +6,45 @@ using System.Threading.Tasks;
 
 namespace Charamaker2.Character
 {
+    /// <summary>
+    /// モーション。ムーブの頂点に君臨するクラス
+    /// </summary>
     [Serializable]
     public class motion
     {
+        /// <summary>
+        /// ムーブのリスト
+        /// </summary>
         public List<moveman> moves = new List<moveman>();
+        /// <summary>
+        /// 今読み込んでる位置と最後尾
+        /// </summary>
         protected int idx = 0, sidx = 0;
+        /// <summary>
+        /// モーションのスピード
+        /// </summary>
         public float sp = 1;
+        /// <summary>
+        /// trueにするとモーションが終了した後ループする
+        /// </summary>
         public bool loop = false;
+        /// <summary>
+        /// このモーションがすべて終了したか
+        /// </summary>
         public bool owari { get { return moves.Count <= sidx; } }
+        /// <summary>
+        /// 普通の空のコンストラクタ
+        /// </summary>
         public motion() { }
+        /// <summary>
+        /// 一個だけのmoveの時に便利なコンストラクタ
+        /// </summary>
+        /// <param name="mv">一番最初に追加するムーブ</param>
         public motion(moveman mv) { addmoves(mv); }
+        /// <summary>
+        /// コピーするためのコンストラクタ
+        /// </summary>
+        /// <param name="m"></param>
         public motion(motion m)
         {
             idx = m.idx;
@@ -27,7 +56,10 @@ namespace Charamaker2.Character
                 moves.Add((moveman)Activator.CreateInstance(t, a));
             }
         }
-
+        /// <summary>
+        /// モーションを始めるためのメソッド
+        /// </summary>
+        /// <param name="c">モーション適用対象</param>
         public void start(character c)
         {
 
@@ -35,6 +67,11 @@ namespace Charamaker2.Character
             sidx = 0;
             if (!owari) moves[idx].start(c);
         }
+        /// <summary>
+        /// モーションを進める
+        /// </summary>
+        /// <param name="c">モーション適用対象</param>
+        /// <param name="cl">時間のスピード</param>
         public void frame(character c,float cl=1)
         {
             if (sp <= 0)
@@ -67,11 +104,20 @@ namespace Charamaker2.Character
             }
             if (owari && loop) start(c);
         }
+        /// <summary>
+        /// ムーブを追加する
+        /// </summary>
+        /// <param name="m">追加するムーブ</param>
         public void addmoves(moveman m)
         {
             moves.Add(m);
 
         }
+        /// <summary>
+        /// 他のモーションの内容を一気に自分の最後尾に追加する
+        /// </summary>
+        /// <param name="m">そのモーション</param>
+        /// <param name="kai">何度その操作を繰り返すか</param>
         public void addmovesikkini(motion m, int kai = 1)
         {
             for (int i = 0; i < kai; i++)
@@ -81,6 +127,10 @@ namespace Charamaker2.Character
                     moves.Add((moveman)Activator.CreateInstance(t, a));
                 }
         }
+        /// <summary>
+        /// 特定のタイプのムーブを全て消去する
+        /// </summary>
+        /// <param name="t">そのタイプ</param>
         public void removemoves(Type t)
         {
             for (int i = moves.Count() - 1; i >= 0; i--)
@@ -90,15 +140,38 @@ namespace Charamaker2.Character
         }
 
     }
+    /// <summary>
+    /// 基底のムーブ。持ってる機能はモーションの読み込みを止めるだけ。
+    /// </summary>
     [Serializable]
     public class moveman
     {
+        /// <summary>
+        /// 終わる時間
+        /// </summary>
         public float time;
+        /// <summary>
+        /// 現在の時間
+        /// </summary>
         protected float timer;
+        /// <summary>
+        /// モーションの読み込みを止めるか
+        /// </summary>
         public bool st;
+        /// <summary>
+        /// ムーブが終わってるか
+        /// </summary>
         public bool owari { get { return timer >= time; } }
+        /// <summary>
+        /// モーションの読み込みを止めているか
+        /// </summary>
         public bool STOP { get { return st && !owari; } }
-
+        /// <summary>
+        /// クロックしたときに残り時間をいい感じに取得する
+        /// </summary>
+        /// <param name="sp">今のスピード</param>
+        /// <param name="from">残り時間の区切り。-1ならムーブが終わるとき</param>
+        /// <returns></returns>
         public float getnokotime(float sp, float from = -1)
         {
             if (from < 0) from = time;
@@ -108,13 +181,21 @@ namespace Charamaker2.Character
             return sp;
         }
 
-
+        /// <summary>
+        /// 普通のコンストラクタ
+        /// </summary>
+        /// <param name="t">継続時間</param>
+        /// <param name="stop">読み込みを止めるか</param>
         public moveman(float t, bool stop = false)
         {
             time = t;
             timer = 0;
             st = stop;
         }
+        /// <summary>
+        /// コピーするためのコンストラクタ。必ず自分のタイプ一つの引数で！
+        /// </summary>
+        /// <param name="m">コピー元</param>
         public moveman(moveman m)
         {
             time = m.time;
@@ -122,13 +203,24 @@ namespace Charamaker2.Character
             st = m.st;
 
         }
+        /// <summary>
+        /// 空のコンストラクタ
+        /// </summary>
         public moveman() { }
 
-
+        /// <summary>
+        /// ムーブを開始する。
+        /// </summary>
+        /// <param name="c">対象のキャラクター</param>
         virtual public void start(character c)
         {
             timer = 0;
         }
+        /// <summary>
+        /// フレーム処理
+        /// </summary>
+        /// <param name="c">対象</param>
+        /// <param name="cl">クロックスピード</param>
         virtual public void frame(character c, float cl)
         {
 
@@ -137,6 +229,9 @@ namespace Charamaker2.Character
 
         }
     }
+    /// <summary>
+    /// キャラクターを移動指せるムーブ
+    /// </summary>
     [Serializable]
     public class idouman : moveman
     {
@@ -144,13 +239,24 @@ namespace Charamaker2.Character
         public float vy;
         public double vrad;
         public List<setu> tag = new List<setu>();
-
+        /// <summary>
+        /// 普通のコンストラクタ
+        /// </summary>
+        /// <param name="t">持続時間</param>
+        /// <param name="vvx">移動速度x</param>
+        /// <param name="vvy">移動速度y</param>
+        /// <param name="vvsita">回転速度(°)</param>
+        /// <param name="stop">止めるか</param>
         public idouman(float t, float vvx, float vvy, double vvsita = 0, bool stop = false) : base(t, stop)
         {
             vx = vvx;
             vy = vvy;
             vrad = Math.PI * vvsita / 180;
-        }
+        } 
+        /// <summary>
+          /// コピーするためのコンストラクタ。
+          /// </summary>
+          /// <param name="i">コピー元</param>
         public idouman(idouman i) : base(i)
         {
             vx = i.vx;
@@ -158,6 +264,9 @@ namespace Charamaker2.Character
             vrad = i.vrad;
             tag = new List<setu>(i.tag);
         }
+        /// <summary>
+        /// 空のコンストラクタ
+        /// </summary>
         public idouman() { }
         public override void start(character c)
         {
@@ -181,25 +290,41 @@ namespace Charamaker2.Character
         }
 
     }
+    /// <summary>
+    /// 回転角度とキャラクターの大きさを考慮して移動するムーブ
+    /// </summary>
     [Serializable]
     public class zureman : moveman
     {
         public float vx;
         public float vy;
 
-
+        /// <summary>
+        /// 普通のコンストラクタ
+        /// </summary>
+        /// <param name="t">持続時間</param>
+        /// <param name="wariaiw">移動速度xのwに対する割合</param>
+        /// <param name="wariaih">移動速度yのhに対する割合</param>
+        /// <param name="stop">止めるか</param>
         public zureman(float t, float wariaiw, float wariaih, bool stop = false) : base(t, stop)
         {
             vx = wariaiw;
             vy = wariaih;
 
         }
+        /// <summary>
+        /// コピーするためのコンストラクタ。
+        /// </summary>
+        /// <param name="i">コピー元</param>
         public zureman(zureman i) : base(i)
         {
             vx = i.vx;
             vy = i.vy;
 
         }
+        /// <summary>
+        /// 空のコンストラクタ
+        /// </summary>
         public zureman() { }
         public override void start(character c)
         {
@@ -216,25 +341,41 @@ namespace Charamaker2.Character
         }
 
     }
+    /// <summary>
+    /// なにがなんでも座標を固定するムーブ
+    /// </summary>
     [Serializable]
     public class zahyosetman : moveman
     {
         public float x;
         public float y;
 
-
+        /// <summary>
+        /// 普通のコンストラクタ
+        /// </summary>
+        /// <param name="t">持続時間</param>
+        /// <param name="xx">固定するx座標</param>
+        /// <param name="yy">固定するy座標</param>
+        /// <param name="stop">止めるか</param>
         public zahyosetman(float t, float xx, float yy, bool stop = false) : base(t, stop)
         {
             x = xx;
             y = yy;
 
         }
+        /// <summary>
+        /// コピーするためのコンストラクタ。
+        /// </summary>
+        /// <param name="i">コピー元</param>
         public zahyosetman(zahyosetman i) : base(i)
         {
             x = i.x;
             y = i.y;
 
         }
+        /// <summary>
+        /// 空のコンストラクタ
+        /// </summary>
         public zahyosetman() { }
         public override void start(character c)
         {
@@ -249,6 +390,9 @@ namespace Charamaker2.Character
         }
 
     }
+    /// <summary>
+    /// 関節を移動、回転させるためのムーブ
+    /// </summary>
     [Serializable]
     public class setuidouman : moveman
     {
@@ -257,6 +401,15 @@ namespace Charamaker2.Character
         public float vdx;
         public float vdy;
         protected List<setu> tag = new List<setu>();
+        /// <summary>
+        /// 普通のコンストラクタ
+        /// </summary>
+        /// <param name="t">持続時間</param>
+        /// <param name="name">対象の節</param>
+        /// <param name="vvsita">回転速度</param>
+        /// <param name="vvdx">移動速度x</param>
+        /// <param name="vvdy">移動速度y</param>
+        /// <param name="stop">止めるか</param>
         public setuidouman(float t, string name, double vvsita, float vvdx = 0, float vvdy = 0, bool stop = false) : base(t, stop)
         {
             nm = name;
@@ -264,6 +417,10 @@ namespace Charamaker2.Character
             vdx = vvdx;
             vdy = vvdy;
         }
+        /// <summary>
+        /// コピーするためのコンストラクタ。
+        /// </summary>
+        /// <param name="s">コピー元</param>
         public setuidouman(setuidouman s) : base(s)
         {
             nm = s.nm;
@@ -273,6 +430,9 @@ namespace Charamaker2.Character
             tag = new List<setu>(s.tag);
 
         }
+        /// <summary>
+        /// 空のコンストラクタ
+        /// </summary>
         public setuidouman() { }
         public override void start(character c)
         {
@@ -310,6 +470,9 @@ namespace Charamaker2.Character
 
 
     }
+    /// <summary>
+    /// 関節を指定した角度に曲げるためのムーブ。
+    /// </summary>
     [Serializable]
     public class setumageman : moveman
     {
@@ -320,6 +483,15 @@ namespace Charamaker2.Character
         protected setu tag;
         protected setu pretag;
         protected List<setu> tags = new List<setu>();
+        /// <summary>
+        /// 普通のコンストラクタ
+        /// </summary>
+        /// <param name="t">持続時間</param>
+        /// <param name="name">対象の節</param>
+        /// <param name="sitato">曲げたい角度(°)</param>
+        /// <param name="sitasp">回転速度(°)</param>
+        /// <param name="saitan">最短経路で回るか</param>
+        /// <param name="stop">止めるか</param>
         public setumageman(float t, string name, double sitato, double sitasp, bool saitan = true, bool stop = false) : base(t, stop)
         {
             radto = Math.PI * sitato / 180;
@@ -327,6 +499,10 @@ namespace Charamaker2.Character
             nm = name;
             sai = saitan;
         }
+        /// <summary>
+        /// コピーするためのコンストラクタ。
+        /// </summary>
+        /// <param name="s">コピー元</param>
         public setumageman(setumageman s) : base(s)
         {
 
@@ -338,6 +514,9 @@ namespace Charamaker2.Character
             pretag = s.pretag;
             tags = new List<setu>(s.tags);
         }
+        /// <summary>
+        /// 空のコンストラクタ
+        /// </summary>
         public setumageman() { }
         public override void start(character c)
         {
@@ -420,6 +599,9 @@ namespace Charamaker2.Character
 
 
     }
+    /// <summary>
+    /// 指定した節、キャラクターの角度を絶対的に決めて回転させるムーブ
+    /// </summary>
     [Serializable]
     public class radtoman : moveman
     {
@@ -429,6 +611,15 @@ namespace Charamaker2.Character
         protected setu tag;
         protected List<setu> tags;
         public bool sai;
+        /// <summary>
+        /// 普通のコンストラクタ
+        /// </summary>
+        /// <param name="t">継続時間</param>
+        /// <param name="name">対象の節""でキャラクターを対象にする</param>
+        /// <param name="sitato">辺か先の絶対的な角度(°)</param>
+        /// <param name="sitasp">回転速度(°)</param>
+        /// <param name="saitan">最短経路で回転するか</param>
+        /// <param name="stop">止める</param>
         public radtoman(float t, string name, double sitato, double sitasp, bool saitan = true, bool stop = false) : base(t, stop)
         {
             radto = Math.PI * sitato / 180;
@@ -436,6 +627,10 @@ namespace Charamaker2.Character
             sai = saitan;
             nm = name;
         }
+        /// <summary>
+        /// コピーするためのコンストラクタ。
+        /// </summary>
+        /// <param name="r">コピー元</param>
         public radtoman(radtoman r) : base(r)
         {
             radto = r.radto;
@@ -446,6 +641,9 @@ namespace Charamaker2.Character
             tags = r.tags;
 
         }
+        /// <summary>
+        /// 空のコンストラクタ
+        /// </summary>
         public radtoman() { }
 
         public override void start(character c)
@@ -559,7 +757,9 @@ namespace Charamaker2.Character
         }
 
     }
-
+    /// <summary>
+    /// テクスチャーの反転、不透明度を操るムーブ
+    /// </summary>
     [Serializable]
     public class texpropman : moveman
     {
@@ -569,6 +769,15 @@ namespace Charamaker2.Character
         public float opasp;
         public bool kzk;
         protected List<setu> tag = new List<setu>();
+        /// <summary>
+        /// 普通のコンストラクタ
+        /// </summary>
+        /// <param name="t">持続時間</param>
+        /// <param name="name">対象にする節""ですべてを指定する</param>
+        /// <param name="mirhow">0で反転、1で正方向,-1で負に、471で何もしない</param>
+        /// <param name="toopa">-1で変更なし、スタートした瞬間の不透明度から速度を自動的に決める。</param>
+        /// <param name="kozokumo">下の節にも同じ効果を適用するか。falseかつ""でキャラクターのmirrorを変更できる</param>
+        /// <param name="stop">止めるか</param>
         public texpropman(float t, string name, int mirhow = 471, float toopa = -1, bool kozokumo = true, bool stop = false) : base(t, stop)
         {
             nm = name;
@@ -577,6 +786,10 @@ namespace Charamaker2.Character
             kzk = kozokumo;
 
         }
+        /// <summary>
+        /// コピーするためのコンストラクタ。
+        /// </summary>
+        /// <param name="t">コピー元</param>
         public texpropman(texpropman t) : base(t)
         {
             nm = t.nm;
@@ -586,6 +799,9 @@ namespace Charamaker2.Character
             kzk = t.kzk;
             tag = new List<setu>(t.tag);
         }
+        /// <summary>
+        /// 空のコンストラクタ
+        /// </summary>
         public texpropman() { }
 
         public override void start(character c)
@@ -674,21 +890,36 @@ namespace Charamaker2.Character
         }
 
     }
+    /// <summary>
+    /// テクスチャーを瞬時に変更するムーブ
+    /// </summary>
     [Serializable]
     public class texchangeman : moveman
     {
         public string nm;
         public string tex;
+        /// <summary>
+        /// 普通のコンストラクタ
+        /// </summary>
+        /// <param name="name">対象にする節</param>
+        /// <param name="texname">変更するテクスチャー</param>
         public texchangeman(string name, string texname) : base(0, false)
         {
             nm = name;
             tex = texname;
         }
+        /// <summary>
+        /// コピーするためのコンストラクタ。
+        /// </summary>
+        /// <param name="t">コピー元</param>
         public texchangeman(texchangeman t) : base(t)
         {
             nm = t.nm;
             tex = t.tex;
         }
+        /// <summary>
+        /// 空のコンストラクタ
+        /// </summary>
         public texchangeman() { }
         public override void start(character c)
         {
@@ -702,6 +933,9 @@ namespace Charamaker2.Character
         }
 
     }
+    /// <summary>
+    /// zを即座に変更するムーブ
+    /// </summary>
     [Serializable]
     public class zchangeman : moveman
     {
@@ -709,13 +943,24 @@ namespace Charamaker2.Character
         public float vz;
         public bool kzk;
         protected List<setu> tag = new List<setu>();
-
+        /// <summary>
+        /// 普通のコンストラクタ
+        /// </summary>
+        /// <param name="t">ストップのためだけの持続時間</param>
+        /// <param name="name">対象になる節</param>
+        /// <param name="ddz">変更するzの幅(定数)</param>
+        /// <param name="kouzokumo">下の節にも同じ効果を適用するか</param>
+        /// <param name="stop">止めるか</param>
         public zchangeman(float t, string name, float ddz, bool kouzokumo = true, bool stop = false) : base(t, stop)
         {
             nm = name;
             vz = ddz;
             kzk = kouzokumo;
         }
+        /// <summary>
+        /// コピーするためのコンストラクタ。
+        /// </summary>
+        /// <param name="z">コピー元</param>
         public zchangeman(zchangeman z) : base(z)
         {
             nm = z.nm;
@@ -723,6 +968,9 @@ namespace Charamaker2.Character
             kzk = z.kzk;
             tag = new List<setu>(z.tag);
         }
+        /// <summary>
+        /// 空のコンストラクタ
+        /// </summary>
         public zchangeman() { }
         public override void start(character c)
         {
@@ -766,6 +1014,9 @@ namespace Charamaker2.Character
         }
 
     }
+    /// <summary>
+    /// 基準をもとにzを即座に変更するムーブ
+    /// </summary>
     [Serializable]
     public class Kzchangeman : moveman
     {
@@ -773,7 +1024,13 @@ namespace Charamaker2.Character
         public float vz;
         public bool kzk;
         protected List<setu> tag = new List<setu>();
-
+        /// <summary>
+        /// 普通のコンストラクタ
+        /// </summary>
+        /// <param name="name">対象の節</param>
+        /// <param name="toname">基準の節の名前</param>
+        /// <param name="dz">基準の節から定数で更に移動する</param>
+        /// <param name="kouzokumo">最終的な移動を下の節にも適用するか</param>
         public Kzchangeman(string name, string toname,float dz, bool kouzokumo = true) : base(1, false)
         {
             nm = name;
@@ -781,6 +1038,10 @@ namespace Charamaker2.Character
             vz = dz;
             kzk = kouzokumo;
         }
+        /// <summary>
+        /// コピーするためのコンストラクタ。
+        /// </summary>
+        /// <param name="z">コピー元</param>
         public Kzchangeman(Kzchangeman z) : base(z)
         {
             nm = z.nm;
@@ -789,6 +1050,9 @@ namespace Charamaker2.Character
             kzk = z.kzk;
             tag = new List<setu>(z.tag);
         }
+        /// <summary>
+        /// 空のコンストラクタ
+        /// </summary>
         public Kzchangeman() { }
         public override void start(character c)
         {
@@ -849,6 +1113,9 @@ namespace Charamaker2.Character
         }
 
     }
+    /// <summary>
+    /// サイズと中心点を移動するように変化させるムーブ
+    /// </summary>
     [Serializable]
     public class sizetokaman : moveman
     {
@@ -858,6 +1125,16 @@ namespace Charamaker2.Character
         public float tx;
         public float ty;
         protected setu tag;
+        /// <summary>
+        /// 普通のコンストラクタ
+        /// </summary>
+        /// <param name="t">持続時間</param>
+        /// <param name="name">対象の節</param>
+        /// <param name="vtx">中心点xの変化速度</param>
+        /// <param name="vty">中心点yの変化速度</param>
+        /// <param name="vw">幅の変化速度</param>
+        /// <param name="vh">高さの変化速度</param>
+        /// <param name="stop"></param>
         public sizetokaman(float t, string name, float vtx, float vty, float vw = 0, float vh = 0, bool stop = false) : base(t, stop)
         {
             nm = name;
@@ -866,6 +1143,10 @@ namespace Charamaker2.Character
             tx = vtx;
             ty = vty;
         }
+        /// <summary>
+        /// コピーするためのコンストラクタ。
+        /// </summary>
+        /// <param name="s">コピー元</param>
         public sizetokaman(sizetokaman s) : base(s)
         {
             nm = s.nm;
@@ -875,6 +1156,9 @@ namespace Charamaker2.Character
             ty = s.ty;
             tag = s.tag;
         }
+        /// <summary>
+        /// 空のコンストラクタ
+        /// </summary>
         public sizetokaman() { }
         public override void start(character c)
         {
@@ -903,6 +1187,9 @@ namespace Charamaker2.Character
             }
         }
     }
+    /// <summary>
+    /// 節やキャラクターの大きさを一時的に大きくするムーブ
+    /// </summary>
     [Serializable]
     public class scalechangeman : moveman
     {
@@ -926,6 +1213,16 @@ namespace Charamaker2.Character
         public float middlen { get { return (time - middle) / 2 + middle; } }
         public bool kakudai { get { return kakun >= timer; } }
         public bool syukusyo { get { return (middlen < timer) && middle >= 0; } }
+        /// <summary>
+        ///  普通のコンストラクタ
+        /// </summary>
+        /// <param name="t">膨張/縮小時間</param>
+        /// <param name="middletime">中間の時間(-1で縮小しない)</param>
+        /// <param name="name">対象となる節(""でキャラクター)</param>
+        /// <param name="changescalex">幅方向のスケール</param>
+        /// <param name="changescaley">高さ方向のスケール</param>
+        /// <param name="kouzokumo">下の節にも同じ割合の効果を適用するか</param>
+        /// <param name="stop">止めるか</param>
         public scalechangeman(float t, float middletime, string name, float changescalex, float changescaley, bool kouzokumo = true, bool stop = false) : base(t, stop)
         {
             middle = middletime;
@@ -936,6 +1233,10 @@ namespace Charamaker2.Character
             scalex = changescalex - 1;
             scaley = changescaley - 1;
         }
+        /// <summary>
+        /// コピーするためのコンストラクタ。
+        /// </summary>
+        /// <param name="s">コピー元</param>
         public scalechangeman(scalechangeman s) : base(s)
         {
             middle = s.middle;
@@ -954,6 +1255,9 @@ namespace Charamaker2.Character
             tag = s.tag;
             tags = new List<setu>(s.tags);
         }
+        /// <summary>
+        /// 空のコンストラクタ
+        /// </summary>
         public scalechangeman() { }
 
         public override void start(character c)
@@ -1186,7 +1490,9 @@ namespace Charamaker2.Character
         }
     }
 
-
+    /// <summary>
+    /// 中心点を一時的にずらすムーブ
+    /// </summary>
     [Serializable]
     public class tyusinchangeman : moveman
     {
@@ -1205,6 +1511,16 @@ namespace Charamaker2.Character
 
         public bool kakudai { get { return (time - middle) / 2 >= timer; } }
         public bool syukusyo { get { return ((time - middle) / 2 + middle < timer) && middle >= 0; } }
+        /// <summary>
+        ///  普通のコンストラクタ
+        /// </summary>
+        /// <param name="t">変更、戻り時間</param>
+        /// <param name="middletime">中間の時間(-1で戻らない)</param>
+        /// <param name="name">対象となる節("")でキャラクター</param>
+        /// <param name="totyusinx">自分のwに対する目標のtxの割合</param>
+        /// <param name="Ynisuru">Y方向に変更させる/param>
+        /// <param name="addsitei">現在の中心点から足すように変化させる</param>
+        /// <param name="stop">止めるか</param>
         public tyusinchangeman(float t, float middletime, string name, float totyusinx, bool Ynisuru = false, bool addsitei = false, bool stop = false) : base(t, stop)
         {
             middle = middletime;
@@ -1215,6 +1531,10 @@ namespace Charamaker2.Character
             tyusinx = totyusinx;
             Y = Ynisuru;
         }
+        /// <summary>
+        /// コピーするためのコンストラクタ。
+        /// </summary>
+        /// <param name="s">コピー元</param>
         public tyusinchangeman(tyusinchangeman s) : base(s)
         {
             middle = s.middle;
@@ -1228,6 +1548,9 @@ namespace Charamaker2.Character
             tag = s.tag;
             count = s.count;
         }
+        /// <summary>
+        /// 空のコンストラクタ
+        /// </summary>
         public tyusinchangeman() { }
 
         public override void start(character c)
@@ -1356,21 +1679,10 @@ namespace Charamaker2.Character
         }
 
     }
-    /*
-             var yuren = new motion();
-    yuren.addmoves(new yureman(3, 60, 90, 20, "core"));
-          yuren.addmoves(new yureman(2, 30, 90, 10, "core"));
-          yuren.addmoves(new yureman(1, 10, 90, 5, "core"));
-          humen.camera.addmotion(yuren);
-
-         var  yuren = new motion();
-                yuren.addmoves(new yureman(6, 100, 90, 10, "core"));
-                yuren.addmoves(new yureman(3, 50, 90, 10, "core"));
-                yuren.addmoves(new yureman(2, 20, 90, 10, "core"));
-                yuren.addmoves(new yureman(1, 10, 90, 10, "core"));
-                humen.camera.addmotion(yuren);
-       */
-
+ 
+    /// <summary>
+    /// 節の相対位置を一時的に変えるムーブ
+    /// </summary>
     [Serializable]
     public class dxchangeman : moveman
     {
@@ -1388,6 +1700,16 @@ namespace Charamaker2.Character
         public float middlen { get { return (time - middle) / 2 + middle; } }
         public bool kakudai { get { return (time - middle) / 2 >= timer; } }
         public bool syukusyo { get { return ((time - middle) / 2 + middle < timer) && middle >= 0; } }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="t">変更、戻り時間</param>
+        /// <param name="middletime">中間の時間(-1で戻らない)</param>
+        /// <param name="name">対象の節</param>
+        /// <param name="todx">親の大きさに対するdxの変化幅の割合</param>
+        /// <param name="Ynisuru">Y方向に適用する</param>
+        /// <param name="addsitei">現在のdx空追加するように変化させる</param>
+        /// <param name="stop">止める</param>
         public dxchangeman(float t, float middletime, string name, float todx, bool Ynisuru = false, bool addsitei = false, bool stop = false) : base(t, stop)
         {
             middle = middletime;
@@ -1398,6 +1720,10 @@ namespace Charamaker2.Character
             dx = todx;
             Y = Ynisuru;
         }
+        /// <summary>
+        /// コピーするためのコンストラクタ。
+        /// </summary>
+        /// <param name="s">コピー元</param>
         public dxchangeman(dxchangeman s) : base(s)
         {
             middle = s.middle;
@@ -1411,6 +1737,9 @@ namespace Charamaker2.Character
             tag = s.tag;
             count = s.count;
         }
+        /// <summary>
+        /// 空のコンストラクタ
+        /// </summary>
         public dxchangeman() { }
 
         public override void start(character c)
@@ -1550,7 +1879,9 @@ namespace Charamaker2.Character
 
     }
 
-
+    /// <summary>
+    /// 基準を元に大きさを変えるムーブ
+    /// </summary>
     [Serializable]
     public class Kscalechangeman : moveman
     {
@@ -1570,6 +1901,16 @@ namespace Charamaker2.Character
 
         protected List<setu> tags = new List<setu>();
         int md = 0;
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="t">変更時間</param>
+        /// <param name="name">対象となる節(""でキャラクター自身)</param>
+        /// <param name="changescalex">幅方向の割合</param>
+        /// <param name="changescaley">高さ方向の割合</param>
+        /// <param name="mode">0で両方変更,1でwのみ,-1でhのみ</param>
+        /// <param name="kouzokumo">後続にも同じ割合で効果を適用するか</param>
+        /// <param name="stop">止めるか</param>
         public Kscalechangeman(float t, string name, float changescalex, float changescaley, int mode = 0, bool kouzokumo = true, bool stop = false) : base(t, stop)
         {
             md = mode;
@@ -1579,6 +1920,10 @@ namespace Charamaker2.Character
             scalex = changescalex;
             scaley = changescaley;
         }
+        /// <summary>
+        /// コピーするためのコンストラクタ。
+        /// </summary>
+        /// <param name="s">コピー元</param>
         public Kscalechangeman(Kscalechangeman s) : base(s)
         {
 
@@ -1599,6 +1944,9 @@ namespace Charamaker2.Character
             md = s.md;
 
         }
+        /// <summary>
+        /// 空のコンストラクタ
+        /// </summary>
         public Kscalechangeman() { }
 
         public override void start(character c)
@@ -1630,7 +1978,7 @@ namespace Charamaker2.Character
                 for (int i = 0; i < tags.Count(); i++)
                 {
                     var ttt = c.getkijyun().core.GetSetu(tags[i].nm);
-
+                    if (ttt != null)
                     {
                         var scx = (ttt.p.w * scalex - tags[i].p.w);
                         var scy = (ttt.p.h * scaley - tags[i].p.h);
@@ -1652,6 +2000,9 @@ namespace Charamaker2.Character
                         if (md == -1) scx = 0;
                         spdx.Add(scx / time);
                         spdy.Add(scy / time);
+                    }
+                    else 
+                    {
                     }
 
                 }
@@ -1696,7 +2047,7 @@ namespace Charamaker2.Character
                 for (int i = 0; i < tags.Count(); i++)
                 {
                     var ttt = c.getkijyun().core.GetSetu(tags[i].nm);
-
+                    if (ttt != null)
                     {
 
                         var scx = (ttt.p.w * scalex - tags[i].p.w);
@@ -1719,6 +2070,15 @@ namespace Charamaker2.Character
                         if (md == -1) scx = 0;
                         spdx.Add(scx / time);
                         spdy.Add(scy / time);
+                    }
+                    else 
+                    {
+                        spw.Add(0);
+                        sph.Add(0);
+                        sptx.Add(0);
+                        spty.Add(0);
+                        spdx.Add(0);
+                        spdy.Add(0);
                     }
 
                 }
@@ -1769,7 +2129,9 @@ namespace Charamaker2.Character
         }
     }
 
-
+    /// <summary>
+    /// 基準をもとに中心の位置を変えるムーブ
+    /// </summary>
     [Serializable]
     public class Ktyusinchangeman : moveman
     {
@@ -1785,6 +2147,16 @@ namespace Charamaker2.Character
 
 
         bool add = false;
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="t">変化時間</param>
+        /// <param name="name">対象となる節(""でキャラクター)</param>
+        /// <param name="changescalex">基準の幅に対する変化xの割合</param>
+        /// <param name="changescaley">基準の高さに対する変化yの割合</param>
+        /// <param name="mode">0で両方、1でxのみ,-1でyのみ変更</param>
+        /// <param name="addin">現在の中心点から突かするように変化させる</param>
+        /// <param name="stop">止めるか</param>
         public Ktyusinchangeman(float t, string name, float changescalex, float changescaley, int mode = 0, bool addin = false, bool stop = false) : base(t, stop)
         {
 
@@ -1795,6 +2167,10 @@ namespace Charamaker2.Character
             md = mode;
             add = addin;
         }
+        /// <summary>
+        /// コピーするためのコンストラクタ。
+        /// </summary>
+        /// <param name="s">コピー元</param>
         public Ktyusinchangeman(Ktyusinchangeman s) : base(s)
         {
 
@@ -1811,6 +2187,9 @@ namespace Charamaker2.Character
 
             md = s.md;
         }
+        /// <summary>
+        /// 空のコンストラクタ
+        /// </summary>
         public Ktyusinchangeman() { }
 
         public override void start(character c)
@@ -1824,7 +2203,7 @@ namespace Charamaker2.Character
             {
 
                 var ttt = c.getkijyun().core.GetSetu(tag.nm);
-
+                if(ttt!=null)
                 {
                     var scx = (ttt.p.w * scalex - tag.p.tx);
                     var scy = (ttt.p.h * scaley - tag.p.ty);
@@ -1837,6 +2216,12 @@ namespace Charamaker2.Character
                     if (md == -1) scx = 0;
                     sptx = ((scx) / time);
                     spty = ((scy) / time);
+                }
+                else
+                {
+
+                    sptx = 0;
+                    spty = 0;
                 }
 
 
@@ -1884,7 +2269,9 @@ namespace Charamaker2.Character
 
         }
     }
-
+    /// <summary>
+    /// 基準をもとに関節の位置を変更するムーブ
+    /// </summary>
     [Serializable]
     public class Kdxychangeman : moveman
     {
@@ -1899,7 +2286,16 @@ namespace Charamaker2.Character
         protected setu tag;
         bool add = false;
 
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="t">変化時間</param>
+        /// <param name="name">対象となる節(""でキャラクター)</param>
+        /// <param name="changescalex">基準の親の幅に対する変化xの割合</param>
+        /// <param name="changescaley">基準の親の高さに対する変化yの割合</param>
+        /// <param name="mode">0で両方、1でxのみ,-1でyのみ変更</param>
+        /// <param name="addin">現在の中心点から突かするように変化させる</param>
+        /// <param name="stop">止めるか</param>
         public Kdxychangeman(float t, string name, float changescalex, float changescaley, int mode = 0, bool addin = false, bool stop = false) : base(t, stop)
         {
 
@@ -1909,6 +2305,10 @@ namespace Charamaker2.Character
             scaley = changescaley;
             md = mode;
         }
+        /// <summary>
+        /// コピーするためのコンストラクタ。
+        /// </summary>
+        /// <param name="s">コピー元</param>
         public Kdxychangeman(Kdxychangeman s) : base(s)
         {
 
@@ -1925,6 +2325,9 @@ namespace Charamaker2.Character
 
             md = s.md;
         }
+        /// <summary>
+        /// 空のコンストラクタ
+        /// </summary>
         public Kdxychangeman() { }
 
         public override void start(character c)
@@ -2005,20 +2408,23 @@ namespace Charamaker2.Character
 
         }
     }
-    /*
-             var yuren = new motion();
-    yuren.addmoves(new yureman(3, 60, 90, 20, "core"));
-          yuren.addmoves(new yureman(2, 30, 90, 10, "core"));
-          yuren.addmoves(new yureman(1, 10, 90, 5, "core"));
-          humen.camera.addmotion(yuren);
+    /*揺れの正しい使い方
+              var yuren = new motion();
+     yuren.addmoves(new yureman(3, 60, 90, 20, "core"));
+           yuren.addmoves(new yureman(2, 30, 90, 10, "core"));
+           yuren.addmoves(new yureman(1, 10, 90, 5, "core"));
+           humen.camera.addmotion(yuren);
 
-         var  yuren = new motion();
-                yuren.addmoves(new yureman(6, 100, 90, 10, "core"));
-                yuren.addmoves(new yureman(3, 50, 90, 10, "core"));
-                yuren.addmoves(new yureman(2, 20, 90, 10, "core"));
-                yuren.addmoves(new yureman(1, 10, 90, 10, "core"));
-                humen.camera.addmotion(yuren);
-       */
+          var  yuren = new motion();
+                 yuren.addmoves(new yureman(6, 100, 90, 10, "core"));
+                 yuren.addmoves(new yureman(3, 50, 90, 10, "core"));
+                 yuren.addmoves(new yureman(2, 20, 90, 10, "core"));
+                 yuren.addmoves(new yureman(1, 10, 90, 10, "core"));
+                 humen.camera.addmotion(yuren);
+        */
+    /// <summary>
+    /// 節やキャラクターを揺れさせるムーブ
+    /// </summary>
     [Serializable]
     public class yureman : moveman
     {
@@ -2031,6 +2437,17 @@ namespace Charamaker2.Character
         protected double now = 0;
         public bool izonn = false;
         public bool soutai = false;
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="kaisuu">揺れる回数</param>
+        /// <param name="speed">回転速度(°)</param>
+        /// <param name="kakudo">揺れる方向</param>
+        /// <param name="haban">揺れる幅</param>
+        /// <param name="tai">揺れる対象(""でキャラクター)</param>
+        /// <param name="izonnu">揺れる幅を定数から大きさ依存にする</param>
+        /// <param name="soutaikaku">揺れる方向を相対角にする</param>
+        /// <param name="stop">止めるか</param>
         public yureman(int kaisuu, float speed, float kakudo, float haban, string tai, bool izonnu = false, bool soutaikaku = false, bool stop = false) : base(360 * kaisuu / speed, stop)
         {
             cou = kaisuu;
@@ -2041,6 +2458,10 @@ namespace Charamaker2.Character
             izonn = izonnu;
             soutai = soutaikaku;
         }
+        /// <summary>
+        /// コピーするためのコンストラクタ。
+        /// </summary>
+        /// <param name="y">コピー元</param>
         public yureman(yureman y) : base(y)
         {
             cou = y.cou;
@@ -2058,6 +2479,9 @@ namespace Charamaker2.Character
             sinhaba = y.sinhaba;
             sinkaku = y.sinkaku;
         }
+        /// <summary>
+        /// 空のコンストラクタ
+        /// </summary>
         public yureman() { }
         public override void start(character c)
         {
@@ -2132,7 +2556,9 @@ namespace Charamaker2.Character
             }
         }
     }
-
+    /// <summary>
+    /// 回転するかのように大きさを変えるムーブ。
+    /// </summary>
     [Serializable]
     public class zkaitenman : moveman
     {
@@ -2144,6 +2570,16 @@ namespace Charamaker2.Character
         character moto;
         double now;
         bool kzk;
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="time">変化時間</param>
+        /// <param name="name">対象の節</param>
+        /// <param name="strsita">現在の想定される角度</param>
+        /// <param name="endsita">変化後の角度</param>
+        /// <param name="mode">0でwh両方,1でwのみ,-1でhのみ回転させる</param>
+        /// <param name="kouzoku">後続にも同じ効果を適用するか</param>
+        /// <param name="stop">止めるか</param>
         public zkaitenman(float time, string name, float strsita, float endsita, int mode = 1, bool kouzoku = false, bool stop = false) : base(time, stop)
         {
             nm = name;
@@ -2352,6 +2788,9 @@ namespace Charamaker2.Character
 
         }
     }
+    /// <summary>
+    /// 反転したときの角度に回転するムーブ
+    /// </summary>
     [Serializable]
     public class hantenkaitenman : moveman
     {
@@ -2360,11 +2799,22 @@ namespace Charamaker2.Character
         List<setu> tags = new List<setu>();
         double sp;
         int md;
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="time">変化時間</param>
+        /// <param name="name">対象</param>
+        /// <param name="mode">回転する方向,1で正,-1で負,0で自動</param>
+        /// <param name="stop">とめるか</param>
         public hantenkaitenman(float time, string name, int mode = 0, bool stop = false) : base(time, stop)
         {
             md = mode;
             nm = name;
         }
+        /// <summary>
+        /// コピーするためのコンストラクタ。
+        /// </summary>
+        /// <param name="h">コピー元</param>
         public hantenkaitenman(hantenkaitenman h) : base(h)
         {
             md = h.md;
@@ -2373,6 +2823,9 @@ namespace Charamaker2.Character
             tags = new List<setu>(h.tags);
             tag = h.tag;
         }
+        /// <summary>
+        /// 空のコンストラクタ
+        /// </summary>
         public hantenkaitenman() : base() { }
         public override void start(character c)
         {
@@ -2448,18 +2901,27 @@ namespace Charamaker2.Character
             }
         }
     }
-
+    /// <summary>
+    /// 全ての回転を止めるムーブ。直接使わない
+    /// </summary>
     [Serializable]
     public class stopaman : moveman
     {
         //これは直接扱わぬ
         List<double> rads = new List<double>();
         public stopaman(float t) : base(t, false) { }
+        /// <summary>
+        /// コピーするためのコンストラクタ。
+        /// </summary>
+        /// <param name="s">コピー元</param>
         public stopaman(stopaman s) : base(s)
         {
             rads = new List<double>(s.rads);
         }
 
+        /// <summary>
+        /// 空のコンストラクタ
+        /// </summary>
         public stopaman() : base() { }
         public override void start(character c)
         {
@@ -2483,17 +2945,31 @@ namespace Charamaker2.Character
             }
         }
     }
+    /// <summary>
+    /// 全ての回転を止めるムーブやつを扱うムーブ
+    /// </summary>
     [Serializable]
     public class stopaaddman : moveman
     {
 
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="t">回転を止める時間</param>
+        /// <param name="stop">...</param>
         public stopaaddman(float t, bool stop = false) : base(t, stop) { }
+        /// <summary>
+        /// コピーするためのコンストラクタ。
+        /// </summary>
+        /// <param name="s">コピー元</param>
         public stopaaddman(stopaaddman s) : base(s)
         {
 
         }
 
+        /// <summary>
+        /// 空のコンストラクタ
+        /// </summary>
         public stopaaddman() : base() { }
         public override void start(character c)
         {
@@ -2502,25 +2978,40 @@ namespace Charamaker2.Character
         }
 
     }
+    /// <summary>
+    /// filemanから音を発するムーブ
+    /// </summary>
     [Serializable]
     public class playotoman:moveman
     {
        protected string oto;
         protected float vol;
         protected bool bgmn;
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="name">音のパス</param>
+        /// <param name="volume">ボリューム(0より小さいときbgmでぶつ切りする)</param>
+        /// <param name="BGM">bgmか</param>
         public playotoman(string name, float volume = 1,bool BGM=false) : base(1,false) 
         {
             oto = name;
             vol = volume;
             bgmn = BGM;
         }
+        /// <summary>
+        /// コピーするためのコンストラクタ。
+        /// </summary>
+        /// <param name="s">コピー元</param>
         public playotoman(playotoman s) : base(s)
         {
             oto = s.oto;
             vol = s.vol;
             bgmn = s.bgmn;
         }
-
+        /// <summary>
+        /// 空のコンストラクタ
+        /// </summary>
         public playotoman() : base() { }
         public override void start(character c)
         {
@@ -2531,6 +3022,9 @@ namespace Charamaker2.Character
             else { bool butu = vol < 0; fileman.playbgm(oto,butu); }
         }
     }
+    /// <summary>
+    /// 表示マンから音を発するムーブ
+    /// </summary>
     [Serializable]
     public class pplayotoman : moveman
     {
@@ -2539,6 +3033,13 @@ namespace Charamaker2.Character
         protected bool bgmn;
         [NonSerialized]
         protected hyojiman hyo;
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="h">音を発する表示マン</param>
+        /// <param name="name">音のパス</param>
+        /// <param name="volume">ボリューム(0より小さいときbgmでぶつ切りする)</param>
+        /// <param name="BGM">bgmか</param>
         public pplayotoman(hyojiman h,string name, float volume = 1, bool BGM = false) : base(1, false)
         {
             hyo = h;
@@ -2546,6 +3047,10 @@ namespace Charamaker2.Character
             vol = volume;
             bgmn = BGM;
         }
+        /// <summary>
+        /// コピーするためのコンストラクタ。
+        /// </summary>
+        /// <param name="s">コピー元</param>
         public pplayotoman(pplayotoman s) : base(s)
         {
             hyo = s.hyo;
@@ -2554,6 +3059,9 @@ namespace Charamaker2.Character
             bgmn = s.bgmn;
         }
 
+        /// <summary>
+        /// 空のコンストラクタ
+        /// </summary>
         public pplayotoman() : base() { }
         public override void start(character c)
         {

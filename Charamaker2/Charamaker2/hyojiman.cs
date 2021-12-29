@@ -1307,14 +1307,14 @@ namespace Charamaker2
         /// <param name="mojisuu">文字数の幅(日本語はちょっとデカい)</param>
         /// <param name="tyusindoko">中心の文字数</param>
         /// <param name="hyojispeed">文字が表示されるに当たって必要なクロック数</param>
-        /// <param name="hyojitime">文字が完全に表示されたのちに表示される時間</param>
-        /// <param name="textt"></param>
-        /// <param name="RR"></param>
-        /// <param name="GG"></param>
-        /// <param name="BB"></param>
-        /// <param name="kyotyousuru"></param>
-        /// <param name="z"></param>
-        /// <param name="sitazoroe"></param>
+        /// <param name="hyojitime">文字が完全に表示されたのちに表示される時間(-1)で無制限</param>
+        /// <param name="textt">文字の内容</param>
+        /// <param name="RR">R</param>
+        /// <param name="GG">G</param>
+        /// <param name="BB">B</param>
+        /// <param name="kyotyousuru">強調するか</param>
+        /// <param name="z">z</param>
+        /// <param name="sitazoroe">下でそろえるか</param>
         public message(float x, float y, float ookisa, int mojisuu, int tyusindoko, float hyojispeed, float hyojitime, string textt, float RR = 0, float GG = 0, float BB = 0, bool kyotyousuru = true,float z=1000000000,bool sitazoroe=false):base(x,y,z)
         {
             sita = sitazoroe;

@@ -72,8 +72,6 @@ namespace Charamaker2
 
 
 
-                temp = fileman.loadcharacter(@"yoshino");
-                
                 temp.resethyoji(hyojiman);
                 sentaku(temp);
                 loaded = new character(temp);

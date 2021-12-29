@@ -24,6 +24,8 @@ namespace Charamaker2
     /// <summary>
     /// ファイルの入出力・このシステムのセットアップを扱うクラス。
     /// setingupingでセットアップは完了する。
+    /// character,motion,tex,oto,oto\bgmというフォルダがexeファイルと同じディレクトリに必要。
+    /// movie機能を使うならmovieというフォルダがexeと同じところに必要。
     /// </summary>
     static public class fileman
     {
@@ -273,6 +275,7 @@ namespace Charamaker2
                     res = characters[file];
                 }
             }
+            if (res == null) return null;
             return new character(res);
 
         }
@@ -847,7 +850,7 @@ namespace Charamaker2
 
         }
         /// <summary>
-        /// ムービーをつくるスクリプトをロードする
+        /// ムービーをつくるスクリプトをロードする。使うならmovieというフォルダがexeと同じところに必要
         /// </summary>
         /// <param name="file">.\movie\*.txtの*部分</param>
         /// <returns>ロードしたムービー</returns>
