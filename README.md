@@ -21,3 +21,4 @@ https://github.com/amerkoleci/Vortice.Windows
 # Usage
 
 Sampleを見てください
+Releaseの中身を自分のプログラムのReleaseにコピーしてCharamaker2.exeを参照に追加すればおｋです。
