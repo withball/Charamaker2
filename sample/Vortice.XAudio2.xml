@@ -1,0 +1,3068 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Vortice.XAudio2</name>
+    </assembly>
+    <members>
+        <member name="T:Vortice.XAudio2.AudioBuffer">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>XAUDIO2_BUFFER</unmanaged>
+            <unmanaged-short>XAUDIO2_BUFFER</unmanaged-short>
+        </member>
+        <member name="M:Vortice.XAudio2.AudioBuffer.#ctor(System.IntPtr,System.Int32,Vortice.XAudio2.BufferFlags)">
+            <summary>
+            Create new instance of <see cref="T:Vortice.XAudio2.AudioBuffer"/> with externally owned memory.
+            </summary>
+            <param name="data">The data pointer.</param>
+            <param name="sizeInBytes">Size in bytes of the buffer.</param>
+            <param name="flags">The <see cref="T:Vortice.XAudio2.BufferFlags"/> flags.</param>
+        </member>
+        <member name="F:Vortice.XAudio2.AudioBuffer.Flags">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>Flags</unmanaged>
+            <unmanaged-short>Flags</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.AudioBuffer.AudioBytes">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>AudioBytes</unmanaged>
+            <unmanaged-short>AudioBytes</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.AudioBuffer.AudioDataPointer">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>pAudioData</unmanaged>
+            <unmanaged-short>pAudioData</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.AudioBuffer.PlayBegin">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>PlayBegin</unmanaged>
+            <unmanaged-short>PlayBegin</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.AudioBuffer.PlayLength">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>PlayLength</unmanaged>
+            <unmanaged-short>PlayLength</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.AudioBuffer.LoopBegin">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>LoopBegin</unmanaged>
+            <unmanaged-short>LoopBegin</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.AudioBuffer.LoopLength">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>LoopLength</unmanaged>
+            <unmanaged-short>LoopLength</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.AudioBuffer.LoopCount">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>LoopCount</unmanaged>
+            <unmanaged-short>LoopCount</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.AudioBuffer.Context">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>pContext</unmanaged>
+            <unmanaged-short>pContext</unmanaged-short>
+        </member>
+        <member name="T:Vortice.XAudio2.DistanceCurve">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>X3DAUDIO_DISTANCE_CURVE</unmanaged>
+            <unmanaged-short>X3DAUDIO_DISTANCE_CURVE</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.DistanceCurve.PointsPointer">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>pPoints</unmanaged>
+            <unmanaged-short>pPoints</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.DistanceCurve.PointCount">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>PointCount</unmanaged>
+            <unmanaged-short>PointCount</unmanaged-short>
+        </member>
+        <member name="T:Vortice.XAudio2.DspSettings">
+            <summary>
+            Receives the results from a call to <see cref="M:Vortice.XAudio2.X3DAudio.Calculate(Vortice.XAudio2.Listener,Vortice.XAudio2.Emitter,Vortice.XAudio2.CalculateFlags,System.Int32,System.Int32)"/>.
+            </summary>
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>X3DAUDIO_DSP_SETTINGS</unmanaged>
+            <unmanaged-short>X3DAUDIO_DSP_SETTINGS</unmanaged-short>
+        </member>
+        <member name="M:Vortice.XAudio2.DspSettings.#ctor(System.Int32,System.Int32)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Vortice.XAudio2.DspSettings" /> class.
+            </summary>
+            <param name="sourceChannelCount">The source channel count.</param>
+            <param name="destinationChannelCount">The destination channel count.</param>
+        </member>
+        <member name="F:Vortice.XAudio2.DspSettings.MatrixCoefficients">
+            <summary>
+            The matrix coefficients
+            </summary>
+        </member>
+        <member name="F:Vortice.XAudio2.DspSettings.DelayTimes">
+            <summary>
+            The delay times
+            </summary>
+        </member>
+        <member name="F:Vortice.XAudio2.DspSettings.MatrixCoefficientsPointer">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>pMatrixCoefficients</unmanaged>
+            <unmanaged-short>pMatrixCoefficients</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.DspSettings.DelayTimesPointer">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>pDelayTimes</unmanaged>
+            <unmanaged-short>pDelayTimes</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.DspSettings.SourceChannelCount">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>SrcChannelCount</unmanaged>
+            <unmanaged-short>SrcChannelCount</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.DspSettings.DestinationChannelCount">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>DstChannelCount</unmanaged>
+            <unmanaged-short>DstChannelCount</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.DspSettings.LpfDirectCoefficient">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>LPFDirectCoefficient</unmanaged>
+            <unmanaged-short>LPFDirectCoefficient</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.DspSettings.LpfReverbCoefficient">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>LPFReverbCoefficient</unmanaged>
+            <unmanaged-short>LPFReverbCoefficient</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.DspSettings.ReverbLevel">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>ReverbLevel</unmanaged>
+            <unmanaged-short>ReverbLevel</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.DspSettings.DopplerFactor">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>DopplerFactor</unmanaged>
+            <unmanaged-short>DopplerFactor</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.DspSettings.EmitterToListenerAngle">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>EmitterToListenerAngle</unmanaged>
+            <unmanaged-short>EmitterToListenerAngle</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.DspSettings.EmitterToListenerDistance">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>EmitterToListenerDistance</unmanaged>
+            <unmanaged-short>EmitterToListenerDistance</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.DspSettings.EmitterVelocityComponent">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>EmitterVelocityComponent</unmanaged>
+            <unmanaged-short>EmitterVelocityComponent</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.DspSettings.ListenerVelocityComponent">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>ListenerVelocityComponent</unmanaged>
+            <unmanaged-short>ListenerVelocityComponent</unmanaged-short>
+        </member>
+        <member name="T:Vortice.XAudio2.EffectDescriptor">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>XAUDIO2_EFFECT_DESCRIPTOR</unmanaged>
+            <unmanaged-short>XAUDIO2_EFFECT_DESCRIPTOR</unmanaged-short>
+        </member>
+        <member name="M:Vortice.XAudio2.EffectDescriptor.#ctor(SharpGen.Runtime.IUnknown)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Vortice.XAudio2.EffectDescriptor"/> class with a Stereo Effect.
+            </summary>
+            <param name="effect">The effect.</param>
+        </member>
+        <member name="M:Vortice.XAudio2.EffectDescriptor.#ctor(SharpGen.Runtime.IUnknown,System.Int32)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Vortice.XAudio2.EffectDescriptor"/> class.
+            </summary>
+            <param name="effect">The effect.</param>
+            <param name="outputChannelCount">The output channel count.</param>
+        </member>
+        <member name="P:Vortice.XAudio2.EffectDescriptor.Effect">
+            <summary>
+            Gets or sets the AudioProcessor. The AudioProcessor cannot be set more than one.
+            </summary>
+            <value>The effect.</value>
+        </member>
+        <member name="F:Vortice.XAudio2.EffectDescriptor.EffectPointer">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>pEffect</unmanaged>
+            <unmanaged-short>pEffect</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.EffectDescriptor.InitialState">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>InitialState</unmanaged>
+            <unmanaged-short>InitialState</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.EffectDescriptor.OutputChannelCount">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>OutputChannels</unmanaged>
+            <unmanaged-short>OutputChannels</unmanaged-short>
+        </member>
+        <member name="T:Vortice.XAudio2.Emitter">
+            <summary>
+            Defines a single-point or multiple-point 3D audio source that is used with an arbitrary number of sound channels.
+            </summary>
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>X3DAUDIO_EMITTER</unmanaged>
+            <unmanaged-short>X3DAUDIO_EMITTER</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.Emitter.Cone">
+            <summary>
+            Cone data.
+            </summary>
+        </member>
+        <member name="F:Vortice.XAudio2.Emitter.ConePointer">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>pCone</unmanaged>
+            <unmanaged-short>pCone</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.Emitter.OrientFront">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>OrientFront</unmanaged>
+            <unmanaged-short>OrientFront</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.Emitter.OrientTop">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>OrientTop</unmanaged>
+            <unmanaged-short>OrientTop</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.Emitter.Position">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>Position</unmanaged>
+            <unmanaged-short>Position</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.Emitter.Velocity">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>Velocity</unmanaged>
+            <unmanaged-short>Velocity</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.Emitter.InnerRadius">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>InnerRadius</unmanaged>
+            <unmanaged-short>InnerRadius</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.Emitter.InnerRadiusAngle">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>InnerRadiusAngle</unmanaged>
+            <unmanaged-short>InnerRadiusAngle</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.Emitter.ChannelCount">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>ChannelCount</unmanaged>
+            <unmanaged-short>ChannelCount</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.Emitter.ChannelRadius">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>ChannelRadius</unmanaged>
+            <unmanaged-short>ChannelRadius</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.Emitter.ChannelAzimuthsPointer">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>pChannelAzimuths</unmanaged>
+            <unmanaged-short>pChannelAzimuths</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.Emitter.VolumeCurvePointer">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>pVolumeCurve</unmanaged>
+            <unmanaged-short>pVolumeCurve</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.Emitter.LFECurvePointer">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>pLFECurve</unmanaged>
+            <unmanaged-short>pLFECurve</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.Emitter.LPFDirectCurvePointer">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>pLPFDirectCurve</unmanaged>
+            <unmanaged-short>pLPFDirectCurve</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.Emitter.LPFReverbCurvePointer">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>pLPFReverbCurve</unmanaged>
+            <unmanaged-short>pLPFReverbCurve</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.Emitter.ReverbCurvePointer">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>pReverbCurve</unmanaged>
+            <unmanaged-short>pReverbCurve</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.Emitter.CurveDistanceScaler">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>CurveDistanceScaler</unmanaged>
+            <unmanaged-short>CurveDistanceScaler</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.Emitter.DopplerScaler">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>DopplerScaler</unmanaged>
+            <unmanaged-short>DopplerScaler</unmanaged-short>
+        </member>
+        <member name="T:Vortice.XAudio2.ErrorEventArgs">
+            <summary>
+            EventArgs used by <see cref="E:Vortice.XAudio2.IXAudio2.CriticalError"/>.
+            </summary>
+        </member>
+        <member name="M:Vortice.XAudio2.ErrorEventArgs.#ctor(SharpGen.Runtime.Result)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Vortice.XAudio2.ErrorEventArgs"/> class.
+            </summary>
+            <param name="errorCode">The error code.</param>
+        </member>
+        <member name="P:Vortice.XAudio2.ErrorEventArgs.ErrorCode">
+            <summary>
+            Gets the error code.
+            </summary>
+        </member>
+        <member name="T:Vortice.XAudio2.Fx.Fx">
+            <summary>
+            Functions
+            </summary>
+        </member>
+        <member name="F:Vortice.XAudio2.Fx.Fx.ReverbMinWetDryMix">
+            <summary>
+            Constant ReverbMinWetDryMix
+            </summary>
+            <unmanaged>XAUDIO2FX_REVERB_MIN_WET_DRY_MIX</unmanaged>
+            <unmanaged-short>XAUDIO2FX_REVERB_MIN_WET_DRY_MIX</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.Fx.Fx.ReverbMinReflectionsDelay">
+            <summary>
+            Constant ReverbMinReflectionsDelay
+            </summary>
+            <unmanaged>XAUDIO2FX_REVERB_MIN_REFLECTIONS_DELAY</unmanaged>
+            <unmanaged-short>XAUDIO2FX_REVERB_MIN_REFLECTIONS_DELAY</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.Fx.Fx.ReverbMinReverbDelay">
+            <summary>
+            Constant ReverbMinReverbDelay
+            </summary>
+            <unmanaged>XAUDIO2FX_REVERB_MIN_REVERB_DELAY</unmanaged>
+            <unmanaged-short>XAUDIO2FX_REVERB_MIN_REVERB_DELAY</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.Fx.Fx.ReverbMinRearDelay">
+            <summary>
+            Constant ReverbMinRearDelay
+            </summary>
+            <unmanaged>XAUDIO2FX_REVERB_MIN_REAR_DELAY</unmanaged>
+            <unmanaged-short>XAUDIO2FX_REVERB_MIN_REAR_DELAY</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.Fx.Fx.ReverbMinPosition">
+            <summary>
+            Constant ReverbMinPosition
+            </summary>
+            <unmanaged>XAUDIO2FX_REVERB_MIN_POSITION</unmanaged>
+            <unmanaged-short>XAUDIO2FX_REVERB_MIN_POSITION</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.Fx.Fx.ReverbMinDiffusion">
+            <summary>
+            Constant ReverbMinDiffusion
+            </summary>
+            <unmanaged>XAUDIO2FX_REVERB_MIN_DIFFUSION</unmanaged>
+            <unmanaged-short>XAUDIO2FX_REVERB_MIN_DIFFUSION</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.Fx.Fx.ReverbMinLowEqGain">
+            <summary>
+            Constant ReverbMinLowEqGain
+            </summary>
+            <unmanaged>XAUDIO2FX_REVERB_MIN_LOW_EQ_GAIN</unmanaged>
+            <unmanaged-short>XAUDIO2FX_REVERB_MIN_LOW_EQ_GAIN</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.Fx.Fx.ReverbMinLowEqCutoff">
+            <summary>
+            Constant ReverbMinLowEqCutoff
+            </summary>
+            <unmanaged>XAUDIO2FX_REVERB_MIN_LOW_EQ_CUTOFF</unmanaged>
+            <unmanaged-short>XAUDIO2FX_REVERB_MIN_LOW_EQ_CUTOFF</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.Fx.Fx.ReverbMinHighEqGain">
+            <summary>
+            Constant ReverbMinHighEqGain
+            </summary>
+            <unmanaged>XAUDIO2FX_REVERB_MIN_HIGH_EQ_GAIN</unmanaged>
+            <unmanaged-short>XAUDIO2FX_REVERB_MIN_HIGH_EQ_GAIN</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.Fx.Fx.ReverbMinHighEqCutoff">
+            <summary>
+            Constant ReverbMinHighEqCutoff
+            </summary>
+            <unmanaged>XAUDIO2FX_REVERB_MIN_HIGH_EQ_CUTOFF</unmanaged>
+            <unmanaged-short>XAUDIO2FX_REVERB_MIN_HIGH_EQ_CUTOFF</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.Fx.Fx.ReverbMinRoomFilterFreq">
+            <summary>
+            Constant ReverbMinRoomFilterFreq
+            </summary>
+            <unmanaged>XAUDIO2FX_REVERB_MIN_ROOM_FILTER_FREQ</unmanaged>
+            <unmanaged-short>XAUDIO2FX_REVERB_MIN_ROOM_FILTER_FREQ</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.Fx.Fx.ReverbMinRoomFilterMain">
+            <summary>
+            Constant ReverbMinRoomFilterMain
+            </summary>
+            <unmanaged>XAUDIO2FX_REVERB_MIN_ROOM_FILTER_MAIN</unmanaged>
+            <unmanaged-short>XAUDIO2FX_REVERB_MIN_ROOM_FILTER_MAIN</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.Fx.Fx.ReverbMinRoomFilterHf">
+            <summary>
+            Constant ReverbMinRoomFilterHf
+            </summary>
+            <unmanaged>XAUDIO2FX_REVERB_MIN_ROOM_FILTER_HF</unmanaged>
+            <unmanaged-short>XAUDIO2FX_REVERB_MIN_ROOM_FILTER_HF</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.Fx.Fx.ReverbMinReflectionsGain">
+            <summary>
+            Constant ReverbMinReflectionsGain
+            </summary>
+            <unmanaged>XAUDIO2FX_REVERB_MIN_REFLECTIONS_GAIN</unmanaged>
+            <unmanaged-short>XAUDIO2FX_REVERB_MIN_REFLECTIONS_GAIN</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.Fx.Fx.ReverbMinReverbGain">
+            <summary>
+            Constant ReverbMinReverbGain
+            </summary>
+            <unmanaged>XAUDIO2FX_REVERB_MIN_REVERB_GAIN</unmanaged>
+            <unmanaged-short>XAUDIO2FX_REVERB_MIN_REVERB_GAIN</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.Fx.Fx.ReverbMinDecayTime">
+            <summary>
+            Constant ReverbMinDecayTime
+            </summary>
+            <unmanaged>XAUDIO2FX_REVERB_MIN_DECAY_TIME</unmanaged>
+            <unmanaged-short>XAUDIO2FX_REVERB_MIN_DECAY_TIME</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.Fx.Fx.ReverbMinDensity">
+            <summary>
+            Constant ReverbMinDensity
+            </summary>
+            <unmanaged>XAUDIO2FX_REVERB_MIN_DENSITY</unmanaged>
+            <unmanaged-short>XAUDIO2FX_REVERB_MIN_DENSITY</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.Fx.Fx.ReverbMinRoomSize">
+            <summary>
+            Constant ReverbMinRoomSize
+            </summary>
+            <unmanaged>XAUDIO2FX_REVERB_MIN_ROOM_SIZE</unmanaged>
+            <unmanaged-short>XAUDIO2FX_REVERB_MIN_ROOM_SIZE</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.Fx.Fx.ReverbMaxWetDryMix">
+            <summary>
+            Constant ReverbMaxWetDryMix
+            </summary>
+            <unmanaged>XAUDIO2FX_REVERB_MAX_WET_DRY_MIX</unmanaged>
+            <unmanaged-short>XAUDIO2FX_REVERB_MAX_WET_DRY_MIX</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.Fx.Fx.ReverbMaxReflectionsDelay">
+            <summary>
+            Constant ReverbMaxReflectionsDelay
+            </summary>
+            <unmanaged>XAUDIO2FX_REVERB_MAX_REFLECTIONS_DELAY</unmanaged>
+            <unmanaged-short>XAUDIO2FX_REVERB_MAX_REFLECTIONS_DELAY</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.Fx.Fx.ReverbMaxReverbDelay">
+            <summary>
+            Constant ReverbMaxReverbDelay
+            </summary>
+            <unmanaged>XAUDIO2FX_REVERB_MAX_REVERB_DELAY</unmanaged>
+            <unmanaged-short>XAUDIO2FX_REVERB_MAX_REVERB_DELAY</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.Fx.Fx.ReverbMaxRearDelay">
+            <summary>
+            Constant ReverbMaxRearDelay
+            </summary>
+            <unmanaged>XAUDIO2FX_REVERB_MAX_REAR_DELAY</unmanaged>
+            <unmanaged-short>XAUDIO2FX_REVERB_MAX_REAR_DELAY</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.Fx.Fx.ReverbMaxPosition">
+            <summary>
+            Constant ReverbMaxPosition
+            </summary>
+            <unmanaged>XAUDIO2FX_REVERB_MAX_POSITION</unmanaged>
+            <unmanaged-short>XAUDIO2FX_REVERB_MAX_POSITION</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.Fx.Fx.ReverbMaxDiffusion">
+            <summary>
+            Constant ReverbMaxDiffusion
+            </summary>
+            <unmanaged>XAUDIO2FX_REVERB_MAX_DIFFUSION</unmanaged>
+            <unmanaged-short>XAUDIO2FX_REVERB_MAX_DIFFUSION</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.Fx.Fx.ReverbMaxLowEqGain">
+            <summary>
+            Constant ReverbMaxLowEqGain
+            </summary>
+            <unmanaged>XAUDIO2FX_REVERB_MAX_LOW_EQ_GAIN</unmanaged>
+            <unmanaged-short>XAUDIO2FX_REVERB_MAX_LOW_EQ_GAIN</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.Fx.Fx.ReverbMaxLowEqCutoff">
+            <summary>
+            Constant ReverbMaxLowEqCutoff
+            </summary>
+            <unmanaged>XAUDIO2FX_REVERB_MAX_LOW_EQ_CUTOFF</unmanaged>
+            <unmanaged-short>XAUDIO2FX_REVERB_MAX_LOW_EQ_CUTOFF</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.Fx.Fx.ReverbMaxHighEqGain">
+            <summary>
+            Constant ReverbMaxHighEqGain
+            </summary>
+            <unmanaged>XAUDIO2FX_REVERB_MAX_HIGH_EQ_GAIN</unmanaged>
+            <unmanaged-short>XAUDIO2FX_REVERB_MAX_HIGH_EQ_GAIN</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.Fx.Fx.ReverbMaxHighEqCutoff">
+            <summary>
+            Constant ReverbMaxHighEqCutoff
+            </summary>
+            <unmanaged>XAUDIO2FX_REVERB_MAX_HIGH_EQ_CUTOFF</unmanaged>
+            <unmanaged-short>XAUDIO2FX_REVERB_MAX_HIGH_EQ_CUTOFF</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.Fx.Fx.ReverbMaxRoomFilterFreq">
+            <summary>
+            Constant ReverbMaxRoomFilterFreq
+            </summary>
+            <unmanaged>XAUDIO2FX_REVERB_MAX_ROOM_FILTER_FREQ</unmanaged>
+            <unmanaged-short>XAUDIO2FX_REVERB_MAX_ROOM_FILTER_FREQ</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.Fx.Fx.ReverbMaxRoomFilterMain">
+            <summary>
+            Constant ReverbMaxRoomFilterMain
+            </summary>
+            <unmanaged>XAUDIO2FX_REVERB_MAX_ROOM_FILTER_MAIN</unmanaged>
+            <unmanaged-short>XAUDIO2FX_REVERB_MAX_ROOM_FILTER_MAIN</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.Fx.Fx.ReverbMaxRoomFilterHf">
+            <summary>
+            Constant ReverbMaxRoomFilterHf
+            </summary>
+            <unmanaged>XAUDIO2FX_REVERB_MAX_ROOM_FILTER_HF</unmanaged>
+            <unmanaged-short>XAUDIO2FX_REVERB_MAX_ROOM_FILTER_HF</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.Fx.Fx.ReverbMaxReflectionsGain">
+            <summary>
+            Constant ReverbMaxReflectionsGain
+            </summary>
+            <unmanaged>XAUDIO2FX_REVERB_MAX_REFLECTIONS_GAIN</unmanaged>
+            <unmanaged-short>XAUDIO2FX_REVERB_MAX_REFLECTIONS_GAIN</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.Fx.Fx.ReverbMaxReverbGain">
+            <summary>
+            Constant ReverbMaxReverbGain
+            </summary>
+            <unmanaged>XAUDIO2FX_REVERB_MAX_REVERB_GAIN</unmanaged>
+            <unmanaged-short>XAUDIO2FX_REVERB_MAX_REVERB_GAIN</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.Fx.Fx.ReverbMaxDensity">
+            <summary>
+            Constant ReverbMaxDensity
+            </summary>
+            <unmanaged>XAUDIO2FX_REVERB_MAX_DENSITY</unmanaged>
+            <unmanaged-short>XAUDIO2FX_REVERB_MAX_DENSITY</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.Fx.Fx.ReverbMaxRoomSize">
+            <summary>
+            Constant ReverbMaxRoomSize
+            </summary>
+            <unmanaged>XAUDIO2FX_REVERB_MAX_ROOM_SIZE</unmanaged>
+            <unmanaged-short>XAUDIO2FX_REVERB_MAX_ROOM_SIZE</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.Fx.Fx.ReverbDefaultWetDryMix">
+            <summary>
+            Constant ReverbDefaultWetDryMix
+            </summary>
+            <unmanaged>XAUDIO2FX_REVERB_DEFAULT_WET_DRY_MIX</unmanaged>
+            <unmanaged-short>XAUDIO2FX_REVERB_DEFAULT_WET_DRY_MIX</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.Fx.Fx.ReverbDefaultReflectionsDelay">
+            <summary>
+            Constant ReverbDefaultReflectionsDelay
+            </summary>
+            <unmanaged>XAUDIO2FX_REVERB_DEFAULT_REFLECTIONS_DELAY</unmanaged>
+            <unmanaged-short>XAUDIO2FX_REVERB_DEFAULT_REFLECTIONS_DELAY</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.Fx.Fx.ReverbDefaultReverbDelay">
+            <summary>
+            Constant ReverbDefaultReverbDelay
+            </summary>
+            <unmanaged>XAUDIO2FX_REVERB_DEFAULT_REVERB_DELAY</unmanaged>
+            <unmanaged-short>XAUDIO2FX_REVERB_DEFAULT_REVERB_DELAY</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.Fx.Fx.ReverbDefaultRearDelay">
+            <summary>
+            Constant ReverbDefaultRearDelay
+            </summary>
+            <unmanaged>XAUDIO2FX_REVERB_DEFAULT_REAR_DELAY</unmanaged>
+            <unmanaged-short>XAUDIO2FX_REVERB_DEFAULT_REAR_DELAY</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.Fx.Fx.ReverbDefault7Point1SideDelay">
+            <summary>
+            Constant ReverbDefault7Point1SideDelay
+            </summary>
+            <unmanaged>XAUDIO2FX_REVERB_DEFAULT_7POINT1_SIDE_DELAY</unmanaged>
+            <unmanaged-short>XAUDIO2FX_REVERB_DEFAULT_7POINT1_SIDE_DELAY</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.Fx.Fx.ReverbDefault7Point1RearDelay">
+            <summary>
+            Constant ReverbDefault7Point1RearDelay
+            </summary>
+            <unmanaged>XAUDIO2FX_REVERB_DEFAULT_7POINT1_REAR_DELAY</unmanaged>
+            <unmanaged-short>XAUDIO2FX_REVERB_DEFAULT_7POINT1_REAR_DELAY</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.Fx.Fx.ReverbDefaultPosition">
+            <summary>
+            Constant ReverbDefaultPosition
+            </summary>
+            <unmanaged>XAUDIO2FX_REVERB_DEFAULT_POSITION</unmanaged>
+            <unmanaged-short>XAUDIO2FX_REVERB_DEFAULT_POSITION</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.Fx.Fx.ReverbDefaultPositionMatrix">
+            <summary>
+            Constant ReverbDefaultPositionMatrix
+            </summary>
+            <unmanaged>XAUDIO2FX_REVERB_DEFAULT_POSITION_MATRIX</unmanaged>
+            <unmanaged-short>XAUDIO2FX_REVERB_DEFAULT_POSITION_MATRIX</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.Fx.Fx.ReverbDefaultEarlyDiffusion">
+            <summary>
+            Constant ReverbDefaultEarlyDiffusion
+            </summary>
+            <unmanaged>XAUDIO2FX_REVERB_DEFAULT_EARLY_DIFFUSION</unmanaged>
+            <unmanaged-short>XAUDIO2FX_REVERB_DEFAULT_EARLY_DIFFUSION</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.Fx.Fx.ReverbDefaultLateDiffusion">
+            <summary>
+            Constant ReverbDefaultLateDiffusion
+            </summary>
+            <unmanaged>XAUDIO2FX_REVERB_DEFAULT_LATE_DIFFUSION</unmanaged>
+            <unmanaged-short>XAUDIO2FX_REVERB_DEFAULT_LATE_DIFFUSION</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.Fx.Fx.ReverbDefaultLowEqGain">
+            <summary>
+            Constant ReverbDefaultLowEqGain
+            </summary>
+            <unmanaged>XAUDIO2FX_REVERB_DEFAULT_LOW_EQ_GAIN</unmanaged>
+            <unmanaged-short>XAUDIO2FX_REVERB_DEFAULT_LOW_EQ_GAIN</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.Fx.Fx.ReverbDefaultLowEqCutoff">
+            <summary>
+            Constant ReverbDefaultLowEqCutoff
+            </summary>
+            <unmanaged>XAUDIO2FX_REVERB_DEFAULT_LOW_EQ_CUTOFF</unmanaged>
+            <unmanaged-short>XAUDIO2FX_REVERB_DEFAULT_LOW_EQ_CUTOFF</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.Fx.Fx.ReverbDefaultHighEqGain">
+            <summary>
+            Constant ReverbDefaultHighEqGain
+            </summary>
+            <unmanaged>XAUDIO2FX_REVERB_DEFAULT_HIGH_EQ_GAIN</unmanaged>
+            <unmanaged-short>XAUDIO2FX_REVERB_DEFAULT_HIGH_EQ_GAIN</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.Fx.Fx.ReverbDefaultHighEqCutoff">
+            <summary>
+            Constant ReverbDefaultHighEqCutoff
+            </summary>
+            <unmanaged>XAUDIO2FX_REVERB_DEFAULT_HIGH_EQ_CUTOFF</unmanaged>
+            <unmanaged-short>XAUDIO2FX_REVERB_DEFAULT_HIGH_EQ_CUTOFF</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.Fx.Fx.ReverbDefaultRoomFilterFreq">
+            <summary>
+            Constant ReverbDefaultRoomFilterFreq
+            </summary>
+            <unmanaged>XAUDIO2FX_REVERB_DEFAULT_ROOM_FILTER_FREQ</unmanaged>
+            <unmanaged-short>XAUDIO2FX_REVERB_DEFAULT_ROOM_FILTER_FREQ</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.Fx.Fx.ReverbDefaultRoomFilterMain">
+            <summary>
+            Constant ReverbDefaultRoomFilterMain
+            </summary>
+            <unmanaged>XAUDIO2FX_REVERB_DEFAULT_ROOM_FILTER_MAIN</unmanaged>
+            <unmanaged-short>XAUDIO2FX_REVERB_DEFAULT_ROOM_FILTER_MAIN</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.Fx.Fx.ReverbDefaultRoomFilterHf">
+            <summary>
+            Constant ReverbDefaultRoomFilterHf
+            </summary>
+            <unmanaged>XAUDIO2FX_REVERB_DEFAULT_ROOM_FILTER_HF</unmanaged>
+            <unmanaged-short>XAUDIO2FX_REVERB_DEFAULT_ROOM_FILTER_HF</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.Fx.Fx.ReverbDefaultReflectionsGain">
+            <summary>
+            Constant ReverbDefaultReflectionsGain
+            </summary>
+            <unmanaged>XAUDIO2FX_REVERB_DEFAULT_REFLECTIONS_GAIN</unmanaged>
+            <unmanaged-short>XAUDIO2FX_REVERB_DEFAULT_REFLECTIONS_GAIN</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.Fx.Fx.ReverbDefaultReverbGain">
+            <summary>
+            Constant ReverbDefaultReverbGain
+            </summary>
+            <unmanaged>XAUDIO2FX_REVERB_DEFAULT_REVERB_GAIN</unmanaged>
+            <unmanaged-short>XAUDIO2FX_REVERB_DEFAULT_REVERB_GAIN</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.Fx.Fx.ReverbDefaultDecayTime">
+            <summary>
+            Constant ReverbDefaultDecayTime
+            </summary>
+            <unmanaged>XAUDIO2FX_REVERB_DEFAULT_DECAY_TIME</unmanaged>
+            <unmanaged-short>XAUDIO2FX_REVERB_DEFAULT_DECAY_TIME</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.Fx.Fx.ReverbDefaultDensity">
+            <summary>
+            Constant ReverbDefaultDensity
+            </summary>
+            <unmanaged>XAUDIO2FX_REVERB_DEFAULT_DENSITY</unmanaged>
+            <unmanaged-short>XAUDIO2FX_REVERB_DEFAULT_DENSITY</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.Fx.Fx.ReverbDefaultRoomSize">
+            <summary>
+            Constant ReverbDefaultRoomSize
+            </summary>
+            <unmanaged>XAUDIO2FX_REVERB_DEFAULT_ROOM_SIZE</unmanaged>
+            <unmanaged-short>XAUDIO2FX_REVERB_DEFAULT_ROOM_SIZE</unmanaged-short>
+        </member>
+        <member name="T:Vortice.XAudio2.Fx.ReverbI3DL2Parameters">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>XAUDIO2FX_REVERB_I3DL2_PARAMETERS</unmanaged>
+            <unmanaged-short>XAUDIO2FX_REVERB_I3DL2_PARAMETERS</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.Fx.ReverbI3DL2Parameters.WetDryMix">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>WetDryMix</unmanaged>
+            <unmanaged-short>WetDryMix</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.Fx.ReverbI3DL2Parameters.Room">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>Room</unmanaged>
+            <unmanaged-short>Room</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.Fx.ReverbI3DL2Parameters.RoomHF">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>RoomHF</unmanaged>
+            <unmanaged-short>RoomHF</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.Fx.ReverbI3DL2Parameters.RoomRolloffFactor">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>RoomRolloffFactor</unmanaged>
+            <unmanaged-short>RoomRolloffFactor</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.Fx.ReverbI3DL2Parameters.DecayTime">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>DecayTime</unmanaged>
+            <unmanaged-short>DecayTime</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.Fx.ReverbI3DL2Parameters.DecayHFRatio">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>DecayHFRatio</unmanaged>
+            <unmanaged-short>DecayHFRatio</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.Fx.ReverbI3DL2Parameters.Reflections">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>Reflections</unmanaged>
+            <unmanaged-short>Reflections</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.Fx.ReverbI3DL2Parameters.ReflectionsDelay">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>ReflectionsDelay</unmanaged>
+            <unmanaged-short>ReflectionsDelay</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.Fx.ReverbI3DL2Parameters.Reverb">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>Reverb</unmanaged>
+            <unmanaged-short>Reverb</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.Fx.ReverbI3DL2Parameters.ReverbDelay">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>ReverbDelay</unmanaged>
+            <unmanaged-short>ReverbDelay</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.Fx.ReverbI3DL2Parameters.Diffusion">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>Diffusion</unmanaged>
+            <unmanaged-short>Diffusion</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.Fx.ReverbI3DL2Parameters.Density">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>Density</unmanaged>
+            <unmanaged-short>Density</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.Fx.ReverbI3DL2Parameters.HFReference">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>HFReference</unmanaged>
+            <unmanaged-short>HFReference</unmanaged-short>
+        </member>
+        <member name="T:Vortice.XAudio2.Fx.Presets">
+            <summary>
+            Standard I3DL2 reverb presets (100% wet).
+            </summary>
+        </member>
+        <member name="T:Vortice.XAudio2.Fx.ReverbParameters">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>XAUDIO2FX_REVERB_PARAMETERS</unmanaged>
+            <unmanaged-short>XAUDIO2FX_REVERB_PARAMETERS</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.Fx.ReverbParameters.WetDryMix">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>WetDryMix</unmanaged>
+            <unmanaged-short>WetDryMix</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.Fx.ReverbParameters.ReflectionsDelay">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>ReflectionsDelay</unmanaged>
+            <unmanaged-short>ReflectionsDelay</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.Fx.ReverbParameters.ReverbDelay">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>ReverbDelay</unmanaged>
+            <unmanaged-short>ReverbDelay</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.Fx.ReverbParameters.RearDelay">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>RearDelay</unmanaged>
+            <unmanaged-short>RearDelay</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.Fx.ReverbParameters.SideDelay">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>SideDelay</unmanaged>
+            <unmanaged-short>SideDelay</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.Fx.ReverbParameters.PositionLeft">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>PositionLeft</unmanaged>
+            <unmanaged-short>PositionLeft</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.Fx.ReverbParameters.PositionRight">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>PositionRight</unmanaged>
+            <unmanaged-short>PositionRight</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.Fx.ReverbParameters.PositionMatrixLeft">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>PositionMatrixLeft</unmanaged>
+            <unmanaged-short>PositionMatrixLeft</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.Fx.ReverbParameters.PositionMatrixRight">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>PositionMatrixRight</unmanaged>
+            <unmanaged-short>PositionMatrixRight</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.Fx.ReverbParameters.EarlyDiffusion">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>EarlyDiffusion</unmanaged>
+            <unmanaged-short>EarlyDiffusion</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.Fx.ReverbParameters.LateDiffusion">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>LateDiffusion</unmanaged>
+            <unmanaged-short>LateDiffusion</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.Fx.ReverbParameters.LowEQGain">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>LowEQGain</unmanaged>
+            <unmanaged-short>LowEQGain</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.Fx.ReverbParameters.LowEQCutoff">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>LowEQCutoff</unmanaged>
+            <unmanaged-short>LowEQCutoff</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.Fx.ReverbParameters.HighEQGain">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>HighEQGain</unmanaged>
+            <unmanaged-short>HighEQGain</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.Fx.ReverbParameters.HighEQCutoff">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>HighEQCutoff</unmanaged>
+            <unmanaged-short>HighEQCutoff</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.Fx.ReverbParameters.RoomFilterFreq">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>RoomFilterFreq</unmanaged>
+            <unmanaged-short>RoomFilterFreq</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.Fx.ReverbParameters.RoomFilterMain">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>RoomFilterMain</unmanaged>
+            <unmanaged-short>RoomFilterMain</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.Fx.ReverbParameters.RoomFilterHF">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>RoomFilterHF</unmanaged>
+            <unmanaged-short>RoomFilterHF</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.Fx.ReverbParameters.ReflectionsGain">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>ReflectionsGain</unmanaged>
+            <unmanaged-short>ReflectionsGain</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.Fx.ReverbParameters.ReverbGain">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>ReverbGain</unmanaged>
+            <unmanaged-short>ReverbGain</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.Fx.ReverbParameters.DecayTime">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>DecayTime</unmanaged>
+            <unmanaged-short>DecayTime</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.Fx.ReverbParameters.Density">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>Density</unmanaged>
+            <unmanaged-short>Density</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.Fx.ReverbParameters.RoomSize">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>RoomSize</unmanaged>
+            <unmanaged-short>RoomSize</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.Fx.ReverbParameters.DisableLateField">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>DisableLateField</unmanaged>
+            <unmanaged-short>DisableLateField</unmanaged-short>
+        </member>
+        <member name="T:Vortice.XAudio2.Fx.VolumeMeterLevels">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>XAUDIO2FX_VOLUMEMETER_LEVELS</unmanaged>
+            <unmanaged-short>XAUDIO2FX_VOLUMEMETER_LEVELS</unmanaged-short>
+        </member>
+        <member name="P:Vortice.XAudio2.Fx.VolumeMeterLevels.PeakLevels">
+            <summary>	
+            Array that will be filled with the maximum absolute level for each channel during a processing pass.
+            The array must be at least ChannelCount × sizeof(float) bytes. <see cref="P:Vortice.XAudio2.Fx.VolumeMeterLevels.PeakLevels"/> may be null if <see cref="P:Vortice.XAudio2.Fx.VolumeMeterLevels.RMSLevels"/> is not null.
+            </summary>	
+        </member>
+        <member name="P:Vortice.XAudio2.Fx.VolumeMeterLevels.RMSLevels">
+            <summary>
+            Array that will be filled with root mean square level for each channel during a processing pass.
+            The array must be at least ChannelCount × sizeof(float) bytes. <see cref="P:Vortice.XAudio2.Fx.VolumeMeterLevels.RMSLevels"/> may be null if <see cref="P:Vortice.XAudio2.Fx.VolumeMeterLevels.PeakLevels"/> is not null.
+            </summary>
+        </member>
+        <member name="P:Vortice.XAudio2.Fx.VolumeMeterLevels.ChannelCount">
+            <summary>
+            Number of channels being processed.
+            </summary>
+        </member>
+        <member name="T:Vortice.XAudio2.IXAudio2">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>IXAudio2</unmanaged>
+            <unmanaged-short>IXAudio2</unmanaged-short>
+        </member>
+        <member name="E:Vortice.XAudio2.IXAudio2.ProcessingPassStart">
+            <summary>
+            Called by XAudio2 just before an audio processing pass begins.
+            </summary>
+        </member>
+        <member name="E:Vortice.XAudio2.IXAudio2.ProcessingPassEnd">
+            <summary>
+            Called by XAudio2 just after an audio processing pass ends.
+            </summary>
+        </member>
+        <member name="E:Vortice.XAudio2.IXAudio2.CriticalError">
+            <summary>
+            Called if a critical system error occurs that requires XAudio2 to be closed down and restarted.
+            </summary>
+        </member>
+        <member name="M:Vortice.XAudio2.IXAudio2.AmplitudeRatioToDecibels(System.Single)">
+            <summary>
+            Calculate a decibel from a volume.
+            </summary>
+            <param name="volume">The volume.</param>
+            <returns>a dB value</returns>
+        </member>
+        <member name="M:Vortice.XAudio2.IXAudio2.CutoffFrequencyToRadians(System.Single,System.Int32)">
+            <summary>
+            Calculate radians from a cutoffs frequency.
+            </summary>
+            <param name="cutoffFrequency">The cutoff frequency.</param>
+            <param name="sampleRate">The sample rate.</param>
+            <returns>radian</returns>
+        </member>
+        <member name="M:Vortice.XAudio2.IXAudio2.RadiansToCutoffFrequency(System.Single,System.Single)">
+            <summary>
+            Calculate a cutoff frequency from a radian.
+            </summary>
+            <param name="radians">The radians.</param>
+            <param name="sampleRate">The sample rate.</param>
+            <returns>cutoff frequency</returns>
+        </member>
+        <member name="M:Vortice.XAudio2.IXAudio2.DecibelsToAmplitudeRatio(System.Single)">
+            <summary>
+            Calculate a volume from a decibel
+            </summary>
+            <param name="decibels">a dB value</param>
+            <returns>an amplitude value</returns>
+        </member>
+        <member name="M:Vortice.XAudio2.IXAudio2.FrequencyRatioToSemitones(System.Single)">
+            <summary>
+            Calculate semitones from a Frequency ratio
+            </summary>
+            <param name="frequencyRatio">The frequency ratio.</param>
+            <returns>semitones</returns>
+        </member>
+        <member name="M:Vortice.XAudio2.IXAudio2.SemitonesToFrequencyRatio(System.Single)">
+            <summary>
+            Calculate frequency from semitones.
+            </summary>
+            <param name="semitones">The semitones.</param>
+            <returns>the frequency</returns>
+        </member>
+        <member name="M:Vortice.XAudio2.IXAudio2.CommitChanges">
+            <summary>
+            Atomically applies a set of operations for all pending operations.
+            </summary>
+        </member>
+        <member name="F:Vortice.XAudio2.IXAudio2.IID_IXAudio2">
+            <summary>
+            Constant IID_IXAudio2
+            </summary>
+            <unmanaged>IID_IXAudio2</unmanaged>
+            <unmanaged-short>IID_IXAudio2</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.IXAudio2.MaximumBufferBytes">
+            <summary>
+            Constant MaximumBufferBytes
+            </summary>
+            <unmanaged>XAUDIO2_MAX_BUFFER_BYTES</unmanaged>
+            <unmanaged-short>XAUDIO2_MAX_BUFFER_BYTES</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.IXAudio2.MaximumQueuedBuffers">
+            <summary>
+            Constant MaximumQueuedBuffers
+            </summary>
+            <unmanaged>XAUDIO2_MAX_QUEUED_BUFFERS</unmanaged>
+            <unmanaged-short>XAUDIO2_MAX_QUEUED_BUFFERS</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.IXAudio2.MaximumAudioChannels">
+            <summary>
+            Constant MaximumAudioChannels
+            </summary>
+            <unmanaged>XAUDIO2_MAX_AUDIO_CHANNELS</unmanaged>
+            <unmanaged-short>XAUDIO2_MAX_AUDIO_CHANNELS</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.IXAudio2.MinimumSampleRate">
+            <summary>
+            Constant MinimumSampleRate
+            </summary>
+            <unmanaged>XAUDIO2_MIN_SAMPLE_RATE</unmanaged>
+            <unmanaged-short>XAUDIO2_MIN_SAMPLE_RATE</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.IXAudio2.MaximumSampleRate">
+            <summary>
+            Constant MaximumSampleRate
+            </summary>
+            <unmanaged>XAUDIO2_MAX_SAMPLE_RATE</unmanaged>
+            <unmanaged-short>XAUDIO2_MAX_SAMPLE_RATE</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.IXAudio2.MaximumVolumeLevel">
+            <summary>
+            Constant MaximumVolumeLevel
+            </summary>
+            <unmanaged>XAUDIO2_MAX_VOLUME_LEVEL</unmanaged>
+            <unmanaged-short>XAUDIO2_MAX_VOLUME_LEVEL</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.IXAudio2.MinimumFrequencyRatio">
+            <summary>
+            Constant MinimumFrequencyRatio
+            </summary>
+            <unmanaged>XAUDIO2_MIN_FREQ_RATIO</unmanaged>
+            <unmanaged-short>XAUDIO2_MIN_FREQ_RATIO</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.IXAudio2.MaximumFrequencyRatio">
+            <summary>
+            Constant MaximumFrequencyRatio
+            </summary>
+            <unmanaged>XAUDIO2_MAX_FREQ_RATIO</unmanaged>
+            <unmanaged-short>XAUDIO2_MAX_FREQ_RATIO</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.IXAudio2.DefaultFrequencyRatio">
+            <summary>
+            Constant DefaultFrequencyRatio
+            </summary>
+            <unmanaged>XAUDIO2_DEFAULT_FREQ_RATIO</unmanaged>
+            <unmanaged-short>XAUDIO2_DEFAULT_FREQ_RATIO</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.IXAudio2.MaximumFilterOneOverQ">
+            <summary>
+            Constant MaximumFilterOneOverQ
+            </summary>
+            <unmanaged>XAUDIO2_MAX_FILTER_ONEOVERQ</unmanaged>
+            <unmanaged-short>XAUDIO2_MAX_FILTER_ONEOVERQ</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.IXAudio2.MaximumFilterFrequency">
+            <summary>
+            Constant MaximumFilterFrequency
+            </summary>
+            <unmanaged>XAUDIO2_MAX_FILTER_FREQUENCY</unmanaged>
+            <unmanaged-short>XAUDIO2_MAX_FILTER_FREQUENCY</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.IXAudio2.MaximumLoopCount">
+            <summary>
+            Constant MaximumLoopCount
+            </summary>
+            <unmanaged>XAUDIO2_MAX_LOOP_COUNT</unmanaged>
+            <unmanaged-short>XAUDIO2_MAX_LOOP_COUNT</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.IXAudio2.CommitNow">
+            <summary>
+            Constant CommitNow
+            </summary>
+            <unmanaged>XAUDIO2_COMMIT_NOW</unmanaged>
+            <unmanaged-short>XAUDIO2_COMMIT_NOW</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.IXAudio2.CommitAll">
+            <summary>
+            Constant CommitAll
+            </summary>
+            <unmanaged>XAUDIO2_COMMIT_ALL</unmanaged>
+            <unmanaged-short>XAUDIO2_COMMIT_ALL</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.IXAudio2.NoLoopRegion">
+            <summary>
+            Constant NoLoopRegion
+            </summary>
+            <unmanaged>XAUDIO2_NO_LOOP_REGION</unmanaged>
+            <unmanaged-short>XAUDIO2_NO_LOOP_REGION</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.IXAudio2.LoopInfinite">
+            <summary>
+            Constant LoopInfinite
+            </summary>
+            <unmanaged>XAUDIO2_LOOP_INFINITE</unmanaged>
+            <unmanaged-short>XAUDIO2_LOOP_INFINITE</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.IXAudio2.DefaultChannels">
+            <summary>
+            Constant DefaultChannels
+            </summary>
+            <unmanaged>XAUDIO2_DEFAULT_CHANNELS</unmanaged>
+            <unmanaged-short>XAUDIO2_DEFAULT_CHANNELS</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.IXAudio2.DefaultSampleRate">
+            <summary>
+            Constant DefaultSampleRate
+            </summary>
+            <unmanaged>XAUDIO2_DEFAULT_SAMPLERATE</unmanaged>
+            <unmanaged-short>XAUDIO2_DEFAULT_SAMPLERATE</unmanaged-short>
+        </member>
+        <member name="P:Vortice.XAudio2.IXAudio2.PerformanceData">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>void IXAudio2::GetPerformanceData([Out] XAUDIO2_PERFORMANCE_DATA* pPerfData)</unmanaged>
+            <unmanaged-short>IXAudio2::GetPerformanceData</unmanaged-short>
+        </member>
+        <member name="M:Vortice.XAudio2.IXAudio2.RegisterForCallbacks(Vortice.XAudio2.IXAudio2EngineCallback)">
+            <summary>
+            No documentation.
+            </summary>
+            <param name = "callbackRef">No documentation.</param>
+            <returns>No documentation.</returns>
+            <unmanaged>HRESULT IXAudio2::RegisterForCallbacks([In] IXAudio2EngineCallback* pCallback)</unmanaged>
+            <unmanaged-short>IXAudio2::RegisterForCallbacks</unmanaged-short>
+        </member>
+        <member name="M:Vortice.XAudio2.IXAudio2.UnregisterForCallbacks(Vortice.XAudio2.IXAudio2EngineCallback)">
+            <summary>
+            No documentation.
+            </summary>
+            <param name = "callbackRef">No documentation.</param>
+            <unmanaged>void IXAudio2::UnregisterForCallbacks([In] IXAudio2EngineCallback* pCallback)</unmanaged>
+            <unmanaged-short>IXAudio2::UnregisterForCallbacks</unmanaged-short>
+        </member>
+        <member name="M:Vortice.XAudio2.IXAudio2.CreateSourceVoice(System.IntPtr,Vortice.XAudio2.VoiceFlags,System.Single,Vortice.XAudio2.IXAudio2VoiceCallback,System.Nullable{Vortice.XAudio2.VoiceSendDescriptors},System.Nullable{Vortice.XAudio2.EffectChain})">
+            <summary>
+            No documentation.
+            </summary>
+            <param name = "sourceFormatRef">No documentation.</param>
+            <param name = "flags">No documentation.</param>
+            <param name = "maxFrequencyRatio">No documentation.</param>
+            <param name = "callbackRef">No documentation.</param>
+            <param name = "sendListRef">No documentation.</param>
+            <param name = "effectChainRef">No documentation.</param>
+            <returns>No documentation.</returns>
+            <unmanaged>HRESULT IXAudio2::CreateSourceVoice([Out] IXAudio2SourceVoice** ppSourceVoice, [In] const WAVEFORMATEX* pSourceFormat, [In] UINT32 Flags, [In] float MaxFrequencyRatio, [In, Optional] IXAudio2VoiceCallback* pCallback, [In, Optional] const XAUDIO2_VOICE_SENDS* pSendList, [In, Optional] const XAUDIO2_EFFECT_CHAIN* pEffectChain)</unmanaged>
+            <unmanaged-short>IXAudio2::CreateSourceVoice</unmanaged-short>
+        </member>
+        <member name="M:Vortice.XAudio2.IXAudio2.CreateSubmixVoice(System.Int32,System.Int32,System.Int32,System.Int32,System.Nullable{Vortice.XAudio2.VoiceSendDescriptors},System.Nullable{Vortice.XAudio2.EffectChain})">
+            <summary>
+            No documentation.
+            </summary>
+            <param name = "inputChannels">No documentation.</param>
+            <param name = "inputSampleRate">No documentation.</param>
+            <param name = "flags">No documentation.</param>
+            <param name = "processingStage">No documentation.</param>
+            <param name = "sendListRef">No documentation.</param>
+            <param name = "effectChainRef">No documentation.</param>
+            <returns>No documentation.</returns>
+            <unmanaged>HRESULT IXAudio2::CreateSubmixVoice([Out] IXAudio2SubmixVoice** ppSubmixVoice, [In] UINT32 InputChannels, [In] UINT32 InputSampleRate, [In] UINT32 Flags, [In] UINT32 ProcessingStage, [In, Optional] const XAUDIO2_VOICE_SENDS* pSendList, [In, Optional] const XAUDIO2_EFFECT_CHAIN* pEffectChain)</unmanaged>
+            <unmanaged-short>IXAudio2::CreateSubmixVoice</unmanaged-short>
+        </member>
+        <member name="M:Vortice.XAudio2.IXAudio2.CreateMasteringVoice(System.Int32,System.Int32,System.Int32,System.String,System.Nullable{Vortice.XAudio2.EffectChain},Vortice.Multimedia.AudioStreamCategory)">
+            <summary>
+            No documentation.
+            </summary>
+            <param name = "inputChannels">No documentation.</param>
+            <param name = "inputSampleRate">No documentation.</param>
+            <param name = "flags">No documentation.</param>
+            <param name = "szDeviceId">No documentation.</param>
+            <param name = "effectChainRef">No documentation.</param>
+            <param name = "streamCategory">No documentation.</param>
+            <returns>No documentation.</returns>
+            <unmanaged>HRESULT IXAudio2::CreateMasteringVoice([Out] IXAudio2MasteringVoice** ppMasteringVoice, [In] UINT32 InputChannels, [In] UINT32 InputSampleRate, [In] UINT32 Flags, [In, Optional] const wchar_t* szDeviceId, [In, Optional] const XAUDIO2_EFFECT_CHAIN* pEffectChain, [In] AUDIO_STREAM_CATEGORY StreamCategory)</unmanaged>
+            <unmanaged-short>IXAudio2::CreateMasteringVoice</unmanaged-short>
+        </member>
+        <member name="M:Vortice.XAudio2.IXAudio2.StartEngine">
+            <summary>
+            No documentation.
+            </summary>
+            <returns>No documentation.</returns>
+            <unmanaged>HRESULT IXAudio2::StartEngine()</unmanaged>
+            <unmanaged-short>IXAudio2::StartEngine</unmanaged-short>
+        </member>
+        <member name="M:Vortice.XAudio2.IXAudio2.StopEngine">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>void IXAudio2::StopEngine()</unmanaged>
+            <unmanaged-short>IXAudio2::StopEngine</unmanaged-short>
+        </member>
+        <member name="M:Vortice.XAudio2.IXAudio2.CommitChanges(System.Int32)">
+            <summary>
+            No documentation.
+            </summary>
+            <param name = "operationSet">No documentation.</param>
+            <returns>No documentation.</returns>
+            <unmanaged>HRESULT IXAudio2::CommitChanges([In] UINT32 OperationSet)</unmanaged>
+            <unmanaged-short>IXAudio2::CommitChanges</unmanaged-short>
+        </member>
+        <member name="M:Vortice.XAudio2.IXAudio2.GetPerformanceData">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>void IXAudio2::GetPerformanceData([Out] XAUDIO2_PERFORMANCE_DATA* pPerfData)</unmanaged>
+            <unmanaged-short>IXAudio2::GetPerformanceData</unmanaged-short>
+        </member>
+        <member name="M:Vortice.XAudio2.IXAudio2.SetDebugConfiguration(System.Nullable{Vortice.XAudio2.DebugConfiguration},System.IntPtr)">
+            <summary>
+            No documentation.
+            </summary>
+            <param name = "debugConfigurationRef">No documentation.</param>
+            <param name = "reservedRef">No documentation.</param>
+            <unmanaged>void IXAudio2::SetDebugConfiguration([In, Optional] const XAUDIO2_DEBUG_CONFIGURATION* pDebugConfiguration, [In] void* pReserved)</unmanaged>
+            <unmanaged-short>IXAudio2::SetDebugConfiguration</unmanaged-short>
+        </member>
+        <member name="T:Vortice.XAudio2.IXAudio2SourceVoice">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>IXAudio2SourceVoice</unmanaged>
+            <unmanaged-short>IXAudio2SourceVoice</unmanaged-short>
+        </member>
+        <member name="P:Vortice.XAudio2.IXAudio2SourceVoice.State">
+            <summary>
+            Gets the voice state.
+            </summary>
+        </member>
+        <member name="P:Vortice.XAudio2.IXAudio2SourceVoice.StateNoSamplesPlayed">
+            <summary>
+            Gets the voice state without samples played.
+            </summary>
+        </member>
+        <member name="P:Vortice.XAudio2.IXAudio2SourceVoice.FrequencyRatio">
+            <summary>
+            Gets or Sets the frequency adjustment ratio of the voice.
+            </summary>
+        </member>
+        <member name="M:Vortice.XAudio2.IXAudio2SourceVoice.Start">
+            <summary>	
+            Starts consumption and processing of audio by the voice. Delivers the result to any connected submix or mastering voices, or to the output device, with CommitNow changes.
+            </summary>	
+        </member>
+        <member name="M:Vortice.XAudio2.IXAudio2SourceVoice.Start(System.Int32)">
+            <summary>	
+            Starts consumption and processing of audio by the voice. Delivers the result to any connected submix or mastering voices, or to the output device.	
+            </summary>	
+            <param name="operationSet">Identifies this call as part of a deferred batch.</param>
+        </member>
+        <member name="M:Vortice.XAudio2.IXAudio2SourceVoice.SubmitSourceBuffer(Vortice.XAudio2.AudioBuffer)">
+            <summary>
+            Adds a new audio buffer to the voice queue.
+            </summary>
+            <param name="buffer"></param>
+        </member>
+        <member name="M:Vortice.XAudio2.IXAudio2SourceVoice.SubmitSourceBuffer(Vortice.XAudio2.AudioBuffer,System.UInt32[])">
+            <summary>
+            Adds a new audio buffer to the voice queue.
+            </summary>
+            <param name="buffer"></param>
+            <param name="decodedXMWAPacketInfo"></param>
+        </member>
+        <member name="F:Vortice.XAudio2.IXAudio2SourceVoice.NoSamplesPlayed">
+            <summary>
+            Constant NoSamplesPlayed
+            </summary>
+            <unmanaged>XAUDIO2_VOICE_NOSAMPLESPLAYED</unmanaged>
+            <unmanaged-short>XAUDIO2_VOICE_NOSAMPLESPLAYED</unmanaged-short>
+        </member>
+        <member name="M:Vortice.XAudio2.IXAudio2SourceVoice.Start(System.Int32,System.Int32)">
+            <summary>
+            No documentation.
+            </summary>
+            <param name = "flags">No documentation.</param>
+            <param name = "operationSet">No documentation.</param>
+            <returns>No documentation.</returns>
+            <unmanaged>HRESULT IXAudio2SourceVoice::Start([In] UINT32 Flags, [In] UINT32 OperationSet)</unmanaged>
+            <unmanaged-short>IXAudio2SourceVoice::Start</unmanaged-short>
+        </member>
+        <member name="M:Vortice.XAudio2.IXAudio2SourceVoice.Stop(Vortice.XAudio2.PlayFlags,System.Int32)">
+            <summary>
+            No documentation.
+            </summary>
+            <param name = "flags">No documentation.</param>
+            <param name = "operationSet">No documentation.</param>
+            <returns>No documentation.</returns>
+            <unmanaged>HRESULT IXAudio2SourceVoice::Stop([In] UINT32 Flags, [In] UINT32 OperationSet)</unmanaged>
+            <unmanaged-short>IXAudio2SourceVoice::Stop</unmanaged-short>
+        </member>
+        <member name="M:Vortice.XAudio2.IXAudio2SourceVoice.SubmitSourceBuffer(Vortice.XAudio2.AudioBuffer,System.Nullable{Vortice.XAudio2.BufferWma})">
+            <summary>
+            No documentation.
+            </summary>
+            <param name = "bufferRef">No documentation.</param>
+            <param name = "bufferWMARef">No documentation.</param>
+            <returns>No documentation.</returns>
+            <unmanaged>HRESULT IXAudio2SourceVoice::SubmitSourceBuffer([In] const XAUDIO2_BUFFER* pBuffer, [In, Optional] const XAUDIO2_BUFFER_WMA* pBufferWMA)</unmanaged>
+            <unmanaged-short>IXAudio2SourceVoice::SubmitSourceBuffer</unmanaged-short>
+        </member>
+        <member name="M:Vortice.XAudio2.IXAudio2SourceVoice.FlushSourceBuffers">
+            <summary>
+            No documentation.
+            </summary>
+            <returns>No documentation.</returns>
+            <unmanaged>HRESULT IXAudio2SourceVoice::FlushSourceBuffers()</unmanaged>
+            <unmanaged-short>IXAudio2SourceVoice::FlushSourceBuffers</unmanaged-short>
+        </member>
+        <member name="M:Vortice.XAudio2.IXAudio2SourceVoice.Discontinuity">
+            <summary>
+            No documentation.
+            </summary>
+            <returns>No documentation.</returns>
+            <unmanaged>HRESULT IXAudio2SourceVoice::Discontinuity()</unmanaged>
+            <unmanaged-short>IXAudio2SourceVoice::Discontinuity</unmanaged-short>
+        </member>
+        <member name="M:Vortice.XAudio2.IXAudio2SourceVoice.ExitLoop(System.Int32)">
+            <summary>
+            No documentation.
+            </summary>
+            <param name = "operationSet">No documentation.</param>
+            <returns>No documentation.</returns>
+            <unmanaged>HRESULT IXAudio2SourceVoice::ExitLoop([In] UINT32 OperationSet)</unmanaged>
+            <unmanaged-short>IXAudio2SourceVoice::ExitLoop</unmanaged-short>
+        </member>
+        <member name="M:Vortice.XAudio2.IXAudio2SourceVoice.GetState(System.Int32)">
+            <summary>
+            No documentation.
+            </summary>
+            <param name = "flags">No documentation.</param>
+            <unmanaged>void IXAudio2SourceVoice::GetState([Out] XAUDIO2_VOICE_STATE* pVoiceState, [In] UINT32 Flags)</unmanaged>
+            <unmanaged-short>IXAudio2SourceVoice::GetState</unmanaged-short>
+        </member>
+        <member name="M:Vortice.XAudio2.IXAudio2SourceVoice.SetFrequencyRatio(System.Single,System.Int32)">
+            <summary>
+            No documentation.
+            </summary>
+            <param name = "ratio">No documentation.</param>
+            <param name = "operationSet">No documentation.</param>
+            <returns>No documentation.</returns>
+            <unmanaged>HRESULT IXAudio2SourceVoice::SetFrequencyRatio([In] float Ratio, [In] UINT32 OperationSet)</unmanaged>
+            <unmanaged-short>IXAudio2SourceVoice::SetFrequencyRatio</unmanaged-short>
+        </member>
+        <member name="M:Vortice.XAudio2.IXAudio2SourceVoice.GetFrequencyRatio">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>void IXAudio2SourceVoice::GetFrequencyRatio([Out] float* pRatio)</unmanaged>
+            <unmanaged-short>IXAudio2SourceVoice::GetFrequencyRatio</unmanaged-short>
+        </member>
+        <member name="M:Vortice.XAudio2.IXAudio2SourceVoice.SetSourceSampleRate(System.Int32)">
+            <summary>
+            No documentation.
+            </summary>
+            <param name = "newSourceSampleRate">No documentation.</param>
+            <returns>No documentation.</returns>
+            <unmanaged>HRESULT IXAudio2SourceVoice::SetSourceSampleRate([In] UINT32 NewSourceSampleRate)</unmanaged>
+            <unmanaged-short>IXAudio2SourceVoice::SetSourceSampleRate</unmanaged-short>
+        </member>
+        <member name="T:Vortice.XAudio2.IXAudio2Voice">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>IXAudio2Voice</unmanaged>
+            <unmanaged-short>IXAudio2Voice</unmanaged-short>
+        </member>
+        <member name="P:Vortice.XAudio2.IXAudio2Voice.Volume">
+            <summary>	
+            Gets or Sets the overall volume level for the voice.	
+            </summary>	
+        </member>
+        <member name="M:Vortice.XAudio2.IXAudio2Voice.SetVolume(System.Single)">
+            <summary>
+            Sets the overall volume level for the voice.
+            </summary>
+            <param name="volume">Overall volume level to use.</param>
+        </member>
+        <member name="M:Vortice.XAudio2.IXAudio2Voice.SetChannelVolumes(System.Int32,System.Single[])">
+            <summary>
+            Sets the volume levels for the voice, per channel.
+            </summary>
+            <param name="channels">Number of channels in the voice.</param>
+            <param name="volumes">Array containing the new volumes of each channel in the voice. The array must have Channels elements.</param>
+        </member>
+        <member name="M:Vortice.XAudio2.IXAudio2Voice.SetEffectChain(Vortice.XAudio2.EffectDescriptor[])">
+            <summary>	
+            Replaces the effect chain of the voice.	
+            </summary>	
+            <param name="effectDescriptors">
+            An array of <see cref="T:Vortice.XAudio2.EffectDescriptor"/> that describes the new effect chain to use. 
+            If null is passed, the current effect chain is removed. If array is non null, its length must be at least of 1.
+            </param>
+        </member>
+        <member name="M:Vortice.XAudio2.IXAudio2Voice.SetOutputVoices(Vortice.XAudio2.VoiceSendDescriptor[])">
+            <summary>	
+            Designates a new set of submix or mastering voices to receive the output of the voice.	
+            </summary>	
+            <param name="outputVoices">
+            Array of <see cref="T:Vortice.XAudio2.VoiceSendDescriptor"/> structure pointers to destination voices. If outputVoices is null, the voice will send its output to the current mastering voice. To set the voice to not send its output anywhere set an array of length 0. All of the voices in a send list must have the same input sample rate, see {{XAudio2 Sample Rate Conversions}} for additional information.
+            </param>
+        </member>
+        <member name="M:Vortice.XAudio2.IXAudio2Voice.SetOutputMatrix(System.Int32,System.Int32,System.Single[])">
+            <summary>	
+            Sets the volume level of each channel of the final output for the voice. These channels are mapped to the input channels of a specified destination voice.	
+            </summary>	
+            <param name="sourceChannels">Confirms the output channel count of the voice. This is the number of channels that are produced by the last effect in the chain.</param>
+            <param name="destinationChannels">Confirms the input channel count of the destination voice.</param>
+            <param name="levelMatrix">
+            Array of [sourceChannels x destinationChannels] volume levels sent to the destination voice. 
+            The level sent from source channel S to destination channel D is specified in the form levelMatrix[sourceChannels x D + S]. 
+            For example, when rendering two-channel stereo input into 5.1 output that is weighted toward the front channels-but is absent from the center and low-frequency channels-the matrix might have the values shown in the following table.
+            </param>
+        </member>
+        <member name="M:Vortice.XAudio2.IXAudio2Voice.SetOutputMatrix(Vortice.XAudio2.IXAudio2Voice,System.Int32,System.Int32,System.Single[])">
+            <summary>	
+            Sets the volume level of each channel of the final output for the voice. These channels are mapped to the input channels of a specified destination voice.	
+            </summary>	
+            <param name="destinationVoice">
+            A destination of <see cref="T:Vortice.XAudio2.IXAudio2Voice"/> for which to set volume levels. 
+            Note If the voice sends to a single target voice then specifying null will cause SetOutputMatrix to operate on that target voice.
+            </param>
+            <param name="sourceChannels">
+            Confirms the output channel count of the voice. This is the number of channels that are produced by the last effect in the chain.
+            </param>
+            <param name="destinationChannels">
+            Confirms the input channel count of the destination voice.
+            </param>
+            <param name="levelMatrix">
+            Array of [sourceChannels x destinationChannels] volume levels sent to the destination voice. 
+            The level sent from source channel S to destination channel D is specified in the form levelMatrix[sourceChannels x D + S]. 
+            For example, when rendering two-channel stereo input into 5.1 output that is weighted toward the front channels-but is absent from the center and low-frequency channels-the matrix might have the values shown in the following table.
+            </param>
+        </member>
+        <member name="M:Vortice.XAudio2.IXAudio2Voice.SetOutputMatrix(System.Int32,System.Int32,System.Single[],System.Int32)">
+            <summary>	
+            Sets the volume level of each channel of the final output for the voice. These channels are mapped to the input channels of a specified destination voice.	
+            </summary>	
+            <param name="sourceChannels">
+            Confirms the output channel count of the voice. This is the number of channels that are produced by the last effect in the chain.
+            </param>
+            <param name="destinationChannels">
+            Confirms the input channel count of the destination voice.
+            </param>
+            <param name="levelMatrix">
+            Array of [sourceChannels x destinationChannels] volume levels sent to the destination voice. 
+            The level sent from source channel S to destination channel D is specified in the form levelMatrix[sourceChannels x D + S]. 
+            For example, when rendering two-channel stereo input into 5.1 output that is weighted toward the front channels-but is absent from the center and low-frequency channels-the matrix might have the values shown in the following table.
+            </param>
+            <param name="operationSet">Identifies this call as part of a deferred batch. See the {{XAudio2 Operation Sets}} overview for more information.</param>
+        </member>
+        <member name="M:Vortice.XAudio2.IXAudio2Voice.EnableEffect(System.Int32)">
+            <summary>	
+            Enables the effect at a given position in the effect chain of the voice.	
+            </summary>	
+            <param name="effectIndex">Zero-based index of an effect in the effect chain of the voice.</param>
+        </member>
+        <member name="M:Vortice.XAudio2.IXAudio2Voice.DisableEffect(System.Int32)">
+            <summary>	
+            Disables the effect at a given position in the effect chain of the voice.	
+            </summary>	
+            <param name="effectIndex">Zero-based index of an effect in the effect chain of the voice.</param>
+        </member>
+        <member name="M:Vortice.XAudio2.IXAudio2Voice.GetEffectParameters``1(System.Int32)">
+            <summary>	
+            Sets parameters for a given effect in the voice's effect chain.
+            </summary>	
+            <param name="effectIndex">[in]  Zero-based index of an effect within the voice's effect chain. </param>
+            <returns>Returns the current values of the effect-specific parameters.</returns>
+        </member>
+        <member name="M:Vortice.XAudio2.IXAudio2Voice.GetEffectParameters(System.Int32,System.Byte[])">
+            <summary>	
+            Returns the current effect-specific parameters of a given effect in the voice's effect chain.	
+            </summary>	
+            <param name="effectIndex">Zero-based index of an effect within the voice's effect chain.</param>
+            <param name="effectParameters">Returns the current values of the effect-specific parameters.</param>
+            <returns>No documentation.</returns>
+        </member>
+        <member name="M:Vortice.XAudio2.IXAudio2Voice.SetEffectParameters(System.Int32,System.Byte[],System.Int32)">
+            <summary>	
+            Sets parameters for a given effect in the voice's effect chain.
+            </summary>	
+            <param name="effectIndex">Zero-based index of an effect within the voice's effect chain.</param>
+            <param name="effectParameter">The the current values of the effect-specific parameters.</param>
+            <param name="operationSet">Identifies this call as part of a deferred batch.</param>
+        </member>
+        <member name="M:Vortice.XAudio2.IXAudio2Voice.SetEffectParameters``1(System.Int32,``0,System.Int32)">
+            <summary>	
+            Sets parameters for a given effect in the voice's effect chain.
+            </summary>	
+            <param name="effectIndex">Zero-based index of an effect within the voice's effect chain.</param>
+            <param name="effectParameter">The current values of the effect-specific parameters.</param>
+            <param name="operationSet">Identifies this call as part of a deferred batch.</param>
+        </member>
+        <member name="P:Vortice.XAudio2.IXAudio2Voice.VoiceDetails">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>void IXAudio2Voice::GetVoiceDetails([Out] XAUDIO2_VOICE_DETAILS* pVoiceDetails)</unmanaged>
+            <unmanaged-short>IXAudio2Voice::GetVoiceDetails</unmanaged-short>
+        </member>
+        <member name="M:Vortice.XAudio2.IXAudio2Voice.GetVoiceDetails">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>void IXAudio2Voice::GetVoiceDetails([Out] XAUDIO2_VOICE_DETAILS* pVoiceDetails)</unmanaged>
+            <unmanaged-short>IXAudio2Voice::GetVoiceDetails</unmanaged-short>
+        </member>
+        <member name="M:Vortice.XAudio2.IXAudio2Voice.SetOutputVoices(System.Nullable{Vortice.XAudio2.VoiceSendDescriptors})">
+            <summary>
+            No documentation.
+            </summary>
+            <param name = "sendListRef">No documentation.</param>
+            <returns>No documentation.</returns>
+            <unmanaged>HRESULT IXAudio2Voice::SetOutputVoices([In, Optional] const XAUDIO2_VOICE_SENDS* pSendList)</unmanaged>
+            <unmanaged-short>IXAudio2Voice::SetOutputVoices</unmanaged-short>
+        </member>
+        <member name="M:Vortice.XAudio2.IXAudio2Voice.SetEffectChain(System.Nullable{Vortice.XAudio2.EffectChain})">
+            <summary>
+            No documentation.
+            </summary>
+            <param name = "effectChainRef">No documentation.</param>
+            <returns>No documentation.</returns>
+            <unmanaged>HRESULT IXAudio2Voice::SetEffectChain([In, Optional] const XAUDIO2_EFFECT_CHAIN* pEffectChain)</unmanaged>
+            <unmanaged-short>IXAudio2Voice::SetEffectChain</unmanaged-short>
+        </member>
+        <member name="M:Vortice.XAudio2.IXAudio2Voice.EnableEffect(System.Int32,System.Int32)">
+            <summary>
+            No documentation.
+            </summary>
+            <param name = "effectIndex">No documentation.</param>
+            <param name = "operationSet">No documentation.</param>
+            <returns>No documentation.</returns>
+            <unmanaged>HRESULT IXAudio2Voice::EnableEffect([In] UINT32 EffectIndex, [In] UINT32 OperationSet)</unmanaged>
+            <unmanaged-short>IXAudio2Voice::EnableEffect</unmanaged-short>
+        </member>
+        <member name="M:Vortice.XAudio2.IXAudio2Voice.DisableEffect(System.Int32,System.Int32)">
+            <summary>
+            No documentation.
+            </summary>
+            <param name = "effectIndex">No documentation.</param>
+            <param name = "operationSet">No documentation.</param>
+            <returns>No documentation.</returns>
+            <unmanaged>HRESULT IXAudio2Voice::DisableEffect([In] UINT32 EffectIndex, [In] UINT32 OperationSet)</unmanaged>
+            <unmanaged-short>IXAudio2Voice::DisableEffect</unmanaged-short>
+        </member>
+        <member name="M:Vortice.XAudio2.IXAudio2Voice.GetEffectState(System.Int32)">
+            <summary>
+            No documentation.
+            </summary>
+            <param name = "effectIndex">No documentation.</param>
+            <unmanaged>void IXAudio2Voice::GetEffectState([In] UINT32 EffectIndex, [Out] BOOL* pEnabled)</unmanaged>
+            <unmanaged-short>IXAudio2Voice::GetEffectState</unmanaged-short>
+        </member>
+        <member name="M:Vortice.XAudio2.IXAudio2Voice.SetEffectParameters(System.Int32,System.IntPtr,System.Int32,System.Int32)">
+            <summary>
+            No documentation.
+            </summary>
+            <param name = "effectIndex">No documentation.</param>
+            <param name = "parametersRef">No documentation.</param>
+            <param name = "parametersByteSize">No documentation.</param>
+            <param name = "operationSet">No documentation.</param>
+            <returns>No documentation.</returns>
+            <unmanaged>HRESULT IXAudio2Voice::SetEffectParameters([In] UINT32 EffectIndex, [In, Buffer] const void* pParameters, [In] UINT32 ParametersByteSize, [In] UINT32 OperationSet)</unmanaged>
+            <unmanaged-short>IXAudio2Voice::SetEffectParameters</unmanaged-short>
+        </member>
+        <member name="M:Vortice.XAudio2.IXAudio2Voice.GetEffectParameters(System.Int32,System.IntPtr,System.Int32)">
+            <summary>
+            No documentation.
+            </summary>
+            <param name = "effectIndex">No documentation.</param>
+            <param name = "parametersRef">No documentation.</param>
+            <param name = "parametersByteSize">No documentation.</param>
+            <returns>No documentation.</returns>
+            <unmanaged>HRESULT IXAudio2Voice::GetEffectParameters([In] UINT32 EffectIndex, [Out, Buffer] void* pParameters, [In] UINT32 ParametersByteSize)</unmanaged>
+            <unmanaged-short>IXAudio2Voice::GetEffectParameters</unmanaged-short>
+        </member>
+        <member name="M:Vortice.XAudio2.IXAudio2Voice.SetFilterParameters(Vortice.XAudio2.FilterParameters,System.Int32)">
+            <summary>
+            No documentation.
+            </summary>
+            <param name = "parametersRef">No documentation.</param>
+            <param name = "operationSet">No documentation.</param>
+            <returns>No documentation.</returns>
+            <unmanaged>HRESULT IXAudio2Voice::SetFilterParameters([In] const XAUDIO2_FILTER_PARAMETERS* pParameters, [In] UINT32 OperationSet)</unmanaged>
+            <unmanaged-short>IXAudio2Voice::SetFilterParameters</unmanaged-short>
+        </member>
+        <member name="M:Vortice.XAudio2.IXAudio2Voice.GetFilterParameters">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>void IXAudio2Voice::GetFilterParameters([Out] XAUDIO2_FILTER_PARAMETERS* pParameters)</unmanaged>
+            <unmanaged-short>IXAudio2Voice::GetFilterParameters</unmanaged-short>
+        </member>
+        <member name="M:Vortice.XAudio2.IXAudio2Voice.SetOutputFilterParameters(Vortice.XAudio2.IXAudio2Voice,Vortice.XAudio2.FilterParameters,System.Int32)">
+            <summary>
+            No documentation.
+            </summary>
+            <param name = "destinationVoiceRef">No documentation.</param>
+            <param name = "parametersRef">No documentation.</param>
+            <param name = "operationSet">No documentation.</param>
+            <returns>No documentation.</returns>
+            <unmanaged>HRESULT IXAudio2Voice::SetOutputFilterParameters([In, Optional] IXAudio2Voice* pDestinationVoice, [In] const XAUDIO2_FILTER_PARAMETERS* pParameters, [In] UINT32 OperationSet)</unmanaged>
+            <unmanaged-short>IXAudio2Voice::SetOutputFilterParameters</unmanaged-short>
+        </member>
+        <member name="M:Vortice.XAudio2.IXAudio2Voice.GetOutputFilterParameters(Vortice.XAudio2.IXAudio2Voice)">
+            <summary>
+            No documentation.
+            </summary>
+            <param name = "destinationVoiceRef">No documentation.</param>
+            <unmanaged>void IXAudio2Voice::GetOutputFilterParameters([In, Optional] IXAudio2Voice* pDestinationVoice, [Out] XAUDIO2_FILTER_PARAMETERS* pParameters)</unmanaged>
+            <unmanaged-short>IXAudio2Voice::GetOutputFilterParameters</unmanaged-short>
+        </member>
+        <member name="M:Vortice.XAudio2.IXAudio2Voice.SetVolume(System.Single,System.Int32)">
+            <summary>
+            No documentation.
+            </summary>
+            <param name = "volume">No documentation.</param>
+            <param name = "operationSet">No documentation.</param>
+            <returns>No documentation.</returns>
+            <unmanaged>HRESULT IXAudio2Voice::SetVolume([In] float Volume, [In] UINT32 OperationSet)</unmanaged>
+            <unmanaged-short>IXAudio2Voice::SetVolume</unmanaged-short>
+        </member>
+        <member name="M:Vortice.XAudio2.IXAudio2Voice.GetVolume">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>void IXAudio2Voice::GetVolume([Out] float* pVolume)</unmanaged>
+            <unmanaged-short>IXAudio2Voice::GetVolume</unmanaged-short>
+        </member>
+        <member name="M:Vortice.XAudio2.IXAudio2Voice.SetChannelVolumes(System.Int32,System.Single[],System.Int32)">
+            <summary>
+            No documentation.
+            </summary>
+            <param name = "channels">No documentation.</param>
+            <param name = "volumesRef">No documentation.</param>
+            <param name = "operationSet">No documentation.</param>
+            <returns>No documentation.</returns>
+            <unmanaged>HRESULT IXAudio2Voice::SetChannelVolumes([In] UINT32 Channels, [In, Buffer] const float* pVolumes, [In] UINT32 OperationSet)</unmanaged>
+            <unmanaged-short>IXAudio2Voice::SetChannelVolumes</unmanaged-short>
+        </member>
+        <member name="M:Vortice.XAudio2.IXAudio2Voice.GetChannelVolumes(System.Int32,System.Single[])">
+            <summary>
+            No documentation.
+            </summary>
+            <param name = "channels">No documentation.</param>
+            <param name = "volumesRef">No documentation.</param>
+            <unmanaged>void IXAudio2Voice::GetChannelVolumes([In] UINT32 Channels, [Out, Buffer] float* pVolumes)</unmanaged>
+            <unmanaged-short>IXAudio2Voice::GetChannelVolumes</unmanaged-short>
+        </member>
+        <member name="M:Vortice.XAudio2.IXAudio2Voice.SetOutputMatrix(Vortice.XAudio2.IXAudio2Voice,System.Int32,System.Int32,System.Single[],System.Int32)">
+            <summary>
+            No documentation.
+            </summary>
+            <param name = "destinationVoiceRef">No documentation.</param>
+            <param name = "sourceChannels">No documentation.</param>
+            <param name = "destinationChannels">No documentation.</param>
+            <param name = "levelMatrixRef">No documentation.</param>
+            <param name = "operationSet">No documentation.</param>
+            <returns>No documentation.</returns>
+            <unmanaged>HRESULT IXAudio2Voice::SetOutputMatrix([In, Optional] IXAudio2Voice* pDestinationVoice, [In] UINT32 SourceChannels, [In] UINT32 DestinationChannels, [In, Buffer] const float* pLevelMatrix, [In] UINT32 OperationSet)</unmanaged>
+            <unmanaged-short>IXAudio2Voice::SetOutputMatrix</unmanaged-short>
+        </member>
+        <member name="M:Vortice.XAudio2.IXAudio2Voice.GetOutputMatrix(Vortice.XAudio2.IXAudio2Voice,System.Int32,System.Int32,System.Single[])">
+            <summary>
+            No documentation.
+            </summary>
+            <param name = "destinationVoiceRef">No documentation.</param>
+            <param name = "sourceChannels">No documentation.</param>
+            <param name = "destinationChannels">No documentation.</param>
+            <param name = "levelMatrixRef">No documentation.</param>
+            <unmanaged>void IXAudio2Voice::GetOutputMatrix([In, Optional] IXAudio2Voice* pDestinationVoice, [In] UINT32 SourceChannels, [In] UINT32 DestinationChannels, [Out, Buffer] float* pLevelMatrix)</unmanaged>
+            <unmanaged-short>IXAudio2Voice::GetOutputMatrix</unmanaged-short>
+        </member>
+        <member name="M:Vortice.XAudio2.IXAudio2Voice.DestroyVoice">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>void IXAudio2Voice::DestroyVoice()</unmanaged>
+            <unmanaged-short>IXAudio2Voice::DestroyVoice</unmanaged-short>
+        </member>
+        <member name="T:Vortice.XAudio2.Listener">
+            <summary>
+            Defines a point of 3D audio reception.
+            </summary>
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>X3DAUDIO_LISTENER</unmanaged>
+            <unmanaged-short>X3DAUDIO_LISTENER</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.Listener.Cone">
+            <summary>
+            Cone data.
+            </summary>
+        </member>
+        <member name="F:Vortice.XAudio2.Listener.OrientFront">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>OrientFront</unmanaged>
+            <unmanaged-short>OrientFront</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.Listener.OrientTop">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>OrientTop</unmanaged>
+            <unmanaged-short>OrientTop</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.Listener.Position">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>Position</unmanaged>
+            <unmanaged-short>Position</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.Listener.Velocity">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>Velocity</unmanaged>
+            <unmanaged-short>Velocity</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.Listener.ConePointer">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>pCone</unmanaged>
+            <unmanaged-short>pCone</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.X3DAudio.SpeedOfSound">
+            <summary>
+            Speed of sound in meters per second for dry air at approximately 20C.
+            </summary>
+        </member>
+        <member name="M:Vortice.XAudio2.X3DAudio.#ctor(Vortice.Multimedia.Speakers)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Vortice.XAudio2.X3DAudio" /> class.
+            </summary>
+            <param name="speakers">The speakers config.</param>
+        </member>
+        <member name="M:Vortice.XAudio2.X3DAudio.#ctor(Vortice.Multimedia.Speakers,System.Single)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Vortice.XAudio2.X3DAudio"/> class.
+            </summary>
+            <param name="speakers">The speakers config.</param>
+            <param name="speedOfSound">The speed of sound.</param>
+        </member>
+        <member name="M:Vortice.XAudio2.X3DAudio.Calculate(Vortice.XAudio2.Listener,Vortice.XAudio2.Emitter,Vortice.XAudio2.CalculateFlags,System.Int32,System.Int32)">
+            <summary>
+            Calculates DSP settings for the specified listener and emitter.
+            </summary>
+            <param name="listener">The <see cref="T:Vortice.XAudio2.Listener"/>.</param>
+            <param name="emitter">The <see cref="T:Vortice.XAudio2.Emitter"/>.</param>
+            <param name="flags">The <see cref="T:Vortice.XAudio2.CalculateFlags"/>.</param>
+            <param name="sourceChannelCount">The source channel count.</param>
+            <param name="destinationChannelCount">The destination channel count.</param>
+            <returns>An instance of <see cref="T:Vortice.XAudio2.DspSettings"/> class.</returns>
+        </member>
+        <member name="M:Vortice.XAudio2.X3DAudio.Calculate(Vortice.XAudio2.Listener,Vortice.XAudio2.Emitter,Vortice.XAudio2.CalculateFlags,Vortice.XAudio2.DspSettings)">
+            <summary>
+            Calculates DSP settings for the specified listener and emitter. See remarks.
+            </summary>
+            <param name="listener">The <see cref="T:Vortice.XAudio2.Listener"/>.</param>
+            <param name="emitter">The <see cref="T:Vortice.XAudio2.Emitter"/>.</param>
+            <param name="flags">The <see cref="T:Vortice.XAudio2.CalculateFlags"/>.</param>
+            <param name="settings">The <see cref="T:Vortice.XAudio2.DspSettings"/>.</param>
+            <remarks>The source and destination channel count must be set on <see cref="T:Vortice.XAudio2.DspSettings" /> before calling this method.</remarks>
+        </member>
+        <member name="M:Vortice.XAudio2.XAudio2.XAudio2Create(Vortice.XAudio2.ProcessorSpecifier,System.Boolean)">
+            <summary>
+            Create new instance of <see cref="T:Vortice.XAudio2.IXAudio2"/> class.
+            </summary>
+            <param name="processorSpecifier"></param>
+            <param name="registerCallback">Whether to register for callback, uses native RegisterForCallbacks.</param>
+            <returns>New instance of <see cref="T:Vortice.XAudio2.IXAudio2"/> class.</returns>
+        </member>
+        <member name="T:Vortice.XAudio2.BufferFlags">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>XAUDIO2_BUFFER_FLAGS</unmanaged>
+            <unmanaged-short>XAUDIO2_BUFFER_FLAGS</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.BufferFlags.EndOfStream">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>XAUDIO2_END_OF_STREAM</unmanaged>
+            <unmanaged-short>XAUDIO2_END_OF_STREAM</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.BufferFlags.None">
+            <summary>
+            Synthetic NONE value
+            </summary>
+            <unmanaged>None</unmanaged>
+            <unmanaged-short>None</unmanaged-short>
+        </member>
+        <member name="T:Vortice.XAudio2.CalculateFlags">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>X3DAudioCalculateFlags</unmanaged>
+            <unmanaged-short>X3DAudioCalculateFlags</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.CalculateFlags.Matrix">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>X3DAUDIO_CALCULATE_MATRIX</unmanaged>
+            <unmanaged-short>X3DAUDIO_CALCULATE_MATRIX</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.CalculateFlags.Delay">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>X3DAUDIO_CALCULATE_DELAY</unmanaged>
+            <unmanaged-short>X3DAUDIO_CALCULATE_DELAY</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.CalculateFlags.LpfDirect">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>X3DAUDIO_CALCULATE_LPF_DIRECT</unmanaged>
+            <unmanaged-short>X3DAUDIO_CALCULATE_LPF_DIRECT</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.CalculateFlags.LpfReverb">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>X3DAUDIO_CALCULATE_LPF_REVERB</unmanaged>
+            <unmanaged-short>X3DAUDIO_CALCULATE_LPF_REVERB</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.CalculateFlags.Reverb">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>X3DAUDIO_CALCULATE_REVERB</unmanaged>
+            <unmanaged-short>X3DAUDIO_CALCULATE_REVERB</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.CalculateFlags.Doppler">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>X3DAUDIO_CALCULATE_DOPPLER</unmanaged>
+            <unmanaged-short>X3DAUDIO_CALCULATE_DOPPLER</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.CalculateFlags.EmitterAngle">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>X3DAUDIO_CALCULATE_EMITTER_ANGLE</unmanaged>
+            <unmanaged-short>X3DAUDIO_CALCULATE_EMITTER_ANGLE</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.CalculateFlags.ZeroCenter">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>X3DAUDIO_CALCULATE_ZEROCENTER</unmanaged>
+            <unmanaged-short>X3DAUDIO_CALCULATE_ZEROCENTER</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.CalculateFlags.RedirectToLfe">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>X3DAUDIO_CALCULATE_REDIRECT_TO_LFE</unmanaged>
+            <unmanaged-short>X3DAUDIO_CALCULATE_REDIRECT_TO_LFE</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.CalculateFlags.None">
+            <summary>
+            Synthetic NONE value
+            </summary>
+            <unmanaged>None</unmanaged>
+            <unmanaged-short>None</unmanaged-short>
+        </member>
+        <member name="T:Vortice.XAudio2.FilterType">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>XAUDIO2_FILTER_TYPE</unmanaged>
+            <unmanaged-short>XAUDIO2_FILTER_TYPE</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.FilterType.LowPassFilter">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>LowPassFilter</unmanaged>
+            <unmanaged-short>LowPassFilter</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.FilterType.BandPassFilter">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>BandPassFilter</unmanaged>
+            <unmanaged-short>BandPassFilter</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.FilterType.HighPassFilter">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>HighPassFilter</unmanaged>
+            <unmanaged-short>HighPassFilter</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.FilterType.NotchFilter">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>NotchFilter</unmanaged>
+            <unmanaged-short>NotchFilter</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.FilterType.LowPassOnePoleFilter">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>LowPassOnePoleFilter</unmanaged>
+            <unmanaged-short>LowPassOnePoleFilter</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.FilterType.HighPassOnePoleFilter">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>HighPassOnePoleFilter</unmanaged>
+            <unmanaged-short>HighPassOnePoleFilter</unmanaged-short>
+        </member>
+        <member name="T:Vortice.XAudio2.LogType">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>XAUDIO2_LOG_TYPE</unmanaged>
+            <unmanaged-short>XAUDIO2_LOG_TYPE</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.LogType.Errors">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>XAUDIO2_LOG_ERRORS</unmanaged>
+            <unmanaged-short>XAUDIO2_LOG_ERRORS</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.LogType.Warnings">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>XAUDIO2_LOG_WARNINGS</unmanaged>
+            <unmanaged-short>XAUDIO2_LOG_WARNINGS</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.LogType.Info">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>XAUDIO2_LOG_INFO</unmanaged>
+            <unmanaged-short>XAUDIO2_LOG_INFO</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.LogType.Detail">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>XAUDIO2_LOG_DETAIL</unmanaged>
+            <unmanaged-short>XAUDIO2_LOG_DETAIL</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.LogType.ApiCalls">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>XAUDIO2_LOG_API_CALLS</unmanaged>
+            <unmanaged-short>XAUDIO2_LOG_API_CALLS</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.LogType.FuncCalls">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>XAUDIO2_LOG_FUNC_CALLS</unmanaged>
+            <unmanaged-short>XAUDIO2_LOG_FUNC_CALLS</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.LogType.Timing">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>XAUDIO2_LOG_TIMING</unmanaged>
+            <unmanaged-short>XAUDIO2_LOG_TIMING</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.LogType.Locks">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>XAUDIO2_LOG_LOCKS</unmanaged>
+            <unmanaged-short>XAUDIO2_LOG_LOCKS</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.LogType.Memory">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>XAUDIO2_LOG_MEMORY</unmanaged>
+            <unmanaged-short>XAUDIO2_LOG_MEMORY</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.LogType.Streaming">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>XAUDIO2_LOG_STREAMING</unmanaged>
+            <unmanaged-short>XAUDIO2_LOG_STREAMING</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.LogType.None">
+            <summary>
+            Synthetic NONE value
+            </summary>
+            <unmanaged>None</unmanaged>
+            <unmanaged-short>None</unmanaged-short>
+        </member>
+        <member name="T:Vortice.XAudio2.PlayFlags">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>XAUDIO2_PLAY_FLAGS</unmanaged>
+            <unmanaged-short>XAUDIO2_PLAY_FLAGS</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.PlayFlags.Tails">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>XAUDIO2_PLAY_TAILS</unmanaged>
+            <unmanaged-short>XAUDIO2_PLAY_TAILS</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.PlayFlags.None">
+            <summary>
+            Synthetic NONE value
+            </summary>
+            <unmanaged>None</unmanaged>
+            <unmanaged-short>None</unmanaged-short>
+        </member>
+        <member name="T:Vortice.XAudio2.ProcessorSpecifier">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>XAUDIO2_WINDOWS_PROCESSOR_SPECIFIER</unmanaged>
+            <unmanaged-short>XAUDIO2_WINDOWS_PROCESSOR_SPECIFIER</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.ProcessorSpecifier.Processor1">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>Processor1</unmanaged>
+            <unmanaged-short>Processor1</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.ProcessorSpecifier.Processor2">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>Processor2</unmanaged>
+            <unmanaged-short>Processor2</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.ProcessorSpecifier.Processor3">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>Processor3</unmanaged>
+            <unmanaged-short>Processor3</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.ProcessorSpecifier.Processor4">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>Processor4</unmanaged>
+            <unmanaged-short>Processor4</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.ProcessorSpecifier.Processor5">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>Processor5</unmanaged>
+            <unmanaged-short>Processor5</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.ProcessorSpecifier.Processor6">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>Processor6</unmanaged>
+            <unmanaged-short>Processor6</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.ProcessorSpecifier.Processor7">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>Processor7</unmanaged>
+            <unmanaged-short>Processor7</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.ProcessorSpecifier.Processor8">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>Processor8</unmanaged>
+            <unmanaged-short>Processor8</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.ProcessorSpecifier.Processor9">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>Processor9</unmanaged>
+            <unmanaged-short>Processor9</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.ProcessorSpecifier.Processor10">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>Processor10</unmanaged>
+            <unmanaged-short>Processor10</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.ProcessorSpecifier.Processor11">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>Processor11</unmanaged>
+            <unmanaged-short>Processor11</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.ProcessorSpecifier.Processor12">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>Processor12</unmanaged>
+            <unmanaged-short>Processor12</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.ProcessorSpecifier.Processor13">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>Processor13</unmanaged>
+            <unmanaged-short>Processor13</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.ProcessorSpecifier.Processor14">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>Processor14</unmanaged>
+            <unmanaged-short>Processor14</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.ProcessorSpecifier.Processor15">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>Processor15</unmanaged>
+            <unmanaged-short>Processor15</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.ProcessorSpecifier.Processor16">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>Processor16</unmanaged>
+            <unmanaged-short>Processor16</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.ProcessorSpecifier.Processor17">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>Processor17</unmanaged>
+            <unmanaged-short>Processor17</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.ProcessorSpecifier.Processor18">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>Processor18</unmanaged>
+            <unmanaged-short>Processor18</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.ProcessorSpecifier.Processor19">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>Processor19</unmanaged>
+            <unmanaged-short>Processor19</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.ProcessorSpecifier.Processor20">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>Processor20</unmanaged>
+            <unmanaged-short>Processor20</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.ProcessorSpecifier.Processor21">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>Processor21</unmanaged>
+            <unmanaged-short>Processor21</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.ProcessorSpecifier.Processor22">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>Processor22</unmanaged>
+            <unmanaged-short>Processor22</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.ProcessorSpecifier.Processor23">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>Processor23</unmanaged>
+            <unmanaged-short>Processor23</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.ProcessorSpecifier.Processor24">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>Processor24</unmanaged>
+            <unmanaged-short>Processor24</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.ProcessorSpecifier.Processor25">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>Processor25</unmanaged>
+            <unmanaged-short>Processor25</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.ProcessorSpecifier.Processor26">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>Processor26</unmanaged>
+            <unmanaged-short>Processor26</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.ProcessorSpecifier.Processor27">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>Processor27</unmanaged>
+            <unmanaged-short>Processor27</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.ProcessorSpecifier.Processor28">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>Processor28</unmanaged>
+            <unmanaged-short>Processor28</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.ProcessorSpecifier.Processor29">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>Processor29</unmanaged>
+            <unmanaged-short>Processor29</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.ProcessorSpecifier.Processor30">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>Processor30</unmanaged>
+            <unmanaged-short>Processor30</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.ProcessorSpecifier.Processor31">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>Processor31</unmanaged>
+            <unmanaged-short>Processor31</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.ProcessorSpecifier.Processor32">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>Processor32</unmanaged>
+            <unmanaged-short>Processor32</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.ProcessorSpecifier.AnyProcessor">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>XAUDIO2_ANY_PROCESSOR</unmanaged>
+            <unmanaged-short>XAUDIO2_ANY_PROCESSOR</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.ProcessorSpecifier.UseDefaultProcessor">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>XAUDIO2_USE_DEFAULT_PROCESSOR</unmanaged>
+            <unmanaged-short>XAUDIO2_USE_DEFAULT_PROCESSOR</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.ProcessorSpecifier.DefaultProcessor">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>XAUDIO2_DEFAULT_PROCESSOR</unmanaged>
+            <unmanaged-short>XAUDIO2_DEFAULT_PROCESSOR</unmanaged-short>
+        </member>
+        <member name="T:Vortice.XAudio2.VoiceFlags">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>XAUDIO2_VOICE_FLAGS</unmanaged>
+            <unmanaged-short>XAUDIO2_VOICE_FLAGS</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.VoiceFlags.NoPitch">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>XAUDIO2_VOICE_NOPITCH</unmanaged>
+            <unmanaged-short>XAUDIO2_VOICE_NOPITCH</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.VoiceFlags.NoSampleRateConversion">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>XAUDIO2_VOICE_NOSRC</unmanaged>
+            <unmanaged-short>XAUDIO2_VOICE_NOSRC</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.VoiceFlags.UseFilter">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>XAUDIO2_VOICE_USEFILTER</unmanaged>
+            <unmanaged-short>XAUDIO2_VOICE_USEFILTER</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.VoiceFlags.Nosamplesplayed">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>XAUDIO2_VOICE_NOSAMPLESPLAYED</unmanaged>
+            <unmanaged-short>XAUDIO2_VOICE_NOSAMPLESPLAYED</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.VoiceFlags.None">
+            <summary>
+            Synthetic NONE value
+            </summary>
+            <unmanaged>None</unmanaged>
+            <unmanaged-short>None</unmanaged-short>
+        </member>
+        <member name="T:Vortice.XAudio2.VoiceSendFlags">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>XAUDIO2_VOICE_SEND_FLAGS</unmanaged>
+            <unmanaged-short>XAUDIO2_VOICE_SEND_FLAGS</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.VoiceSendFlags.UseFilter">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>XAUDIO2_SEND_USEFILTER</unmanaged>
+            <unmanaged-short>XAUDIO2_SEND_USEFILTER</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.VoiceSendFlags.None">
+            <summary>
+            Synthetic NONE value
+            </summary>
+            <unmanaged>None</unmanaged>
+            <unmanaged-short>None</unmanaged-short>
+        </member>
+        <member name="T:Vortice.XAudio2.XAudio2Flags">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>XAUDIO2_FLAGS</unmanaged>
+            <unmanaged-short>XAUDIO2_FLAGS</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.XAudio2Flags.DebugEngine">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>XAUDIO2_DEBUG_ENGINE</unmanaged>
+            <unmanaged-short>XAUDIO2_DEBUG_ENGINE</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.XAudio2Flags.None">
+            <summary>
+            Synthetic NONE value
+            </summary>
+            <unmanaged>None</unmanaged>
+            <unmanaged-short>None</unmanaged-short>
+        </member>
+        <member name="T:Vortice.XAudio2.ResultCode">
+            <summary>
+            Functions
+            </summary>
+        </member>
+        <member name="F:Vortice.XAudio2.ResultCode.InvalidCall">
+            <summary>
+            Constant InvalidCall
+            </summary>
+            <unmanaged>XAUDIO2_E_INVALID_CALL</unmanaged>
+            <unmanaged-short>XAUDIO2_E_INVALID_CALL</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.ResultCode.XmaDecoderError">
+            <summary>
+            Constant XmaDecoderError
+            </summary>
+            <unmanaged>XAUDIO2_E_XMA_DECODER_ERROR</unmanaged>
+            <unmanaged-short>XAUDIO2_E_XMA_DECODER_ERROR</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.ResultCode.XapoCreationFailed">
+            <summary>
+            Constant XapoCreationFailed
+            </summary>
+            <unmanaged>XAUDIO2_E_XAPO_CREATION_FAILED</unmanaged>
+            <unmanaged-short>XAUDIO2_E_XAPO_CREATION_FAILED</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.ResultCode.DeviceInvalidated">
+            <summary>
+            Constant DeviceInvalidated
+            </summary>
+            <unmanaged>XAUDIO2_E_DEVICE_INVALIDATED</unmanaged>
+            <unmanaged-short>XAUDIO2_E_DEVICE_INVALIDATED</unmanaged-short>
+        </member>
+        <member name="T:Vortice.XAudio2.IXAudio2EngineCallback">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>IXAudio2EngineCallback</unmanaged>
+            <unmanaged-short>IXAudio2EngineCallback</unmanaged-short>
+        </member>
+        <member name="T:Vortice.XAudio2.IXAudio2MasteringVoice">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>IXAudio2MasteringVoice</unmanaged>
+            <unmanaged-short>IXAudio2MasteringVoice</unmanaged-short>
+        </member>
+        <member name="P:Vortice.XAudio2.IXAudio2MasteringVoice.ChannelMask">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>HRESULT IXAudio2MasteringVoice::GetChannelMask([Out] DWORD* pChannelmask)</unmanaged>
+            <unmanaged-short>IXAudio2MasteringVoice::GetChannelMask</unmanaged-short>
+        </member>
+        <member name="M:Vortice.XAudio2.IXAudio2MasteringVoice.GetChannelMask">
+            <summary>
+            No documentation.
+            </summary>
+            <returns>No documentation.</returns>
+            <unmanaged>HRESULT IXAudio2MasteringVoice::GetChannelMask([Out] DWORD* pChannelmask)</unmanaged>
+            <unmanaged-short>IXAudio2MasteringVoice::GetChannelMask</unmanaged-short>
+        </member>
+        <member name="T:Vortice.XAudio2.IXAudio2SubmixVoice">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>IXAudio2SubmixVoice</unmanaged>
+            <unmanaged-short>IXAudio2SubmixVoice</unmanaged-short>
+        </member>
+        <member name="T:Vortice.XAudio2.IXAudio2VoiceCallback">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>IXAudio2VoiceCallback</unmanaged>
+            <unmanaged-short>IXAudio2VoiceCallback</unmanaged-short>
+        </member>
+        <member name="T:Vortice.XAudio2.BufferWma">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>XAUDIO2_BUFFER_WMA</unmanaged>
+            <unmanaged-short>XAUDIO2_BUFFER_WMA</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.BufferWma.DecodedPacketCumulativeBytesPointer">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>pDecodedPacketCumulativeBytes</unmanaged>
+            <unmanaged-short>pDecodedPacketCumulativeBytes</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.BufferWma.PacketCount">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>PacketCount</unmanaged>
+            <unmanaged-short>PacketCount</unmanaged-short>
+        </member>
+        <member name="T:Vortice.XAudio2.Cone">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>X3DAUDIO_CONE</unmanaged>
+            <unmanaged-short>X3DAUDIO_CONE</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.Cone.InnerAngle">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>InnerAngle</unmanaged>
+            <unmanaged-short>InnerAngle</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.Cone.OuterAngle">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>OuterAngle</unmanaged>
+            <unmanaged-short>OuterAngle</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.Cone.InnerVolume">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>InnerVolume</unmanaged>
+            <unmanaged-short>InnerVolume</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.Cone.OuterVolume">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>OuterVolume</unmanaged>
+            <unmanaged-short>OuterVolume</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.Cone.InnerLpf">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>InnerLPF</unmanaged>
+            <unmanaged-short>InnerLPF</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.Cone.OuterLpf">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>OuterLPF</unmanaged>
+            <unmanaged-short>OuterLPF</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.Cone.InnerReverb">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>InnerReverb</unmanaged>
+            <unmanaged-short>InnerReverb</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.Cone.OuterReverb">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>OuterReverb</unmanaged>
+            <unmanaged-short>OuterReverb</unmanaged-short>
+        </member>
+        <member name="T:Vortice.XAudio2.CurvePoint">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>X3DAUDIO_DISTANCE_CURVE_POINT</unmanaged>
+            <unmanaged-short>X3DAUDIO_DISTANCE_CURVE_POINT</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.CurvePoint.Distance">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>Distance</unmanaged>
+            <unmanaged-short>Distance</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.CurvePoint.DspSetting">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>DSPSetting</unmanaged>
+            <unmanaged-short>DSPSetting</unmanaged-short>
+        </member>
+        <member name="T:Vortice.XAudio2.DebugConfiguration">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>XAUDIO2_DEBUG_CONFIGURATION</unmanaged>
+            <unmanaged-short>XAUDIO2_DEBUG_CONFIGURATION</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.DebugConfiguration.TraceMask">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>TraceMask</unmanaged>
+            <unmanaged-short>TraceMask</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.DebugConfiguration.BreakMask">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>BreakMask</unmanaged>
+            <unmanaged-short>BreakMask</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.DebugConfiguration.LogThreadID">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>LogThreadID</unmanaged>
+            <unmanaged-short>LogThreadID</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.DebugConfiguration.LogFileline">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>LogFileline</unmanaged>
+            <unmanaged-short>LogFileline</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.DebugConfiguration.LogFunctionName">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>LogFunctionName</unmanaged>
+            <unmanaged-short>LogFunctionName</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.DebugConfiguration.LogTiming">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>LogTiming</unmanaged>
+            <unmanaged-short>LogTiming</unmanaged-short>
+        </member>
+        <member name="T:Vortice.XAudio2.EffectChain">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>XAUDIO2_EFFECT_CHAIN</unmanaged>
+            <unmanaged-short>XAUDIO2_EFFECT_CHAIN</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.EffectChain.EffectCount">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>EffectCount</unmanaged>
+            <unmanaged-short>EffectCount</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.EffectChain.EffectDescriptorPointer">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>pEffectDescriptors</unmanaged>
+            <unmanaged-short>pEffectDescriptors</unmanaged-short>
+        </member>
+        <member name="T:Vortice.XAudio2.FilterParameters">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>XAUDIO2_FILTER_PARAMETERS</unmanaged>
+            <unmanaged-short>XAUDIO2_FILTER_PARAMETERS</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.FilterParameters.Type">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>Type</unmanaged>
+            <unmanaged-short>Type</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.FilterParameters.Frequency">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>Frequency</unmanaged>
+            <unmanaged-short>Frequency</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.FilterParameters.OneOverQ">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>OneOverQ</unmanaged>
+            <unmanaged-short>OneOverQ</unmanaged-short>
+        </member>
+        <member name="T:Vortice.XAudio2.PerformanceData">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>XAUDIO2_PERFORMANCE_DATA</unmanaged>
+            <unmanaged-short>XAUDIO2_PERFORMANCE_DATA</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.PerformanceData.AudioCyclesSinceLastQuery">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>AudioCyclesSinceLastQuery</unmanaged>
+            <unmanaged-short>AudioCyclesSinceLastQuery</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.PerformanceData.TotalCyclesSinceLastQuery">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>TotalCyclesSinceLastQuery</unmanaged>
+            <unmanaged-short>TotalCyclesSinceLastQuery</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.PerformanceData.MinimumCyclesPerQuantum">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>MinimumCyclesPerQuantum</unmanaged>
+            <unmanaged-short>MinimumCyclesPerQuantum</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.PerformanceData.MaximumCyclesPerQuantum">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>MaximumCyclesPerQuantum</unmanaged>
+            <unmanaged-short>MaximumCyclesPerQuantum</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.PerformanceData.MemoryUsageInBytes">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>MemoryUsageInBytes</unmanaged>
+            <unmanaged-short>MemoryUsageInBytes</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.PerformanceData.CurrentLatencyInSamples">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>CurrentLatencyInSamples</unmanaged>
+            <unmanaged-short>CurrentLatencyInSamples</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.PerformanceData.GlitchesSinceEngineStarted">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>GlitchesSinceEngineStarted</unmanaged>
+            <unmanaged-short>GlitchesSinceEngineStarted</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.PerformanceData.ActiveSourceVoiceCount">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>ActiveSourceVoiceCount</unmanaged>
+            <unmanaged-short>ActiveSourceVoiceCount</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.PerformanceData.TotalSourceVoiceCount">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>TotalSourceVoiceCount</unmanaged>
+            <unmanaged-short>TotalSourceVoiceCount</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.PerformanceData.ActiveSubmixVoiceCount">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>ActiveSubmixVoiceCount</unmanaged>
+            <unmanaged-short>ActiveSubmixVoiceCount</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.PerformanceData.ActiveResamplerCount">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>ActiveResamplerCount</unmanaged>
+            <unmanaged-short>ActiveResamplerCount</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.PerformanceData.ActiveMatrixMixCount">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>ActiveMatrixMixCount</unmanaged>
+            <unmanaged-short>ActiveMatrixMixCount</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.PerformanceData.ActiveXmaSourceVoices">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>ActiveXmaSourceVoices</unmanaged>
+            <unmanaged-short>ActiveXmaSourceVoices</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.PerformanceData.ActiveXmaStreams">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>ActiveXmaStreams</unmanaged>
+            <unmanaged-short>ActiveXmaStreams</unmanaged-short>
+        </member>
+        <member name="T:Vortice.XAudio2.VoiceDetails">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>XAUDIO2_VOICE_DETAILS</unmanaged>
+            <unmanaged-short>XAUDIO2_VOICE_DETAILS</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.VoiceDetails.CreationFlags">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>CreationFlags</unmanaged>
+            <unmanaged-short>CreationFlags</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.VoiceDetails.ActiveFlags">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>ActiveFlags</unmanaged>
+            <unmanaged-short>ActiveFlags</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.VoiceDetails.InputChannelCount">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>InputChannels</unmanaged>
+            <unmanaged-short>InputChannels</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.VoiceDetails.InputSampleRate">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>InputSampleRate</unmanaged>
+            <unmanaged-short>InputSampleRate</unmanaged-short>
+        </member>
+        <member name="T:Vortice.XAudio2.VoiceSendDescriptor">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>XAUDIO2_SEND_DESCRIPTOR</unmanaged>
+            <unmanaged-short>XAUDIO2_SEND_DESCRIPTOR</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.VoiceSendDescriptor.Flags">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>Flags</unmanaged>
+            <unmanaged-short>Flags</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.VoiceSendDescriptor.OutputVoice">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>pOutputVoice</unmanaged>
+            <unmanaged-short>pOutputVoice</unmanaged-short>
+        </member>
+        <member name="T:Vortice.XAudio2.VoiceSendDescriptors">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>XAUDIO2_VOICE_SENDS</unmanaged>
+            <unmanaged-short>XAUDIO2_VOICE_SENDS</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.VoiceSendDescriptors.SendCount">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>SendCount</unmanaged>
+            <unmanaged-short>SendCount</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.VoiceSendDescriptors.SendPointer">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>pSends</unmanaged>
+            <unmanaged-short>pSends</unmanaged-short>
+        </member>
+        <member name="T:Vortice.XAudio2.VoiceState">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>XAUDIO2_VOICE_STATE</unmanaged>
+            <unmanaged-short>XAUDIO2_VOICE_STATE</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.VoiceState.Context">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>pCurrentBufferContext</unmanaged>
+            <unmanaged-short>pCurrentBufferContext</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.VoiceState.BuffersQueued">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>BuffersQueued</unmanaged>
+            <unmanaged-short>BuffersQueued</unmanaged-short>
+        </member>
+        <member name="F:Vortice.XAudio2.VoiceState.SamplesPlayed">
+            <summary>
+            No documentation.
+            </summary>
+            <unmanaged>SamplesPlayed</unmanaged>
+            <unmanaged-short>SamplesPlayed</unmanaged-short>
+        </member>
+    </members>
+</doc>
