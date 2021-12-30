@@ -188,7 +188,7 @@
             コピーするためのコンストラクタ。
             </summary>
             <param name="c">コピー元</param>
-            <param name="setkijyun">基準をセットするか</param>
+            <param name="setkijyun">基準をセット/コピーするか</param>
             <param name="motion">モーションまでもコピーするか</param>
         </member>
         <member name="M:Charamaker2.Character.character.#ctor">
@@ -242,7 +242,7 @@
         </member>
         <member name="M:Charamaker2.Character.character.resettokijyun">
             <summary>
-            
+            自身を基準と同一のものとする
             </summary>
         </member>
         <member name="M:Charamaker2.Character.character.refreshtokijyun(Charamaker2.hyojiman)">
@@ -306,7 +306,7 @@
             キャラクターのサイズを変える
             </summary>
             <param name="sc">スケール</param>
-            <param name="setkijyun">基準をセットするか</param>
+            <param name="setkijyun">基準にも拡大を適用するか</param>
         </member>
         <member name="M:Charamaker2.Character.character.getcx(System.Single,System.Single)">
             <summary>
@@ -359,11 +359,12 @@
             <param name="dx">x方向の移動量</param>
             <param name="dy">y方向の移動量</param>
         </member>
-        <member name="M:Charamaker2.Character.character.zbai(System.Single)">
+        <member name="M:Charamaker2.Character.character.zbai(System.Single,System.Boolean)">
             <summary>
             zの大きさを定数倍する
             </summary>
             <param name="bai">倍率</param>
+            <param name="setkijyun">基準にも同じ効果を適用するか</param>
         </member>
         <member name="M:Charamaker2.Character.character.resetmotion">
             <summary>

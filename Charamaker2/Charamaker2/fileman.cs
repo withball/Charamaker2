@@ -566,11 +566,15 @@ namespace Charamaker2
                 res = characters[file];
             }
 
-            var ret = new character(res);
-            ret.scalechange(scale);
-            //         res.x = -1000;
-            //         res.y = -1000;
-            return ret;
+            if (res != null)
+            {
+                var ret = new character(res);
+                ret.scalechange(scale);
+                //         res.x = -1000;
+                //         res.y = -1000;
+                return ret;
+            }
+            return res;
         }
         /// <summary>
         /// グローバルボリューム。0＜＝＜＝1

@@ -455,10 +455,12 @@ namespace Charamaker2
         {
             if (selll != null && newsetubox.Text != "")
             {
-
-                selll.sts.Add(new setu(newsetubox.Text, 0, 0, new picture(0, 0, 0, 0, 0, 0, 0, 0, false, 1, "def", new Dictionary<string, string>()), new List<setu>()));
-                sel.resethyoji(hyojiman);
-                sentaku(sel);
+                if (sel.GetSetu(newsetubox.Text) == null)
+                {
+                    selll.sts.Add(new setu(newsetubox.Text, 0, 0, new picture(0, 0, 0, 0, 0, 0, 0, 0, false, 1, "def", new Dictionary<string, string>()), new List<setu>()));
+                    sel.resethyoji(hyojiman);
+                    sentaku(sel);
+                }
             }
             else 
             {

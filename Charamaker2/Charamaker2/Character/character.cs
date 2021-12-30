@@ -291,7 +291,7 @@ namespace Charamaker2.Character
         /// コピーするためのコンストラクタ。
         /// </summary>
         /// <param name="c">コピー元</param>
-        /// <param name="setkijyun">基準をセットするか</param>
+        /// <param name="setkijyun">基準をセット/コピーするか</param>
         /// <param name="motion">モーションまでもコピーするか</param>
         public character(character c, bool setkijyun = true, bool motion = false)
         {
@@ -307,7 +307,11 @@ namespace Charamaker2.Character
             premir = c.premir;
             if (setkijyun)
             {
-                setkijyuns();
+                if (c.kijyun == null) setkijyuns();
+                else
+                {
+                    kijyun = new character(c.kijyun, false, false);
+                }
             }
 
             if (motion) copymotion(c);
@@ -402,7 +406,7 @@ namespace Charamaker2.Character
             premir = false;
         }
         /// <summary>
-        /// 
+        /// 自身を基準と同一のものとする
         /// </summary>
         public void resettokijyun()
         {
@@ -437,7 +441,6 @@ namespace Charamaker2.Character
             tx = c.tx;
             ty = c.ty;
             rad = c.rad;
-            premir = false;
 
 
             this.sinu(hyo);
@@ -618,7 +621,7 @@ namespace Charamaker2.Character
         /// キャラクターのサイズを変える
         /// </summary>
         /// <param name="sc">スケール</param>
-        /// <param name="setkijyun">基準をセットするか</param>
+        /// <param name="setkijyun">基準にも拡大を適用するか</param>
         public void scalechange(float sc,bool setkijyun=true)
         {
             w *= sc;
@@ -627,7 +630,17 @@ namespace Charamaker2.Character
             ty *= sc;
 
             core.scalechange(sc);
-            if(setkijyun)setkijyuns();
+            if (setkijyun)
+            {
+                if (kijyun != null) 
+                {
+                    kijyun.w *= sc;
+                    kijyun.h *= sc;
+                    kijyun.tx *= sc;
+                    kijyun.ty *= sc; 
+                    kijyun.core.scalechange(sc);
+                }
+            }
         }
         /// <summary>
         /// キャラクター上の一点のx座標を取得する(回転の影響を考慮してるってこと)
@@ -710,11 +723,19 @@ namespace Charamaker2.Character
         /// zの大きさを定数倍する
         /// </summary>
         /// <param name="bai">倍率</param>
-        public void zbai(float bai)
+        /// <param name="setkijyun">基準にも同じ効果を適用するか</param>
+        public void zbai(float bai,bool setkijyun=true)
         {
             foreach (var c in core.getallsetu())
             {
                 c.p.z *= bai;
+            }
+            if (setkijyun && kijyun != null) 
+            {
+                foreach (var c in kijyun.core.getallsetu())
+                {
+                    c.p.z *= bai;
+                }
             }
         }
         /// <summary>
