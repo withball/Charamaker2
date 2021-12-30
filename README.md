@@ -44,3 +44,11 @@ filemanのセッティングアップからhyojimanをmakeして.inputinをMouse
 ビルドした中身を自分のプログラムのReleaseにコピーします。<br>
 Charamaker2.exeをソリューションエクスプローラーから参照に追加し、更に同梱されてるSystem.Runtime.CompilerServices.Unsafe.dllも参照に追加すればビルドができるようになると思います<br>
 また含まれているリソースは全て著作権は私のものです。再配布さえしなければ煮るなり焼くなりどうぞ。
+
+# Sarani
+
+Form.csやSavedataのテンプレートを置いておきました。可読性はひどいですがかなりマシになるでしょう。
+
+# Tinamini
+
+どんなゲームが作れるかはWith_Ball_Dribbleのプロフィールのリンクからご覧ください。
