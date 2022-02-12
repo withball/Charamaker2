@@ -405,10 +405,13 @@ namespace Charamaker2.Character
             this.resethyoji(hyo);
             premir = false;
         }
+
         /// <summary>
         /// 自身を基準と同一のものとする
         /// </summary>
-        public void resettokijyun()
+        /// <param name="OPA">不透明度も同一とするか</param>
+        /// <param name="TEX">テクスチャーも同一とするか</param>
+        public void resettokijyun(bool OPA=true,bool TEX =true)
         {
             character c = getkijyun();
 
@@ -424,12 +427,57 @@ namespace Charamaker2.Character
                 var b = this.core.GetSetu(a.nm);
                 if (b != null)
                 {
+                    float opa = b.p.OPA;
+                    string tex = b.p.texname;
+
                     b.copy(a);
+                    if (!OPA)
+                    {
+                        b.p.OPA = opa;
+
+                    }
+                    if (!TEX)
+                    {
+                        b.p.texname = tex;
+                    }
                 }
             }
         }
         /// <summary>
-        /// 角度やミラー以外の要素を基準に整える
+        /// 不透明度のみを基準とそろえる
+        /// </summary>
+        public void refreshopa()
+        {
+            character c = getkijyun();
+
+            foreach (var a in kijyun.core.getallsetu())
+            {
+                var b = this.core.GetSetu(a.nm);
+                if (b != null)
+                {
+                    b.p.OPA=a.p.OPA;
+                }
+            }
+        }
+       
+        // <summary>
+        /// ピクチャーのミラーのみを基準とそろえる
+        /// </summary>
+        public void refreshmir()
+        {
+            character c = getkijyun();
+
+            foreach (var a in kijyun.core.getallsetu())
+            {
+                var b = this.core.GetSetu(a.nm);
+                if (b != null)
+                {
+                    b.p.mir = a.p.mir;
+                }
+            }
+        }
+        /// <summary>
+        /// 角度以外の要素を基準に整える
         /// </summary>
         /// <param name="hyo">あると便利</param>
         public void refreshtokijyun(hyojiman hyo)
@@ -441,7 +489,7 @@ namespace Charamaker2.Character
             tx = c.tx;
             ty = c.ty;
             rad = c.rad;
-
+            
 
             this.sinu(hyo);
             core = new setu(kijyun.core);
@@ -450,9 +498,11 @@ namespace Charamaker2.Character
         }
 
         /// <summary>
-        /// 角度やミラー以外の要素を基準に整える
+        /// 角度や以外の要素を基準に整える
         /// </summary>
-        public void refreshtokijyun()
+        /// <param name="OPA">不透明度も同一とするか</param>
+        /// <param name="TEX">テクスチャーも同一とするか</param>
+        public void refreshtokijyun(bool OPA = true, bool TEX = true)
         {
             character c = getkijyun();
             character pre = new character(this, false);
@@ -469,7 +519,19 @@ namespace Charamaker2.Character
                 var b = this.core.GetSetu(a.nm);
                 if (b != null)
                 {
+                    float opa = b.p.OPA;
+                    string tex = b.p.texname;
+
                     b.copy(a);
+                    if (!OPA)
+                    {
+                        b.p.OPA = opa;
+
+                    }
+                    if (!TEX)
+                    {
+                        b.p.texname = tex;
+                    }
                 }
             }
             this.copykakudo(pre);
@@ -480,15 +542,24 @@ namespace Charamaker2.Character
       /// モーションをコピーする
       /// </summary>
       /// <param name="c">コピー元</param>
-        public void copymotion(character c)
+      /// <param name="="reset">モーションを最初から行うかfalseは割と特殊になる</param> 
+
+        public void copymotion(character c,bool reset=true)
         {
-
-
-            foreach (var a in c.motions)
+            if (reset)
             {
-                motions.Add(new motion(a));
+                foreach (var a in c.motions)
+                {
+                    addmotion(new motion(a));
+                }
             }
-
+            else 
+            {
+                foreach (var a in c.motions)
+                {
+                    motions.Add(new motion(a));
+                }
+            }
         }
         /// <summary>
         /// 角度をコピーする
@@ -496,6 +567,10 @@ namespace Charamaker2.Character
         /// <param name="c">コピー元</param>
         public void copykakudo(character c)
         {
+            if (c.premir) 
+            {
+                c.kijyuhanten();
+            }
             foreach (var a in c.core.getallsetu())
             {
                 foreach (var b in core.getallsetu())
@@ -508,6 +583,11 @@ namespace Charamaker2.Character
                 }
             }
             rad = c.rad;
+            if (c.premir)
+            {
+
+                c.kijyuhanten();
+            }
         }
         /// <summary>
         /// hyojimanに全ての節のピクチャーを追加する。
@@ -746,12 +826,57 @@ namespace Charamaker2.Character
             motions.Clear();
         }
         /// <summary>
+        /// 終わっていないモーションを終わらせる
+        /// </summary>
+        /// <param name="power">終わらせるフレームの時間</param>
+        /// <param name="bunkatu">フレームを分割するか</param>
+        /// <returns>全て終わっていたらtrue</returns>
+        public bool endmotions(float power=10000,bool bunkatu=true) 
+        {
+            bool res = true;
+            var mmm = new List<motion>(this.motions);
+            foreach (var a in mmm) 
+            {
+                if (!a.loop) 
+                {
+                    if (bunkatu) 
+                    {
+                        for (int i = 0; i < power && !a.owari; i++) 
+                        {
+                            if (mirror) kijyuhanten();
+                            a.frame(this,1);
+                            if (mirror) kijyuhanten();
+                            this.soroeru();
+                        }
+                    }
+                    else
+                    {
+                        a.frame(this, power);
+                    }
+                    res = false;
+                }
+            }
+            return res;
+        }
+        /// <summary>
         /// モーションを追加する
         /// </summary>
         /// <param name="m">追加するモーション</param>
         /// <param name="sento">最後に実行されるところに入れるか</param>
         public void addmotion(motion m, bool sento = true)
         {
+            if (sento) motions.Insert(0, m);
+            else motions.Add(m);
+            m.start(this);
+        }
+        /// <summary>
+        /// ムーブを追加する。moveが一つの時だけ使ってね
+        /// </summary>
+        /// <param name="move">追加するムーブ。motionに直される</param>
+        /// <param name="sento">最後に実行されるところに入れるか</param>
+        public void addmotion(moveman move, bool sento = true)
+        {
+            var m = new motion(move);
             if (sento) motions.Insert(0, m);
             else motions.Add(m);
             m.start(this);
@@ -895,7 +1020,9 @@ namespace Charamaker2.Character
         /// <param name="eff">コピー元</param>
         /// <param name="addy">表示マンに追加するか</param>
         /// <param name="hyo">nullならコピー元の表示マンに</param>
-        public effectchara(effectchara eff, bool addy = true, hyojiman hyo = null) : base(eff)
+        /// <param name="setkijyun">基準をコピーするか</param>
+        /// <param name="motion">モーションをコピーするか</param>
+        public effectchara(effectchara eff, bool addy = true, hyojiman hyo = null,bool setkijyun=true,bool motion=false) : base(eff,setkijyun,motion)
         {
             time = eff.time;
             on = eff.on;
@@ -916,7 +1043,10 @@ namespace Charamaker2.Character
         /// <param name="tuisetu">ついていく節の名前""でキャラクター本体</param>
         /// <param name="kaitenawaseru">このキャラクターの回転を合わせるか</param>
         /// <param name="addy">hyojimanにaddしてしまうか</param>
-        public effectchara(hyojiman hyo, float timee, character c, character onn = null, string tuisetu = "", bool addy = true, bool kaitenawaseru = false) : base(c)
+        /// <param name="setkijyun">基準をコピーするか</param>
+        /// <param name="motion">モーションをコピーするか</param>
+        public effectchara(hyojiman hyo, float timee, character c, character onn = null, string tuisetu = "", bool addy = true, bool kaitenawaseru = false
+            , bool setkijyun = true, bool motion = false) : base(c,setkijyun,motion)
         {
             hyojiman = hyo;
             time = timee;
@@ -929,10 +1059,7 @@ namespace Charamaker2.Character
         /// <summary>
         /// 空のコンストラクタ
         /// </summary>
-        public effectchara() : base()
-        {
-
-        }
+        public effectchara()  {}
         /// <summary>
         /// フレーム処理。表示マンが行ってくれる
         /// </summary>
@@ -1018,10 +1145,15 @@ namespace Charamaker2.Character
         /// <param name="eff">コピー元</param>
         /// <param name="addy">表示マンに追加するか</param>
         /// <param name="hyo">nullならコピー元の表示マンに</param>
-        public haikeieff(haikeieff eff, bool addy = true, hyojiman hyo = null) : base(eff,addy,hyo)
+        /// <param name="setkijyun">基準をコピーするか</param>
+        /// <param name="motion">モーションをコピーするか</param>
+        public haikeieff(haikeieff eff, bool addy = true, hyojiman hyo = null,bool setkijyun=true,bool motion=false) : base(eff,false,hyo,setkijyun,motion)
         {
+          
             scx = eff.scx;
             scy = eff.scy;
+            if (addy) add();
+
         }
         /// <summary>
         /// 空のコンストラクタ
@@ -1116,13 +1248,15 @@ namespace Charamaker2.Character
             hyo.addpicture(m);
           
         }
-       /// <summary>
-       /// コピーするためのコンストラクタ
-       /// </summary>
-       /// <param name="eff">コピー元</param>
-       /// <param name="addy">追加するか</param>
-       /// <param name="hyo">追加する表示マン(nullならコピー元のを使う)</param>
-        public serif(serif eff, bool addy = true, hyojiman hyo = null) : base(eff, addy, hyo)
+        /// <summary>
+        /// コピーするためのコンストラクタ
+        /// </summary>
+        /// <param name="eff">コピー元</param>
+        /// <param name="addy">追加するか</param>
+        /// <param name="hyo">追加する表示マン(nullならコピー元のを使う)</param>
+        /// <param name="setkijyun">基準をコピーするか</param>
+        /// <param name="motion">モーションをコピーするか</param>
+        public serif(serif eff, bool addy = true, hyojiman hyo = null,bool setkijyun= true, bool motion = false) : base(eff, addy, hyo, setkijyun, motion)
         {
             m = new message(m);
             size = eff.size;

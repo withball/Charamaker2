@@ -50,6 +50,7 @@ namespace Charamaker2.Character
             idx = m.idx;
             sidx = m.sidx;
             loop = m.loop;
+            sp = m.sp;
             foreach (var a in m.moves)
             {
                 var t = a.GetType();
@@ -201,8 +202,11 @@ namespace Charamaker2.Character
             time = m.time;
             timer = m.timer;
             st = m.st;
-
+            copyed = true;
         }
+
+        bool copyed = false;
+
         /// <summary>
         /// 空のコンストラクタ
         /// </summary>
@@ -223,11 +227,20 @@ namespace Charamaker2.Character
         /// <param name="cl">クロックスピード</param>
         virtual public void frame(character c, float cl)
         {
-
+            if (copyed) 
+            {
+                hukkyuu(c);
+                copyed = false;
+            }
             timer += cl;
 
 
         }
+        /// <summary>
+        /// コピーした後に復旧する奴
+        /// </summary>
+        /// <param name="c"></param>
+        virtual protected void hukkyuu(character c) { }
     }
     /// <summary>
     /// キャラクターを移動指せるムーブ
@@ -272,6 +285,22 @@ namespace Charamaker2.Character
         {
             base.start(c);
             tag = c.core.getallsetu();
+        }
+        protected override void hukkyuu(character c)
+        {
+            base.hukkyuu(c);
+            for (int i = tag.Count - 1; i >= 0; i--)
+            {
+                var tt = c.GetSetu(tag[i].nm);
+                if (tt == null)
+                {
+                    tag.RemoveAt(i);
+                }
+                else
+                {
+                    tag[i] = tt;
+                }
+            }
         }
         public override void frame(character c, float cl)
         {
@@ -448,6 +477,23 @@ namespace Charamaker2.Character
             }
 
         }
+        protected override void hukkyuu(character c)
+        {
+            base.hukkyuu(c);
+           
+            for (int i = tag.Count - 1; i >= 0; i--)
+            {
+                var tt = c.GetSetu(tag[i].nm);
+                if (tt == null)
+                {
+                    tag.RemoveAt(i);
+                }
+                else
+                {
+                    tag[i] = tt;
+                }
+            }
+        }
         public override void frame(character c, float cl)
         {
 
@@ -534,11 +580,28 @@ namespace Charamaker2.Character
             }
 
         }
+        protected override void hukkyuu(character c)
+        {
+            base.hukkyuu(c);
+            if (tag != null) tag = c.GetSetu(tag.nm);
+            if (pretag != null) pretag = c.GetSetu(pretag.nm);
+            for (int i = tags.Count-1; i >=0; i--) 
+            {
+                var tt = c.GetSetu(tags[i].nm);
+                if (tt == null)
+                {
+                    tags.RemoveAt(i);
+                }
+                else 
+                {
+                    tags[i] = tt;
+                }
+            }
+        }
         public override void frame(character c, float cl)
         {
-
             var t = getnokotime(cl);
-
+            base.frame(c, cl);
             if (tag != null)
             {
                 double rkaku;
@@ -592,7 +655,7 @@ namespace Charamaker2.Character
 
                 }
             }
-            base.frame(c, cl);
+           
 
         }
 
@@ -658,7 +721,26 @@ namespace Charamaker2.Character
             {
                 tags = c.core.getallsetu();
             }
+            
 
+        }
+        protected override void hukkyuu(character c)
+        {
+            base.hukkyuu(c);
+            if (tag != null) tag = c.GetSetu(tag.nm);
+         
+            for (int i = tags.Count - 1; i >= 0; i--)
+            {
+                var tt = c.GetSetu(tags[i].nm);
+                if (tt == null)
+                {
+                    tags.RemoveAt(i);
+                }
+                else
+                {
+                    tags[i] = tt;
+                }
+            }
         }
         public override void frame(character c, float cl)
         {
@@ -874,6 +956,23 @@ namespace Charamaker2.Character
                         }
 
                     }
+                }
+            }
+        }
+        protected override void hukkyuu(character c)
+        {
+            base.hukkyuu(c);
+            
+            for (int i = tag.Count - 1; i >= 0; i--)
+            {
+                var tt = c.GetSetu(tag[i].nm);
+                if (tt == null)
+                {
+                    tag.RemoveAt(i);
+                }
+                else
+                {
+                    tag[i] = tt;
                 }
             }
         }
@@ -1165,7 +1264,12 @@ namespace Charamaker2.Character
             base.start(c);
             tag = c.core.GetSetu(nm);
         }
-
+        protected override void hukkyuu(character c)
+        {
+            base.hukkyuu(c);
+            if (tag != null) tag = c.GetSetu(tag.nm);
+           
+        }
         public override void frame(character c, float cl)
         {
             var t = getnokotime(cl);
@@ -1360,6 +1464,23 @@ namespace Charamaker2.Character
                 }
             }
             count = 0;
+        }
+        protected override void hukkyuu(character c)
+        {
+            base.hukkyuu(c);
+            if (tag != null) tag = c.GetSetu(tag.nm);
+            for (int i = tags.Count - 1; i >= 0; i--)
+            {
+                var tt = c.GetSetu(tags[i].nm);
+                if (tt == null)
+                {
+                    tags.RemoveAt(i);
+                }
+                else
+                {
+                    tags[i] = tt;
+                }
+            }
         }
         public override void frame(character c, float cl)
         {
@@ -1621,6 +1742,12 @@ namespace Charamaker2.Character
             }
             count = 0;
         }
+        protected override void hukkyuu(character c)
+        {
+            base.hukkyuu(c);
+            if (tag != null) tag = c.GetSetu(tag.nm);
+            
+        }
         public override void frame(character c, float cl)
         {
             while (cl > 0)
@@ -1822,6 +1949,12 @@ namespace Charamaker2.Character
                 timer = 0;
             }
             count = 0;
+        }
+        protected override void hukkyuu(character c)
+        {
+            base.hukkyuu(c);
+            if (tag != null) tag = c.GetSetu(tag.nm);
+          
         }
         public override void frame(character c, float cl)
         {
@@ -2085,6 +2218,24 @@ namespace Charamaker2.Character
             }
 
         }
+        protected override void hukkyuu(character c)
+        {
+            base.hukkyuu(c);
+            if (tag != null) tag = c.GetSetu(tag.nm);
+        
+            for (int i = tags.Count - 1; i >= 0; i--)
+            {
+                var tt = c.GetSetu(tags[i].nm);
+                if (tt == null)
+                {
+                    tags.RemoveAt(i);
+                }
+                else
+                {
+                    tags[i] = tt;
+                }
+            }
+        }
         public override void frame(character c, float cl)
         {
 
@@ -2248,6 +2399,12 @@ namespace Charamaker2.Character
             }
 
         }
+        protected override void hukkyuu(character c)
+        {
+            base.hukkyuu(c);
+            if (tag != null) tag = c.GetSetu(tag.nm);
+          
+        }
         public override void frame(character c, float cl)
         {
 
@@ -2392,6 +2549,12 @@ namespace Charamaker2.Character
 
 
         }
+        protected override void hukkyuu(character c)
+        {
+            base.hukkyuu(c);
+            if (tag != null) tag = c.GetSetu(tag.nm);
+       
+        }
         public override void frame(character c, float cl)
         {
 
@@ -2438,7 +2601,7 @@ namespace Charamaker2.Character
         public bool izonn = false;
         public bool soutai = false;
         /// <summary>
-        /// 
+        /// 普通のコンストラクタ
         /// </summary>
         /// <param name="kaisuu">揺れる回数</param>
         /// <param name="speed">回転速度(°)</param>
@@ -2508,6 +2671,12 @@ namespace Charamaker2.Character
             }
             else sinhaba = haba;
         }
+        protected override void hukkyuu(character c)
+        {
+            base.hukkyuu(c);
+            if (tag != null) tag = c.GetSetu(tag.nm);
+            
+        }
         public override void frame(character c, float cl)
         {
             var p = getnokotime(cl);
@@ -2571,7 +2740,7 @@ namespace Charamaker2.Character
         double now;
         bool kzk;
         /// <summary>
-        /// 
+        /// 普通のコンストラクタ
         /// </summary>
         /// <param name="time">変化時間</param>
         /// <param name="name">対象の節</param>
@@ -2588,6 +2757,10 @@ namespace Charamaker2.Character
             kzk = kouzoku;
             md = mode;
         }
+        /// <summary>
+        /// コーピーするコンストラクタ
+        /// </summary>
+        /// <param name="z">^^</param>
         public zkaitenman(zkaitenman z) : base(z)
         {
             nm = z.nm;
@@ -2599,6 +2772,9 @@ namespace Charamaker2.Character
             tags = new List<setu>(z.tags);
             kzk = z.kzk;
         }
+        /// <summary>
+        /// 空のコンストラクタ
+        /// </summary>
         public zkaitenman() : base()
         {
 
@@ -2684,6 +2860,24 @@ namespace Charamaker2.Character
 
                 byosoku = (end - sta) / time;
                 now = sta;
+            }
+        }
+        protected override void hukkyuu(character c)
+        {
+            base.hukkyuu(c);
+            if (tag != null) tag = c.GetSetu(tag.nm);
+ 
+            for (int i = tags.Count - 1; i >= 0; i--)
+            {
+                var tt = c.GetSetu(tags[i].nm);
+                if (tt == null)
+                {
+                    tags.RemoveAt(i);
+                }
+                else
+                {
+                    tags[i] = tt;
+                }
             }
         }
         public override void frame(character c, float cl)
@@ -2888,6 +3082,24 @@ namespace Charamaker2.Character
                     if (dd > 0) dd = -Math.PI * 2 + dd;
                 }
                 sp = dd / time;
+            }
+        }
+        protected override void hukkyuu(character c)
+        {
+            base.hukkyuu(c);
+            if (tag != null) tag = c.GetSetu(tag.nm);
+         
+            for (int i = tags.Count - 1; i >= 0; i--)
+            {
+                var tt = c.GetSetu(tags[i].nm);
+                if (tt == null)
+                {
+                    tags.RemoveAt(i);
+                }
+                else
+                {
+                    tags[i] = tt;
+                }
             }
         }
         public override void frame(character c, float cl)

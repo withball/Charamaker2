@@ -40,18 +40,29 @@ namespace Charamaker2.input
     [Serializable]
     public class inputin
     {
+
         /// <summary>
         /// ナマの入力を保存するためのやつ。キーコンフィグのときとかに使う
         /// </summary>
+        [NonSerialized]
         static public inputin raw = new inputin();
+
+
+
         /// <summary>
         /// ナマの変換
         /// </summary>
+        [NonSerialized]
         static public List<IPC> rawconv = new List<IPC>();
+
         List<Keys> k = new List<Keys>();
         List<MouseButtons> m = new List<MouseButtons>();
         List<Keys> pk = new List<Keys>();
         List<MouseButtons> pm = new List<MouseButtons>();
+        /// <summary>
+        /// 空のコンストラクタ
+        /// </summary>
+        public  inputin(){}
         /// <summary>
         /// マウスの座標
         /// </summary>
@@ -252,10 +263,10 @@ namespace Charamaker2.input
         }
 
         /// <summary>
-        /// マウスの座標をセットする。
+        /// マウスの座標をカーソルからセットする。
         /// </summary>
-        /// <param name="hyojiman"></param>
-        /// <param name="f"></param>
+        /// <param name="hyojiman">活動制限のためのhyojiman</param>
+        /// <param name="f">座標変換のためのフォーム</param>
         /// /// <param name="gamennai">falseの時、画面外の指定を可能にする</param>
         public void setpointer(hyojiman hyojiman, Form f,bool gamennai=true)
         {
@@ -272,6 +283,37 @@ namespace Charamaker2.input
             }
             x += +hyojiman.camx;
             y += +hyojiman.camy;
+        }
+        /// <summary>
+        /// マウスの座標を中心点との差分でポインタの座標からセットする。
+        /// </summary>
+        /// 
+        /// <param name="prepoint">前回の戻り値。nullはやめてね</param>
+        /// <param name="hyojiman">活動制限のためのhyojiman</param>
+        /// <param name="f">座標変換のためのフォーム</param>
+        /// <param name="gamennai">falseの時、画面外の指定を可能にする</param>
+        /// <returns>保存しといて次代入するポイント</returns>>
+        public System.Drawing.Point setlockpointer(System.Drawing.Point prepoint, hyojiman hyojiman, Form f, bool gamennai = true)
+        {
+            var cu = Cursor.Position;
+            var pcu = new System.Drawing.Point(f.Location.X + f.Width / 2, f.Location.Y + f.Height / 2);
+
+
+            x = prepoint.X + (cu.X - pcu.X) * (hyojiman.ww / f.ClientRectangle.Width);
+            y = prepoint.Y + (cu.Y - pcu.Y) * (hyojiman.wh / f.ClientRectangle.Height);
+
+            if (gamennai)
+            {
+                if (x < 0) x = 0;
+                if (x > hyojiman.ww) x = hyojiman.ww;
+                if (y < 0) y = 0;
+                if (y > hyojiman.wh) y = hyojiman.wh;
+            }
+            prepoint = new System.Drawing.Point((int)x, (int)y);
+            x += hyojiman.camx;
+            y += hyojiman.camy;
+            Cursor.Position = pcu;
+            return prepoint;
         }
         /// <summary>
         /// 何かしらのボタンが押されてたりしてるか判定する
@@ -490,6 +532,81 @@ namespace Charamaker2.input
 
         }
 
+        /// <summary>
+        /// 変換する前の入力キー・ボタンをテキストとして取得しようとする
+        /// </summary>
+        /// <param name="k">そのキー</param>
+        /// <param name="converts">変換IPC列</param>
+        /// <returns>Key: OR Mouse: OR None</returns>
+        static public string getConvertmaeinput(Keys k,List<IPC> converts) 
+        {
+            bool onin = false;
+            foreach (var a in converts) 
+            {
+                if (k == a.KO) 
+                {
+                    if (a.KI != Keys.None)
+                    {
+                        return "Key:" + a.KI.ToString();
+                    }
+                    else 
+                    {
+                        return "Mus:" + a.MI.ToString();
+                    }
+                }
+                if (k == a.KI) 
+                {
+                    onin = true;
+                }  
+            }
+            if (onin)
+            {
+                return "Nul:None";
+            }
+            else 
+            {
+                return "Key:" + k.ToString();
+            }
+        }
+
+        /// <summary>
+        /// 変換する前の入力キー・ボタンをテキストとして取得しようとする
+        /// </summary>
+        /// <param name="m">そのボタン</param>
+        /// <param name="converts">変換IPC列</param>
+        /// <returns>Key: OR Mouse: OR None</returns>
+        static public string getConvertmaeinput(MouseButtons m, List<IPC> converts)
+        {
+            bool onin = false;
+            foreach (var a in converts)
+            {
+                if (m == a.MO)
+                {
+                    if (a.KI != Keys.None)
+                    {
+                        
+                        return "Key:" + a.KI.ToString();
+                    }
+                    else
+                    {
+                        return "Mus:" + a.MI.ToString();
+                    }
+                }
+                if (m == a.MI)
+                {
+                    onin = true;
+                }
+            }
+            if (onin)
+            {
+                return "Nul:None";
+            }
+            else
+            {
+                return "Mus:" + m.ToString();
+            }
+
+        }
 
     }
     /// <summary>
@@ -650,12 +767,38 @@ namespace Charamaker2.input
         public string getString()
         {
             string aas = "";
-            if (k != Keys.None) aas += k.ToString();
-            if (m != MouseButtons.None) aas += m.ToString();
+            aas += getinString();
             aas += " => ";
 
-            if (ko != Keys.None) aas += ko.ToString();
-            if (mo != MouseButtons.None) aas += mo.ToString();
+
+            aas += getoutString();
+
+            return aas;
+        }
+        /// <summary>
+        /// 出力のストリングを返す
+        /// </summary>
+        /// <returns>出力</returns>
+        public string getoutString()
+        {
+            string aas = "";
+           
+
+            if (ko != Keys.None) aas += "Key:"+ko.ToString();
+            if (mo != MouseButtons.None) aas += "Mus:" + mo.ToString();
+
+            return aas;
+        } 
+        /// <summary>
+            /// 入力のストリングを返す
+            /// </summary>
+            /// <returns>入力</returns>
+        public string getinString()
+        {
+            string aas = "";
+            if (k != Keys.None) aas += "Key:" + k.ToString();
+            if (m != MouseButtons.None) aas += "Mus:" + m.ToString();
+          
 
             return aas;
         }
