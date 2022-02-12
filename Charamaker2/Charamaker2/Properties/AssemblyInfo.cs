@@ -9,10 +9,10 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("Charamaker2")]
 [assembly: AssemblyDescription("説明はねぇよ！")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Microsoft")]
+[assembly: AssemblyCompany("WithBallDribble")]
 [assembly: AssemblyProduct("Charamaker2")]
-[assembly: AssemblyCopyright("Copyright © Microsoft 2020")]
-[assembly: AssemblyTrademark("With Ball Dribble")]
+[assembly: AssemblyCopyright("Copyright © WithBall")]
+[assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
 // ComVisible を false に設定すると、このアセンブリ内の型は COM コンポーネントから

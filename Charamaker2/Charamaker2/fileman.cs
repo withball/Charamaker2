@@ -42,6 +42,10 @@ namespace Charamaker2
         /// </summary>
         static float gasyu = 1;
         /// <summary>
+        /// 画質の倍率
+        /// </summary>
+        static public float gasitu { get { return gasyu; } }
+        /// <summary>
         /// 画面のサイズを設定し、hyojimanを生成可能にする。
         /// </summary>
         /// <param name="bairitu">画質の倍率</param>
@@ -811,6 +815,14 @@ namespace Charamaker2
 /// </summary>
         static IXAudio2MasteringVoice MV;
         /// <summary>
+        /// ランダム変数に現在時刻をシードであれする
+        /// </summary>
+        public static void setrandomseed() 
+        {
+            r = new Random(DateTime.Now.Year + DateTime.Now.Month+ DateTime.Now.Day+ DateTime.Now.Hour+ DateTime.Now.Minute + DateTime.Now.Second);
+        }
+
+        /// <summary>
         /// ファイルマンを初期化する
         /// </summary>
         /// <param name="hand"></param>
@@ -824,8 +836,8 @@ namespace Charamaker2
 
             audio = Vortice.XAudio2.XAudio2.XAudio2Create();
             MV = audio.CreateMasteringVoice();
-   
-            r = new Random();
+
+            setrandomseed();
             foreach (var a in texs.Keys)
             {
                 if (texs[a] != null)

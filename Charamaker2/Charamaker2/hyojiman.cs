@@ -265,11 +265,11 @@ namespace Charamaker2
         public override bool draw(hyojiman hyo,float cl) 
         {
             if (hyo == null) return false ;
-            
+
             if (this.OPA > 0 &&
                 Math.Abs((getcx(w / 2, h / 2)) - (hyo.ww / 2 + hyo.camx)) * 2 <= hyo.ww + Math.Abs(w * Math.Cos(RAD)) + Math.Abs(h * Math.Sin(RAD)) &&
-                Math.Abs((getcy(w / 2, h / 2)) - (hyo.wh / 2 + hyo.camy))*2 <= hyo.wh  + Math.Abs(w * Math.Sin(RAD)) + Math.Abs(h * Math.Cos(RAD)) 
-                )
+                Math.Abs((getcy(w / 2, h / 2)) - (hyo.wh / 2 + hyo.camy)) * 2 <= hyo.wh + Math.Abs(w * Math.Sin(RAD)) + Math.Abs(h * Math.Cos(RAD))
+                ) 
             {
                
                 var p = this;
@@ -310,10 +310,11 @@ namespace Charamaker2
 
 
 
-
-                        var btmpos = new RawRectF((p.x * hyo.bairitu - hyo.camx * hyo.bairitu), (p.y * hyo.bairitu - hyo.camy * hyo.bairitu), (p.x * hyo.bairitu + p.w * hyo.bairitu - hyo.camx * hyo.bairitu), (p.y * hyo.bairitu + p.h * hyo.bairitu - hyo.camy * hyo.bairitu));
-                        var bitmon = new RawRectF(0, 0, bitmap.Size.Width, bitmap.Size.Height);
-                        hyo.render.DrawBitmap(bitmap, btmpos, this.OPA, BitmapInterpolationMode.Linear, bitmon);
+                        hyo.render.DrawBitmap(bitmap
+                            , new RawRectF((p.x * hyo.bairitu - hyo.camx * hyo.bairitu), (p.y * hyo.bairitu - hyo.camy * hyo.bairitu)
+                            , (p.x * hyo.bairitu + p.w * hyo.bairitu - hyo.camx * hyo.bairitu), (p.y * hyo.bairitu + p.h * hyo.bairitu - hyo.camy * hyo.bairitu))
+                            , this.OPA, BitmapInterpolationMode.Linear
+                            , new RawRectF(0, 0, bitmap.Size.Width, bitmap.Size.Height));
 
                         // Console.WriteLine(p.textures[p.texname]+" asffffffffffffff   " +btmpos.ToString());
                     }
@@ -375,12 +376,13 @@ namespace Charamaker2
         /// <param name="scrollwariaix">x方向のスクロール割合</param>
         /// <param name="scrollwariaiy">y方向のスクロール割合</param>
         /// <param name="dd">なにかdrawings</param>
-        public haikeidraws(float scrollwariaix, float scrollwariaiy, drawings dd ) 
+
+        public haikeidraws(float scrollwariaix, float scrollwariaiy, drawings dd) 
         {
             d = dd;
             x = scrollwariaix;
             y = scrollwariaiy;
-
+       
             //z = scroll;
         }
         /// <summary>
@@ -413,11 +415,18 @@ namespace Charamaker2
                 return false;
             }
             float tx = hyo.camx,ty=hyo.camy;
-            hyo.camx *= x;
-            hyo.camy *= y;
+            float xx = d.x, yy = d.y;
+
+            hyo.camx = (hyo.camx + hyo.ww/2) * x ;
+            hyo.camy = (hyo.camy + hyo.wh/2) * y;
+            d.x += hyo.ww / 2;
+            d.y += hyo.wh / 2;
             var res = d.draw(hyo,cl);
             hyo.camx = tx;
             hyo.camy = ty;
+            d.x = xx;
+            d.y = yy;
+
             return res;
         }
     }
@@ -561,6 +570,26 @@ namespace Charamaker2
         /// ウィンドウの座標での高さ
         /// </summary>
         public float wh { get { return render.PixelSize.Height / bairitu; } }
+
+        /// <summary>
+        /// bairituを幅を指定して決める
+        /// </summary>
+        /// <param name="w">その幅</param>
+        /// <param name="="h">高さにするか</param>
+        public void setBairituW(float w,bool h=false) 
+        {
+            w = Math.Abs(w);
+            if (w == 0) return;
+            if (h)
+            {
+                bairitu = render.PixelSize.Height * fileman.gasitu /w;
+            }
+            else
+            {
+                bairitu = render.PixelSize.Width * fileman.gasitu / w;
+            }
+        }
+
         /// <summary>
         /// 表示マンのコンストラクタ
         /// </summary>
@@ -623,17 +652,19 @@ namespace Charamaker2
         public void copy(hyojiman moto)
         {
             var mmm = new List<effectchara>(moto.effects);
-            foreach (var a in mmm) a.sinu(moto);
+            int i;
+            for (i=0; i<mmm.Count;i++) mmm[i].sinu(moto);
 
             pics = new List<drawings>(moto.pics);
             haikeipics = new List<haikeidraws>(moto.haikeipics);
 
-            foreach (var a in mmm) a.add();
+            for (i = 0; i < mmm.Count; i++) mmm[i].add();
 
             effects = new List<effectchara>();
-            foreach (var a in moto.effects)
+            for (i = 0; i < moto.effects.Count(); i++) 
             {
-                Activator.CreateInstance(a.GetType(),a, true, this);
+                
+                Activator.CreateInstance(moto.effects[i].GetType(),Convert.ChangeType(moto.effects[i], moto.effects[i].GetType()), true, this, true, false);
             }
             otos = new List<string>(moto.otos);
             otovols = new List<float>(moto.otovols);
@@ -1198,7 +1229,7 @@ namespace Charamaker2
         /// <summary>
         /// タイマーでしかない
         /// </summary>
-        protected float timer;
+        public float timer;
         /// <summary>
         /// 強調するか
         /// </summary>
@@ -1211,6 +1242,31 @@ namespace Charamaker2
       /// <param name="hyojiman">その表示マン</param>
       /// <returns>乗っているか</returns>
         public bool onhyoji(hyojiman hyojiman) {return hyojiman.pics.Contains(this);  }
+        /// <summary>
+        /// 動きを追わらせる
+        /// </summary>
+        /// <param name="power">終わらせる時間のパワー</param>
+        /// <returns>終わっていたらtrue</returns>
+        public bool endmove(float power = 10000)
+        {
+            bool res = true;
+
+            if (inlength > 0)
+            {
+                if (inlength + instart > timer) res = false;
+            }
+            if (outlength > 0)
+            {
+                if (outlength + outstart > timer) res = false;
+            }
+            if (text.Length * speed > timer) res = false;
+
+            if (res == false) timer += power;
+
+            return res;
+
+
+        }
         /// <summary>
         /// 死ぬべきか
         /// </summary>
@@ -1364,11 +1420,11 @@ namespace Charamaker2
             if (maxopa > 1) maxopa = 1;
         }
         /// <summary>
-        /// フェードアウトを設定する
+        /// フェードアウトを設定する。ちなみに自動でhyojimanから消える。
         /// </summary>
         /// <param name="start">開始時間</param>
         /// <param name="length">長さ</param>
-        public void setfadeout(float start, float length = 0)
+        public void setfadeout(float start, float length )
         {
             outstart = start;
             outlength = length;
@@ -1556,7 +1612,7 @@ namespace Charamaker2
                 }
               //  Console.WriteLine(opa + " :dwad: " + timer + " :dawf: " + instart);
             }
-           if (outstart > 0 && outlength > 0)
+           if (outstart >= 0 && outlength > 0)
             {
                 if (timer > outstart + outlength)
                 {
@@ -1623,14 +1679,13 @@ namespace Charamaker2
         /// <param name="BB">B</param>
         /// <param name="kyoutyousuru">強調するか</param>
         /// <param name="z">z</param>
-        /// <param name="addin">表示マンに追加するか</param>
         /// <param name="sitazoroe">下でそろえるか</param>
         /// <param name="R2">後ろのR,-1で自動</param>
         /// <param name="G2">後ろのG,-1で自動</param>
         /// <param name="B2">後ろのB,-1で自動</param>
         /// <returns></returns>
-        public static List<message> hutidorin(float sabun , hyojiman hyo, float x, float y, float ookisam, int mojisuu, int tyusindoko,float  hyojispeed, float hyojitime, string textt,float RR=0
-            ,float  GG=0,float BB=0,bool kyoutyousuru=true,float z=(float)1E+09,bool addin=true,bool sitazoroe=false,float R2=-1, float G2 = -1, float B2 = -1) 
+        public static List<message> hutidorin(float sabun , float x, float y, float ookisam, int mojisuu, int tyusindoko,float  hyojispeed, float hyojitime, string textt,float RR=0
+            ,float  GG=0,float BB=0,bool kyoutyousuru=true,float z=(float)1E+09, hyojiman hyo=null, bool sitazoroe=false,float R2=-1, float G2 = -1, float B2 = -1) 
         {
             var res = new List<message>();
             float R = 1, G = 1, B = 1;
@@ -1646,7 +1701,7 @@ namespace Charamaker2
             res.Add(new message(x-sabun, y, ookisam, mojisuu, tyusindoko, hyojispeed, hyojitime, textt, R, G, B, kyoutyousuru, z,  sitazoroe));
             res.Add(new message(x, y+sabun, ookisam, mojisuu, tyusindoko, hyojispeed, hyojitime, textt, R, G, B, kyoutyousuru, z,  sitazoroe));
             res.Add(new message(x, y-sabun, ookisam, mojisuu, tyusindoko, hyojispeed, hyojitime, textt, R, G, B, kyoutyousuru, z,  sitazoroe));
-            if (addin) 
+            if (hyo!=null) 
             {
                 foreach(var a in res)
                 hyo.addpicture(a);
