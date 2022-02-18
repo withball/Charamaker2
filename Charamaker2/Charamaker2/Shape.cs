@@ -284,7 +284,112 @@ namespace Charamaker2.Shapes
         /// <returns></returns>
         abstract public double gethosen(float px, float py);
         /// <summary>
-        /// 相手のgetpointsをも呼び出していい感じの法線ベクトルを返す。おそらく物理的な奴向きき？
+        /// 外周が時計回りで並んでいるかどうか
+        /// </summary>
+        /// <returns>時計回りか？</returns>
+        public bool tokeimawari2() 
+        {
+           return tokeimawari(getgaisyuus());
+        }
+        /// <summary>
+        /// 外周が時計回りで並んでいるかどうか
+        /// </summary>
+        /// <param name="gaisyuu">なんでもいいから外周</param>
+        /// <returns></returns>
+        protected bool tokeimawari(List<double[]>gaisyuu) 
+        {
+            if (gaisyuu.Count >= 2) 
+            {
+                var a = Math.Atan2(gaisyuu[0][3] - gaisyuu[0][1], gaisyuu[0][2] - gaisyuu[0][0]);
+                var b = Math.Atan2(gaisyuu[1][3] - gaisyuu[1][1], gaisyuu[1][2] - gaisyuu[1][0]);
+                return Math.Atan2(Math.Sin(b - a), Math.Cos(b - a)) >= 0;
+            }
+            return true;
+        }
+        /// <summary>
+        /// 対象の角の法線ベクトルを出す
+        /// </summary>
+        /// <param name="gaisyuu">なんでもいいから外周</param>
+        /// <param name="taisyo"></param>
+        /// <returns></returns>
+        protected double hosenton(List<double[]> gaisyuu, double taisyo) 
+        {
+            if (tokeimawari(gaisyuu))
+            {
+                return Math.Atan2(Math.Sin(taisyo - Math.PI), Math.Cos(taisyo - Math.PI));
+            }
+            else
+            {
+                return Math.Atan2(Math.Sin(taisyo + Math.PI), Math.Cos(taisyo + Math.PI));
+            }
+        }
+        /// <summary>
+        /// gethosen2のための角度割り出しマン
+        /// </summary>
+        /// <param name="s">相手の図形</param>
+        /// <param name="gaisyu">自分の絶対外周</param>
+        /// <param name="hoss">絶対外周の法線ベクトルが外側を向くための補正角度</param>
+        /// <returns></returns>
+        protected double tasuuketun(Shape s, List<double[]> gaisyu)
+        {
+            var hoss = Math.PI / 2;
+            if (tokeimawari(gaisyu)) 
+            {
+                hoss *= -1;
+            }
+            List<double> k = new List<double> ();
+            var aas = s.getpoints(s.gettx(),s.getty(), s.syatei());
+            double res = 0;
+            List<double> kkkke = new List<double>();
+            for (int i = 0; i < gaisyu.Count; i++)
+            {
+                kkkke.Add(Math.Atan2(gaisyu[i][3] - gaisyu[i][1], gaisyu[i][2] - gaisyu[i][0]));
+                k.Add(0);
+          
+            }
+
+            for (int i = 0; i < aas.Count; i++)
+            {
+                for (int t = 0; t < kkkke.Count; t++)
+                {
+                    var kp = Math.Abs(
+                        Math.Atan2(Math.Sin(Math.Atan2(-aas[i].Y + (gaisyu[t][3] + gaisyu[t][1]) / 2, -aas[i].X + (gaisyu[t][2] + gaisyu[t][0]) / 2) - kkkke[t] + hoss)
+                                 , Math.Cos(Math.Atan2(-aas[i].Y + (gaisyu[t][3] + gaisyu[t][1]) / 2, -aas[i].X + (gaisyu[t][2] + gaisyu[t][0]) / 2) - kkkke[t] + hoss))
+                        );
+                     k[t] +=kp;
+                }
+               
+
+            }
+            int cou = 0;
+          
+            for (int i = 0; i < k.Count; i++)
+            {
+                //  Console.WriteLine(Math.Atan2(Math.Sin(kkkke[i] + hoss), Math.Cos(kkkke[i] + hoss)) / Math.PI * 180 + " hyou : " + k[i]);
+                  if (k.Min() == k[i])
+                   {
+                       res += kkkke[i];
+                       cou++;
+                   }
+        //kkk           Console.WriteLine(kkkke[i]*180/Math.PI + "aslfk -> "+k[i]);
+               
+          
+            }
+            if (cou==k.Count)
+            {
+                return nasukaku(s);
+            }
+
+         //   res = Math.Atan2(py, px);
+           
+      //kkk      Console.WriteLine(res/cou * 180 / Math.PI + " VYVYVYVYVV " + hoss*180/Math.PI);
+
+            res = Math.Atan2(Math.Sin(res / cou + hoss), Math.Cos(res / cou + hoss));
+            return res;
+        }
+
+        /// <summary>
+        /// 相手のgetpointsをも呼び出していい感じの法線ベクトルを返す。おそらく物理的な奴向き？
         /// </summary>
         /// <param name="s"></param>
         /// <returns></returns>
@@ -765,6 +870,7 @@ namespace Charamaker2.Shapes
             {
                 var t = (float)Math.Sqrt(w/2*w/2+h/2*h/2)*(float)Math.Cos(Math.Atan2(a[i].Y, a[i].X)+kaku);
                 if (t > res) res = t;
+               
             }
 
 
@@ -849,41 +955,8 @@ namespace Charamaker2.Shapes
         }
         public override double gethosen2(Shape s)
         {
-            int k1=0,k2=0,k3=0,k4 = 0;
-            double res=rad;
-            var aas = s.getpoints(gettx(), getty(), syatei());
-            for(int i=0;i<aas.Count;i++) 
-            {
-                float dx = aas[i].X - gettx();
-                float dy = aas[i].Y - getty();
-
-                double ddx = dx * Math.Cos(-rad) - dy * Math.Sin(-rad);
-                double ddy = dx * Math.Sin(-rad) + dy * Math.Cos(-rad);
-
-                if (ddx >= w/2) k1 += 1;
-                if (ddy >= h/2) k2 += 1;
-                if (ddx <= -w/2) k3 += 1;
-                if (ddy <= -h/2) k4 += 1;
-              //  Console.WriteLine(k1 + " :: " + k2 + " :qqq: " + k3 + " :: " + k4);
-            }
-            if (k1 >= k2 && k1 >= k3 && k1 >= k4)
-            {
-                res += 0;
-            }
-            else if (k2 >= k1 && k2 >= k3 && k2 >= k4) 
-            {
-                res+= Math.PI/2;
-            }
-            else if (k3 >= k2 && k3 >= k1 && k3 >= k4) 
-            {
-                res += Math.PI;
-            }
-            else if (k4 >= k2 && k4 >= k3 && k4 >= k1)
-            {
-                res-= Math.PI / 2;
-            }
-         //   Console.WriteLine(k1 + " :: " + k2 + " :rwq: " + k3 + " :: " + k4);
-           return Math.Atan2(Math.Sin(res), Math.Cos(res));
+           
+           return tasuuketun(s,getgaisyuus2());
 
         }
        
@@ -918,7 +991,12 @@ namespace Charamaker2.Shapes
     /// </summary>
     public class Triangle : Shape
     {
-        
+        int _houkou=1;
+        /// <summary>
+        /// 三角形の先の方向。1で右-1で左2で下
+        /// </summary>
+        public int houkou { get { return _houkou; } set { if (-2 <= value && value <= 2&&value!=0) _houkou = value; } }
+
         float _haji;
         /// <summary>
         /// 先端の高さの割合hajiは0<=<=1の範囲で変化する。
@@ -932,22 +1010,50 @@ namespace Charamaker2.Shapes
         /// <param name="ww">幅</param>
         /// <param name="hh">高さ</param>
         /// <param name="hajih">高さと先端の高さの割合。0で左上の角が90°になる</param>
+        /// <param name="hou">三角形の先端の方向1で右-1で左2で下</param>
         /// <param name="radd">回転角度</param>
-        public Triangle(float xx, float yy, float ww, float hh,float hajih=0.5f, double radd=0) : base(xx, yy, ww, hh, radd)
+        public Triangle(float xx, float yy, float ww, float hh,float hajih=0.5f, double radd=0,int hou=1) : base(xx, yy, ww, hh, radd)
         {
             haji = hajih;
+            houkou = hou;
         }
+
+        
         public override float gettx()
         {
-            return (getcx(0, 0) + getcx(0, h) + getcx(w, h*haji)) / 3;
+            switch (_houkou) {
+                case 1:
+                    return (getcx(0, 0) + getcx(0, h) + getcx(w, h * haji)) / 3;
+                case 2:
+                    return (getcx(0, 0) + getcx(w, 0) + getcx(w * haji, h)) / 3;
+                case -1:
+                    return (getcx(w, 0) + getcx(w, h) + getcx(0, h * haji)) / 3;
+                case -2:
+                    return (getcx(0, h) + getcx(w, h) + getcx(w * haji, 0)) / 3;
+                default:
+                    return (getcx(0, 0) + getcx(0, h) + getcx(w, h * haji)) / 3; 
+            } 
         }
+        
         public override float getty()
         {
-            return (getcy(0, 0) + getcy(0, h) + getcy(w, h*haji)) / 3;
+            switch (_houkou)
+            {
+                case 1:
+                    return (getcy(0, 0) + getcy(0, h) + getcy(w, h * haji)) / 3;
+                case 2:
+                    return (getcy(0, 0) + getcy(w, 0) + getcy(w * haji, h)) / 3;
+                case -1:
+                    return (getcy(w, 0) + getcy(w, h) + getcy(0, h * haji)) / 3;
+                case -2:
+                    return (getcy(0, h) + getcy(w, h) + getcy(w * haji, 0)) / 3;
+                default:
+                    return (getcy(0, 0) + getcy(0, h) + getcy(w, h * haji)) / 3;
+            }
         }
         public override Shape clone()
         {
-            var res = new Triangle(x, y, w, h,haji, rad);
+            var res = new Triangle(x, y, w, h,haji, rad,houkou);
             res.settxy(gettx(), getty());
             return res;
         }
@@ -962,14 +1068,15 @@ namespace Charamaker2.Shapes
             y += yy - getty();
 
         }
-
-
+        /// <summary>
+        /// 中心からの天の位置を取得する
+        /// </summary>
+        /// <returns></returns>
+   
         override public float getsaikyo(double kaku)
         {
-            var a = new List<PointF>();
-            a.Add(new PointF(getcx(0,0)-gettx(), getcy(0, 0) - getty()));
-            a.Add(new PointF(getcx(0, h) - gettx(), getcy(0, h) - getty()));
-            a.Add(new PointF(getcx(w, h*haji) - gettx(), getcy(w, h*haji) - getty()));
+            var a = getsoutaipoints();
+           
 
 
 
@@ -977,14 +1084,57 @@ namespace Charamaker2.Shapes
 
             for(int i=0;i<a.Count;i++)
             {
-                var t = (float)Math.Sqrt(a[i].X* a[i].X + a[i].Y* a[i].Y) * (float)Math.Cos(Math.Atan2(a[i].Y, a[i].X)+kaku );
+                var raad = Math.Atan2(Math.Sin(Math.Atan2(a[i].Y, a[i].X) - kaku), Math.Cos(Math.Atan2(a[i].Y, a[i].X) - kaku)) + Math.PI;
+                var t = (float)Math.Sqrt(a[i].X* a[i].X + a[i].Y* a[i].Y) * (float)Math.Cos(raad);
                 if (t > res) res = t;
-           //     Console.WriteLine(t+" sad "+(float)Math.Sqrt(b.X * b.X + b.Y * b.Y)  + " :saikyo: "+ (float)Math.Cos(Math.Atan2(b.Y, b.X) + kaku));
+               // Console.WriteLine(kaku*180/Math.PI+" ksja: "+ Math.Atan2(a[i].Y, a[i].X)/Math.PI*180+" asljok "+ Math.Sqrt(a[i].X * a[i].X + a[i].Y * a[i].Y));
+          //     Console.WriteLine(t+" sad " + " :saikyo: "+raad/Math.PI*180);
             }
 
 
-            return Math.Abs(res);
+            return res;
         }
+        protected List<PointF> getsoutaipoints(bool ho = false)
+        {
+            var a = new List<PointF>();
+            switch (_houkou)
+            {
+                case 1:
+                    a.Add(new PointF(getcx(0, 0) - gettx(), getcy(0, 0) - getty()));
+                    a.Add(new PointF(getcx(0, h) - gettx(), getcy(0, h) - getty()));
+                    a.Add(new PointF(getcx(w, h * haji) - gettx(), getcy(w, h * haji) - getty()));
+
+                    break;
+                case 2:
+                    a.Add(new PointF(getcx(0, 0) - gettx(), getcy(0, 0) - getty()));
+                    a.Add(new PointF(getcx(w, 0) - gettx(), getcy(w, 0) - getty()));
+                    a.Add(new PointF(getcx(w * haji, h) - gettx(), getcy(w * haji, h) - getty()));
+                    break;
+                case -1:
+                    a.Add(new PointF(getcx(w, 0) - gettx(), getcy(w, 0) - getty()));
+                    a.Add(new PointF(getcx(w, h) - gettx(), getcy(w, h) - getty()));
+                    a.Add(new PointF(getcx(0, h * haji) - gettx(), getcy(0, h * haji) - getty()));
+                    break;
+                case -2:
+                    a.Add(new PointF(getcx(0, h) - gettx(), getcy(0, h) - getty()));
+                    a.Add(new PointF(getcx(w, h) - gettx(), getcy(w, h) - getty()));
+                    a.Add(new PointF(getcx(w * haji, 0) - gettx(), getcy(w * haji, 0) - getty()));
+                    break;
+                default:
+                    a.Add(new PointF(getcx(0, 0) - gettx(), getcy(0, 0) - getty()));
+                    a.Add(new PointF(getcx(0, h) - gettx(), getcy(0, h) - getty()));
+                    a.Add(new PointF(getcx(w, h * haji) - gettx(), getcy(w, h * haji) - getty()));
+                    break;
+            }
+            if (ho)
+            {
+                var t = a[2];
+                a[2] = a[1];
+                a[1] = t;
+            }
+            return a;
+        }
+      
         public override float gethokyo(double kaku)
         {
             float dx = syatei() * (float)Math.Cos(kaku) ;
@@ -994,19 +1144,16 @@ namespace Charamaker2.Shapes
 
             double a = kaku;
 
-            float res = (float)Math.Sqrt(Math.Pow(getcx(0,0)-gettx(),2)+ Math.Pow(getcy(0, 0) - getty(),2));
-            var aaa = new List<PointF>();
-            aaa.Add(new PointF(getcx(0, 0) - gettx(), getcy(0, 0) - getty()));
-            aaa.Add(new PointF(getcx(w, h * haji) - gettx(), getcy(w, h * haji) - getty()));
-            aaa.Add(new PointF(getcx(0, h) - gettx(), getcy(0, h) - getty()));
-
+            var aaa = getsoutaipoints(true);
+            float res = (float)Math.Sqrt(Math.Pow(aaa[0].X, 2) + Math.Pow(aaa[0].Y, 2));
 
             for (int i = 0; i < 2; i++)
             {
 
                 var ka = Math.Atan2(aaa[i].Y, aaa[i].X) - a;
                 var kb = Math.Atan2(aaa[i + 1].Y, aaa[i + 1].X) - a;
-                if (Math.Atan2(Math.Sin(ka), Math.Cos(ka)) - Math.Atan2(Math.Sin(kb), Math.Cos(kb)) <= Math.PI && Math.Atan2(Math.Sin(ka), Math.Cos(ka)) * Math.Atan2(Math.Sin(kb), Math.Cos(kb)) < 0)
+                if (Math.Abs(Math.Atan2(Math.Sin(ka), Math.Cos(ka))) +Math.Abs(Math.Atan2(Math.Sin(kb), Math.Cos(kb))) <= Math.PI 
+                    && Math.Atan2(Math.Sin(ka), Math.Cos(ka)) * Math.Atan2(Math.Sin(kb), Math.Cos(kb)) < 0)
                 {
                    
 
@@ -1017,17 +1164,68 @@ namespace Charamaker2.Shapes
                 }
                
             }
-            return Math.Abs(res)     ;
+            return Math.Abs(res)  ;
 
         }
+        /*
+         fuckkkkkkk -180
+80.29448 : asdasd : -180
+9.299986 : opijiojio : 70.99449
+43.38372 : WOWOWOW : 114.3782
+fwwwwkkk 0
+36.79126 : asdasd : 0
+70.875 : opijiojio : -34.08374
+43.38372 : WOWOWOW : 9.299985
+80.29448 :nes1 hos1: -3.14159265358979
+
+36.79126 :nes2 hos2: 3.14159265358979
+:::2:::
+      
+         
+         fuckkkkkkk 90
+26.7413 : asdasd : 90
+39.99018 : opijiojio : -13.24888
+103.1479 : WOWOWOW : 89.89904
+fwwwwkkk -90
+81.84226 : asdasd : -90
+145 : opijiojio : -63.15774
+103.1479 : WOWOWOW : 39.99018
+26.7413 :nes1 hos1: 1.5707963267949
+81.84226 :nes2 hos2: 1.5707963267949
+:::1:::*/
         public override List<PointF> getpoints(float px, float py, float syatei)
         {
 
             var res = new List<PointF>();
             res.Add(new PointF(gettx(), getty()));
-            res.Add(new PointF(getcx(0, 0), getcy(0, 0)));
-            res.Add(new PointF(getcx(0, h), getcy(0, h)));
-            res.Add(new PointF(getcx(w, h*haji), getcy(w, h*haji)));
+            switch (_houkou)
+            {
+                case 1:
+                    res.Add(new PointF(getcx(0, 0) , getcy(0, 0) ));
+                    res.Add(new PointF(getcx(0, h) , getcy(0, h) ));
+                    res.Add(new PointF(getcx(w, h * haji) , getcy(w, h * haji) ));
+                    return res;
+                case 2:
+                    res.Add(new PointF(getcx(0, 0) , getcy(0, 0) ));
+                    res.Add(new PointF(getcx(w, 0) , getcy(w, 0) ));
+                    res.Add(new PointF(getcx(w * haji, h) , getcy(w * haji, h) ));
+                    return res;
+                case -1:
+                    res.Add(new PointF(getcx(w, 0) , getcy(w, 0) ));
+                    res.Add(new PointF(getcx(w, h) , getcy(w, h) ));
+                    res.Add(new PointF(getcx(0, h * haji) , getcy(0, h * haji) ));
+                    return res;
+                case -2:
+                    res.Add(new PointF(getcx(0, h) , getcy(0, h) ));
+                    res.Add(new PointF(getcx(w, h) , getcy(w, h) ));
+                    res.Add(new PointF(getcx(w * haji, 0) , getcy(w * haji, 0) ));
+                    return res;
+                default:
+                    res.Add(new PointF(getcx(0, 0) , getcy(0, 0) ));
+                    res.Add(new PointF(getcx(0, h) , getcy(0, h) ));
+                    res.Add(new PointF(getcx(w, h * haji) , getcy(w, h * haji) ));
+                    return res;
+            }
 
 
 
@@ -1036,22 +1234,85 @@ namespace Charamaker2.Shapes
 
         public override bool onhani(float px, float py)
         {
+            var aas = new List<PointF>();
+            switch (houkou) 
+            {
+                case 1:
+                    aas.Add(new PointF(0, 0));
+                    aas.Add(new PointF(0, h));
+                    aas.Add(new PointF(w, h * haji));
+                    break;
+                case 2:
+                    aas.Add(new PointF(0, 0));
+                    aas.Add(new PointF(w, 0));
+                    aas.Add(new PointF(w * haji, h));
+                    break;
+                case -1:
+                    aas.Add(new PointF(w, 0));
+                    aas.Add(new PointF(w, h));
+                    aas.Add(new PointF(0, h * haji));
+                    break;
+                case -2:
 
-            float dx = px - getcx(0,h/2);
-            float dy = py - getcy(0,h/2);
+                    aas.Add(new PointF(0, h));
+                    aas.Add(new PointF(w, h));
+                    aas.Add(new PointF(w * haji, 0));
+                    break;
+                default:
+                    aas.Add(new PointF(0, 0));
+                    aas.Add(new PointF(0, h));
+                    aas.Add(new PointF(w, h * haji));
+                    break;
+            }
+            float dx = px - getcx((-aas[0].X + aas[1].X)/2, (-aas[0].Y + aas[1].Y)/2) ;
+            float dy = py - getcy((-aas[0].X + aas[1].X) / 2, (-aas[0].Y + aas[1].Y) / 2);
 
             double ddx = dx * Math.Cos(-rad) - dy * Math.Sin(-rad);
             double ddy = dx * Math.Sin(-rad) + dy * Math.Cos(-rad);
 
             double uh = 0,sh=0;
-            if (w != 0)
+            switch (houkou)
             {
-                sh = -  h * (1- ddx / w )* haji;
-                uh =   h * (1- ddx / w )* (1 - haji);
+                case 1:
+                    if (w != 0)
+                    {
+                        sh = -h * (1 - ddx / w) * haji;
+                        uh = h * (1 - ddx / w) * (1 - haji);
+                    }
+                    return (0 <= ddx && ddx <= w) && (sh <= ddy && ddy <= uh);
+                case 2:
+                    if (h != 0)
+                    {
+                        sh = -w * (1 - ddy / h) * haji;
+                        uh = w * (1 - ddy / h) * (1 - haji);
+                    }
+                    return (0 <= ddy && ddy <= h) && (sh <= ddx && ddx <= uh);
+                case -1:
+                    if (w != 0)
+                    {
+                        sh = -h * ( ddx / w) * haji;
+                        uh = h * ( ddx / w) * (1 - haji);
+                    }
+                    return (0 <= ddx && ddx <= w) && (sh <= ddy && ddy <= uh);
+                case -2:
+                    if (h != 0)
+                    {
+                        sh = -w * ( ddy / h) * haji;
+                        uh = w * (ddy / h) * (1 - haji);
+                    }
+                     return (0 <= ddy && ddy <= h) && (sh <= ddx && ddx <= uh);
+                default:
+                    if (w != 0)
+                    {
+                        sh = -h * (1 - ddx / w) * haji;
+                        uh = h * (1 - ddx / w) * (1 - haji);
+                    }
+                    return (0 <= ddx && ddx <= w) && (sh <= ddy && ddy <= uh);
             }
+           
            // Console.WriteLine(haji+" ha "+ddx + " " + ddy + "  asl; " +sh+" :saf: "+uh);
 
-            return (0 <= ddx && ddx <= w ) && (sh  <= ddy && ddy <= uh);
+          
         }
         public override bool onhani(float px, float py, float ppx, float ppy)
         {
@@ -1064,9 +1325,36 @@ namespace Charamaker2.Shapes
         protected override List<double[]> getgaisyuus(float x=0,float y=0,double rad=0)
         {
             List<double[]> mom = new List<double[]>();
-            float x1 = -w / 3,y1= -(h + h * haji) / 3;
-            float x2 = -w / 3, y2 = h - (h + h * haji) / 3;
-            float x3 = w * 2 / 3, y3 = h * haji - (h + h * haji) / 3;
+            float x1, x2, x3, y1, y2, y3;
+            switch (_houkou)
+            {
+                case 1:
+                     x1 = -w / 3; y1 = -(h + h * haji) / 3;
+                     x2 = -w / 3; y2 = h - (h + h * haji) / 3;
+                     x3 = w * 2 / 3; y3 = h * haji - (h + h * haji) / 3;
+                    break;
+                case 2:
+                     y1 = -h / 3; x1 = -(w + w * haji) / 3;
+                     y2 = -h / 3; x2 = w - (w + w * haji) / 3;
+                     y3 = h * 2 / 3; x3 = w * haji - (w + w * haji) / 3;
+                    break;
+                case -1:
+                     x1 = w / 3; y1 = -(h + h * haji) / 3;
+                     x2 = w / 3; y2 = h - (h + h * haji) / 3;
+                     x3 = -w * 2 / 3; y3 = h * haji - (h + h * haji) / 3;
+                    break;
+                case -2:
+                    y1 = h / 3; x1 = -(w + w * haji) / 3;
+                    y2 = h / 3; x2 = w - (w + w * haji) / 3;
+                    y3 = -h * 2 / 3; x3 = w * haji - (w + w * haji) / 3;
+                    break;
+                default:
+                     x1 = -w / 3; y1 = -(h + h * haji) / 3;
+                     x2 = -w / 3; y2 = h - (h + h * haji) / 3;
+                     x3 = w * 2 / 3; y3 = h * haji - (h + h * haji) / 3;
+                    break;
+            }
+           
 
             mom.Add(new double[] { x1 * Math.Cos(rad) - y1 * Math.Sin(rad) + x, x1 * Math.Sin(rad) + y1 * Math.Cos(rad) + y
                 ,x2 * Math.Cos(rad) - y2 * Math.Sin(rad) + x, x2 * Math.Sin(rad) + y2 * Math.Cos(rad) + y});
@@ -1083,81 +1371,31 @@ namespace Charamaker2.Shapes
  
             double a = Math.Atan2(dy, dx);
 
-            double res=Math.PI+rad; 
-            
-            var aaa = new List<PointF>();
-            aaa.Add(new PointF(getcx(0, 0) - gettx(), getcy(0, 0) - getty()));
-            aaa.Add(new PointF(getcx(w, h * haji) - gettx(), getcy(w, h * haji) - getty()));
-            aaa.Add(new PointF(getcx(0, h) - gettx(), getcy(0, h) - getty()));
-            for (int i = 0; i < 2; i++)
-            {
-                var ka = Math.Atan2(aaa[i].Y, aaa[i].X) - a;
-                 var kb = Math.Atan2(aaa[i + 1].Y, aaa[i + 1].X) - a;
-                   if (Math.Atan2(Math.Sin(ka), Math.Cos(ka)) - Math.Atan2(Math.Sin(kb), Math.Cos(kb))<=Math.PI && Math.Atan2(Math.Sin(ka),Math.Cos(ka))* Math.Atan2(Math.Sin(kb), Math.Cos(kb))<0)
-                {
-                
-                    res = Math.Atan2(aaa[i + 1].Y - aaa[i].Y, aaa[i + 1].X - aaa[i].X) ;
+            double res=Math.PI+rad;
 
-                    if (w >= 0) res -= Math.PI / 2;
-                    else res += Math.PI / 2;
+            var aaa = getgaisyuus(0,0,0);
+            for (int i = 0; i < aaa.Count; i++)
+            {
+                var ka = Math.Atan2(aaa[i][1], aaa[i][0]) - a;
+                 var kb = Math.Atan2(aaa[i][3], aaa[i][2]) - a;
+                if (Math.Abs(Math.Atan2(Math.Sin(ka), Math.Cos(ka)) - Math.Atan2(Math.Sin(kb), Math.Cos(kb))) <= Math.PI && Math.Atan2(Math.Sin(ka), Math.Cos(ka)) * Math.Atan2(Math.Sin(kb), Math.Cos(kb)) < 0)
+                {
+
+                    res = Math.Atan2(aaa[i][3] - aaa[i][1], aaa[i][2] - aaa[i][0]);
+                    res = hosenton(getgaisyuus(),res);
                 }
             }
             
             return Math.Atan2(Math.Sin(res), Math.Cos(res));
         }
+      
         public override double gethosen2(Shape s)
         {
-            int k1 = 0, k2 = 0, k3 = 0;
-            double res = rad;
-            var aas = s.getpoints(gettx(), getty(), syatei());
-            for (int i=0;i<aas.Count;i++)
-            {
-                var koun = nasukaku(aas[i].X, aas[i].Y);
-
-                var kkkk1 = nasukaku(gettx() + (getcx(w, h * haji) - getcx(0, 0)), getty() + (getcy(w, h * haji) - getcy(0, 0)));
-                var kkkk1e = Math.Atan2(Math.Sin(kkkk1 + Math.PI), Math.Cos(kkkk1 + Math.PI));
-
-                var kkkk2 = nasukaku(gettx() + (getcx(0, h ) - getcx(w, h*haji)), getty() + (getcy(0, h) - getcy(w, h*haji)));
-                var kkkk2e = Math.Atan2(Math.Sin(kkkk2 + Math.PI), Math.Cos(kkkk2 + Math.PI));
-
-                var kkkk3 = nasukaku(gettx() + (getcx(0, 0) - getcx(0, h)), getty() + (getcy(0, 0) - getcy(0, h)));
-                var kkkk3e = Math.Atan2(Math.Sin(kkkk3+Math.PI), Math.Cos(kkkk3 + Math.PI));
-
-
-
-                if (Math.Atan2(Math.Sin(koun-kkkk2),Math.Cos(koun-kkkk1))<=0&& Math.Atan2(Math.Sin(koun - kkkk1e), Math.Cos(koun - kkkk1e)) >= 0) k1 += 1;
-                if (Math.Atan2(Math.Sin(koun - kkkk2), Math.Cos(koun - kkkk2)) <= 0 && Math.Atan2(Math.Sin(koun - kkkk2e), Math.Cos(koun - kkkk2e)) >= 0) k2 += 1;
-                if (Math.Atan2(Math.Sin(koun - kkkk3), Math.Cos(koun - kkkk3)) <= 0 && Math.Atan2(Math.Sin(koun - kkkk3e), Math.Cos(koun - kkkk3e)) >= 0) k3 += 1;
-
-
-            }
-            if (k1 >= k2 && k1 >= k3 )
-            {
-
-                res = nasukaku(gettx() + (getcx(w, h * haji) - getcx(0, 0)), getty() + (getcy(w, h * haji) - getcy(0, 0)));
-
-                if (w >= 0) res -= Math.PI / 2;
-                else res += Math.PI / 2;
-            }
-            else if (k2 >= k1 && k2 >= k3 )
-            {
-
-                res = nasukaku(gettx() + (getcx(0, h) - getcx(w, h * haji)), getty() + (getcy(0, h) - getcy(w, h * haji)));
-
-                if (w >= 0) res -= Math.PI / 2;
-                else res += Math.PI / 2;
-            }
-            else if (k3 >= k2 && k3 >= k1)
-            {
-
-                res = nasukaku(gettx() + (getcx(0, 0) - getcx(0, h)), getty() + (getcy(0, 0) - getcy(0, h)));
-
-                if (w >= 0) res -= Math.PI / 2;
-                else res += Math.PI / 2;
-            }
-            return Math.Atan2(Math.Sin(res), Math.Cos(res));
+                 
+            return tasuuketun(s,getgaisyuus2());
 
         }
+  
 
 
         protected override void drawn(Color4 col, hyojiman hyo)
@@ -1165,15 +1403,15 @@ namespace Charamaker2.Shapes
             var bruh = hyo.render.CreateSolidColorBrush(col);
            
             float bai = hyo.bairitu;
-            
-            hyo.render.DrawLine(new PointF((getcx(0, 0) - hyo.camx) * bai, (getcy(0, 0) - hyo.camy) * bai)
-                , new PointF((getcx(w, h * _haji) - hyo.camx) * bai, (getcy(w, h*_haji) - hyo.camy) * bai), bruh, 3*bai);
+            var aas = getpoints(gettx(),getty(),syatei());
+            hyo.render.DrawLine(new PointF((aas[1].X - hyo.camx) * bai, (aas[1].Y - hyo.camy) * bai)
+                , new PointF((aas[3].X - hyo.camx) * bai, (aas[3].Y - hyo.camy) * bai), bruh, 3*bai);
 
-            hyo.render.DrawLine(new PointF((getcx(0, h) - hyo.camx) * bai, (getcy(0, h) - hyo.camy) * bai)
-                , new PointF((getcx(w, h * _haji) - hyo.camx) * bai, (getcy(w, h * _haji) - hyo.camy) * bai), bruh, 3 * bai);
+            hyo.render.DrawLine(new PointF((aas[2].X - hyo.camx) * bai, (aas[2].Y - hyo.camy) * bai)
+                , new PointF((aas[3].X - hyo.camx) * bai, (aas[3].Y - hyo.camy) * bai), bruh, 3 * bai);
 
-            hyo.render.DrawLine(new PointF((getcx(0, 0) - hyo.camx) * bai, (getcy(0, 0) - hyo.camy) * bai)
-                , new PointF((getcx(0, h) - hyo.camx) * bai, (getcy(0, h) - hyo.camy) * bai), bruh, 3 * bai);
+            hyo.render.DrawLine(new PointF((aas[1].X - hyo.camx) * bai, (aas[1].Y - hyo.camy) * bai)
+                , new PointF((aas[2].X - hyo.camx) * bai, (aas[2].Y - hyo.camy) * bai), bruh, 3 * bai);
          
             /*var bruh2 = hyo.render.CreateSolidColorBrush(new Color4(1 - col.R, 1 - col.G, 1 - col.B, col.A));
             foreach (var a in getgaisyuus(gettx(),getty(),rad)) 
@@ -1182,7 +1420,7 @@ namespace Charamaker2.Shapes
              , new PointF((gettx() + (float)a[2] - hyo.camx) * bai, (getty() + (float)a[3] - hyo.camy) * bai), bruh2, 4 * bai);
             }
             bruh2.Dispose();*/
-            bruh.Dispose();
+        bruh.Dispose();
         }
 
         public override float syatei()

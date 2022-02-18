@@ -17,7 +17,11 @@ namespace Charamaker2.Character
         /// <summary>
         /// 節の前。一つのキャラクター内で被ってはいけない。
         /// </summary>
-        public string nm;
+        protected string _nm;
+        /// <summary>
+        /// 節の名前。一つのキャラクター内で被ってはいけない。""は無理
+        /// </summary>
+        public string nm { get { return _nm; }set {if(value!="") _nm = value; } }
         /// <summary>
         /// ピクチャーだよ！
         /// </summary>
@@ -60,10 +64,10 @@ namespace Charamaker2.Character
         public setu(setu s)
         {
             nm = s.nm;
-            p = new picture(s.p);
+            p =  (picture)Activator.CreateInstance( s.p.GetType(),s.p);
             foreach (var a in s.sts)
             {
-                sts.Add(new setu(a));
+                sts.Add((setu)Activator.CreateInstance(a.GetType(),a));
             }
             dx = s.dx;
             dy = s.dy;
@@ -302,7 +306,7 @@ namespace Charamaker2.Character
             tx = c.tx;
             ty = c.ty;
             rad = c.rad;
-            core = new setu(c.core);
+            core = (setu)Activator.CreateInstance(c.core.GetType(),c.core);
             _mirror = c._mirror;
             premir = c.premir;
             if (setkijyun)
@@ -401,7 +405,7 @@ namespace Charamaker2.Character
             rad = c.rad;
             _mirror = c._mirror;
             this.sinu(hyo);
-            core = new setu(kijyun.core);
+            core =(setu)Activator.CreateInstance(kijyun.core.GetType(),kijyun.core);
             this.resethyoji(hyo);
             premir = false;
         }
@@ -492,7 +496,7 @@ namespace Charamaker2.Character
             
 
             this.sinu(hyo);
-            core = new setu(kijyun.core);
+            core = (setu)Activator.CreateInstance(kijyun.core.GetType(),kijyun.core);
             this.resethyoji(hyo);
             this.copykakudo(pre);
         }
@@ -789,14 +793,26 @@ namespace Charamaker2.Character
             soroeru();
         }
         /// <summary>
-        /// 回転している方向に移動する奴
+        /// 移動する奴
         /// </summary>
         /// <param name="dx">x方向の移動量</param>
         /// <param name="dy">y方向の移動量</param>
+        public void idouxy(float dx, float dy)
+        {
+            x += dx;
+            y += dy;
+            soroeru();
+        }
+        /// <summary>
+        /// 回転している方向に移動する奴
+        /// </summary>
+        /// <param name="dx">w方向の移動量</param>
+        /// <param name="dy">h方向の移動量</param>
         public void wowidouxy(float dx, float dy)
         {
-            settxy(gettx() + dx * (float)Math.Cos(rad) - dy * (float)Math.Sin(rad),
-                getty() + dx * (float)Math.Sin(rad) + dy * (float)Math.Cos(rad));
+            x += dx * (float)Math.Cos(rad) - dy * (float)Math.Sin(rad);
+            y += dx * (float)Math.Sin(rad) + dy * (float)Math.Cos(rad);
+            soroeru();
         }
 
         /// <summary>

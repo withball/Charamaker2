@@ -5,6 +5,10 @@ VisualStudioVersion = 16.0.30611.23
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Charamaker2", "Charamaker2\Charamaker2.csproj", "{BABCBE24-E559-4287-8FED-7EA329699968}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GameSet1", "GameSet1\GameSet1.csproj", "{6CB99150-145E-4FE0-B359-4CD738491A8F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Template", "Template\Template.csproj", "{63AEEBF4-F4DC-4B94-A35C-E305C1AFC46D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +19,14 @@ Global
 		{BABCBE24-E559-4287-8FED-7EA329699968}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BABCBE24-E559-4287-8FED-7EA329699968}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BABCBE24-E559-4287-8FED-7EA329699968}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6CB99150-145E-4FE0-B359-4CD738491A8F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6CB99150-145E-4FE0-B359-4CD738491A8F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6CB99150-145E-4FE0-B359-4CD738491A8F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6CB99150-145E-4FE0-B359-4CD738491A8F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{63AEEBF4-F4DC-4B94-A35C-E305C1AFC46D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{63AEEBF4-F4DC-4B94-A35C-E305C1AFC46D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{63AEEBF4-F4DC-4B94-A35C-E305C1AFC46D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{63AEEBF4-F4DC-4B94-A35C-E305C1AFC46D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
