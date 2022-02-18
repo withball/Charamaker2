@@ -9,9 +9,14 @@
             関節。pictureを一枚持ち、いい感じに構成する
             </summary>
         </member>
-        <member name="F:Charamaker2.Character.setu.nm">
+        <member name="F:Charamaker2.Character.setu._nm">
             <summary>
             節の前。一つのキャラクター内で被ってはいけない。
+            </summary>
+        </member>
+        <member name="P:Charamaker2.Character.setu.nm">
+            <summary>
+            節の名前。一つのキャラクター内で被ってはいけない。""は無理
             </summary>
         </member>
         <member name="F:Charamaker2.Character.setu.p">
@@ -240,28 +245,33 @@
             </summary>
             <param name="hyo">表示を変えるために必要</param>
         </member>
-        <member name="M:Charamaker2.Character.character.resettokijyun">
+        <member name="M:Charamaker2.Character.character.resettokijyun(System.Boolean,System.Boolean)">
             <summary>
             自身を基準と同一のものとする
             </summary>
+            <param name="OPA">不透明度も同一とするか</param>
+            <param name="TEX">テクスチャーも同一とするか</param>
         </member>
+        <member name="M:Charamaker2.Character.character.refreshopa">
+            <summary>
+            不透明度のみを基準とそろえる
+            </summary>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:Charamaker2.Character.character.refreshmir" -->
         <member name="M:Charamaker2.Character.character.refreshtokijyun(Charamaker2.hyojiman)">
             <summary>
-            角度やミラー以外の要素を基準に整える
+            角度以外の要素を基準に整える
             </summary>
             <param name="hyo">あると便利</param>
         </member>
-        <member name="M:Charamaker2.Character.character.refreshtokijyun">
+        <member name="M:Charamaker2.Character.character.refreshtokijyun(System.Boolean,System.Boolean)">
             <summary>
-            角度やミラー以外の要素を基準に整える
+            角度や以外の要素を基準に整える
             </summary>
+            <param name="OPA">不透明度も同一とするか</param>
+            <param name="TEX">テクスチャーも同一とするか</param>
         </member>
-        <member name="M:Charamaker2.Character.character.copymotion(Charamaker2.Character.character)">
-            <summary>
-            モーションをコピーする
-            </summary>
-            <param name="c">コピー元</param>
-        </member>
+        <!-- Badly formed XML comment ignored for member "M:Charamaker2.Character.character.copymotion(Charamaker2.Character.character,System.Boolean)" -->
         <member name="M:Charamaker2.Character.character.copykakudo(Charamaker2.Character.character)">
             <summary>
             角度をコピーする
@@ -352,12 +362,19 @@
             <param name="xx">セットするx座標</param>
             <param name="yy">セットするy座標</param>
         </member>
+        <member name="M:Charamaker2.Character.character.idouxy(System.Single,System.Single)">
+            <summary>
+            移動する奴
+            </summary>
+            <param name="dx">x方向の移動量</param>
+            <param name="dy">y方向の移動量</param>
+        </member>
         <member name="M:Charamaker2.Character.character.wowidouxy(System.Single,System.Single)">
             <summary>
             回転している方向に移動する奴
             </summary>
-            <param name="dx">x方向の移動量</param>
-            <param name="dy">y方向の移動量</param>
+            <param name="dx">w方向の移動量</param>
+            <param name="dy">h方向の移動量</param>
         </member>
         <member name="M:Charamaker2.Character.character.zbai(System.Single,System.Boolean)">
             <summary>
@@ -371,11 +388,26 @@
             モーションをすべて消す
             </summary>
         </member>
+        <member name="M:Charamaker2.Character.character.endmotions(System.Single,System.Boolean)">
+            <summary>
+            終わっていないモーションを終わらせる
+            </summary>
+            <param name="power">終わらせるフレームの時間</param>
+            <param name="bunkatu">フレームを分割するか</param>
+            <returns>全て終わっていたらtrue</returns>
+        </member>
         <member name="M:Charamaker2.Character.character.addmotion(Charamaker2.Character.motion,System.Boolean)">
             <summary>
             モーションを追加する
             </summary>
             <param name="m">追加するモーション</param>
+            <param name="sento">最後に実行されるところに入れるか</param>
+        </member>
+        <member name="M:Charamaker2.Character.character.addmotion(Charamaker2.Character.moveman,System.Boolean)">
+            <summary>
+            ムーブを追加する。moveが一つの時だけ使ってね
+            </summary>
+            <param name="move">追加するムーブ。motionに直される</param>
             <param name="sento">最後に実行されるところに入れるか</param>
         </member>
         <member name="M:Charamaker2.Character.character.sinu(Charamaker2.hyojiman)">
@@ -469,15 +501,17 @@
             表示マンに追加するメソッド
             </summary>
         </member>
-        <member name="M:Charamaker2.Character.effectchara.#ctor(Charamaker2.Character.effectchara,System.Boolean,Charamaker2.hyojiman)">
+        <member name="M:Charamaker2.Character.effectchara.#ctor(Charamaker2.Character.effectchara,System.Boolean,Charamaker2.hyojiman,System.Boolean,System.Boolean)">
             <summary>
             コピーするためのコンストラクタ
             </summary>
             <param name="eff">コピー元</param>
             <param name="addy">表示マンに追加するか</param>
             <param name="hyo">nullならコピー元の表示マンに</param>
+            <param name="setkijyun">基準をコピーするか</param>
+            <param name="motion">モーションをコピーするか</param>
         </member>
-        <member name="M:Charamaker2.Character.effectchara.#ctor(Charamaker2.hyojiman,System.Single,Charamaker2.Character.character,Charamaker2.Character.character,System.String,System.Boolean,System.Boolean)">
+        <member name="M:Charamaker2.Character.effectchara.#ctor(Charamaker2.hyojiman,System.Single,Charamaker2.Character.character,Charamaker2.Character.character,System.String,System.Boolean,System.Boolean,System.Boolean,System.Boolean)">
             <summary>
             キャラクターをエフェクトに変換するためのコンストラクタ
             </summary>
@@ -488,6 +522,8 @@
             <param name="tuisetu">ついていく節の名前""でキャラクター本体</param>
             <param name="kaitenawaseru">このキャラクターの回転を合わせるか</param>
             <param name="addy">hyojimanにaddしてしまうか</param>
+            <param name="setkijyun">基準をコピーするか</param>
+            <param name="motion">モーションをコピーするか</param>
         </member>
         <member name="M:Charamaker2.Character.effectchara.#ctor">
             <summary>
@@ -522,13 +558,15 @@
             <param name="c">素となるキャラクター</param>
             <param name="addin">追加するか</param>
         </member>
-        <member name="M:Charamaker2.Character.haikeieff.#ctor(Charamaker2.Character.haikeieff,System.Boolean,Charamaker2.hyojiman)">
+        <member name="M:Charamaker2.Character.haikeieff.#ctor(Charamaker2.Character.haikeieff,System.Boolean,Charamaker2.hyojiman,System.Boolean,System.Boolean)">
             <summary>
             コピーするためのコンストラクタ
             </summary>
             <param name="eff">コピー元</param>
             <param name="addy">表示マンに追加するか</param>
             <param name="hyo">nullならコピー元の表示マンに</param>
+            <param name="setkijyun">基準をコピーするか</param>
+            <param name="motion">モーションをコピーするか</param>
         </member>
         <member name="M:Charamaker2.Character.haikeieff.#ctor">
             <summary>
@@ -583,13 +621,15 @@
             <param name="takaa">セリフが表示される高さ</param>
             <param name="textuer">ウィンドウのテクスチャー</param>
         </member>
-        <member name="M:Charamaker2.Character.serif.#ctor(Charamaker2.Character.serif,System.Boolean,Charamaker2.hyojiman)">
+        <member name="M:Charamaker2.Character.serif.#ctor(Charamaker2.Character.serif,System.Boolean,Charamaker2.hyojiman,System.Boolean,System.Boolean)">
             <summary>
             コピーするためのコンストラクタ
             </summary>
             <param name="eff">コピー元</param>
             <param name="addy">追加するか</param>
             <param name="hyo">追加する表示マン(nullならコピー元のを使う)</param>
+            <param name="setkijyun">基準をコピーするか</param>
+            <param name="motion">モーションをコピーするか</param>
         </member>
         <member name="M:Charamaker2.Character.serif.#ctor">
             <summary>
@@ -754,6 +794,12 @@
             </summary>
             <param name="c">対象</param>
             <param name="cl">クロックスピード</param>
+        </member>
+        <member name="M:Charamaker2.Character.moveman.hukkyuu(Charamaker2.Character.character)">
+            <summary>
+            コピーした後に復旧する奴
+            </summary>
+            <param name="c"></param>
         </member>
         <member name="T:Charamaker2.Character.idouman">
             <summary>
@@ -1205,7 +1251,7 @@
         </member>
         <member name="M:Charamaker2.Character.yureman.#ctor(System.Int32,System.Single,System.Single,System.Single,System.String,System.Boolean,System.Boolean,System.Boolean)">
             <summary>
-            
+            普通のコンストラクタ
             </summary>
             <param name="kaisuu">揺れる回数</param>
             <param name="speed">回転速度(°)</param>
@@ -1234,7 +1280,7 @@
         </member>
         <member name="M:Charamaker2.Character.zkaitenman.#ctor(System.Single,System.String,System.Single,System.Single,System.Int32,System.Boolean,System.Boolean)">
             <summary>
-            
+            普通のコンストラクタ
             </summary>
             <param name="time">変化時間</param>
             <param name="name">対象の節</param>
@@ -1243,6 +1289,17 @@
             <param name="mode">0でwh両方,1でwのみ,-1でhのみ回転させる</param>
             <param name="kouzoku">後続にも同じ効果を適用するか</param>
             <param name="stop">止めるか</param>
+        </member>
+        <member name="M:Charamaker2.Character.zkaitenman.#ctor(Charamaker2.Character.zkaitenman)">
+            <summary>
+            コーピーするコンストラクタ
+            </summary>
+            <param name="z">^^</param>
+        </member>
+        <member name="M:Charamaker2.Character.zkaitenman.#ctor">
+            <summary>
+            空のコンストラクタ
+            </summary>
         </member>
         <member name="T:Charamaker2.Character.hantenkaitenman">
             <summary>
@@ -1378,6 +1435,11 @@
         <member name="F:Charamaker2.fileman.gasyu">
             <summary>
             ガシーツ
+            </summary>
+        </member>
+        <member name="P:Charamaker2.fileman.gasitu">
+            <summary>
+            画質の倍率
             </summary>
         </member>
         <member name="M:Charamaker2.fileman.resizen(System.Single,System.IntPtr,System.Single,System.Single)">
@@ -1547,6 +1609,11 @@
         <member name="F:Charamaker2.fileman.MV">
             <summary>
             音を合成したときの奴を表す奴
+            </summary>
+        </member>
+        <member name="M:Charamaker2.fileman.setrandomseed">
+            <summary>
+            ランダム変数に現在時刻をシードであれする
             </summary>
         </member>
         <member name="M:Charamaker2.fileman.resetfileman(System.IntPtr)">
@@ -2005,6 +2072,7 @@
             ウィンドウの座標での高さ
             </summary>
         </member>
+        <!-- Badly formed XML comment ignored for member "M:Charamaker2.hyojiman.setBairituW(System.Single,System.Boolean)" -->
         <member name="M:Charamaker2.hyojiman.#ctor(Vortice.Direct2D1.ID2D1RenderTarget)">
             <summary>
             表示マンのコンストラクタ
@@ -2194,6 +2262,13 @@
             <param name="hyojiman">その表示マン</param>
             <returns>乗っているか</returns>
         </member>
+        <member name="M:Charamaker2.message.endmove(System.Single)">
+            <summary>
+            動きを追わらせる
+            </summary>
+            <param name="power">終わらせる時間のパワー</param>
+            <returns>終わっていたらtrue</returns>
+        </member>
         <member name="P:Charamaker2.message.sinderu">
             <summary>
             死ぬべきか
@@ -2314,7 +2389,7 @@
         </member>
         <member name="M:Charamaker2.message.setfadeout(System.Single,System.Single)">
             <summary>
-            フェードアウトを設定する
+            フェードアウトを設定する。ちなみに自動でhyojimanから消える。
             </summary>
             <param name="start">開始時間</param>
             <param name="length">長さ</param>
@@ -2344,7 +2419,7 @@
             <param name="hyo"></param>
             <param name="cl"></param>
         </member>
-        <member name="M:Charamaker2.message.hutidorin(System.Single,Charamaker2.hyojiman,System.Single,System.Single,System.Single,System.Int32,System.Int32,System.Single,System.Single,System.String,System.Single,System.Single,System.Single,System.Boolean,System.Single,System.Boolean,System.Boolean,System.Single,System.Single,System.Single)">
+        <member name="M:Charamaker2.message.hutidorin(System.Single,System.Single,System.Single,System.Single,System.Int32,System.Int32,System.Single,System.Single,System.String,System.Single,System.Single,System.Single,System.Boolean,System.Single,Charamaker2.hyojiman,System.Boolean,System.Single,System.Single,System.Single)">
             <summary>
             縁取りを適用したメッセージ群を作り出す
             </summary>
@@ -2363,7 +2438,6 @@
             <param name="BB">B</param>
             <param name="kyoutyousuru">強調するか</param>
             <param name="z">z</param>
-            <param name="addin">表示マンに追加するか</param>
             <param name="sitazoroe">下でそろえるか</param>
             <param name="R2">後ろのR,-1で自動</param>
             <param name="G2">後ろのG,-1で自動</param>
@@ -2412,6 +2486,11 @@
         <member name="F:Charamaker2.input.inputin.rawconv">
             <summary>
             ナマの変換
+            </summary>
+        </member>
+        <member name="M:Charamaker2.input.inputin.#ctor">
+            <summary>
+            空のコンストラクタ
             </summary>
         </member>
         <member name="F:Charamaker2.input.inputin.x">
@@ -2489,11 +2568,22 @@
         </member>
         <member name="M:Charamaker2.input.inputin.setpointer(Charamaker2.hyojiman,System.Windows.Forms.Form,System.Boolean)">
             <summary>
-            マウスの座標をセットする。
+            マウスの座標をカーソルからセットする。
             </summary>
-            <param name="hyojiman"></param>
-            <param name="f"></param>
+            <param name="hyojiman">活動制限のためのhyojiman</param>
+            <param name="f">座標変換のためのフォーム</param>
             /// <param name="gamennai">falseの時、画面外の指定を可能にする</param>
+        </member>
+        <member name="M:Charamaker2.input.inputin.setlockpointer(System.Drawing.Point,Charamaker2.hyojiman,System.Windows.Forms.Form,System.Boolean)">
+            <summary>
+            マウスの座標を中心点との差分でポインタの座標からセットする。
+            </summary>
+            
+            <param name="prepoint">前回の戻り値。nullはやめてね</param>
+            <param name="hyojiman">活動制限のためのhyojiman</param>
+            <param name="f">座標変換のためのフォーム</param>
+            <param name="gamennai">falseの時、画面外の指定を可能にする</param>
+            <returns>保存しといて次代入するポイント</returns>>
         </member>
         <member name="M:Charamaker2.input.inputin.ok(Charamaker2.input.itype)">
             <summary>
@@ -2571,6 +2661,22 @@
             </summary>
             <param name="i">バイト列</param>
             <returns>インプット</returns>
+        </member>
+        <member name="M:Charamaker2.input.inputin.getConvertmaeinput(System.Windows.Forms.Keys,System.Collections.Generic.List{Charamaker2.input.IPC})">
+            <summary>
+            変換する前の入力キー・ボタンをテキストとして取得しようとする
+            </summary>
+            <param name="k">そのキー</param>
+            <param name="converts">変換IPC列</param>
+            <returns>Key: OR Mouse: OR None</returns>
+        </member>
+        <member name="M:Charamaker2.input.inputin.getConvertmaeinput(System.Windows.Forms.MouseButtons,System.Collections.Generic.List{Charamaker2.input.IPC})">
+            <summary>
+            変換する前の入力キー・ボタンをテキストとして取得しようとする
+            </summary>
+            <param name="m">そのボタン</param>
+            <param name="converts">変換IPC列</param>
+            <returns>Key: OR Mouse: OR None</returns>
         </member>
         <member name="T:Charamaker2.input.IPC">
             <summary>
@@ -2684,6 +2790,18 @@
             何をどう変換しているのかを文字列で表す
             </summary>
             <returns>入力 => 出力</returns>
+        </member>
+        <member name="M:Charamaker2.input.IPC.getoutString">
+            <summary>
+            出力のストリングを返す
+            </summary>
+            <returns>出力</returns>
+        </member>
+        <member name="M:Charamaker2.input.IPC.getinString">
+            <summary>
+            入力のストリングを返す
+            </summary>
+            <returns>入力</returns>
         </member>
         <member name="F:Charamaker2.motionmaker.components">
             <summary>
@@ -2862,6 +2980,21 @@
             <param name="ppy">その点のy座標2</param>
             <returns></returns>
         </member>
+        <member name="M:Charamaker2.Shapes.Shape.getgaisyuus(System.Single,System.Single,System.Double)">
+            <summary>
+            図形の外周の辺のリストを手に入れる。引数無しで相対座標で出してくれる
+            </summary>
+            <param name="x">中心座標x</param>>
+            <param name="y">中心座標y</param>>
+            <param name="rad">回転角</param>>
+            <returns>外周のリスト(相対座標){{x1,y1,x2,y2},{x1,y1,x2,y2}}</returns>
+        </member>
+        <member name="M:Charamaker2.Shapes.Shape.getgaisyuus2">
+            <summary>
+            外周を絶対座標にして返す
+            </summary>
+            <returns>外周のリスト(絶対座標)</returns>
+        </member>
         <member name="M:Charamaker2.Shapes.Shape.clone">
             <summary>
             図形を複製する
@@ -2921,9 +3054,39 @@
             <param name="py"></param>
             <returns></returns>
         </member>
+        <member name="M:Charamaker2.Shapes.Shape.tokeimawari2">
+            <summary>
+            外周が時計回りで並んでいるかどうか
+            </summary>
+            <returns>時計回りか？</returns>
+        </member>
+        <member name="M:Charamaker2.Shapes.Shape.tokeimawari(System.Collections.Generic.List{System.Double[]})">
+            <summary>
+            外周が時計回りで並んでいるかどうか
+            </summary>
+            <param name="gaisyuu">なんでもいいから外周</param>
+            <returns></returns>
+        </member>
+        <member name="M:Charamaker2.Shapes.Shape.hosenton(System.Collections.Generic.List{System.Double[]},System.Double)">
+            <summary>
+            対象の角の法線ベクトルを出す
+            </summary>
+            <param name="gaisyuu">なんでもいいから外周</param>
+            <param name="taisyo"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Charamaker2.Shapes.Shape.tasuuketun(Charamaker2.Shapes.Shape,System.Collections.Generic.List{System.Double[]})">
+            <summary>
+            gethosen2のための角度割り出しマン
+            </summary>
+            <param name="s">相手の図形</param>
+            <param name="gaisyu">自分の絶対外周</param>
+            <param name="hoss">絶対外周の法線ベクトルが外側を向くための補正角度</param>
+            <returns></returns>
+        </member>
         <member name="M:Charamaker2.Shapes.Shape.gethosen2(Charamaker2.Shapes.Shape)">
             <summary>
-            相手のgetpointsをも呼び出していい感じの法線ベクトルを返す。おそらく物理的な奴向きき？
+            相手のgetpointsをも呼び出していい感じの法線ベクトルを返す。おそらく物理的な奴向き？
             </summary>
             <param name="s"></param>
             <returns></returns>
@@ -2996,6 +3159,26 @@
             <param name="kaku">法線ベクトル(自分のgethosenで手に入れた奴で)</param>
             <returns>距離</returns>
         </member>
+        <member name="M:Charamaker2.Shapes.Shape.crosses(System.Double[],System.Double[])">
+            <summary>
+            線がクロスしているのかを判定する
+            </summary>
+            <param name="mom">{x1,y1,x2,y2}</param>
+            <param name="mom2">{x1,y1,x2,y2}</param>
+            <returns></returns>
+        </member>
+        <member name="M:Charamaker2.Shapes.Shape.crosses(System.Double,System.Double,System.Double,System.Double,System.Collections.Generic.List{System.Double[]},System.Boolean)">
+            <summary>
+            一本の辺と辺の集合がクロスしているかを判定する
+            </summary>
+            <param name="px">x1</param>
+            <param name="py">y1</param>
+            <param name="ppx">x2</param>
+            <param name="ppy">y2</param>
+            <param name="mom">相対座標の辺の集合{{x1,y1,x2,y2},{x1,y1,x2,y2},{x1,y1,x2,y2}}こんなの</param>
+            <param name="soutaika">x1~y2を図形からの相対座標にするか</param>>
+            <returns></returns>
+        </member>
         <member name="T:Charamaker2.Shapes.Rectangle">
             <summary>
             四角形を表すクラス
@@ -3017,21 +3200,19 @@
             </summary>
             <returns>複製された図形</returns>
         </member>
-        <member name="M:Charamaker2.Shapes.Rectangle.atarin(Charamaker2.Shapes.Shape)">
-            <summary>
-            相手の図形と接触しているかを調べる
-            </summary>
-            <param name="s"></param>
-            <returns>当たってるか</returns>
-        </member>
         <member name="T:Charamaker2.Shapes.Triangle">
             <summary>
             三角形を表すクラス。
             しかし|>こういう左の辺がy軸と平行で右の先端が左の辺のy座標の間にあるな形の三角形しか作れない。
             </summary>
         </member>
+        <member name="P:Charamaker2.Shapes.Triangle.houkou">
+            <summary>
+            三角形の先の方向。1で右-1で左2で下
+            </summary>
+        </member>
         <!-- Badly formed XML comment ignored for member "P:Charamaker2.Shapes.Triangle.haji" -->
-        <member name="M:Charamaker2.Shapes.Triangle.#ctor(System.Single,System.Single,System.Single,System.Single,System.Single,System.Double)">
+        <member name="M:Charamaker2.Shapes.Triangle.#ctor(System.Single,System.Single,System.Single,System.Single,System.Single,System.Double,System.Int32)">
             <summary>
             三角形を作る。左辺が底で右が先端。
             </summary>
@@ -3040,7 +3221,21 @@
             <param name="ww">幅</param>
             <param name="hh">高さ</param>
             <param name="hajih">高さと先端の高さの割合。0で左上の角が90°になる</param>
+            <param name="hou">三角形の先端の方向1で右-1で左2で下</param>
             <param name="radd">回転角度</param>
+        </member>
+        <member name="M:Charamaker2.Shapes.Triangle.settxy(System.Single,System.Single)">
+            <summary>
+            重心をxy座標にセットする。
+            </summary>
+            <param name="xx">セットするx座標</param>
+            <param name="yy">セットするy座標</param>
+        </member>
+        <member name="M:Charamaker2.Shapes.Triangle.getsaikyo(System.Double)">
+            <summary>
+            中心からの天の位置を取得する
+            </summary>
+            <returns></returns>
         </member>
         <member name="T:Charamaker2.Shapes.Circle">
             <summary>
