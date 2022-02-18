@@ -1,6 +1,6 @@
-﻿namespace SAVE_THE_SANTACOS_
+﻿namespace Template
 {
-    partial class Form1
+    partial class display
     {
         /// <summary>
         /// 必要なデザイナー変数です。
@@ -29,24 +29,23 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.clocker = new System.Windows.Forms.Timer(this.components);
             this.SuspendLayout();
             // 
-            // timer1
+            // clocker
             // 
-            this.timer1.Enabled = true;
-            this.timer1.Interval = 10;
-            this.timer1.Tick += new System.EventHandler(this.ticked);
+            this.clocker.Enabled = true;
+            this.clocker.Interval = 16;
+            this.clocker.Tick += new System.EventHandler(this.clocked);
             // 
-            // Form1
+            // display
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1278, 1244);
-            this.Name = "Form1";
-            this.Text = "Form1";
+            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Name = "display";
+            this.Text = "uoootempletoooo";
             this.Load += new System.EventHandler(this.Form1_Load);
-            this.Shown += new System.EventHandler(this.shown);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.keydown);
             this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.keyup);
             this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.mousedown);
@@ -57,7 +56,7 @@
 
         #endregion
 
-        private System.Windows.Forms.Timer timer1;
+        private System.Windows.Forms.Timer clocker;
     }
 }
 

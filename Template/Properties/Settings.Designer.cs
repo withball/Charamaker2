@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace SAVE_THE_SANTACOS_.Properties
+namespace Template.Properties
 {
 
 
