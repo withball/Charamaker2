@@ -61,7 +61,7 @@ Form.csやSavedataのテンプレートを置いておきました。可読性�
 \Visual Studio 2019\Templates\ProjectTemplates
 <br>
 にGameSet1Project.zipを置いてください。<br>
-よくわからなければtemplateのプロジェクトを改造する感じでもいいと思います。<br>
+インストールとかしてないので参照がおかしなことになってると思います。なのでDDebug内の同名の奴を参照してあげてください<br>
 DDebugの中にリソースフォルダ群を置いといてあるのでそちらも.exeの横においてご活用ください。
 
 
