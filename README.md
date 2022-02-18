@@ -53,7 +53,7 @@ Form.csやSavedataのテンプレートを置いておきました。可読性�
 
 どんなゲームが作れるかはWith_Ball_Dribbleのプロフィールのリンクからご覧ください。
 
-#AboutTemplate
+# AboutTemplate
 
 基本的なEntityとSceneのクラスを構えているGameSet1を作りました。<br>
 それに際してTemplateを用意しました。使えるようにするには
