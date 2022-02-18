@@ -289,6 +289,13 @@
             <param name="name">名前共</param>
             <returns>順番は保証する。しかしnullが混じっているかも</returns>
         </member>
+        <member name="M:GameSet1.ataribinding.getatari(System.Collections.Generic.List{System.String})">
+            <summary>
+            あたり判定のリストを得る
+            </summary>
+            <param name="name">名前共</param>
+            <returns>順番は保証する。しかしnullが混じっているかも</returns>
+        </member>
         <member name="M:GameSet1.ataribinding.#ctor(Charamaker2.Character.character,GameSet1.ABrecipie)">
             <summary>
             普通のコンストラクタ
@@ -751,6 +758,106 @@
             オーバーライドしてね。
             ここで自分を新しく追加するとかやったら無限ループするからやめてね。
             </summary>
+        </member>
+        <member name="M:GameSet1.Waza.atafilter(System.Collections.Generic.List{GameSet1.Entity},System.Collections.Generic.List{System.String},GameSet1.Entity,System.Collections.Generic.List{System.String},System.Boolean,System.Boolean)">
+            <summary>
+            ListEntityに対してあたり判定でフィルターを掛ける
+            </summary>
+            <param name="lis">フィルター対象</param>
+            <param name="lisataris">対象のあたり判定の節の名前群</param>
+            <param name="e">フィルターに使うエンテティ</param>
+            <param name="eataris">フィルターに使う奴の節の名前群</param>
+            <param name="pre">1フレーム前のも考慮するか</param>
+            <param name="not">当たっていないやつを残すことにする</param>
+        </member>
+        <member name="M:GameSet1.Waza.atypefilter(System.Collections.Generic.List{GameSet1.Entity},GameSet1.buturiinfo,System.Boolean)">
+            <summary>
+            ListEntityを当たりタイプでフィルターを掛ける
+            </summary>
+            <param name="b">フィルターを掛ける物理インフォメーション</param>
+            <param name="lis">フィルターするリスト</param>
+            <param name="friend">当たらないやつを残す</param>
+        </member>
+        <member name="M:GameSet1.Waza.atarisfilter(System.Collections.Generic.List{GameSet1.Entity},System.Int32,System.Boolean)">
+            <summary>
+            atarisをもとにフィルターを掛ける
+            </summary>
+            <param name="lis">フィルターをかける奴</param>
+            <param name="num">フィルターを掛けるatarisのナンバー</param>
+            <param name="exist">atarisにある場合リストに残すモード</param>
+        </member>
+        <member name="M:GameSet1.Waza.atarisconnectto(GameSet1.Waza)">
+            <summary>
+            atarisを他の技と共有
+            </summary>
+            <param name="w">共有元</param>
+        </member>
+        <member name="F:GameSet1.Waza.ataris">
+            <summary>
+            技を適用した奴を保存しておくリスト。
+            タイマーにも使える
+            </summary>
+        </member>
+        <member name="M:GameSet1.Waza.atarisAdd(GameSet1.Entity,System.Single,System.Int32)">
+            <summary>
+            atarisに追加する
+            </summary>
+            <param name="e">追加するエンテティ</param>
+            <param name="time">なにクロック時間残るか</param>
+            <param name="i">atarisナンバー</param>
+        </member>
+        <member name="M:GameSet1.Waza.atarisRemove(GameSet1.Entity,System.Int32)">
+            <summary>
+            atarisから消す
+            </summary>
+            <param name="e">消すエンテティ</param>
+            <param name="i">atarisナンバー</param>
+        </member>
+        <member name="M:GameSet1.Waza.atarisClear(System.Int32)">
+            <summary>
+            atarisをクリアする
+            </summary>
+            <param name="i">atarisナンバー</param>
+        </member>
+        <member name="M:GameSet1.Waza.atarisClearAll">
+            <summary>
+            atarisを完全に消す
+            </summary>
+        </member>
+        <member name="M:GameSet1.Waza.atarisAru(GameSet1.Entity,System.Int32)">
+            <summary>
+            atarisに存在するか調べる
+            </summary>
+            <param name="e">調べるエンテティ</param>
+            <param name="i">atarisナンバー</param>
+            <returns>あったのか？</returns>
+        </member>
+        <member name="M:GameSet1.Waza.atarislist(System.Int32)">
+            <summary>
+            atarisを持ってくる
+            </summary>
+            <param name="i">atarisナンバー</param>
+            <returns>りすと！</returns>
+        </member>
+        <member name="M:GameSet1.Waza.atarislistall">
+            <summary>
+            atarisの全てのリストを結合して持ってくる
+            </summary>
+            <returns>Entityが重複してるかもしれないリスト</returns>
+        </member>
+        <member name="M:GameSet1.Waza.atarisDorearu(GameSet1.Entity)">
+            <summary>
+            Entityがどこかしらのatarisにあるか調べる
+            </summary>
+            <param name="e">Entity</param>
+            <returns>ナンバー関係なくあるか</returns>
+        </member>
+        <member name="M:GameSet1.Waza.kugirin(System.Single)">
+            <summary>
+            timerが区切り時間以上かを調べる
+            </summary>
+            <param name="kugiriko">区切り時間</param>
+            <returns>区切り時間が-1かtimerが区切り時間未満だとfalse</returns>
         </member>
     </members>
 </doc>

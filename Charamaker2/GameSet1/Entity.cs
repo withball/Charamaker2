@@ -337,6 +337,28 @@ namespace GameSet1
             }
             return res;
         }
+        /// <summary>
+        /// あたり判定のリストを得る
+        /// </summary>
+        /// <param name="name">名前共</param>
+        /// <returns>順番は保証する。しかしnullが混じっているかも</returns>
+        public List<Shape> getatari(List<string>name)
+        {
+            var res = new List<Shape>();
+            foreach (var a in name)
+            {
+                int i = rec.names.IndexOf(a);
+                if (i >= 0)
+                {
+                    res.Add(rec.shapes[i]);
+                }
+                else
+                {
+                    res.Add(null);
+                }
+            }
+            return res;
+        }
 
         /// <summary>
         /// 普通のコンストラクタ
