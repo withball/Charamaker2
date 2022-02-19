@@ -1503,6 +1503,18 @@
             乱数ロット
             </summary>
         </member>
+        <member name="M:Charamaker2.fileman.settextobit(System.String,Vortice.Mathematics.Color)">
+            <summary>
+            texsに色のついたビットを追加する。
+            </summary>
+            <param name="bitname">bitname+"bit"</param>
+            <param name="color">色</param>
+        </member>
+        <member name="F:Charamaker2.fileman.clmcol">
+            <summary>
+            ビットマップを読み込むときに使うクロマキーの色
+            </summary>
+        </member>
         <member name="M:Charamaker2.fileman.ldtex(System.String,System.Boolean)">
             <summary>
             bitmapテクスチャーを読み込む。既に読み込んでいた場合は読み込まずに返す。
@@ -1510,7 +1522,7 @@
             </summary>
             <param name="file">.\tex\に続くファイルパス</param>
             <param name="reset">強制的に再読み込みする</param>
-            <returns>ロードしたテクスチャー</returns>
+            <returns>clmcolを透明にしたビットマップ</returns>
         </member>
         <member name="M:Charamaker2.fileman.savecharacter(Charamaker2.Character.character)">
             <summary>
@@ -1611,6 +1623,11 @@
             音を合成したときの奴を表す奴
             </summary>
         </member>
+        <member name="F:Charamaker2.fileman.basebitnames">
+            <summary>
+            基本的なビットのあれよ。名前とか
+            </summary>
+        </member>
         <member name="M:Charamaker2.fileman.setrandomseed">
             <summary>
             ランダム変数に現在時刻をシードであれする
@@ -1633,6 +1650,13 @@
             <summary>
             tex,oto,character,motionフォルダにあるアイテムを全てロードする
             </summary>
+        </member>
+        <member name="M:Charamaker2.fileman.whrandhani(System.Single)">
+            <summary>
+            0~wの範囲でランダムな整数を発生させる
+            </summary>
+            <param name="w"></param>
+            <returns></returns>
         </member>
         <member name="T:Charamaker2.otoman">
             <summary>

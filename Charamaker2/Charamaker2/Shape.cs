@@ -44,7 +44,7 @@ namespace Charamaker2.Shapes
         /// <param name="ww">幅</param>
         /// <param name="hh">高さ</param>
         /// <param name="radd">角度</param>
-        public Shape(float xx, float yy, float ww, float hh, double radd = 0)
+        public Shape(float xx, float yy, float ww, float hh, double radd )
         {
             
             x = xx;
@@ -841,7 +841,7 @@ namespace Charamaker2.Shapes
         /// <param name="ww">幅</param>
         /// <param name="hh">高さ</param>
         /// <param name="radd">回転角度</param>
-        public Rectangle(float xx, float yy, float ww, float hh, double radd) : base(xx, yy, ww, hh, radd) 
+        public Rectangle(float xx, float yy, float ww=0, float hh=0, double radd=0) : base(xx, yy, ww, hh, radd) 
         {
             
         }
@@ -1012,7 +1012,7 @@ namespace Charamaker2.Shapes
         /// <param name="hajih">高さと先端の高さの割合。0で左上の角が90°になる</param>
         /// <param name="hou">三角形の先端の方向1で右-1で左2で下</param>
         /// <param name="radd">回転角度</param>
-        public Triangle(float xx, float yy, float ww, float hh,float hajih=0.5f, double radd=0,int hou=1) : base(xx, yy, ww, hh, radd)
+        public Triangle(float xx, float yy, float ww=0, float hh=0,float hajih=0.5f, double radd=0,int hou=1) : base(xx, yy, ww, hh, radd)
         {
             haji = hajih;
             houkou = hou;
@@ -1167,32 +1167,6 @@ namespace Charamaker2.Shapes
             return Math.Abs(res)  ;
 
         }
-        /*
-         fuckkkkkkk -180
-80.29448 : asdasd : -180
-9.299986 : opijiojio : 70.99449
-43.38372 : WOWOWOW : 114.3782
-fwwwwkkk 0
-36.79126 : asdasd : 0
-70.875 : opijiojio : -34.08374
-43.38372 : WOWOWOW : 9.299985
-80.29448 :nes1 hos1: -3.14159265358979
-
-36.79126 :nes2 hos2: 3.14159265358979
-:::2:::
-      
-         
-         fuckkkkkkk 90
-26.7413 : asdasd : 90
-39.99018 : opijiojio : -13.24888
-103.1479 : WOWOWOW : 89.89904
-fwwwwkkk -90
-81.84226 : asdasd : -90
-145 : opijiojio : -63.15774
-103.1479 : WOWOWOW : 39.99018
-26.7413 :nes1 hos1: 1.5707963267949
-81.84226 :nes2 hos2: 1.5707963267949
-:::1:::*/
         public override List<PointF> getpoints(float px, float py, float syatei)
         {
 
@@ -1443,7 +1417,7 @@ fwwwwkkk -90
         /// <param name="hh">高さ</param>
         /// <param name="radd">回転角</param>
         /// <param name="pointkinji">近似する多角形の画数</param>
-        public Circle(float xx, float yy, float ww, float hh, double radd,int pointkinji=20) : base(xx, yy, ww, hh, radd)
+        public Circle(float xx, float yy, float ww=0, float hh=0, double radd=0,int pointkinji=20) : base(xx, yy, ww, hh, radd)
         {
             if (pointkinji > kinji)
             {

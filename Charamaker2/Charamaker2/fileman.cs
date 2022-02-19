@@ -124,13 +124,40 @@ namespace Charamaker2
         /// 乱数ロット
         /// </summary>
         static public Random r = new Random();
+
+
+        /// <summary>
+        /// texsに色のついたビットを追加する。
+        /// </summary>
+        /// <param name="bitname">bitname+"bit"</param>
+        /// <param name="color">色</param>
+        static private void settextobit(string bitname, Color color)
+        {
+            using (var tempStream = new DataStream(1, true, true))
+            {
+                int rgba = color.R | (color.G << 8) | (color.B << 16) | (color.A << 24);
+                tempStream.Write(rgba);
+                var bitmapProperties = new BitmapProperties(new PixelFormat(Vortice.DXGI.Format.R8G8B8A8_UNorm, Vortice.DCommon.AlphaMode.Premultiplied));
+                if (!texs.ContainsKey(bitname + "bit.bmp"))
+                {
+                    Console.WriteLine(bitname + "bit" + " set!!");
+                    texs.Add(bitname + "bit.bmp", rendertarget.CreateBitmap(new System.Drawing.Size(1, 1), tempStream.BasePointer, sizeof(int), bitmapProperties));
+                }
+            }
+
+        }
+
+        /// <summary>
+        /// ビットマップを読み込むときに使うクロマキーの色
+        /// </summary>
+        static public Color3 clmcol = new Color3(0,254,254);
         /// <summary>
         /// bitmapテクスチャーを読み込む。既に読み込んでいた場合は読み込まずに返す。
         /// .bmpはつけてもつけなくてもいい
         /// </summary>
         /// <param name="file">.\tex\に続くファイルパス</param>
         /// <param name="reset">強制的に再読み込みする</param>
-        /// <returns>ロードしたテクスチャー</returns>
+        /// <returns>clmcolを透明にしたビットマップ</returns>
         static public ID2D1Bitmap ldtex(string file, bool reset = false)
         {
             var aa = Path.GetExtension(file);
@@ -172,7 +199,7 @@ namespace Charamaker2
 
 
                                     int rgba = R | (G << 8) | (B << 16) | (A << 24);
-                                    if (B == 254 && R == 0 && G == 254) tempStream.Write(gaba);
+                                    if (R == clmcol.R && G == clmcol.G && B == clmcol.B) tempStream.Write(gaba);
                                     else
                                         tempStream.Write(rgba);
 
@@ -814,6 +841,18 @@ namespace Charamaker2
 /// 音を合成したときの奴を表す奴
 /// </summary>
         static IXAudio2MasteringVoice MV;
+
+        /// <summary>
+        /// 基本的なビットのあれよ。名前とか
+        /// </summary>
+        static public Dictionary<string, Color> basebitnames = new Dictionary<string, Color>
+                {
+                    {"red",System.Drawing.Color.Red },{"blue",System.Drawing.Color.Blue },{"green",System.Drawing.Color.Green },
+                    {"white",System.Drawing.Color.White },{"gray",System.Drawing.Color.Gray },{"black",System.Drawing.Color.Black },
+                    {"yellow",System.Drawing.Color.Yellow },{"cyan",System.Drawing.Color.Cyan },{"purple",System.Drawing.Color.Purple },
+                    {"aqua",System.Drawing.Color.Aqua },{"brown",System.Drawing.Color.Brown },{"crimson",System.Drawing.Color.Crimson },
+                };
+
         /// <summary>
         /// ランダム変数に現在時刻をシードであれする
         /// </summary>
@@ -851,6 +890,7 @@ namespace Charamaker2
 
                 }
             }
+          
 
             foreach (var a in otos)
             {
@@ -863,6 +903,15 @@ namespace Charamaker2
             motions.Clear();
             characters.Clear();
             otos.Clear();
+
+            //基本ビットを追加
+            {
+
+                foreach (var a in basebitnames)
+                {
+                    settextobit(a.Key, a.Value);
+                }
+            }
 
         }
         /// <summary>
@@ -970,6 +1019,11 @@ namespace Charamaker2
             }
          
         }
+        /// <summary>
+        /// 0~wの範囲でランダムな整数を発生させる
+        /// </summary>
+        /// <param name="w"></param>
+        /// <returns></returns>
         static public float whrandhani(float w)
         {
             if (w == 0)
