@@ -20,6 +20,59 @@ namespace GameSet1
         Dictionary<string, List<Entity>> EDB = new Dictionary<string, List<Entity>>();
         Dictionary<string, bool> EDBF = new Dictionary<string, bool>();
 
+        Dictionary<string, List<Entity>> CEDB = new Dictionary<string, List<Entity>>();
+
+        /// <summary>
+        /// エンテティをデータベースにぶち込むメソッド。
+        /// 一生変わらない特性はここで振り分ける
+        /// </summary>
+        /// <param name="e"></param>
+        /// <returns>既に追加されていなかったか</returns>
+        virtual public bool entadd(Entity e) 
+        {
+            if (!Entities.Contains(e))
+            {
+               Entities.Add(e);
+                var a = ARhuri(e);
+                foreach (var b in a) 
+                {
+                    CEDB[b].Add(e);
+                }
+                return true;
+            }
+            return false;
+        }
+        /// <summary>
+        /// エンテティをデータベースからぶち消す
+        /// 一生変わらない特性はここでリストから削除しとく
+        /// </summary>
+        /// <param name="e"></param>
+        /// <returns>既に追加されていなかったか</returns>
+        virtual public bool entremove(Entity e)
+        {
+            if (Entities.Remove(e))
+            {
+                var a = ARhuri(e);
+                foreach (var b in a)
+                {
+                    CEDB[b].Remove(e);
+                }
+                return true;
+            }
+            return false;
+        }
+        /// <summary>
+        /// 追加されるときにCEDBに振り分けるためのメソッド
+        /// </summary>
+        /// <param name="e">振り分けるエンテティ</param>
+        /// <returns>どのCEDBに入れるか</returns>
+        virtual protected List<string> ARhuri(Entity e) 
+        {
+            var res = new List<string>();
+            res.Add("ents");
+            return res;
+
+        }
         /// <summary>
         /// 普通のコンストラクタ
         /// </summary>
@@ -30,19 +83,28 @@ namespace GameSet1
         /// <summary>
         /// 新しいデータ列を追加する
         /// </summary>
+        /// <param name="c">コンスタントのか（毎フレームごとの検査は必要ない奴のこと）</param>
         /// <param name="name">その名前</param>
-        protected void add(string name)
+        protected void add(string name,bool c=false)
         {
-            EDB.Add(name, new List<Entity>());
-            EDBF.Add(name, false);
+            if (c) 
+            {
+                CEDB.Add(name,new List<Entity>());
+            }
+            else
+            {
+                EDB.Add(name, new List<Entity>());
+                EDBF.Add(name, false);
+            }
         }
         /// <summary>
         /// コンストラクタで呼び出されるデータ列セットマン
         /// </summary>
         virtual protected void setDB()
         {
-            add("ents");
+            add("ents",true);
             add("moves");
+            add("atarens");
             add("overweights");
         }
         /// <summary>
@@ -88,21 +150,30 @@ namespace GameSet1
         /// <param name="name">名前</param>
         virtual protected void seton(string name)
         {
-            if (name == "ents") 
-            {
-                sets("ents", new List<Entity>(Entities));
-            }
-            if (name == "moves"||name=="overweights")
+            if (name == "moves"||name=="overweights"||name=="atarens"||name=="atarerus")
             {
                 var wei = new List<Entity>();
                 var mov = new List<Entity>();
+                var ren = new List<Entity>();
+                var reru = new List<Entity>();
+
                 foreach (var a in Entities) 
                 {
-                    if (a.bif.ovw) wei.Add(a);
-                    else mov.Add(a);
+                    if (a.atariable)
+                    {
+                        if (a.bif.ovw) wei.Add(a);
+                        else mov.Add(a);
+                        reru.Add(a);
+                    }
+                    else 
+                    {
+                        ren.Add(a);
+                    }
                 }
                 sets("moves", mov);
                 sets("overweights", wei);
+                sets("atarens", ren);
+                sets("atarerus", reru);
             }
         }
         /// <summary>
@@ -112,10 +183,15 @@ namespace GameSet1
         /// <returns>フラグがtrueのやつ</returns>
         protected List<Entity> already(string name) 
         {
+            if (CEDB.ContainsKey(name)) 
+            {
+                return new List<Entity>(CEDB[name]);
+            }
             if (EDBF[name]) 
             {
-                return EDB[name];
+                return new List<Entity>(EDB[name]);
             }
+
             return null;
         }
 
@@ -150,13 +226,21 @@ namespace GameSet1
         /// </summary>
         public List<Entity> ents { get { return EDB.get("ents"); } }
         /// <summary>
-        /// 動くというか重さが限界じゃないやつら
+        /// 物理的に当たれる中の動くというか重さが限界じゃないやつら
         /// </summary>
         public List<Entity> moves { get { return EDB.get("moves"); } }
         /// <summary>
-        /// 重さが限界に達してる奴ら
+        /// 物理的に当たれる中の重さが限界に達してる奴ら
         /// </summary>
         public List<Entity> overweights { get { return EDB.get("overweights"); } }
+        /// <summary>
+        /// 物理的に当たれる奴ら
+        /// </summary>
+        public List<Entity> atarerus { get { return EDB.get("atarerus"); } }
+        /// <summary>
+        /// 物理的に当たれないやつら
+        /// </summary>
+        public List<Entity> atarens { get { return EDB.get("atarens"); } }
 
         /// <summary>
         /// エンテティをマネージャーにぶち込む。基本ENtity.addを呼べ
@@ -166,13 +250,8 @@ namespace GameSet1
         /// <returns>もうぶち込まれてたらfalse</returns>
         public bool add(Entity e)
         {
-            if (!EDB.Entities.Contains(e)) 
-            {
-                EDB.Entities.Add(e);
-
-                return true;
-            }
-            return false;
+          
+            return EDB.entadd(e);
         }
         /// <summary>
         /// エンテティをを削除する。基本ENtity.REmoveを呼べ
@@ -182,7 +261,7 @@ namespace GameSet1
         public bool remoeve(Entity e)
         {
 
-            return EDB.Entities.Remove(e);
+            return EDB.entremove(e);
         }
 
 
@@ -209,7 +288,10 @@ namespace GameSet1
         {
             reset();
         }
-        Dictionary<Entity, List<Entity>> atalis = new Dictionary<Entity, List<Entity>>();
+        /// <summary>
+        /// 当たったよっていうなんかデータ
+        /// </summary>
+        protected Dictionary<Entity, List<Entity>> atalis = new Dictionary<Entity, List<Entity>>();
         /// <summary>
         /// これがこれに当たったよ！というお知らせ
         /// </summary>
@@ -233,8 +315,10 @@ namespace GameSet1
         }
        
 
-
-        Dictionary<Entity, List<Entity>> hansyasu = new Dictionary<Entity, List<Entity>>();
+        /// <summary>
+        /// 反射のなんかデータ
+        /// </summary>
+       protected Dictionary<Entity, List<Entity>> hansyasu = new Dictionary<Entity, List<Entity>>();
 
         /// <summary>
         /// 反射処理をおこなったかを記憶させる
@@ -262,7 +346,7 @@ namespace GameSet1
         /// フレーム処理
         /// </summary>
         /// <param name="cl">クロック時間</param>
-        public void frame(float cl )
+        virtual public void frame(float cl )
         {
             int i = 0;
             atalis.Clear();
@@ -278,19 +362,35 @@ namespace GameSet1
            
 
             bool ren;
-            
+
             foreach (var a in moves)
             {
 
                 ren = false;
 
-                if (a.atariable)
+
+                foreach (var b in atarerus)
                 {
-                    foreach (var b in ents)
+                    if (!atattano(a, b) && a.bif.different(b.bif) && (a.Acore.atarun2(a.PAcore, b.Acore, b.PAcore)))
                     {
-                        if (!atattano(a, b) && b.atariable && a.bif.different(b.bif) && (a.Acore.atarun2(a.PAcore, b.Acore, b.PAcore)))
+                        if (a.bif.zuren(a, b))
                         {
-                            if (a.bif.zuren(a,b))
+                            atattao(a, b);
+
+                            ren = true;
+
+                            hansyao(a, b);
+                        }
+                    }
+                }
+                while (ren)
+                {
+                    ren = false;
+                    foreach (var b in atarerus)
+                    {
+                        if (!atattano(a, b) && a.bif.different(b.bif) && a.Acore.atarun(b.Acore))
+                        {
+                            if (a.bif.zuren(a, b))
                             {
                                 atattao(a, b);
 
@@ -300,25 +400,8 @@ namespace GameSet1
                             }
                         }
                     }
-                    while (ren)
-                    {
-                        ren = false;
-                        foreach (var b in ents)
-                        {
-                            if (!atattano(a, b) && b.atariable && a.bif.different(b.bif) && a.Acore.atarun(b.Acore))
-                            {
-                                if (a.bif.zuren(a,b))
-                                {
-                                    atattao(a, b);
-
-                                    ren = true;
-
-                                    hansyao(a, b);
-                                }
-                            }
-                        }
-                    }
                 }
+
             }
             foreach (var a in overweights)
             {

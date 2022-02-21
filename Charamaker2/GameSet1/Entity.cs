@@ -28,6 +28,16 @@ namespace GameSet1
 
 
         /// <summary>
+        /// 新しく辺りバインディングを設定する。pabもリセットするし
+        /// </summary>
+        /// <param name="recipie">レシピ</param>
+        public void setNewAtariBinding(ABrecipie recipie) 
+        {
+            _ab = new ataribinding(c, recipie);
+            _pab = new ataribinding(c, recipie);
+   
+        }
+        /// <summary>
         /// 今のフレームのあたり判定。
         /// </summary>
         public ataribinding ab { get { return _ab; } }
@@ -58,7 +68,7 @@ namespace GameSet1
         /// </summary>
         public Shape PAcore { get { if (pab != null) return pab.core; return ab.getatari(""); } }
 
-
+        
 
 
         /// <summary>
@@ -101,7 +111,7 @@ namespace GameSet1
             {
                 a.frame(cl);
             }
-            ab.frame();
+            setab(false);
 
         }
         /// <summary>
@@ -112,6 +122,14 @@ namespace GameSet1
             pab.frame();
         }
         /// <summary>
+        /// 今のあたり判定をセットする。初期とかワープしたときとかは呼び出してね
+        /// </summary>
+        virtual public void setab(bool pabtoo = false)
+        {
+            ab.frame();
+            if (pabtoo) pab.frame();
+        }
+        /// <summary>
         /// 追加されてるエンテティマネージャー。仕様上一個しか無理なんだ。ごめんね
         /// </summary>
         protected EntityManager _EM = null;
@@ -120,6 +138,11 @@ namespace GameSet1
         /// エンテティマネージャー。hyojimanとかもここからとれる
         /// </summary>
         public EntityManager EM{get{ return _EM; }}
+
+        /// <summary>
+        /// 便利ショトカ。表示マン
+        /// </summary>
+        public hyojiman hyoji { get { return _EM.hyoji; } }
 
 
         /// <summary>
@@ -375,6 +398,7 @@ namespace GameSet1
                 set.Add(tt);
                 if (rec.names[i] == "" && tt == null) _core = rec.shapes[i];
             }
+            frame();
         }
         /// <summary>
         /// キャラクターを物理用のあたり判定の方に合わせる
@@ -447,6 +471,15 @@ namespace GameSet1
         public float vx, vy, ax, ay;
 
         /// <summary>
+        /// 物体の速度
+        /// </summary>
+        public float speed { get { return (float)Math.Sqrt(vx * vx + vy * vy); } }
+        /// <summary>
+        /// スピードの方向
+        /// </summary>
+        public double speedvec { get { return Math.Atan2(vy, vx); } }
+
+        /// <summary>
         /// 反発係数？
         /// </summary>
         protected float _hanpatu;
@@ -491,7 +524,7 @@ namespace GameSet1
         /// <summary>
         /// あたり判定の分類
         /// </summary>
-        List<string> atag;
+        public List<string> atag;
         /// <summary>
         /// 普通のコンストラクタ
         /// </summary>
@@ -517,6 +550,37 @@ namespace GameSet1
             this.atag = new List<string>(atag);
         }
         /// <summary>
+        /// 普通のコンストラクタ
+        /// </summary>
+        /// <param name="wei">重さ</param>
+        /// <param name="tik">空気抵抗</param>
+        /// <param name="hanp">反射係数</param>
+        /// <param name="mas">摩擦係数</param>
+        /// <param name="vx">速度</param>
+        /// <param name="vy">速度</param>
+        /// <param name="ax">加速度</param>
+        /// <param name="ay">加速度</param>
+        /// <param name="atag">あたり判定の分類</param>
+        public buturiinfo(float wei = 1, float tik = 0, float hanp = 0, float mas = 0, float vx = 0, float vy = 0, float ax = 0, float ay = 0, List<string> atag=null)
+        {
+            this.wei = wei;
+            teikou = tik;
+            hanpatu = hanp;
+            masatu = mas;
+            this.vx = vx;
+            this.vy = vy;
+            this.ax = ax;
+            this.ay = ay;
+            if (atag == null)
+            {
+                this.atag = new List<string>();
+            }
+            else 
+            {
+                this.atag = new List<string>(atag);
+            }
+        }
+        /// <summary>
         /// 重さに応じて加速できたりする
         /// </summary>
         /// <param name="vx">x方向の加速度</param>
@@ -531,8 +595,8 @@ namespace GameSet1
             }
             else 
             {
-                this.vx += vx * this.wei / (weight + this.wei);
-                this.vy += vy * this.wei / (weight + this.wei);
+                this.vx += vx * weight / (weight + this.wei);
+                this.vy += vy * weight / (weight + this.wei);
             }
         }
 

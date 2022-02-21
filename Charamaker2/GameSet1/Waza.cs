@@ -93,9 +93,10 @@ namespace GameSet1
         /// <param name="cl">クロック時間</param>
         virtual public void frame(float cl) 
         {
-           
-            onFrame(nokoritime(cl));
+            float cll = nokoritime(cl);
             timer += cl;
+            onFrame(cll);
+           
             if (timer >= end) remove();
         }
         /// <summary>
@@ -148,7 +149,8 @@ namespace GameSet1
         /// <param name="eataris">フィルターに使う奴の節の名前群</param>
         /// <param name="pre">1フレーム前のも考慮するか</param>
         /// <param name="not">当たっていないやつを残すことにする</param>
-        public static void atafilter(List<Entity> lis, List<string> lisataris, Entity e, List<string> eataris, bool pre = true, bool not = false)
+        public static void atafilter<T>(List<T> lis, List<string> lisataris, Entity e, List<string> eataris, bool pre = true, bool not = false)
+        where T:Entity
         {
             bool rem = false;
             List<Shape> SE = e.ab.getatari(eataris);
@@ -157,7 +159,7 @@ namespace GameSet1
             if (pre)
             {
                 PSE = e.pab.getatari(eataris);
-                for (int i = SE.Count - 1; i >= 0; i++)
+                for (int i = SE.Count - 1; i >= 0; i--)
                 {
                     if (SE[i] == null || PSE[i] == null)
                     {
@@ -168,7 +170,7 @@ namespace GameSet1
             }
             else
             {
-                for (int i = SE.Count - 1; i >= 0; i++)
+                for (int i = SE.Count - 1; i >= 0; i--)
                 {
                     if (SE[i] == null)
                     {
@@ -184,8 +186,8 @@ namespace GameSet1
                 LS = lis[i].ab.getatari(lisataris);
                 if (pre)
                 {
-                    LPS = lis[i].pab.getatari(eataris);
-                    for (int j = LS.Count - 1; j >= 0; j++)
+                    LPS = lis[i].pab.getatari(lisataris);
+                    for (int j = LS.Count - 1; j >= 0; j--)
                     {
                         if (LS[j] == null || LPS[j] == null)
                         {
@@ -196,7 +198,7 @@ namespace GameSet1
                 }
                 else
                 {
-                    for (int j = LS.Count - 1; j >= 0; j++)
+                    for (int j = LS.Count - 1; j >= 0; j--)
                     {
                         if (LS[j] == null)
                         {
@@ -232,8 +234,10 @@ namespace GameSet1
         /// <param name="b">フィルターを掛ける物理インフォメーション</param>
         /// <param name="lis">フィルターするリスト</param>
         /// <param name="friend">当たらないやつを残す</param>
-        static protected void atypefilter(List<Entity> lis, buturiinfo b, bool friend = false)
+        static public void atypefilter<T>(List<T> lis, buturiinfo b, bool friend = false)
+            where T:Entity
         {
+
             for (int i = lis.Count - 1; i >= 0; i--)
             {
                 if (lis[i].bif.different(b) == friend)
@@ -248,7 +252,8 @@ namespace GameSet1
         /// <param name="lis">フィルターをかける奴</param>
         /// <param name="num">フィルターを掛けるatarisのナンバー</param>
         /// <param name="exist">atarisにある場合リストに残すモード</param>
-        protected void atarisfilter(List<Entity> lis, int num = 0, bool exist = false)
+        protected void atarisfilter<T>(List<T> lis, int num = 0, bool exist = false)
+                  where T : Entity
         {
             for (int i = lis.Count - 1; i >= 0; i--)
             {

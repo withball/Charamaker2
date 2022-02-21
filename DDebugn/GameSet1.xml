@@ -87,6 +87,12 @@
             空気抵抗とかの物理のインフォメーションとか
             </summary>
         </member>
+        <member name="M:GameSet1.Entity.setNewAtariBinding(GameSet1.ABrecipie)">
+            <summary>
+            新しく辺りバインディングを設定する。pabもリセットするし
+            </summary>
+            <param name="recipie">レシピ</param>
+        </member>
         <member name="P:GameSet1.Entity.ab">
             <summary>
             今のフレームのあたり判定。
@@ -148,6 +154,11 @@
             今で、昔のあたり判定をセットする
             </summary>
         </member>
+        <member name="M:GameSet1.Entity.setab(System.Boolean)">
+            <summary>
+            今のあたり判定をセットする。初期とかワープしたときとかは呼び出してね
+            </summary>
+        </member>
         <member name="F:GameSet1.Entity._EM">
             <summary>
             追加されてるエンテティマネージャー。仕様上一個しか無理なんだ。ごめんね
@@ -156,6 +167,11 @@
         <member name="P:GameSet1.Entity.EM">
             <summary>
             エンテティマネージャー。hyojimanとかもここからとれる
+            </summary>
+        </member>
+        <member name="P:GameSet1.Entity.hyoji">
+            <summary>
+            便利ショトカ。表示マン
             </summary>
         </member>
         <member name="M:GameSet1.Entity.add(GameSet1.EntityManager)">
@@ -338,6 +354,16 @@
             御存じ速度加速度
             </summary>
         </member>
+        <member name="P:GameSet1.buturiinfo.speed">
+            <summary>
+            物体の速度
+            </summary>
+        </member>
+        <member name="P:GameSet1.buturiinfo.speedvec">
+            <summary>
+            スピードの方向
+            </summary>
+        </member>
         <member name="F:GameSet1.buturiinfo._hanpatu">
             <summary>
             反発係数？
@@ -395,6 +421,20 @@
             </summary>
         </member>
         <member name="M:GameSet1.buturiinfo.#ctor(System.Single,System.Single,System.Single,System.Single,System.Single,System.Single,System.Single,System.Single,System.String[])">
+            <summary>
+            普通のコンストラクタ
+            </summary>
+            <param name="wei">重さ</param>
+            <param name="tik">空気抵抗</param>
+            <param name="hanp">反射係数</param>
+            <param name="mas">摩擦係数</param>
+            <param name="vx">速度</param>
+            <param name="vy">速度</param>
+            <param name="ax">加速度</param>
+            <param name="ay">加速度</param>
+            <param name="atag">あたり判定の分類</param>
+        </member>
+        <member name="M:GameSet1.buturiinfo.#ctor(System.Single,System.Single,System.Single,System.Single,System.Single,System.Single,System.Single,System.Single,System.Collections.Generic.List{System.String})">
             <summary>
             普通のコンストラクタ
             </summary>
@@ -470,15 +510,39 @@
             直接扱うときは注意。getから呼べばコピーが出るよ。
             </summary>
         </member>
+        <member name="M:GameSet1.EntityDataBase.entadd(GameSet1.Entity)">
+            <summary>
+            エンテティをデータベースにぶち込むメソッド。
+            一生変わらない特性はここで振り分ける
+            </summary>
+            <param name="e"></param>
+            <returns>既に追加されていなかったか</returns>
+        </member>
+        <member name="M:GameSet1.EntityDataBase.entremove(GameSet1.Entity)">
+            <summary>
+            エンテティをデータベースからぶち消す
+            一生変わらない特性はここでリストから削除しとく
+            </summary>
+            <param name="e"></param>
+            <returns>既に追加されていなかったか</returns>
+        </member>
+        <member name="M:GameSet1.EntityDataBase.ARhuri(GameSet1.Entity)">
+            <summary>
+            追加されるときにCEDBに振り分けるためのメソッド
+            </summary>
+            <param name="e">振り分けるエンテティ</param>
+            <returns>どのCEDBに入れるか</returns>
+        </member>
         <member name="M:GameSet1.EntityDataBase.#ctor">
             <summary>
             普通のコンストラクタ
             </summary>
         </member>
-        <member name="M:GameSet1.EntityDataBase.add(System.String)">
+        <member name="M:GameSet1.EntityDataBase.add(System.String,System.Boolean)">
             <summary>
             新しいデータ列を追加する
             </summary>
+            <param name="c">コンスタントのか（毎フレームごとの検査は必要ない奴のこと）</param>
             <param name="name">その名前</param>
         </member>
         <member name="M:GameSet1.EntityDataBase.setDB">
@@ -547,12 +611,22 @@
         </member>
         <member name="P:GameSet1.EntityManager.moves">
             <summary>
-            動くというか重さが限界じゃないやつら
+            物理的に当たれる中の動くというか重さが限界じゃないやつら
             </summary>
         </member>
         <member name="P:GameSet1.EntityManager.overweights">
             <summary>
-            重さが限界に達してる奴ら
+            物理的に当たれる中の重さが限界に達してる奴ら
+            </summary>
+        </member>
+        <member name="P:GameSet1.EntityManager.atarerus">
+            <summary>
+            物理的に当たれる奴ら
+            </summary>
+        </member>
+        <member name="P:GameSet1.EntityManager.atarens">
+            <summary>
+            物理的に当たれないやつら
             </summary>
         </member>
         <member name="M:GameSet1.EntityManager.add(GameSet1.Entity)">
@@ -580,6 +654,11 @@
             デストラクタ
             </summary>
         </member>
+        <member name="F:GameSet1.EntityManager.atalis">
+            <summary>
+            当たったよっていうなんかデータ
+            </summary>
+        </member>
         <member name="M:GameSet1.EntityManager.atattao(GameSet1.Entity,GameSet1.Entity)">
             <summary>
             これがこれに当たったよ！というお知らせ
@@ -594,6 +673,11 @@
             <param name="korega">これが</param>
             <param name="koreni">これに</param>
             <returns>当たったの？</returns>
+        </member>
+        <member name="F:GameSet1.EntityManager.hansyasu">
+            <summary>
+            反射のなんかデータ
+            </summary>
         </member>
         <member name="M:GameSet1.EntityManager.hansyao(GameSet1.Entity,GameSet1.Entity)">
             <summary>
@@ -759,7 +843,7 @@
             ここで自分を新しく追加するとかやったら無限ループするからやめてね。
             </summary>
         </member>
-        <member name="M:GameSet1.Waza.atafilter(System.Collections.Generic.List{GameSet1.Entity},System.Collections.Generic.List{System.String},GameSet1.Entity,System.Collections.Generic.List{System.String},System.Boolean,System.Boolean)">
+        <member name="M:GameSet1.Waza.atafilter``1(System.Collections.Generic.List{``0},System.Collections.Generic.List{System.String},GameSet1.Entity,System.Collections.Generic.List{System.String},System.Boolean,System.Boolean)">
             <summary>
             ListEntityに対してあたり判定でフィルターを掛ける
             </summary>
@@ -770,7 +854,7 @@
             <param name="pre">1フレーム前のも考慮するか</param>
             <param name="not">当たっていないやつを残すことにする</param>
         </member>
-        <member name="M:GameSet1.Waza.atypefilter(System.Collections.Generic.List{GameSet1.Entity},GameSet1.buturiinfo,System.Boolean)">
+        <member name="M:GameSet1.Waza.atypefilter``1(System.Collections.Generic.List{``0},GameSet1.buturiinfo,System.Boolean)">
             <summary>
             ListEntityを当たりタイプでフィルターを掛ける
             </summary>
@@ -778,7 +862,7 @@
             <param name="lis">フィルターするリスト</param>
             <param name="friend">当たらないやつを残す</param>
         </member>
-        <member name="M:GameSet1.Waza.atarisfilter(System.Collections.Generic.List{GameSet1.Entity},System.Int32,System.Boolean)">
+        <member name="M:GameSet1.Waza.atarisfilter``1(System.Collections.Generic.List{``0},System.Int32,System.Boolean)">
             <summary>
             atarisをもとにフィルターを掛ける
             </summary>
