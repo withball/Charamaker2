@@ -988,6 +988,126 @@ namespace Charamaker2.Character
             base.frame(c, cl);
         }
 
+    }    /// <summary>
+         /// テクスチャーの反転、不透明度を操るムーブ
+         /// </summary>
+    [Serializable]
+    public class Kopaman: moveman
+    {
+        public string nm;
+        public float opabai;
+        
+        public bool kzk;
+        protected List<setu> tag = new List<setu>();
+        protected List<float> opasp=new List<float>();
+        /// <summary>
+        /// 普通のコンストラクタ
+        /// </summary>
+        /// <param name="t">持続時間</param>
+        /// <param name="name">対象にする節""ですべてを指定する</param>
+        /// <param name="toopabai">-1で変更なし、基準の不透明度から速度を自動的に決める。</param>
+        /// <param name="kozokumo">下の節にも同じ効果を適用するか。falseかつ""でキャラクターのmirrorを変更できる</param>
+        /// <param name="stop">止めるか</param>
+        public Kopaman(float t, string name,  float toopabai = -1, bool kozokumo = true, bool stop = false) : base(t, stop)
+        {
+            nm = name;
+            opabai = toopabai;
+            kzk = kozokumo;
+
+        }
+        /// <summary>
+        /// コピーするためのコンストラクタ。
+        /// </summary>
+        /// <param name="t">コピー元</param>
+        public Kopaman(Kopaman t) : base(t)
+        {
+            nm = t.nm;
+            opabai = t.opabai;
+            opasp = t.opasp;
+            kzk = t.kzk;
+            tag = new List<setu>(t.tag);
+        }
+        /// <summary>
+        /// 空のコンストラクタ
+        /// </summary>
+        public Kopaman() { }
+
+        public override void start(character c)
+        {
+            base.start(c);
+            var t = c.core.GetSetu(nm);
+
+            if (t != null)
+            {
+                if (kzk)
+                {
+                    tag = t.getallsetu();
+                }
+                else
+                {
+                    tag = new List<setu>();
+                    tag.Add(t);
+                }
+            }
+            else if (nm == "" && kzk)
+            {
+                tag = c.core.getallsetu();
+            }
+            else
+            {
+                tag = new List<setu>();
+            }
+            if (opabai >= 0)
+            {
+            }
+            else
+            {
+                opabai = 0;
+            }
+            foreach (var a in tag)
+            {
+               var tt= c.getkijyun().GetSetu(a.nm);
+                if (tt != null)
+                {
+                    opasp.Add((tt.p.OPA*opabai - a.p.OPA) / time);
+                }
+                else 
+                {
+                    opasp.Add(0);
+                }
+            }
+            
+            
+        }
+        protected override void hukkyuu(character c)
+        {
+            base.hukkyuu(c);
+
+            for (int i = tag.Count - 1; i >= 0; i--)
+            {
+                var tt = c.GetSetu(tag[i].nm);
+                if (tt == null)
+                {
+                    tag.RemoveAt(i);
+                }
+                else
+                {
+                    tag[i] = tt;
+                }
+            }
+        }
+        public override void frame(character c, float cl)
+        {
+
+
+            var t = getnokotime(cl);
+            for(int i=0;i<tag.Count;i++)
+            {
+                tag[i].p.OPA += opasp[i] * t;
+            }
+            base.frame(c, cl);
+        }
+
     }
     /// <summary>
     /// テクスチャーを瞬時に変更するムーブ

@@ -15,13 +15,9 @@ namespace Charamaker2.Character
     public class setu
     {
         /// <summary>
-        /// 節の前。一つのキャラクター内で被ってはいけない。
+        /// 節の前。一つのキャラクター内で被ってはいけない。あと""もやめてくれ
         /// </summary>
-        protected string _nm;
-        /// <summary>
-        /// 節の名前。一つのキャラクター内で被ってはいけない。""は無理
-        /// </summary>
-        public string nm { get { return _nm; }set {if(value!="") _nm = value; } }
+       public string nm;
         /// <summary>
         /// ピクチャーだよ！
         /// </summary>
@@ -307,6 +303,7 @@ namespace Charamaker2.Character
             ty = c.ty;
             rad = c.rad;
             core = (setu)Activator.CreateInstance(c.core.GetType(),c.core);
+            
             _mirror = c._mirror;
             premir = c.premir;
             if (setkijyun)

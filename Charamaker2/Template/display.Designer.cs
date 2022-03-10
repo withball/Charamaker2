@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(display));
             this.clocker = new System.Windows.Forms.Timer(this.components);
             this.SuspendLayout();
             // 
@@ -43,8 +44,10 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "display";
             this.Text = "uoootempletoooo";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.closing);
             this.Load += new System.EventHandler(this.Form1_Load);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.keydown);
             this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.keyup);

@@ -50,6 +50,7 @@ namespace Charamaker2
                 + "radtoman(time,setuname,tosita,vsita,最短経路を自動で選択=true,stop=false):節とかを絶対角度で曲げる指定した名前が\"\"の時はキャラの回転になる" + Environment.NewLine
                 + "texpropman(time,setuname,mirror(1->false;0->反転;-1->true),toopa=-1(変更しない),後続も同じ効果を適用するか=true(false かつキャラでキャラのミラーの変更),stop=false):ミラー(471で変更なし)、不透明度の変更。ミラーは瞬時、不透明度はゆっくり変更される。" + Environment.NewLine
                 + "texchangeman(setuname,texname):テクスチャーの変更。瞬時に行われる。" + Environment.NewLine
+                  + "Kopaman(time, setuname,  基準の不透明度から何倍か, bool kozokumo = true, bool stop = false):関節の不透明度を基準のを基準にして整える" + Environment.NewLine
                 + "zchangeman(time,setuname,vz,後続も同じ効果を適用するか=true,stop=false):zを即座に移動する。" + Environment.NewLine
                  + "Kzchangeman(setuname,tosetuname,vz,後続も同じ効果を適用するか=true):zを基準の指定節のz+vzに即座に移動する。" + Environment.NewLine
                 + "sizetokaman(time,setuname,vtx,vty,vw=0,vh=0,stop=false):中心の位置txty大きさwhを移動する。指定した名前が\"\"の時はキャラのが変更される" + Environment.NewLine

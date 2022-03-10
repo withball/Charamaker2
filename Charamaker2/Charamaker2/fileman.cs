@@ -38,6 +38,10 @@ namespace Charamaker2
         /// </summary>
         static ID2D1HwndRenderTarget rendertarget;
         /// <summary>
+        /// おおもとのレンダー
+        /// </summary>
+        static public ID2D1RenderTarget render{get {return rendertarget;} }
+        /// <summary>
         /// ガシーツ
         /// </summary>
         static float gasyu = 1;

@@ -11,6 +11,9 @@ using Charamaker2.input;
 using Charamaker2.Character;
 using GameSet1;
 using Charamaker2.Shapes;
+//通信用　using C2WebRTCP2P;死体場合はC2webRTCCP2Pを参照に追加してね！
+// なんかわからんけど、mrwebrtc.dllがないって言われたらpackages->MixedRealityWebrtc->runtimes->win10-x86->nativにある
+// やつをexeのとこまで持ってけ！
 
 namespace Template
 {
@@ -31,6 +34,7 @@ namespace Template
         {
             InitializeComponent();
             fileman.setinguping(this);
+            //通信用 C2WebRTCP2P.supertusin.setup();
             new SScene(sm).start();
         }
 
@@ -64,6 +68,11 @@ namespace Template
         private void mouseup(object sender, MouseEventArgs e)
         {
             i.up(e.Button, inputin.rawconv);
+        }
+
+        private void closing(object sender, FormClosingEventArgs e)
+        {
+           //通信用 supertusin.shutdown();
         }
     }
     class SScene : Scene 

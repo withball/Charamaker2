@@ -9,14 +9,9 @@
             関節。pictureを一枚持ち、いい感じに構成する
             </summary>
         </member>
-        <member name="F:Charamaker2.Character.setu._nm">
+        <member name="F:Charamaker2.Character.setu.nm">
             <summary>
-            節の前。一つのキャラクター内で被ってはいけない。
-            </summary>
-        </member>
-        <member name="P:Charamaker2.Character.setu.nm">
-            <summary>
-            節の名前。一つのキャラクター内で被ってはいけない。""は無理
+            節の前。一つのキャラクター内で被ってはいけない。あと""もやめてくれ
             </summary>
         </member>
         <member name="F:Charamaker2.Character.setu.p">
@@ -985,6 +980,32 @@
             空のコンストラクタ
             </summary>
         </member>
+        <member name="T:Charamaker2.Character.Kopaman">
+            <summary>
+            テクスチャーの反転、不透明度を操るムーブ
+            </summary>
+        </member>
+        <member name="M:Charamaker2.Character.Kopaman.#ctor(System.Single,System.String,System.Single,System.Boolean,System.Boolean)">
+            <summary>
+            普通のコンストラクタ
+            </summary>
+            <param name="t">持続時間</param>
+            <param name="name">対象にする節""ですべてを指定する</param>
+            <param name="toopabai">-1で変更なし、基準の不透明度から速度を自動的に決める。</param>
+            <param name="kozokumo">下の節にも同じ効果を適用するか。falseかつ""でキャラクターのmirrorを変更できる</param>
+            <param name="stop">止めるか</param>
+        </member>
+        <member name="M:Charamaker2.Character.Kopaman.#ctor(Charamaker2.Character.Kopaman)">
+            <summary>
+            コピーするためのコンストラクタ。
+            </summary>
+            <param name="t">コピー元</param>
+        </member>
+        <member name="M:Charamaker2.Character.Kopaman.#ctor">
+            <summary>
+            空のコンストラクタ
+            </summary>
+        </member>
         <member name="T:Charamaker2.Character.texchangeman">
             <summary>
             テクスチャーを瞬時に変更するムーブ
@@ -1432,6 +1453,11 @@
             もちろん保存しないといけないレンダーターゲット
             </summary>
         </member>
+        <member name="P:Charamaker2.fileman.render">
+            <summary>
+            おおもとのレンダー
+            </summary>
+        </member>
         <member name="F:Charamaker2.fileman.gasyu">
             <summary>
             ガシーツ
@@ -1724,13 +1750,15 @@
             空のコンストラクタ
             </summary>
         </member>
-        <member name="M:Charamaker2.drawings.draw(Charamaker2.hyojiman,System.Single)">
-            <summary>
-            書くときに呼び出されるメソッド
-            </summary>
-            <param name="hyo">書くhyojiman</param>
-            <param name="cl">描画で変化があるならその時の時間の速さ。</param>
-            <returns>描画したか</returns>
+        <member name="M:Charamaker2.drawings.draw(Charamaker2.hyojiman,System.Single,System.Boolean)">
+             <summary>
+             書くときに呼び出されるメソッド
+             </summary>
+             <param name="hyo">書くhyojiman</param>
+             <param name="cl">描画で変化があるならその時の時間の速さ。</param>
+            <param name="draw"> 描画するか</param>
+             <returns>描画したか</returns>
+             
         </member>
         <member name="M:Charamaker2.drawings.add(Charamaker2.hyojiman)">
             <summary>
@@ -1751,6 +1779,11 @@
             コピーするためのメソッド
             </summary>
             <param name="d">コピー元</param>
+        </member>
+        <member name="T:Charamaker2.PBHman">
+            <summary>
+            PBHに仕えるクラス
+            </summary>
         </member>
         <member name="T:Charamaker2.picture">
             <summary>
@@ -1896,13 +1929,14 @@
             <param name="dx">x方向の移動量</param>
             <param name="dy">y方向の移動量</param>
         </member>
-        <member name="M:Charamaker2.picture.draw(Charamaker2.hyojiman,System.Single)">
-            <summary>
-            書くときに呼び出されるメソッド。画面外にある場合は描画されない
-            </summary>
-            <param name="hyo">書くhyojiman</param>
-            <param name="cl">描画で変化があるならその時の時間の速さ。</param>
-            <returns>描画したか</returns>
+        <member name="M:Charamaker2.picture.draw(Charamaker2.hyojiman,System.Single,System.Boolean)">
+             <summary>
+             書くときに呼び出されるメソッド。画面外にある場合は描画されない
+             </summary>
+             <param name="hyo">書くhyojiman</param>
+             <param name="cl">描画で変化があるならその時の時間の速さ。</param>
+            <param name="draw"> 描画するか</param>
+             <returns>描画したか</returns>
         </member>
         <member name="M:Charamaker2.picture.copy(Charamaker2.picture)">
             <summary>
@@ -1958,13 +1992,14 @@
             コピーするためのコンストラクタ
              </summary>
         </member>
-        <member name="M:Charamaker2.haikeidraws.draw(Charamaker2.hyojiman,System.Single)">
-            <summary>
-            描くためのメソッド
-            </summary>
-            <param name="hyo">描画する表示マン</param>
-            <param name="cl">クロック</param>
-            <returns></returns>
+        <member name="M:Charamaker2.haikeidraws.draw(Charamaker2.hyojiman,System.Single,System.Boolean)">
+             <summary>
+             描くためのメソッド
+             </summary>
+             <param name="hyo">描画する表示マン</param>
+             <param name="cl">クロック</param>
+            <param name="draw"> 描画するか</param>
+             <returns></returns>
         </member>
         <member name="T:Charamaker2.timehaikeidraws">
             <summary>
@@ -2005,6 +2040,26 @@
             レンダーの描画を終了するbegindrawの間に描画を記述する。
             </summary>
         </member>
+        <member name="F:Charamaker2.hyojiman.otos">
+            <summary>
+            再生する音
+            </summary>
+        </member>
+        <member name="F:Charamaker2.hyojiman.otovols">
+            <summary>
+            再生す音の音量
+            </summary>
+        </member>
+        <member name="F:Charamaker2.hyojiman.bgm">
+            <summary>
+            再生するBGM
+            </summary>
+        </member>
+        <member name="F:Charamaker2.hyojiman.butu">
+            <summary>
+            同じBGMを流すときに最初から再生するか
+            </summary>
+        </member>
         <member name="M:Charamaker2.hyojiman.playoto(System.String,System.Single)">
             <summary>
             音を出す。通信や、リプレイの保存をするならばこれを使わなくてはならない。
@@ -2012,6 +2067,18 @@
             </summary>
             <param name="otoe">.\oto\*.wav</param>
             <param name="vol">この音のボリューム</param>
+        </member>
+        <member name="M:Charamaker2.hyojiman.playoto(Charamaker2.hyojiman)">
+            <summary>
+            他のhyojimanから音をもってくる
+            </summary>
+            <param name="hyo">持ってくる元</param>
+        </member>
+        <member name="M:Charamaker2.hyojiman.playbgm(Charamaker2.hyojiman)">
+            <summary>
+            他のhyojimanのBGMをコピーする
+            </summary>
+            <param name="hyo">コピー元</param>
         </member>
         <member name="M:Charamaker2.hyojiman.playbgm(System.String,System.Boolean)">
             <summary>
@@ -2096,7 +2163,18 @@
             ウィンドウの座標での高さ
             </summary>
         </member>
-        <!-- Badly formed XML comment ignored for member "M:Charamaker2.hyojiman.setBairituW(System.Single,System.Boolean)" -->
+        <member name="F:Charamaker2.hyojiman.maxdraws">
+            <summary>
+            同時に表示できる描画オブジェクトの限界量
+            </summary>
+        </member>
+        <member name="M:Charamaker2.hyojiman.setBairituW(System.Single,System.Boolean)">
+            <summary>
+            bairituを幅を指定して決める
+            </summary>
+            <param name="w">その幅</param>
+            <param name="h">高さにするか</param>
+        </member>
         <member name="M:Charamaker2.hyojiman.#ctor(Vortice.Direct2D1.ID2D1RenderTarget)">
             <summary>
             表示マンのコンストラクタ
@@ -2132,7 +2210,7 @@
             </summary>
             <param name="cl">クロック</param>
         </member>
-        <member name="M:Charamaker2.hyojiman.hyoji(System.Single,System.Boolean,System.Boolean,System.Boolean,System.Boolean)">
+        <member name="M:Charamaker2.hyojiman.hyoji(System.Single,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Boolean)">
             <summary>
             表示を行う
             </summary>
@@ -2140,7 +2218,8 @@
             <param name="begin">描画開始をするか</param>
             <param name="end">描画終了をするか</param>
             <param name="doEffectframe">エフェクトのフレームを行うか</param>
-            <param name="playotonkesi">音を再生した後その情報を消すか(録画を再生するときのみfalseで)</param>
+            <param name="playotonkesi">音を再生した後その情報を消すか(録画を再生するときのみfalseで?)</param>
+            <param name="draw">描画とか音再生するか</param>
         </member>
         <member name="M:Charamaker2.hyojiman.resetpics">
             <summary>
@@ -2442,6 +2521,14 @@
             </summary>
             <param name="hyo"></param>
             <param name="cl"></param>
+        </member>
+        <member name="M:Charamaker2.message.byoga(Charamaker2.hyojiman,System.Single,System.Boolean)">
+            <summary>
+            文字を描画する
+            </summary>
+            <param name="hyo"></param>
+            <param name="cl"></param>
+            <param name="draw"></param>
         </member>
         <member name="M:Charamaker2.message.hutidorin(System.Single,System.Single,System.Single,System.Single,System.Int32,System.Int32,System.Single,System.Single,System.String,System.Single,System.Single,System.Single,System.Boolean,System.Single,Charamaker2.hyojiman,System.Boolean,System.Single,System.Single,System.Single)">
             <summary>
