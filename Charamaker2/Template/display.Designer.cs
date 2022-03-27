@@ -49,10 +49,12 @@
             this.Text = "uoootempletoooo";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.closing);
             this.Load += new System.EventHandler(this.Form1_Load);
+            this.Shown += new System.EventHandler(this.shown);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.keydown);
             this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.keyup);
             this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.mousedown);
             this.MouseUp += new System.Windows.Forms.MouseEventHandler(this.mouseup);
+            this.Resize += new System.EventHandler(this.resized);
             this.ResumeLayout(false);
 
         }

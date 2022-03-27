@@ -17,6 +17,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 using Charamaker2.Character;
 using Vortice.DCommon;
 using Microsoft.CodeAnalysis.Scripting;
+
 using Microsoft.CodeAnalysis.CSharp.Scripting;
 
 namespace Charamaker2
@@ -45,6 +46,11 @@ namespace Charamaker2
         /// ガシーツ
         /// </summary>
         static float gasyu = 1;
+        /// <summary>
+        /// セットアップされたフォーム
+        /// </summary>
+        static public ContainerControl CC { get { return _CC; } }
+        static ContainerControl _CC;
         /// <summary>
         /// 画質の倍率
         /// </summary>
@@ -82,25 +88,15 @@ namespace Charamaker2
         /// セットアップをする。
         /// 画像の表示、音の再生が使用可能になる。
         /// </summary>
-        /// <param name="f">素となるフォーム</param>
+        /// <param name="f">素となるフォームとかユーザーコントロール</param>
         /// <param name="bai">画質の倍率</param>
-        static public void setinguping(Form f,float bai=1)
+        static public void setinguping(ContainerControl f,float bai=1)
         {
+            Console.WriteLine("fileman setup go");
+            _CC = f;
             resizen(bai, f.Handle, f.ClientSize.Width, f.ClientSize.Height);
             fileman.resetfileman( f.Handle);
-
-        }
-        /// <summary>
-        /// セットアップをする。
-        /// 画像の表示、音の再生が使用可能になる。
-        /// </summary>
-        /// <param name="f">素となるユーザーコントロール</param>
-        /// <param name="bai">画質の倍率</param>
-        static public void setinguping(UserControl f,float bai=1)
-        {
-            resizen(bai, f.Handle, f.ClientSize.Width, f.ClientSize.Height);
-
-            fileman.resetfileman( f.Handle);
+            Console.WriteLine("fileman setup ok");
 
         }
 
@@ -302,7 +298,7 @@ namespace Charamaker2
                             characters[file] = (character)loadedData;
                         }
                     }
-                    catch { }
+                    catch (Exception e){ Console.WriteLine(e.ToString()); }
 
                 }
                 if (characters.ContainsKey(file))
@@ -381,7 +377,7 @@ namespace Charamaker2
                             motions[file] = ((motionsaveman)loadedData);
                         }
                     }
-                    catch { }
+                    catch (Exception e) { Console.WriteLine(e.ToString()); }
                     res = (motionsaveman)loadedData;
                 }
                 
@@ -443,7 +439,7 @@ namespace Charamaker2
                         motions[file] = (motionsaveman)loadedData;
                     }
                 }
-                catch { }
+                catch (Exception e) { Console.WriteLine(e.ToString()); }
 
             }
             if (motions.ContainsKey(file))
@@ -593,7 +589,7 @@ namespace Charamaker2
                         characters[file] = new character((Character.character)loadedData);
                     }
                 }
-                catch { }
+                catch (Exception e) { Console.WriteLine(e.ToString()); }
 
             }
             if (characters.ContainsKey(file))
@@ -871,6 +867,7 @@ namespace Charamaker2
         /// <param name="hand"></param>
         static private void resetfileman( IntPtr hand)
         {
+            
             if (audio != null)
             {
                 audio.Dispose();
@@ -941,7 +938,7 @@ namespace Charamaker2
                 }
 
             }
-            catch { }
+            catch (Exception e) { Console.WriteLine(e.ToString()); }
 
             ScriptOptions a = ScriptOptions.Default
        .WithReferences(Assembly.GetEntryAssembly())

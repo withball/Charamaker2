@@ -1463,6 +1463,11 @@
             ガシーツ
             </summary>
         </member>
+        <member name="P:Charamaker2.fileman.CC">
+            <summary>
+            セットアップされたフォーム
+            </summary>
+        </member>
         <member name="P:Charamaker2.fileman.gasitu">
             <summary>
             画質の倍率
@@ -1483,20 +1488,12 @@
             </summary>
             <returns>新しいhyojiman</returns>
         </member>
-        <member name="M:Charamaker2.fileman.setinguping(System.Windows.Forms.Form,System.Single)">
+        <member name="M:Charamaker2.fileman.setinguping(System.Windows.Forms.ContainerControl,System.Single)">
             <summary>
             セットアップをする。
             画像の表示、音の再生が使用可能になる。
             </summary>
-            <param name="f">素となるフォーム</param>
-            <param name="bai">画質の倍率</param>
-        </member>
-        <member name="M:Charamaker2.fileman.setinguping(System.Windows.Forms.UserControl,System.Single)">
-            <summary>
-            セットアップをする。
-            画像の表示、音の再生が使用可能になる。
-            </summary>
-            <param name="f">素となるユーザーコントロール</param>
+            <param name="f">素となるフォームとかユーザーコントロール</param>
             <param name="bai">画質の倍率</param>
         </member>
         <member name="F:Charamaker2.fileman.texs">
@@ -2530,7 +2527,7 @@
             <param name="cl"></param>
             <param name="draw"></param>
         </member>
-        <member name="M:Charamaker2.message.hutidorin(System.Single,System.Single,System.Single,System.Single,System.Int32,System.Int32,System.Single,System.Single,System.String,System.Single,System.Single,System.Single,System.Boolean,System.Single,Charamaker2.hyojiman,System.Boolean,System.Single,System.Single,System.Single)">
+        <member name="M:Charamaker2.message.hutidorin(System.Single,System.Single,System.Single,System.Single,System.Int32,System.Int32,System.Single,System.Single,System.String,System.Single,System.Single,System.Single,System.Boolean,System.Single,Charamaker2.hyojiman,System.Boolean,System.Single,System.Single,System.Single,System.Single,System.Int32)">
             <summary>
             縁取りを適用したメッセージ群を作り出す
             </summary>
@@ -2553,6 +2550,8 @@
             <param name="R2">後ろのR,-1で自動</param>
             <param name="G2">後ろのG,-1で自動</param>
             <param name="B2">後ろのB,-1で自動</param>
+            <param name="dz">後ろの前とのzの差</param>
+            <param name="kazu">何個で縁取りするか。0~4</param>
             <returns></returns>
         </member>
         <member name="M:Charamaker2.message.copy(Charamaker2.message)">
@@ -2913,6 +2912,14 @@
             入力のストリングを返す
             </summary>
             <returns>入力</returns>
+        </member>
+        <member name="M:Charamaker2.input.IPC.convertstringinput(System.Collections.Generic.List{Charamaker2.input.IPC},System.String)">
+            <summary>
+            文章の中に含まれてる入力([Key:Left],[Mus:Right])[]必要！を変換する
+            </summary>
+            <param name="ipss">変換器共</param>
+            <param name="mo">変換する文字列</param>
+            <returns>変換した文字列</returns>
         </member>
         <member name="F:Charamaker2.motionmaker.components">
             <summary>

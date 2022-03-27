@@ -44,11 +44,13 @@ namespace GameSet1
         /// テキストを取得する
         /// </summary>
         /// <param name="name">テキストの名前</param>
+        /// <param name="ipcs">入力の変換(nullでしない)</param>
         /// <returns>stringで帰ってくる無い場合は変な文字列</returns>
-        static public string GT(string name)
+        static public string GT(string name,List<IPC>ipcs=null)
         {
             if (texts.ContainsKey(name))
             {
+                if (ipcs != null) return IPC.convertstringinput(ipcs, texts[name]);
                 return texts[name];
             }
             else

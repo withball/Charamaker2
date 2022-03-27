@@ -4,6 +4,58 @@
         <name>GameSet1</name>
     </assembly>
     <members>
+        <member name="T:GameSet1.benriUI.buttoninterface">
+            <summary>
+            クリック+キーで移動アンドセレクトできる便利めのインターフェース
+            </summary>
+        </member>
+        <member name="F:GameSet1.benriUI.buttoninterface.selecter">
+            <summary>
+            指す奴
+            </summary>
+        </member>
+        <member name="M:GameSet1.benriUI.buttoninterface.#ctor(Charamaker2.hyojiman,System.Int32,Charamaker2.picture,System.Collections.Generic.List{Charamaker2.picture},Charamaker2.Shapes.Shape)">
+            <summary>
+            普通のコンストラクタ
+            </summary>
+            <param name="hyo">表示マン</param>
+            <param name="nowindex">最初に選択するボタンの番号</param>
+            <param name="selecter">選択中を表すカーソル</param>
+            <param name="buttons">左から右の順番にしてほしい</param>
+            <param name="buttonkata">ボタンの形(x,y,w,h,radは関係ないよ)</param>
+        </member>
+        <member name="M:GameSet1.benriUI.buttoninterface.sinu">
+             <summary>
+            UIを破壊するときに呼び出せば？
+             </summary>
+        </member>
+        <member name="M:GameSet1.benriUI.buttoninterface.clickeds(Charamaker2.input.inputin)">
+            <summary>
+            クリックで選択したボタンを全部返す
+            </summary>
+            <param name="i">クリック位置</param>
+            <returns>クリックしたボタン</returns>
+        </member>
+        <member name="M:GameSet1.benriUI.buttoninterface.selected">
+            <summary>
+            選択中のボタンを返す
+            </summary>
+            <returns>選択中のボタン(1だけどこっちのが便利だろ？)</returns>
+        </member>
+        <member name="M:GameSet1.benriUI.buttoninterface.select(Charamaker2.picture)">
+            <summary>
+            選んでる奴をセットする
+            </summary>
+            <param name="p">選ぶ奴</param>
+            <returns>選べたか</returns>
+        </member>
+        <member name="M:GameSet1.benriUI.buttoninterface.selectsaikinbosi(System.Boolean,System.Boolean)">
+            <summary>
+            最もそれらしいボタンに移動する
+            </summary>
+            <param name="plus">プラスか</param>
+            <param name="y">y方向か</param>
+        </member>
         <member name="T:GameSet1.FP">
             <summary>
             キャラクターの攻撃力とかセリフとかをテキストファイルから読み込むクラス
@@ -28,11 +80,12 @@
             <param name="name">パラメータの名前</param>
             <returns>floatで帰ってくる無い場合は死ぬ</returns>
         </member>
-        <member name="M:GameSet1.FP.GT(System.String)">
+        <member name="M:GameSet1.FP.GT(System.String,System.Collections.Generic.List{Charamaker2.input.IPC})">
             <summary>
             テキストを取得する
             </summary>
             <param name="name">テキストの名前</param>
+            <param name="ipcs">入力の変換(nullでしない)</param>
             <returns>stringで帰ってくる無い場合は変な文字列</returns>
         </member>
         <member name="M:GameSet1.FP.nulltext(System.String)">
@@ -738,6 +791,7 @@
         <member name="P:GameSet1.Scene.started">
             <summary>
             start(),end()が複数回発動しないようにするフラグ。startでtrueになる。
+            直接いじってもいいけどstart,endで変えてくれるんだけど
             </summary>
         </member>
         <member name="M:GameSet1.Scene.start">
@@ -755,8 +809,79 @@
         </member>
         <member name="M:GameSet1.Scene.end">
             <summary>
-            標準はnextをスタートするだけ
+            標準はnextをスタートしてstartedをfalseにするだけ
             </summary>
+        </member>
+        <member name="T:GameSet1.SD">
+            <summary>
+            セーブデータのクラス。標準で画質や音量のデータを搭載
+            </summary>
+        </member>
+        <member name="M:GameSet1.SD.setup``1(System.String)">
+            <summary>
+            最初のセーブデータロードするよ
+            </summary>
+            <param name="savefile"></param>
+            <typeparam name="T">セーブデータのタイプ</typeparam>
+        </member>
+        <member name="F:GameSet1.SD.S">
+            <summary>
+            現在ロードしてるセーブデータ
+            </summary>
+        </member>
+        <member name="P:GameSet1.SD.mvol">
+            <summary>
+            マスターボリューム
+            </summary>
+        </member>
+        <member name="P:GameSet1.SD.kvol">
+            <summary>
+            効果音のボリューム
+            </summary>
+        </member>
+        <member name="P:GameSet1.SD.bvol">
+            <summary>
+            BGMのボリューム
+            </summary>
+        </member>
+        <member name="P:GameSet1.SD.gsit">
+            <summary>
+            画質。こればかりは起動時にfileman.setingupに代入する
+            </summary>
+        </member>
+        <member name="M:GameSet1.SD.#ctor">
+            <summary>
+            普通のコンストラクタ
+            </summary>
+        </member>
+        <member name="F:GameSet1.SD.converts">
+            <summary>
+            キーコンフィグ
+            </summary>
+        </member>
+        <member name="M:GameSet1.SD.resetIPC">
+            <summary>
+            キーコンフィグのリセット
+            </summary>
+        </member>
+        <member name="M:GameSet1.SD.setvols">
+            <summary>
+            ボリュームを設定する
+            </summary>
+        </member>
+        <member name="M:GameSet1.SD.savesave``1(System.String)">
+            <summary>
+            セーブする
+            </summary>
+            <param name="name">ファイルの名前</param>
+            <typeparam name="T">セーブデータのタイプ</typeparam>
+        </member>
+        <member name="M:GameSet1.SD.loadsave``1(System.String)">
+            <summary>
+            セーブデータをロードする
+            </summary>
+            <param name="file">ファイルの名前</param>
+            <typeparam name="T">セーブデータのタイプ</typeparam>
         </member>
         <member name="T:GameSet1.Waza">
             <summary>

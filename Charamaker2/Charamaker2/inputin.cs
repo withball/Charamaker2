@@ -802,5 +802,21 @@ namespace Charamaker2.input
 
             return aas;
         }
+        /// <summary>
+        /// 文章の中に含まれてる入力([Key:Left],[Mus:Right])[]必要！を変換する
+        /// </summary>
+        /// <param name="ipss">変換器共</param>
+        /// <param name="mo">変換する文字列</param>
+        /// <returns>変換した文字列</returns>
+        static public string convertstringinput(List<IPC>ipss,string mo) 
+        {
+           
+            foreach (var a in ipss) 
+            {
+            mo=    mo.Replace("["+a.getoutString()+"]",a.getinString());
+
+            }
+            return mo;
+        }
     }
 }

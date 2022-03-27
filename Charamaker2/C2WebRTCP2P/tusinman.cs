@@ -88,6 +88,15 @@ namespace C2WebRTCP2P
             if (cl != null) cl.resetcount();
         }
         /// <summary>
+        /// 接続してる情報をリセットする
+        /// </summary>
+        static public void clear() 
+        {
+
+            sv?.dispose(); 
+            cl?.dispose();
+        }
+        /// <summary>
         /// 通信を開始したのちに使用する。hyojimanを受け取る
         /// </summary>
         /// <returns>受け取ったhyojiman</returns>

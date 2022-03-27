@@ -46,8 +46,9 @@ namespace GameSet1
         private bool _started=false;
         /// <summary>
         /// start(),end()が複数回発動しないようにするフラグ。startでtrueになる。
+        /// 直接いじってもいいけどstart,endで変えてくれるんだけど
         /// </summary>
-        protected bool started { get { return _started; } }
+        protected bool started { get { return _started; } set { _started = value; } }
         /// <summary>
         /// シーンを開始したいときに発動してね。
         /// smにこれが代入されてnextがない時は何かしらを代入しておくといい
@@ -72,7 +73,7 @@ namespace GameSet1
             hyo.hyoji(cl);
         }
         /// <summary>
-        /// 標準はnextをスタートするだけ
+        /// 標準はnextをスタートしてstartedをfalseにするだけ
         /// </summary>
         virtual public void end()
         {

@@ -41,6 +41,11 @@
             接続したのちに使用する。通信を開始する。
             </summary>
         </member>
+        <member name="M:C2WebRTCP2P.supertusin.clear">
+            <summary>
+            接続してる情報をリセットする
+            </summary>
+        </member>
         <member name="M:C2WebRTCP2P.supertusin.getinhyoji">
             <summary>
             通信を開始したのちに使用する。hyojimanを受け取る

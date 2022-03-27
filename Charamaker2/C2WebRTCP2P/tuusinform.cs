@@ -175,7 +175,10 @@ namespace C2WebRTCP2P
 
 		string tex1 = "", tex2 = "";
 
-        
+        private void tuusinform_Load_1(object sender, EventArgs e)
+        {
+
+        }
 
         private void ticked(object sender, EventArgs e)
         {

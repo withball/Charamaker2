@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>SuperControls4</name>
+    </assembly>
+    <members>
+        <member name="T:SuperControls4.GGTextBox">
+            <summary>
+            画面外に置くことで真価を発揮するテキストボックス。
+            Scene.startで追加してScene.endで削除すると良き
+            </summary>
+        </member>
+        <member name="M:SuperControls4.GGTextBox.#ctor(System.Windows.Forms.ContainerControl)">
+            <summary>
+            コンストラクタ
+            </summary>
+            <param name="f">フォーカスを外したりしたいので親フォームちょうだい</param>
+        </member>
+        <member name="M:SuperControls4.GGTextBox.Active">
+            <summary>
+            こいつをアクティブにするメソッド
+            </summary>
+        </member>
+        <member name="M:SuperControls4.GGTextBox.EndActive">
+            <summary>
+            こいつを非活性化するメソッド
+            </summary>
+        </member>
+        <member name="P:SuperControls4.GGTextBox.superText">
+            <summary>
+            都合上文字が画面外なので見えない。これをmessageとかで表示するとカーソルの位置が見えていい感じかもしれない
+            </summary>
+        </member>
+    </members>
+</doc>

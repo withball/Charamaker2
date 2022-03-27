@@ -27,13 +27,19 @@ namespace Template
         ///fileman.loadcharacter("yoshino");
         ///fileman.ldmotion("yoshino\\kougeki");
         ///とかいう具合や！
+        ///セッティングを使用するためにはセッティング用のとこを解放しろ！
         /// </summary>
         inputin i = new inputin();
         SceneManager sm = new SceneManager();
+        System.Drawing.Size size=new System.Drawing.Size(800,800);
         public display()
         {
             InitializeComponent();
-            fileman.setinguping(this);
+            this.ClientSize=new System.Drawing.Size(size.Width,size.Height);
+            //SD.setup();
+            //SD.S.setvols();
+            fileman.setinguping(this,1/*SD.S.gsit*/);
+           // FP.seting(new List<string>(),new List<string> { "settingtext" });
             //通信用 C2WebRTCP2P.supertusin.setup();
             new SScene(sm).start();
         }
@@ -48,31 +54,51 @@ namespace Template
             i.setpointer(sm.s.hyo, this);
             sm.s.frame(i, 1);
             i.topre();
+            //セッティング用inputin.raw.topre();
         }
 
         private void keydown(object sender, KeyEventArgs e)
         {
-            i.down(e.KeyCode,inputin.rawconv);
+            
+            i.down(e.KeyCode,inputin.rawconv/*セッティング用SD.S.converts*/);
+            //  セッティング用 inputin.raw.down(e.KeyCode, inputin.rawconv);
         }
 
         private void keyup(object sender, KeyEventArgs e)
         {
-            i.up(e.KeyCode, inputin.rawconv);
+            i.up(e.KeyCode, inputin.rawconv/*セッティング用SD.S.converts*/);
+            //  セッティング用 inputin.raw.up(e.KeyCode, inputin.rawconv);
         }
 
         private void mousedown(object sender, MouseEventArgs e)
         {
-            i.down(e.Button, inputin.rawconv);
+            i.down(e.Button, inputin.rawconv/*セッティング用SD.S.converts*/);
+            // セッティング用  inputin.raw.down(e.Button, inputin.rawconv);
         }
 
         private void mouseup(object sender, MouseEventArgs e)
         {
-            i.up(e.Button, inputin.rawconv);
+            i.up(e.Button, inputin.rawconv/*セッティング用SD.S.converts*/);
+            //セッティング用   inputin.raw.up(e.Button, inputin.rawconv);
         }
 
         private void closing(object sender, FormClosingEventArgs e)
         {
            //通信用 supertusin.shutdown();
+        }
+
+        private void resized(object sender, EventArgs e)
+        {
+            int sum = this.ClientSize.Width + this.ClientSize.Height;
+            this.ClientSize = new System.Drawing.Size(sum * size.Width / (size.Width+size.Height), sum * size.Height / (size.Width + size.Height));
+        }
+
+        private void shown(object sender, EventArgs e)
+        {
+            /*出来上がりの時は開放してね
+            sm.s.hyo.hyoji();
+            fileman.loadfiletoka();
+        */
         }
     }
     class SScene : Scene 

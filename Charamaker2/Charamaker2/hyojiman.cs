@@ -1514,7 +1514,7 @@ namespace Charamaker2
         /// <summary>
         /// 最大であろう横幅の長さ
         /// </summary>
-        public float WWW { get { return size / 2 * nmoji; } }
+        public float WWW { get { return size / 2 * nmoji*2f; } }
 
         /// <summary>
         /// \nや文字幅オーバーとかで分割された列
@@ -1826,8 +1826,7 @@ namespace Charamaker2
 
             float si = size * bairitu;
             if (si <= 1) si = 1;
-            var fa = Vortice.DirectWrite.DWrite.DWriteCreateFactory<IDWriteFactory>();
-            var fom = fa.CreateTextFormat("MS UI Gothic", FontWeight.Light, style, si);
+         
 
             if (inlength > 0)
             {
@@ -1879,17 +1878,27 @@ namespace Charamaker2
 
 
                 }
-                var slb = render.CreateSolidColorBrush(new Color4(R, G, B, opa));
+            
                 string text = textoraa();
                 float yyy = 0;
                 if (sita) yyy = sitazoroeman;
-                render.DrawText(text, fom,
+                if (this.opa > 0 &&
+               Math.Abs((x) - (hyo.ww / 2 + hyo.camx)) * 2 <= hyo.ww + Math.Abs(WWW * Math.Cos(rad)) + Math.Abs(H * Math.Sin(rad)) &&
+               Math.Abs((y) - (hyo.wh / 2 + hyo.camy)) * 2 <= hyo.wh + Math.Abs(WWW * Math.Sin(rad)) + Math.Abs(H * Math.Cos(rad))
+               )
+                {
+                    var slb = render.CreateSolidColorBrush(new Color4(R, G, B, opa));
+                    var fa = Vortice.DirectWrite.DWrite.DWriteCreateFactory<IDWriteFactory>();
+                    var fom = fa.CreateTextFormat("MS UI Gothic", FontWeight.Light, style, si);
+                    render.DrawText(text, fom,
                              new RawRectF((mx - hyo.camx) * bairitu, (my - hyo.camy - yyy) * bairitu,
-                             (mx + WWW * 2 - hyo.camx) * bairitu, (my + H - hyo.camy - yyy) * bairitu), slb);
+                             (mx + WWW  - hyo.camx) * bairitu, (my + H - hyo.camy - yyy) * bairitu), slb);
 
-                fa.Dispose();
-                fom.Dispose();
-                slb.Dispose();
+                    fa.Dispose();
+                    fom.Dispose();
+                    slb.Dispose();
+                }
+               
             }
             if (sinderu) remove(hyo);
         }
@@ -1916,9 +1925,11 @@ namespace Charamaker2
         /// <param name="R2">後ろのR,-1で自動</param>
         /// <param name="G2">後ろのG,-1で自動</param>
         /// <param name="B2">後ろのB,-1で自動</param>
+        /// <param name="dz">後ろの前とのzの差</param>
+        /// <param name="kazu">何個で縁取りするか。0~4</param>
         /// <returns></returns>
         public static List<message> hutidorin(float sabun , float x, float y, float ookisam, int mojisuu, int tyusindoko,float  hyojispeed, float hyojitime, string textt,float RR=0
-            ,float  GG=0,float BB=0,bool kyoutyousuru=true,float z=(float)1E+09, hyojiman hyo=null, bool sitazoroe=false,float R2=-1, float G2 = -1, float B2 = -1) 
+            ,float  GG=0,float BB=0,bool kyoutyousuru=true,float z=(float)1E+09, hyojiman hyo=null, bool sitazoroe=false,float R2=-1, float G2 = -1, float B2 = -1,float dz=-1,int kazu=1) 
         {
             var res = new List<message>();
             float R = 1, G = 1, B = 1;
@@ -1929,11 +1940,31 @@ namespace Charamaker2
             if (R2 != -1) R = R2;
             if (G2 != -1) G = G2;
             if (B2 != -1) B = B2;
-            res.Add(new message(x, y, ookisam, mojisuu, tyusindoko, hyojispeed, hyojitime, textt, RR, GG, BB, kyoutyousuru, z, sitazoroe));
-            res.Add(new message(x + sabun, y, ookisam, mojisuu, tyusindoko, hyojispeed, hyojitime, textt, R, G, B, kyoutyousuru, z-Math.Abs(z*0.0001f), sitazoroe));
-            res.Add(new message(x-sabun, y, ookisam, mojisuu, tyusindoko, hyojispeed, hyojitime, textt, R, G, B, kyoutyousuru, z - Math.Abs(z * 0.0001f),  sitazoroe));
-            res.Add(new message(x, y+sabun, ookisam, mojisuu, tyusindoko, hyojispeed, hyojitime, textt, R, G, B, kyoutyousuru, z - Math.Abs(z * 0.0001f),  sitazoroe));
-            res.Add(new message(x, y-sabun, ookisam, mojisuu, tyusindoko, hyojispeed, hyojitime, textt, R, G, B, kyoutyousuru, z -Math.Abs(z * 0.0001f),  sitazoroe));
+
+             res.Add(new message(x, y, ookisam, mojisuu, tyusindoko, hyojispeed, hyojitime, textt, RR, GG, BB, kyoutyousuru, z, sitazoroe));
+            switch (kazu) 
+            {
+                case 1:
+                    res.Add(new message(x + sabun, y+sabun, ookisam, mojisuu, tyusindoko, hyojispeed, hyojitime, textt, R, G, B, kyoutyousuru, z + dz, sitazoroe));
+
+                    break;
+                case 2:
+                    res.Add(new message(x + sabun, y + sabun, ookisam, mojisuu, tyusindoko, hyojispeed, hyojitime, textt, R, G, B, kyoutyousuru, z + dz, sitazoroe));
+                    res.Add(new message(x - sabun, y - sabun, ookisam, mojisuu, tyusindoko, hyojispeed, hyojitime, textt, R, G, B, kyoutyousuru, z + dz, sitazoroe));
+                    break;
+                case 3:
+                    res.Add(new message(x + sabun, y + sabun, ookisam, mojisuu, tyusindoko, hyojispeed, hyojitime, textt, R, G, B, kyoutyousuru, z + dz, sitazoroe));
+                    res.Add(new message(x - sabun, y , ookisam, mojisuu, tyusindoko, hyojispeed, hyojitime, textt, R, G, B, kyoutyousuru, z + dz, sitazoroe));
+                    res.Add(new message(x + sabun, y - sabun, ookisam, mojisuu, tyusindoko, hyojispeed, hyojitime, textt, R, G, B, kyoutyousuru, z + dz, sitazoroe));
+
+                    break;
+                case 4:
+                    res.Add(new message(x + sabun, y , ookisam, mojisuu, tyusindoko, hyojispeed, hyojitime, textt, R, G, B, kyoutyousuru, z + dz, sitazoroe));
+                    res.Add(new message(x - sabun, y, ookisam, mojisuu, tyusindoko, hyojispeed, hyojitime, textt, R, G, B, kyoutyousuru, z + dz, sitazoroe));
+                    res.Add(new message(x  , y - sabun, ookisam, mojisuu, tyusindoko, hyojispeed, hyojitime, textt, R, G, B, kyoutyousuru, z + dz, sitazoroe));
+                    res.Add(new message(x  , y + sabun, ookisam, mojisuu, tyusindoko, hyojispeed, hyojitime, textt, R, G, B, kyoutyousuru, z + dz, sitazoroe));
+                    break;
+            }
             if (hyo!=null) 
             {
                 foreach(var a in res)
