@@ -12,7 +12,7 @@ using Charamaker2.Character;
 namespace Charamaker2
 {
 
-    public partial class charamaker : UserControl
+     partial class charamaker : UserControl
     {
 
     
@@ -119,7 +119,7 @@ namespace Charamaker2
             moviebutton.Location = new Point(this.Size.Width - 150, 360);
 
             mirrorcheck.Location = new Point(this.Size.Width - 300, 440);
-
+            TexSizeLabel.Location = new Point(this.Size.Width - 150, 440);
 
             kijyunb.Location = new Point(this.Size.Width - 300, 520);
             refreshb.Location = new Point(this.Size.Width - 150, 520);
@@ -202,9 +202,25 @@ namespace Charamaker2
         private void frame(object sender, EventArgs e)
         {
           
+
+
             //pic.rad += 0.01;
             if (movie == null || movie.ended)
             {
+                if(selll!=null)
+                {
+                    var aa=selll.p.nowtex;
+                    if (aa != "")
+                    {
+                        var sisi = fileman.gettexsize(aa);
+                        TexSizeLabel.Text = sisi.Width + " :: " + sisi.Height;
+                    }
+                    else 
+                    {
+                        TexSizeLabel.Text = "0 :: 0";
+                    }
+                }
+
                 
                 sel.frame();
                 if (selll != null)

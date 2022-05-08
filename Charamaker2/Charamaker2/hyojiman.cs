@@ -134,6 +134,10 @@ namespace Charamaker2
         
         private string pretex;
         /// <summary>
+        /// 現在のテクスチャー無い場合は"";
+        /// </summary>
+        public string nowtex { get {if(textures.ContainsKey(texname))return textures[texname]; return ""; } }
+        /// <summary>
         /// 不透明度。0＜＝＜＝1
         /// </summary>
         public float OPA { get { return opa; } set { if (value > 1) opa = 1; else if (value < 0) opa = 0; else opa = value; } }
@@ -580,6 +584,19 @@ namespace Charamaker2
             d =(drawings)Activator.CreateInstance(h.d.GetType(),h.d);
 
         }
+        /// <summary>
+        /// 表示マンにぶち込む
+        /// </summary>
+        /// <param name="h"></param>
+        /// <returns>ぶち込めたか</returns>
+       virtual public bool add(hyojiman h) {return h.addhaikeipicture(this); }
+
+        /// <summary>
+        /// 表示マンから消す
+        /// </summary>
+        /// <param name="h"></param>
+        /// <returns>ぶち消せたか</returns>
+        virtual public bool remove(hyojiman h) {return h.removehaikeipicture(this); }
         /// <summary>
         /// 描くためのメソッド
         /// </summary>
@@ -1083,7 +1100,7 @@ namespace Charamaker2
         /// </summary>
         /// <param name="p">なんでも</param>
         /// <returns>追加ができたかどうか</returns>
-        public bool addpicture(drawings p)
+        internal bool addpicture(drawings p)
         {
             resetpics();
             if (!pics.Contains(p))
@@ -1099,7 +1116,7 @@ namespace Charamaker2
         /// </summary>
         /// <param name="p">なんでも</param>
         /// <returns>削除できたかどうか</returns>
-        public bool removepicture(drawings p)
+       internal bool removepicture(drawings p)
         {
 
             return pics.Remove(p);
@@ -1111,7 +1128,7 @@ namespace Charamaker2
         /// </summary>
         /// <param name="p">なんでも</param>
         /// <returns>追加できたかどうか</returns>
-        public bool addhaikeipicture(haikeidraws p)
+        internal bool addhaikeipicture(haikeidraws p)
         {
 
 
@@ -1129,7 +1146,7 @@ namespace Charamaker2
         /// </summary>
         /// <param name="p">なんでも</param>
         /// <returns>削除できたかどうか</returns>
-        public bool removehaikeipicture(haikeidraws p)
+        internal bool removehaikeipicture(haikeidraws p)
         {
 
            return haikeipics.Remove(p);

@@ -14,7 +14,7 @@ using System.Reflection;
 
 namespace Charamaker2
 {
-   public partial class motionmaker : Form
+    partial class motionmaker : Form
     {
         character sel;
         setu selll;

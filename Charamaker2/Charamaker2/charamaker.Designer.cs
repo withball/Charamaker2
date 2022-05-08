@@ -61,6 +61,7 @@
             this.mirrorcheck = new System.Windows.Forms.CheckBox();
             this.kijyunb = new System.Windows.Forms.Button();
             this.refreshb = new System.Windows.Forms.Button();
+            this.TexSizeLabel = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dxbox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.zbox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.opabox)).BeginInit();
@@ -515,6 +516,15 @@
             this.refreshb.UseVisualStyleBackColor = true;
             this.refreshb.Click += new System.EventHandler(this.chararefresh);
             // 
+            // TexSizeLabel
+            // 
+            this.TexSizeLabel.AutoSize = true;
+            this.TexSizeLabel.Location = new System.Drawing.Point(1043, 493);
+            this.TexSizeLabel.Name = "TexSizeLabel";
+            this.TexSizeLabel.Size = new System.Drawing.Size(30, 18);
+            this.TexSizeLabel.TabIndex = 41;
+            this.TexSizeLabel.Text = "0,0";
+            // 
             // charamaker
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 18F);
@@ -522,6 +532,7 @@
             this.AutoValidate = System.Windows.Forms.AutoValidate.EnableAllowFocusChange;
             this.BackColor = System.Drawing.Color.Transparent;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.Controls.Add(this.TexSizeLabel);
             this.Controls.Add(this.refreshb);
             this.Controls.Add(this.kijyunb);
             this.Controls.Add(this.mirrorcheck);
@@ -608,5 +619,6 @@
         private System.Windows.Forms.CheckBox mirrorcheck;
         private System.Windows.Forms.Button kijyunb;
         private System.Windows.Forms.Button refreshb;
+        private System.Windows.Forms.Label TexSizeLabel;
     }
 }

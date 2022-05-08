@@ -7,6 +7,109 @@ using Charamaker2.Shapes;
 namespace GameSet1
 {
     /// <summary>
+    /// あれよGameSet1のイベントあーぎゅメンツよ
+    /// </summary>
+    public class EEventArgs 
+    {
+        /// <summary>
+        /// 普通のコンストラクタ
+        /// </summary>
+        /// <param name="e">Eventerの元</param>
+        /// <param name="tag">効果先</param>
+        /// <param name="cl">クロック</param>
+        public EEventArgs(Entity e,Entity tag=null,float cl=1) 
+        {
+            ent = e;
+            this.cl = cl;
+            this.tag = tag;
+        }
+        /// <summary>
+        /// Eventerの仕えるエンテティ
+        /// </summary>
+        public Entity ent;
+        /// <summary>
+        /// 効果先のエンテティ
+        /// </summary>
+        public Entity tag;
+        /// <summary>
+        /// クロック
+        /// </summary>
+        public float cl;
+
+    }
+    /// <summary>
+    /// エンテティに付属するイベント管理官
+    /// </summary>
+    public class EEventer
+    {
+        /// <summary>
+        /// 元のエンテティ
+        /// </summary>
+        protected Entity e;
+        /// <summary>
+        /// 普通のコンストラクタ。
+        /// </summary>
+        /// <param name="E">仕えるエンテティ</param>
+        public EEventer(Entity E)
+        {
+            e = E;
+        }
+        /// <summary>
+        /// addされたときのイベント
+        /// </summary>
+       public event EventHandler<EEventArgs> added;
+        /// <summary>
+        /// removeされたときのイベント
+        /// </summary>
+        public event EventHandler<EEventArgs> removed;
+        /// <summary>
+        /// frameされたときのイベント
+        /// </summary>
+        public event EventHandler<EEventArgs> framed;
+
+        /// <summary>
+        /// 反射されたときのイベント
+        /// </summary>
+        public event EventHandler<EEventArgs> hansyad;
+
+
+        /// <summary>
+        /// フレームしたときに呼び出されるやつ。
+        /// </summary>
+        /// <param name="sender">呼び出し元</param>
+        /// <param name="cl">クロック</param>
+        public void frame(object sender,float cl) 
+        {
+            framed?.Invoke(sender, new EEventArgs(e,null, cl));
+        }
+        /// <summary>
+        /// addしたときに呼び出されるやつ。
+        /// </summary>
+        /// <param name="sender">呼び出し元</param>
+        public void add(object sender)
+        {
+           
+            added?.Invoke(sender, new EEventArgs(e));
+        }
+        /// <summary>
+        /// removeしたときに呼び出されるやつ。
+        /// </summary>
+        /// <param name="sender">呼び出し元</param>
+        public void remove(object sender)
+        {
+            removed?.Invoke(sender, new EEventArgs(e));
+        }
+        /// <summary>
+        /// 反射したときに呼び出される
+        /// </summary>
+        /// <param name="sender">呼び出し元</param>
+        /// <param name="tag">あたり先</param>
+        public void hansya(object sender,Entity tag)
+        {
+            hansyad?.Invoke(sender, new EEventArgs(e,tag));
+        }
+    }
+    /// <summary>
     /// 移動速度、加速度、とか持ってる奴。体力とかはオーバライドしてね。
     /// </summary>
     public class Entity
@@ -26,16 +129,36 @@ namespace GameSet1
         /// </summary>
         protected buturiinfo _bif;
 
+        /// <summary>
+        /// EMに乗ってるかどうか
+        /// </summary>
+        public bool onEM
+        {
+            get{
+                if(_EM==null) return false;
+
+                return EM.ents.Contains(this);
+            } 
+        }
 
         /// <summary>
         /// 新しく辺りバインディングを設定する。pabもリセットするし
         /// </summary>
-        /// <param name="recipie">レシピ</param>
+        /// <param name="recipie">レシピ。コピーされたものが使われる</param>
         public void setNewAtariBinding(ABrecipie recipie) 
         {
             _ab = new ataribinding(c, recipie);
             _pab = new ataribinding(c, recipie);
    
+        }
+        /// <summary>
+        /// 新しく辺りバインディングを設定する。pabもリセットするし
+        /// </summary>
+        /// <param name="info">レシピ。コピーされたものが使われる</param>
+        public void setNewAtariBinding(buturiinfo info)
+        {
+            _bif = new buturiinfo( info);
+
         }
         /// <summary>
         /// 今のフレームのあたり判定。
@@ -68,21 +191,35 @@ namespace GameSet1
         /// </summary>
         public Shape PAcore { get { if (pab != null) return pab.core; return ab.getatari(""); } }
 
-        
-
-
+        /// <summary>
+        /// イベントを司るもの。継承したやつ使うならsetEEventerをオーバーライドしろ
+        /// </summary>
+        protected EEventer _EEV;
+        /// <summary>
+        /// イベントを司るもの
+        /// </summary>
+        public EEventer EEV { get { return _EEV; } }
+        /// <summary>
+        /// EEventerをセットする。 EEventerが継承した奴ならオーバーライドしろ
+        /// </summary>
+        protected virtual void setEEventer()
+        {
+            _EEV = new EEventer(this);
+        }
         /// <summary>
         /// 普通のコンストラクタ
         /// </summary>
         /// <param name="chara">キャラクター</param>
-        /// <param name="recipie">あたり判定のレシピ</param>
-        /// <param name="ai">物理とかの情報</param>
+        /// <param name="recipie">あたり判定のレシピ。コピーされたものが使われる</param>
+        /// <param name="ai">物理とかの情報。コピーされたものが使われる</param>
         public Entity(character chara, ABrecipie recipie, buturiinfo ai)
         {
             _c = chara;
             _ab = new ataribinding(c, recipie);
             _pab = new ataribinding(c, recipie);
             _bif = new buturiinfo(ai);
+            setEEventer();
+            
         }
         /// <summary>
         /// コピーするためのコンストラクタ
@@ -95,6 +232,7 @@ namespace GameSet1
             _ab = new ataribinding(c, E.ab.RECIPIE);
             _pab = new ataribinding(c, E.ab.RECIPIE);
             _bif = (buturiinfo)Activator.CreateInstance(E.bif.GetType(), E.bif);
+            setEEventer();
         }
 
         /// <summary>
@@ -103,16 +241,30 @@ namespace GameSet1
         /// <param name="cl">フレームの長さ</param>
         virtual public void frame(float cl)
         {
+          
 
             bif.frame(cl, c);
 
             c.frame(cl);
-            foreach (var a in wazas) 
+
+            setab(false);
+
+        }
+        /// <summary>
+        /// エンテティが、物理的に移動した後に起こるフレーム
+        /// </summary>
+        /// <param name="cl">クロックの長さ</param>
+       virtual public void endframe(float cl) 
+        {
+            c.soroeru();
+            setab(false);
+          
+            foreach (var a in wazas)
             {
                 a.frame(cl);
             }
-            setab(false);
-
+            EEV.frame(this, cl);
+            setpab();
         }
         /// <summary>
         /// 今で、昔のあたり判定をセットする
@@ -149,10 +301,11 @@ namespace GameSet1
         /// エンテティマネージャー―に追加したいときに呼ぶメソッド。
         /// </summary>
         /// <param name="e">追加する奴。同時に複数のマネージャーには追加しちゃいけない。ごめんね</param>
+        /// <param name="add">先頭に入れたいならfalse</param>
         /// <returns>追加されたか。trueならついでにonAddが呼び出される。</returns>
-        virtual public bool add(EntityManager e) 
+        virtual public bool add(EntityManager e,bool add=true) 
         {
-            if ( e.add(this))
+            if ( e.add(this,add))
             {
                _EM = e;
                 onAdd();
@@ -181,7 +334,8 @@ namespace GameSet1
         {
 
             c.resethyoji(EM.hyoji);
-
+            setab(true);
+            EEV.add(this);
         }
 
         /// <summary>
@@ -195,7 +349,7 @@ namespace GameSet1
             {
                 _wazas[0].remove();
             }
-
+            EEV.remove(this);
         }
 
         /// <summary>
@@ -235,7 +389,7 @@ namespace GameSet1
         /// </summary>
         /// <param name="w">追加する技</param>
         /// <returns>追加できた</returns>
-        public bool addWaza(Waza w) 
+        internal bool addWaza(Waza w) 
         {
             if (!_wazas.Contains(w)) 
             {
@@ -249,7 +403,7 @@ namespace GameSet1
         /// </summary>
         /// <param name="w">削除する技</param>
         /// <returns>削除できた</returns>
-        public bool removeWaza(Waza w) 
+        internal bool removeWaza(Waza w) 
         {
             return _wazas.Remove(w);
         }
@@ -337,12 +491,21 @@ namespace GameSet1
             if (i == -1) return null;
 
             return rec.shapes[i];
+        }    
+        /// <summary>
+        /// あたり判定の全てのリストを得る
+        /// </summary>
+        /// <returns>順番は保証する。しかしnullが混じっているかも</returns>
+        public List<Shape> getallatari()
+        {
+           
+            return new List<Shape>(this.rec.shapes);
         }
-       /// <summary>
-       /// あたり判定のリストを得る
-       /// </summary>
-       /// <param name="name">名前共</param>
-       /// <returns>順番は保証する。しかしnullが混じっているかも</returns>
+        /// <summary>
+        /// あたり判定のリストを得る
+        /// </summary>
+        /// <param name="name">名前共</param>
+        /// <returns>順番は保証する。しかしnullが混じっているかも</returns>
         public List<Shape> getatari(params string[] name)
         {
             var res = new List<Shape>();
@@ -430,11 +593,11 @@ namespace GameSet1
                     }
                     else
                     {
-                        rec.shapes[i].w = -set[i].p.w;
+                        rec.shapes[i].w = set[i].p.w;
                         rec.shapes[i].h = set[i].p.h;
                         rec.shapes[i].rad = set[i].p.RAD;
 
-                        rec.shapes[i].setcxy(set[i].p.getcx(rec.shapes[i].w, 0), set[i].p.getcy(rec.shapes[i].w, 0), 0, 0);
+                        rec.shapes[i].setcxy(set[i].p.getcx(0, 0), set[i].p.getcy(0, 0), 0, 0);
                     }
                 }
                 else
@@ -449,11 +612,11 @@ namespace GameSet1
                     }
                     else
                     {
-                        rec.shapes[i].w = -c.w;
+                        rec.shapes[i].w = c.w;
                         rec.shapes[i].h = c.h;
                         rec.shapes[i].rad = c.RAD;
 
-                        rec.shapes[i].setcxy(c.getcx(rec.shapes[i].w, 0), c.getcy(rec.shapes[i].w, 0), 0, 0);
+                        rec.shapes[i].setcxy(c.getcx(0, 0), c.getcy(0, 0), 0, 0);
                     }
                 }
             }
@@ -828,6 +991,8 @@ namespace GameSet1
         /// <returns>反射が起きたかどうか</returns>
         public bool hansya(Entity thiis,Entity e)
         {
+            thiis.EEV.hansya(this,e);
+            e.EEV.hansya(this,thiis);
             if (thiis.bif.ovw || !e.atariable || !thiis.atariable) return false;
 
             float VVX = thiis.bif.vx - e.bif.vx;

@@ -1,4 +1,5 @@
-﻿using Charamaker2.Shapes;
+﻿using Charamaker2.Character;
+using Charamaker2.Shapes;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -46,7 +47,7 @@ namespace GameSet1
         /// </summary>
         /// <param name="e">追加するエンテティ</param>
         /// <returns>追加されたかどうか</returns>
-        virtual public bool add(Entity e) 
+        virtual public bool add(Entity e)
         {
             if(e.addWaza(this))
             {
@@ -144,21 +145,36 @@ namespace GameSet1
         /// ListEntityに対してあたり判定でフィルターを掛ける
         /// </summary>
         /// <param name="lis">フィルター対象</param>
-        /// <param name="lisataris">対象のあたり判定の節の名前群</param>
+        /// <param name="lisataris">対象のあたり判定の節の名前群,nullでそれぞれ全部</param>
         /// <param name="e">フィルターに使うエンテティ</param>
-        /// <param name="eataris">フィルターに使う奴の節の名前群</param>
+        /// <param name="eataris">フィルターに使う奴の節の名前群,nullで全部</param>
         /// <param name="pre">1フレーム前のも考慮するか</param>
         /// <param name="not">当たっていないやつを残すことにする</param>
         public static void atafilter<T>(List<T> lis, List<string> lisataris, Entity e, List<string> eataris, bool pre = true, bool not = false)
         where T:Entity
         {
             bool rem = false;
-            List<Shape> SE = e.ab.getatari(eataris);
+            List<Shape> SE ;
+            if (eataris == null)
+            {
+                SE = e.ab.getallatari();
+            }
+            else 
+            {
+                SE = e.ab.getatari(eataris);
+            }
             List<Shape> PSE;
             List<Shape> LS, LPS;
             if (pre)
             {
-                PSE = e.pab.getatari(eataris);
+                if (eataris == null)
+                {
+                    PSE = e.pab.getallatari();
+                }
+                else 
+                {
+                    PSE = e.pab.getatari(eataris);
+                }
                 for (int i = SE.Count - 1; i >= 0; i--)
                 {
                     if (SE[i] == null || PSE[i] == null)
@@ -183,10 +199,25 @@ namespace GameSet1
             for (int i = lis.Count - 1; i >= 0; i--)
             {
                 rem = true;
-                LS = lis[i].ab.getatari(lisataris);
+                if (lisataris == null)
+                {
+                    LS = lis[i].ab.getallatari();
+                }
+                else 
+                {
+                    LS = lis[i].ab.getatari(lisataris);
+                }
                 if (pre)
                 {
-                    LPS = lis[i].pab.getatari(lisataris);
+                    if (lisataris == null)
+                    {
+                        LPS = lis[i].pab.getallatari();
+                    }
+                    else 
+                    {
+                        LPS = lis[i].pab.getatari(lisataris);
+                    }
+                    
                     for (int j = LS.Count - 1; j >= 0; j--)
                     {
                         if (LS[j] == null || LPS[j] == null)
@@ -229,9 +260,87 @@ namespace GameSet1
             }
         }
         /// <summary>
+        /// ListEntityに対してあたり判定でフィルターを掛ける
+        /// </summary>
+        /// <param name="lis">フィルター対象</param>
+        /// <param name="lisataris">対象のあたり判定の節の名前群,nullでそれぞれ全部</param>
+        /// <param name="s">フィルターに使う図形</param>
+        /// <param name="pres">フィルターに使う図形の一フレーム前</param>
+        /// <param name="pre">1フレーム前のも考慮するか</param>
+        /// <param name="not">当たっていないやつを残すことにする</param>
+        public static void atafilter<T>(List<T> lis, List<string> lisataris, Shape s, Shape pres,bool pre = true, bool not = false)
+        where T : Entity
+        {
+            bool rem = false;
+            List<Shape> LS, LPS;
+           
+
+            for (int i = lis.Count - 1; i >= 0; i--)
+            {
+                rem = true;
+                if (lisataris == null)
+                {
+                    LS = lis[i].ab.getallatari();
+                }
+                else
+                {
+                    LS = lis[i].ab.getatari(lisataris);
+                }
+                if (pre)
+                {
+                    if (lisataris == null)
+                    {
+                        LPS = lis[i].pab.getallatari();
+                    }
+                    else
+                    {
+                        LPS = lis[i].pab.getatari(lisataris);
+                    }
+
+                    for (int j = LS.Count - 1; j >= 0; j--)
+                    {
+                        if (LS[j] == null || LPS[j] == null)
+                        {
+                            LS.RemoveAt(j);
+                            LPS.RemoveAt(j);
+                        }
+                    }
+                }
+                else
+                {
+                    for (int j = LS.Count - 1; j >= 0; j--)
+                    {
+                        if (LS[j] == null)
+                        {
+                            LS.RemoveAt(j);
+                        }
+                    }
+                    LPS = LS;
+                }
+
+                for (int j = 0; j < LS.Count && rem; j++)
+                {
+
+                    if ((LS[j].atarun2(LPS[j], s,pres)))
+                    {
+                        rem = false;
+                    }
+
+                }
+                if (not ^ rem)
+                {
+                    lis.RemoveAt(i);
+                }
+
+
+
+
+            }
+        }
+        /// <summary>
         /// ListEntityを当たりタイプでフィルターを掛ける
         /// </summary>
-        /// <param name="b">フィルターを掛ける物理インフォメーション</param>
+        /// <param name="b">フィルターを掛ける物理インフォメーション(atagのみ参照)</param>
         /// <param name="lis">フィルターするリスト</param>
         /// <param name="friend">当たらないやつを残す</param>
         static public void atypefilter<T>(List<T> lis, buturiinfo b, bool friend = false)
@@ -246,6 +355,7 @@ namespace GameSet1
                 }
             }
         }
+
         /// <summary>
         /// atarisをもとにフィルターを掛ける
         /// </summary>
@@ -399,6 +509,49 @@ namespace GameSet1
         }
       
 
+
+    }
+    /// <summary>
+    ///  addしたEntityを数秒後死に至らしめる劇毒
+    /// </summary>
+    public class jisatukun : Waza 
+    {
+        /// <summary>
+        /// 普通のコンストラクタ
+        /// </summary>
+        /// <param name="end"></param>
+        public jisatukun(float end) : base(end) 
+        {
+        
+        }
+        protected override void onRemove()
+        {
+            e.remove();
+            base.onRemove();
+        }
+
+    }
+    /// <summary>
+    ///  addしたEntityの速度と角度を合わせる奴
+    /// </summary>
+    public class speedkakusoroe : Waza
+    {
+        /// <summary>
+        /// 普通のコンストラクタ
+        /// </summary>
+        /// <param name="end"></param>
+        /// <param name="basekaku">ベースの角度(°)</param>
+        public speedkakusoroe(float basekaku,float end) : base(end)
+        {
+            this.basekaku = basekaku;
+        }
+        float basekaku;
+
+        protected override void onFrame(float cl)
+        {
+            base.onFrame(cl);
+            e.c.addmotion(new radtoman(cl,"", basekaku + (Math.Atan2(e.bif.vy, e.bif.vx))/Math.PI*180,360));
+        }
 
     }
 }

@@ -55,9 +55,10 @@ namespace GameSet1
         /// </summary>
         virtual public void start() 
         {
+            sm.s = this;
             if (!started)
             {
-                sm.s = this;
+                
                 if (next == null) next = this;
                 _started = true;
             }

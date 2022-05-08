@@ -28,7 +28,7 @@ namespace Madoushi
         {
 
             base.start();
-            hyo.addpicture(new picture(0, 0, -1000000, hyo.ww, hyo.wh, 0, 0, 0, false, 0.7f, "def", new Dictionary<string, string> { { "def", @"window\setting" } }));
+            new picture(0, 0, -1000000, hyo.ww, hyo.wh, 0, 0, 0, false, 0.7f, "def", new Dictionary<string, string> { { "def", @"window\setting" } }).add(hyo);
             float h = hyo.wh / 10;
             float w = hyo.ww * 0.5f;
             {
@@ -260,6 +260,7 @@ namespace Madoushi
             {
                 case 0:
                     SD.S.mvol += 0.01f * sl;
+                    
                     if (fileman.percentin(33))
                     {
                         inamimove("attention", "inamioto1", 222);
@@ -278,6 +279,7 @@ namespace Madoushi
                 case 1:
 
                     SD.S.kvol += 0.01f * sl;
+                  
                     if (fileman.percentin(33))
                     {
                         inamimove("attention", "inamikouka1", 222);
@@ -296,7 +298,7 @@ namespace Madoushi
                 case 2:
 
                     SD.S.bvol += 0.01f * sl;
-                    // fileman.playbgm("setting", true);
+                    //ここ！大事！ fileman.playbgm("setting",true);
                     if (fileman.percentin(33))
                     {
                         inamimove("attention", "inamibgm1", 222);
@@ -421,7 +423,7 @@ namespace Madoushi
         {
 
             base.start();
-            hyo.addpicture(new picture(0, 0, -1000000, hyo.ww, hyo.wh, 0, 0, 0, false, 0.7f, "def", new Dictionary<string, string> { { "def", @"window\setting" } }));
+            new picture(0, 0, -1000000, hyo.ww, hyo.wh, 0, 0, 0, false, 0.7f, "def", new Dictionary<string, string> { { "def", @"window\setting" } }).add(hyo);
 
             inamiset();
             inamimove("attention", "inamikeykaeri", 60);

@@ -58,10 +58,37 @@
         </member>
         <member name="T:GameSet1.FP">
             <summary>
-            キャラクターの攻撃力とかセリフとかをテキストファイルから読み込むクラス
+            キャラクターの攻撃力とかセリフとかをテキストファイルから読み込んだりするクラス
             名前:
             で行末までパラメータになる
             </summary>
+        </member>
+        <member name="M:GameSet1.FP.entitysimulate``1(``0,System.Single,System.Single)">
+            <summary>
+            エンテティの未来の位置を予測する。空気抵抗ががばがばなの許して。
+            </summary>
+            <typeparam name="T">このタイプへとコピーする</typeparam>
+            <param name="e">コピー元エンテティ</param>
+            <param name="time">何秒後か</param>
+            <param name="cl">時間の精度になるね</param>
+            <returns>何秒か動いたエンテティ</returns>
+        </member>
+        <member name="M:GameSet1.FP.entitysimulate``1(``0,System.Single,System.Single,System.Single,System.Single,System.Single,System.Int32)">
+            <summary>
+            エンテティが飛んでいくとして、その狙った地点に当てるためにはどの角度で打ち出せばいいかを教えてくれる。。
+            </summary>
+            <summary>
+            エンテティが飛んでいくとして、その狙った地点に当てるためにはどの角度で打ち出せばいいかを教えてくれる。。
+            </summary>
+            <typeparam name="T">このタイプへとコピーする</typeparam>
+            <param name="e">コピー元エンテティ</param>
+            <param name="x">目標x</param>
+            <param name="y">目標y</param>
+            <param name="speed">与えたい速度</param>
+            <param name="time">何秒後までか</param>
+            <param name="cl">精度になるね</param>
+            <param name="kuri">何回繰り返しシミュレートするか</param>
+            <returns>いい角度</returns>
         </member>
         <member name="F:GameSet1.FP.texts">
             <summary>
@@ -114,6 +141,96 @@
             </summary>
             <returns>filemanのとは違ってシード値がリセットの奴だけ</returns>
         </member>
+        <member name="T:GameSet1.EEventArgs">
+            <summary>
+            あれよGameSet1のイベントあーぎゅメンツよ
+            </summary>
+        </member>
+        <member name="M:GameSet1.EEventArgs.#ctor(GameSet1.Entity,GameSet1.Entity,System.Single)">
+            <summary>
+            普通のコンストラクタ
+            </summary>
+            <param name="e">Eventerの元</param>
+            <param name="tag">効果先</param>
+            <param name="cl">クロック</param>
+        </member>
+        <member name="F:GameSet1.EEventArgs.ent">
+            <summary>
+            Eventerの仕えるエンテティ
+            </summary>
+        </member>
+        <member name="F:GameSet1.EEventArgs.tag">
+            <summary>
+            効果先のエンテティ
+            </summary>
+        </member>
+        <member name="F:GameSet1.EEventArgs.cl">
+            <summary>
+            クロック
+            </summary>
+        </member>
+        <member name="T:GameSet1.EEventer">
+            <summary>
+            エンテティに付属するイベント管理官
+            </summary>
+        </member>
+        <member name="F:GameSet1.EEventer.e">
+            <summary>
+            元のエンテティ
+            </summary>
+        </member>
+        <member name="M:GameSet1.EEventer.#ctor(GameSet1.Entity)">
+            <summary>
+            普通のコンストラクタ。
+            </summary>
+            <param name="E">仕えるエンテティ</param>
+        </member>
+        <member name="E:GameSet1.EEventer.added">
+            <summary>
+            addされたときのイベント
+            </summary>
+        </member>
+        <member name="E:GameSet1.EEventer.removed">
+            <summary>
+            removeされたときのイベント
+            </summary>
+        </member>
+        <member name="E:GameSet1.EEventer.framed">
+            <summary>
+            frameされたときのイベント
+            </summary>
+        </member>
+        <member name="E:GameSet1.EEventer.hansyad">
+            <summary>
+            反射されたときのイベント
+            </summary>
+        </member>
+        <member name="M:GameSet1.EEventer.frame(System.Object,System.Single)">
+            <summary>
+            フレームしたときに呼び出されるやつ。
+            </summary>
+            <param name="sender">呼び出し元</param>
+            <param name="cl">クロック</param>
+        </member>
+        <member name="M:GameSet1.EEventer.add(System.Object)">
+            <summary>
+            addしたときに呼び出されるやつ。
+            </summary>
+            <param name="sender">呼び出し元</param>
+        </member>
+        <member name="M:GameSet1.EEventer.remove(System.Object)">
+            <summary>
+            removeしたときに呼び出されるやつ。
+            </summary>
+            <param name="sender">呼び出し元</param>
+        </member>
+        <member name="M:GameSet1.EEventer.hansya(System.Object,GameSet1.Entity)">
+            <summary>
+            反射したときに呼び出される
+            </summary>
+            <param name="sender">呼び出し元</param>
+            <param name="tag">あたり先</param>
+        </member>
         <member name="T:GameSet1.Entity">
             <summary>
             移動速度、加速度、とか持ってる奴。体力とかはオーバライドしてね。
@@ -140,11 +257,22 @@
             空気抵抗とかの物理のインフォメーションとか
             </summary>
         </member>
+        <member name="P:GameSet1.Entity.onEM">
+            <summary>
+            EMに乗ってるかどうか
+            </summary>
+        </member>
         <member name="M:GameSet1.Entity.setNewAtariBinding(GameSet1.ABrecipie)">
             <summary>
             新しく辺りバインディングを設定する。pabもリセットするし
             </summary>
-            <param name="recipie">レシピ</param>
+            <param name="recipie">レシピ。コピーされたものが使われる</param>
+        </member>
+        <member name="M:GameSet1.Entity.setNewAtariBinding(GameSet1.buturiinfo)">
+            <summary>
+            新しく辺りバインディングを設定する。pabもリセットするし
+            </summary>
+            <param name="info">レシピ。コピーされたものが使われる</param>
         </member>
         <member name="P:GameSet1.Entity.ab">
             <summary>
@@ -182,13 +310,28 @@
             昔の物理的なあたり判定に使うやーつ
             </summary>
         </member>
+        <member name="F:GameSet1.Entity._EEV">
+            <summary>
+            イベントを司るもの。継承したやつ使うならsetEEventerをオーバーライドしろ
+            </summary>
+        </member>
+        <member name="P:GameSet1.Entity.EEV">
+            <summary>
+            イベントを司るもの
+            </summary>
+        </member>
+        <member name="M:GameSet1.Entity.setEEventer">
+            <summary>
+            EEventerをセットする。 EEventerが継承した奴ならオーバーライドしろ
+            </summary>
+        </member>
         <member name="M:GameSet1.Entity.#ctor(Charamaker2.Character.character,GameSet1.ABrecipie,GameSet1.buturiinfo)">
             <summary>
             普通のコンストラクタ
             </summary>
             <param name="chara">キャラクター</param>
-            <param name="recipie">あたり判定のレシピ</param>
-            <param name="ai">物理とかの情報</param>
+            <param name="recipie">あたり判定のレシピ。コピーされたものが使われる</param>
+            <param name="ai">物理とかの情報。コピーされたものが使われる</param>
         </member>
         <member name="M:GameSet1.Entity.#ctor(GameSet1.Entity)">
             <summary>
@@ -201,6 +344,12 @@
             フレーム処理
             </summary>
             <param name="cl">フレームの長さ</param>
+        </member>
+        <member name="M:GameSet1.Entity.endframe(System.Single)">
+            <summary>
+            エンテティが、物理的に移動した後に起こるフレーム
+            </summary>
+            <param name="cl">クロックの長さ</param>
         </member>
         <member name="M:GameSet1.Entity.setpab">
             <summary>
@@ -227,11 +376,12 @@
             便利ショトカ。表示マン
             </summary>
         </member>
-        <member name="M:GameSet1.Entity.add(GameSet1.EntityManager)">
+        <member name="M:GameSet1.Entity.add(GameSet1.EntityManager,System.Boolean)">
             <summary>
             エンテティマネージャー―に追加したいときに呼ぶメソッド。
             </summary>
             <param name="e">追加する奴。同時に複数のマネージャーには追加しちゃいけない。ごめんね</param>
+            <param name="add">先頭に入れたいならfalse</param>
             <returns>追加されたか。trueならついでにonAddが呼び出される。</returns>
         </member>
         <member name="M:GameSet1.Entity.remove">
@@ -350,6 +500,12 @@
             </summary>
             <param name="name">節の名前</param>
             <returns>無かったらnull</returns>
+        </member>
+        <member name="M:GameSet1.ataribinding.getallatari">
+            <summary>
+            あたり判定の全てのリストを得る
+            </summary>
+            <returns>順番は保証する。しかしnullが混じっているかも</returns>
         </member>
         <member name="M:GameSet1.ataribinding.getatari(System.String[])">
             <summary>
@@ -563,12 +719,13 @@
             直接扱うときは注意。getから呼べばコピーが出るよ。
             </summary>
         </member>
-        <member name="M:GameSet1.EntityDataBase.entadd(GameSet1.Entity)">
+        <member name="M:GameSet1.EntityDataBase.entadd(GameSet1.Entity,System.Boolean)">
             <summary>
             エンテティをデータベースにぶち込むメソッド。
             一生変わらない特性はここで振り分ける
             </summary>
             <param name="e"></param>
+            <param name="add">先頭に入れるならfalse</param>
             <returns>既に追加されていなかったか</returns>
         </member>
         <member name="M:GameSet1.EntityDataBase.entremove(GameSet1.Entity)">
@@ -615,6 +772,20 @@
             フレーム処理の時に呼び出す奴
             フラグをfalseにするだけ
             </summary>
+        </member>
+        <member name="M:GameSet1.EntityDataBase.getTypeEnts``1">
+            <summary>
+            タイプ別にエンテティを取得する
+            </summary>
+            <typeparam name="T">Entity、もしくは継承したクラス</typeparam>
+            <returns>リストだよ</returns>
+        </member>
+        <member name="M:GameSet1.EntityDataBase.getTypeEnts(System.Type)">
+            <summary>
+            タイプ別にエンテティを取得する
+            </summary>
+            <param name="T">タイプ</param>
+            <returns>リストだよ</returns>
         </member>
         <member name="M:GameSet1.EntityDataBase.get(System.String)">
             <summary>
@@ -682,12 +853,35 @@
             物理的に当たれないやつら
             </summary>
         </member>
-        <member name="M:GameSet1.EntityManager.add(GameSet1.Entity)">
+        <member name="M:GameSet1.EntityManager.getTypeEnts``1">
+            <summary>
+            タイプ別にエンテティを取得する
+            </summary>
+            <typeparam name="T">Entity、もしくは継承したクラス</typeparam>
+            <returns>リストだよ</returns>
+        </member>
+        <member name="M:GameSet1.EntityManager.getTypeEnts(System.Type)">
+            <summary>
+            タイプ別にエンテティを取得する
+            </summary>
+            <param name="T">タイプ</param>
+            <returns>リストだよ</returns>
+        </member>
+        <member name="M:GameSet1.EntityManager.istyped(System.Type,GameSet1.Entity)">
+            <summary>
+            エンテティのタイプがどうとか返す
+            </summary>
+            <param name="T">タイプ</param>
+            <param name="e">調査対象</param>
+            <returns>当てはまってら</returns>
+        </member>
+        <member name="M:GameSet1.EntityManager.add(GameSet1.Entity,System.Boolean)">
             <summary>
             エンテティをマネージャーにぶち込む。基本ENtity.addを呼べ
             表示もしてくれる
             </summary>
             <param name="e">ぶち込むやつ</param>
+            <param name="add">先頭に加えたい場合はfalse</param>
             <returns>もうぶち込まれてたらfalse</returns>
         </member>
         <member name="M:GameSet1.EntityManager.remoeve(GameSet1.Entity)">
@@ -700,11 +894,6 @@
         <member name="M:GameSet1.EntityManager.reset">
             <summary>
             リセットなんだけどnew ENtityManagerの方が正確かな
-            </summary>
-        </member>
-        <member name="M:GameSet1.EntityManager.Finalize">
-            <summary>
-            デストラクタ
             </summary>
         </member>
         <member name="F:GameSet1.EntityManager.atalis">
@@ -973,9 +1162,20 @@
             ListEntityに対してあたり判定でフィルターを掛ける
             </summary>
             <param name="lis">フィルター対象</param>
-            <param name="lisataris">対象のあたり判定の節の名前群</param>
+            <param name="lisataris">対象のあたり判定の節の名前群,nullでそれぞれ全部</param>
             <param name="e">フィルターに使うエンテティ</param>
-            <param name="eataris">フィルターに使う奴の節の名前群</param>
+            <param name="eataris">フィルターに使う奴の節の名前群,nullで全部</param>
+            <param name="pre">1フレーム前のも考慮するか</param>
+            <param name="not">当たっていないやつを残すことにする</param>
+        </member>
+        <member name="M:GameSet1.Waza.atafilter``1(System.Collections.Generic.List{``0},System.Collections.Generic.List{System.String},Charamaker2.Shapes.Shape,Charamaker2.Shapes.Shape,System.Boolean,System.Boolean)">
+            <summary>
+            ListEntityに対してあたり判定でフィルターを掛ける
+            </summary>
+            <param name="lis">フィルター対象</param>
+            <param name="lisataris">対象のあたり判定の節の名前群,nullでそれぞれ全部</param>
+            <param name="s">フィルターに使う図形</param>
+            <param name="pres">フィルターに使う図形の一フレーム前</param>
             <param name="pre">1フレーム前のも考慮するか</param>
             <param name="not">当たっていないやつを残すことにする</param>
         </member>
@@ -983,7 +1183,7 @@
             <summary>
             ListEntityを当たりタイプでフィルターを掛ける
             </summary>
-            <param name="b">フィルターを掛ける物理インフォメーション</param>
+            <param name="b">フィルターを掛ける物理インフォメーション(atagのみ参照)</param>
             <param name="lis">フィルターするリスト</param>
             <param name="friend">当たらないやつを残す</param>
         </member>
@@ -1067,6 +1267,29 @@
             </summary>
             <param name="kugiriko">区切り時間</param>
             <returns>区切り時間が-1かtimerが区切り時間未満だとfalse</returns>
+        </member>
+        <member name="T:GameSet1.jisatukun">
+            <summary>
+             addしたEntityを数秒後死に至らしめる劇毒
+            </summary>
+        </member>
+        <member name="M:GameSet1.jisatukun.#ctor(System.Single)">
+            <summary>
+            普通のコンストラクタ
+            </summary>
+            <param name="end"></param>
+        </member>
+        <member name="T:GameSet1.speedkakusoroe">
+            <summary>
+             addしたEntityの速度と角度を合わせる奴
+            </summary>
+        </member>
+        <member name="M:GameSet1.speedkakusoroe.#ctor(System.Single,System.Single)">
+            <summary>
+            普通のコンストラクタ
+            </summary>
+            <param name="end"></param>
+            <param name="basekaku">ベースの角度(°)</param>
         </member>
     </members>
 </doc>

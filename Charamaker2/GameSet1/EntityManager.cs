@@ -21,22 +21,74 @@ namespace GameSet1
         Dictionary<string, bool> EDBF = new Dictionary<string, bool>();
 
         Dictionary<string, List<Entity>> CEDB = new Dictionary<string, List<Entity>>();
-
+        Dictionary<Type, List<Entity>> TEDB = new Dictionary<Type, List<Entity>>() {{typeof(Entity),new List<Entity>() } };
         /// <summary>
         /// エンテティをデータベースにぶち込むメソッド。
         /// 一生変わらない特性はここで振り分ける
         /// </summary>
         /// <param name="e"></param>
+        /// <param name="add">先頭に入れるならfalse</param>
         /// <returns>既に追加されていなかったか</returns>
-        virtual public bool entadd(Entity e) 
+        virtual public bool entadd(Entity e,bool add) 
         {
             if (!Entities.Contains(e))
             {
-               Entities.Add(e);
-                var a = ARhuri(e);
-                foreach (var b in a) 
+                if (add)
                 {
-                    CEDB[b].Add(e);
+                    Entities.Add(e);
+                } else
+                {
+                    Entities.Insert(0, e);
+                }   
+                var a = ARhuri(e); 
+                if (add)
+                {
+                    foreach (var b in a)
+                    {
+                        CEDB[b].Add(e);
+                    }
+                }
+                else
+                {
+                    foreach (var b in a)
+                    {
+                        CEDB[b].Insert(0,e);
+                    }
+                }
+                
+                {
+                    Type t = e.GetType();
+                    {
+                        Type pre = t;
+
+                        while (!TEDB.ContainsKey(pre))
+                        {
+                            TEDB.Add(pre, new List<Entity>());
+                            pre = t.BaseType;
+                        } 
+                    }
+
+                    if (add)
+                    {
+                        foreach (var aa in TEDB.Keys)
+                        {
+                            if (t == aa || t.IsSubclassOf(aa))
+                            {
+                                TEDB[aa].Add(e);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        foreach (var aa in TEDB.Keys)
+                        {
+                            if (t == aa || t.IsSubclassOf(aa))
+                            {
+                                TEDB[aa].Insert(0,e);
+                            }
+                        }
+                    }
+                 
                 }
                 return true;
             }
@@ -57,6 +109,18 @@ namespace GameSet1
                 {
                     CEDB[b].Remove(e);
                 }
+                {
+                    Type t = e.GetType();
+                   
+                  
+                    foreach (var aa in TEDB.Keys)
+                    {
+                        if (t == aa || t.IsSubclassOf(aa))
+                        {
+                            TEDB[aa].Remove(e);
+                        }
+                    }
+                }
                 return true;
             }
             return false;
@@ -69,7 +133,7 @@ namespace GameSet1
         virtual protected List<string> ARhuri(Entity e) 
         {
             var res = new List<string>();
-            res.Add("ents");
+            
             return res;
 
         }
@@ -102,9 +166,9 @@ namespace GameSet1
         /// </summary>
         virtual protected void setDB()
         {
-            add("ents",true);
             add("moves");
-            add("atarens");
+            add("atarens"); 
+            add("atarerus");
             add("overweights");
         }
         /// <summary>
@@ -130,11 +194,40 @@ namespace GameSet1
             }
         }
         /// <summary>
+        /// タイプ別にエンテティを取得する
+        /// </summary>
+        /// <typeparam name="T">Entity、もしくは継承したクラス</typeparam>
+        /// <returns>リストだよ</returns>
+        public List<T> getTypeEnts<T>()
+            where T:Entity
+        {
+            var t=typeof(T);
+            if (TEDB.ContainsKey(t)) 
+            {
+                return new List<T>(TEDB[t].ConvertAll(a=>(T)a));
+            }
+            return new List<T>();
+        }
+        /// <summary>
+        /// タイプ別にエンテティを取得する
+        /// </summary>
+        /// <param name="T">タイプ</param>
+        /// <returns>リストだよ</returns>
+        public List<Entity> getTypeEnts(Type T)
+        {
+            var t = T;
+            if (TEDB.ContainsKey(t))
+            {
+                return new List<Entity>(TEDB[t]);
+            }
+            return new List<Entity>();
+        }
+        /// <summary>
         /// なにかしら呼び出す
         /// </summary>
         /// <param name="name">なまえentsで全部</param>
         /// <returns>そっちでキャストしてくれ～い</returns>
-        virtual public List<Entity> get(string name="ents")
+        virtual public List<Entity> get(string name)
         {
             var res = already(name);
             if (res != null) return res;
@@ -224,7 +317,7 @@ namespace GameSet1
         /// <summary>
         /// エンテティのリスト
         /// </summary>
-        public List<Entity> ents { get { return EDB.get("ents"); } }
+        public List<Entity> ents { get { return EDB.getTypeEnts<Entity>(); } }
         /// <summary>
         /// 物理的に当たれる中の動くというか重さが限界じゃないやつら
         /// </summary>
@@ -242,23 +335,57 @@ namespace GameSet1
         /// </summary>
         public List<Entity> atarens { get { return EDB.get("atarens"); } }
 
+
+        /// <summary>
+        /// タイプ別にエンテティを取得する
+        /// </summary>
+        /// <typeparam name="T">Entity、もしくは継承したクラス</typeparam>
+        /// <returns>リストだよ</returns>
+        public List<T> getTypeEnts<T>()
+            where T : Entity
+        {
+            return EDB.getTypeEnts<T>();
+        }
+        /// <summary>
+        /// タイプ別にエンテティを取得する
+        /// </summary>
+        /// <param name="T">タイプ</param>
+        /// <returns>リストだよ</returns>
+        public List<Entity> getTypeEnts(Type T)
+        {
+           
+            return EDB.getTypeEnts(T);
+        }
+
+        /// <summary>
+        /// エンテティのタイプがどうとか返す
+        /// </summary>
+        /// <param name="T">タイプ</param>
+        /// <param name="e">調査対象</param>
+        /// <returns>当てはまってら</returns>
+        public bool istyped(Type T,Entity e)
+        {
+            return EDB.getTypeEnts(T).Contains(e);
+        }
+
         /// <summary>
         /// エンテティをマネージャーにぶち込む。基本ENtity.addを呼べ
         /// 表示もしてくれる
         /// </summary>
         /// <param name="e">ぶち込むやつ</param>
+        /// <param name="add">先頭に加えたい場合はfalse</param>
         /// <returns>もうぶち込まれてたらfalse</returns>
-        public bool add(Entity e)
+        internal bool add(Entity e,bool add)
         {
           
-            return EDB.entadd(e);
+            return EDB.entadd(e,add);
         }
         /// <summary>
         /// エンテティをを削除する。基本ENtity.REmoveを呼べ
         /// </summary>
         /// <param name="e">削除する奴</param>
         /// <returns>そもそも存在していなかったらfalse</returns>
-        public bool remoeve(Entity e)
+         internal bool remoeve(Entity e)
         {
 
             return EDB.entremove(e);
@@ -275,18 +402,11 @@ namespace GameSet1
             EDB.frame();
             foreach (var a in ents)
             {
-                a.remove();
+                remoeve(a);
             }
             hyo.reset();
             EDB.frame();
         
-        }
-        /// <summary>
-        /// デストラクタ
-        /// </summary>
-        ~EntityManager()
-        {
-            reset();
         }
         /// <summary>
         /// 当たったよっていうなんかデータ
@@ -356,7 +476,8 @@ namespace GameSet1
 
             EDB.frame();
 
-            for (i = ents.Count - 1; i >= 0; i--) ents[i].frame(cl);
+            var elis = new List<Entity>(ents);
+            foreach (var a in elis) a.frame(cl);
 
 
            
@@ -449,7 +570,7 @@ namespace GameSet1
 
 
           
-            foreach (var a in ents) a.setpab();
+            foreach (var a in elis) a.endframe(cl);
            
         }
     

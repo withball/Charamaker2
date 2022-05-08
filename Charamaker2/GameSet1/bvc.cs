@@ -9,12 +9,120 @@ using Charamaker2.input;
 namespace GameSet1
 {
     /// <summary>
-    /// キャラクターの攻撃力とかセリフとかをテキストファイルから読み込むクラス
+    /// キャラクターの攻撃力とかセリフとかをテキストファイルから読み込んだりするクラス
     /// 名前:
     /// で行末までパラメータになる
     /// </summary>
     public static class FP
     {
+        /// <summary>
+        /// エンテティの未来の位置を予測する。空気抵抗ががばがばなの許して。
+        /// </summary>
+        /// <typeparam name="T">このタイプへとコピーする</typeparam>
+        /// <param name="e">コピー元エンテティ</param>
+        /// <param name="time">何秒後か</param>
+        /// <param name="cl">時間の精度になるね</param>
+        /// <returns>何秒か動いたエンテティ</returns>
+        static public T entitysimulate<T>(T e,float time,float cl)
+            where T:Entity
+        {
+            var res = (T)Activator.CreateInstance(typeof(T),e);
+            while (time > 0) 
+            {
+                res.frame(cl);
+                time -= cl;
+            }
+            return res;
+        }
+        /// <summary>
+        /// エンテティが飛んでいくとして、その狙った地点に当てるためにはどの角度で打ち出せばいいかを教えてくれる。。
+        /// </summary>
+
+
+
+        /// <summary>
+        /// エンテティが飛んでいくとして、その狙った地点に当てるためにはどの角度で打ち出せばいいかを教えてくれる。。
+        /// </summary>
+        /// <typeparam name="T">このタイプへとコピーする</typeparam>
+        /// <param name="e">コピー元エンテティ</param>
+        /// <param name="x">目標x</param>
+        /// <param name="y">目標y</param>
+        /// <param name="speed">与えたい速度</param>
+        /// <param name="time">何秒後までか</param>
+        /// <param name="cl">精度になるね</param>
+        /// <param name="kuri">何回繰り返しシミュレートするか</param>
+        /// <returns>いい角度</returns>
+        static public double entitysimulate<T>(T e,float x,float y,float speed, float time, float cl,int kuri=5)
+            where T : Entity
+        {
+        
+
+            double kaku = Math.Atan2(y - e.c.getty(), x - e.c.gettx());
+            float tumi = 0;
+           
+            bool st = x - e.c.gettx() > 0;
+            
+
+            for (int i = 0; i < kuri; i++) 
+            {
+                float pretumi;
+                {
+                    var res = (T)Activator.CreateInstance(typeof(T), e);
+                    res.bif.kasoku(speed * (float)Math.Cos(kaku), speed * (float)Math.Sin(kaku));
+
+
+                    bool now = x - e.c.gettx() > 0;
+                    float nowtime = time;
+
+                    while (now == st && nowtime > 0)
+                    {
+                        res.frame(cl);
+
+                        now = x - res.c.gettx() > 0;
+                        nowtime -= cl;
+
+                    }
+              
+                    pretumi = (y - res.c.getty());
+                    
+                    tumi += pretumi;
+                    kaku = Math.Atan2(y + tumi - e.c.getty(), x - e.c.gettx());
+                }
+
+                {
+                    var res = (T)Activator.CreateInstance(typeof(T), e);
+                    res.bif.kasoku(speed * (float)Math.Cos(kaku), speed * (float)Math.Sin(kaku));
+
+
+                    bool now = x - e.c.gettx() > 0;
+                    float nowtime = time;
+
+                    while (now == st && nowtime > 0)
+                    {
+                        res.frame(cl);
+
+                        now = x - res.c.gettx() > 0;
+                        nowtime -= cl;
+
+                    }
+                    float nowtumi = (y - res.c.getty());
+                    if (Math.Abs(pretumi) < Math.Abs(nowtumi))
+                    {
+                        tumi -= pretumi;
+                        tumi -= pretumi;
+                        kaku = Math.Atan2(y + tumi - e.c.getty(), x - e.c.gettx());
+                      //  Console.WriteLine("reverse!");
+                    }
+               //     Console.WriteLine(res.c.gettx()+" :xy: "+res.c.getty()+" -> "+x+" :xy: "+y);
+                }
+              //  Console.WriteLine((x - e.c.gettx())+" :x y: " + (y + tumi - e.c.getty()) + " sal "+tumi + " kaku-> " + (kaku / Math.PI * 180+" simulating!"));
+            }
+
+          //  Console.WriteLine((x - e.c.gettx()) + " :x y: " + (y + tumi - e.c.getty()) + " sal " + tumi + " kaku-> " + (kaku / Math.PI * 180 + " SSSSSSS"));
+
+            return kaku;
+        }
+
         /// <summary>
         /// 特殊なシーケンスを使うときとかだけ参照してね。(\nは標準で変換されるよ)
         /// </summary>

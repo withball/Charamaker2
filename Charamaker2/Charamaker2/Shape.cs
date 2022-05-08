@@ -136,6 +136,31 @@ namespace Charamaker2.Shapes
             setcxy(x, y, cw, ch);
         }
         /// <summary>
+        /// 図形をピクチャーにかぶせるっていうかセットする
+        /// </summary>
+        /// <param name="p"></param>
+        public void setto(picture p) 
+        {
+            w = p.w;
+            h = p.h;
+            rad = p.RAD;
+            x = p.x;
+            y = p.y;
+        }
+        /// <summary>
+        /// 図形をキャラクターにかぶせるっていうかセットする
+        /// </summary>
+        /// <param name="p"></param>
+        public void setto(Character.character p)
+        {
+            w = p.w;
+            h = p.h;
+            rad = p.RAD;
+            x = p.x;
+            y = p.y;
+        }
+
+        /// <summary>
         /// 図形を描画する
         /// </summary>
         /// <param name="hyojiman">描画するhyojiman</param>

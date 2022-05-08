@@ -224,6 +224,38 @@ namespace Charamaker2.Character
     public class character
     {
         /// <summary>
+        /// ピクチャー一枚だけのキャラクターを作る
+        /// </summary>
+        /// <param name="tex">テクスチャー</param>
+        /// <param name="z">Z</param>
+        /// <param name="widthscale">横幅をここにそろえる</param>
+        /// <param name="hin">やっぱ縦幅にする</param>
+        /// <param name="txp">中心点の位置x</param>
+        /// <param name="typ">中心点の位置y</param>
+        /// <param name="opa">透明度</param>
+        /// <param name="rad">角度</param>
+        /// <returns></returns>
+        public static character onepicturechara(string tex, float widthscale,float z=0,bool hin=false,float txp=0.5f,float typ=0.5f,float opa=1,double rad=0) 
+        {
+
+            var si = fileman.gettexsize(tex);
+            float scale ;
+            if (hin)
+            {
+                scale = widthscale / (float)si.Height;
+            }
+            else 
+            {
+                scale = widthscale / (float)si.Width;
+            } 
+            
+            var res = new character(0, 0, si.Width * scale, si.Height * scale, si.Width * scale * txp, si.Height * scale * typ, rad,
+                new setu("core", 0, 0, new picture(0, 0, z, si.Width * scale, si.Height * scale, si.Width * scale * txp, si.Height * scale * typ
+                , rad, false, opa, "def", new Dictionary<string, string> { { "def", tex } })));
+          
+            return res;
+        }
+        /// <summary>
         /// xy座標
         /// </summary>
         public float x,y;

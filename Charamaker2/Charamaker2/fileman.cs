@@ -152,6 +152,22 @@ namespace Charamaker2
         /// </summary>
         static public Color3 clmcol = new Color3(0,254,254);
         /// <summary>
+        /// テクスチャーのサイズを取得する
+        /// </summary>
+        /// <param name="file">そのテクスチャー</param>
+        /// <returns></returns>
+        static public System.Drawing.Size gettexsize(string file) 
+        {
+
+            var a = ldtex(file);
+            if (a!=null) 
+            {
+                return a.PixelSize;
+            }
+            return new System.Drawing.Size();
+        }
+
+        /// <summary>
         /// bitmapテクスチャーを読み込む。既に読み込んでいた場合は読み込まずに返す。
         /// .bmpはつけてもつけなくてもいい
         /// </summary>
@@ -851,6 +867,8 @@ namespace Charamaker2
                     {"white",System.Drawing.Color.White },{"gray",System.Drawing.Color.Gray },{"black",System.Drawing.Color.Black },
                     {"yellow",System.Drawing.Color.Yellow },{"cyan",System.Drawing.Color.Cyan },{"purple",System.Drawing.Color.Purple },
                     {"aqua",System.Drawing.Color.Aqua },{"brown",System.Drawing.Color.Brown },{"crimson",System.Drawing.Color.Crimson },
+                    {"pink",System.Drawing.Color.Pink },{"orange",System.Drawing.Color.Orange },{"indigo",System.Drawing.Color.Indigo }
+                    
                 };
 
         /// <summary>

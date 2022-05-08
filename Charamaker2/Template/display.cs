@@ -111,14 +111,19 @@ namespace Template
             ,new ABrecipie(new List<string> {"" },new List<Shape> {new Rectangle(0,0,0,0,0) }),new buturiinfo(atag:"me"));
         Entity he = new Entity(new character(100, 100, 50, 20, 25, 10, 0, new setu("core", 0, 0, new picture(0, 0, 0, 0, 0, 0, 0, 0, false, 0, "def", new Dictionary<string, string> { { "def", "nothing" } })))
            , new ABrecipie(new List<string> { "" }, new List<Shape> { new Rectangle(0, 0, 0, 0, 0) }), new buturiinfo(atag: "he"));
+        Entity he2 = new Entity(new character(100, 100, 50, 20, 25, 10, 0, new setu("core", 0, 0, new picture(0, 0, 0, 0, 0, 0, 0, 0, false, 0, "def", new Dictionary<string, string> { { "def", "nothing" } })))
+            , new ABrecipie(new List<string> { "" }, new List<Shape> { new Triangle(0, 0, 0, 0, 0,0,-1) }), new buturiinfo(-1,atag: "he2"));
+
         public override void start()
         {
             em = new EntityManager(hyo);
             next = new SScene(sm);
             me.add(em);
-            he.add(em);
+            he.add(em); 
+            he2.add(em);
             new shapedraw().add(me);
-            new shapedraw().add(he);
+            new shapedraw().add(he); 
+            new shapedraw().add(he2);
             base.start();
         }
         public override void frame(inputin i, float cl)
@@ -157,13 +162,30 @@ namespace Template
     }
     class shapedraw : Waza 
     {
+
         public shapedraw() : base(10000) 
         {
         
         }
+        protected override void onAdd()
+        {
+            base.onAdd();
+            e.EEV.hansyad += hansyama;
+        }
+        protected override void onRemove()
+        {
+            base.onRemove();
+            e.EEV.hansyad -= hansyama;
+        }
+        float R = 0;
+        protected void hansyama(object sender,EEventArgs e) 
+        {
+            R = 1;
+        }
         public override void frame(float cl)
         {
             base.frame(cl);
+            R = 0;
             timer = 0;
         }
         protected override void onFrame(float cl)
@@ -171,8 +193,8 @@ namespace Template
             base.onFrame(cl);
             if (e.atariable) 
             {
-                //これクソ重いよ。賀三がなくても描画するための苦肉の策なんだ
-                e.Acore.drawshape(hyoji,1,1,1,1,true);
+                //これクソ重いよ。画像がなくても描画するための苦肉の策なんだ
+                e.Acore.drawshape(hyoji,R,1,1,1,true);
             }
         }
     }
