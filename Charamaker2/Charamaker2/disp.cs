@@ -57,7 +57,7 @@ namespace Charamaker2
         private void disp_shown(object sender, EventArgs e)
         {
             Controls.Clear();
-            Controls.Add(new charamaker(this));
+            Controls.Add(new maker.charamaker(this));
             // gogogo();
         }
        
@@ -85,7 +85,7 @@ namespace Charamaker2
         private void charamakerpress(object sender, MouseEventArgs e)
         {
             Controls.Clear();
-            Controls.Add(new charamaker(this));
+            Controls.Add(new maker.charamaker(this));
         }
 
 

@@ -1,6 +1,6 @@
-﻿namespace Charamaker2
+﻿namespace Charamaker2.maker
 {
-    partial class motionmaker
+    public partial class motionmaker
     {
         /// <summary>
         /// Required designer variable.

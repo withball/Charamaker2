@@ -12,9 +12,9 @@ using Microsoft.CodeAnalysis.CSharp.Scripting;
 using Microsoft.CodeAnalysis.Scripting;
 using System.Reflection;
 
-namespace Charamaker2
+namespace Charamaker2.maker
 {
-    partial class motionmaker : Form
+   public partial class motionmaker : Form
     {
         character sel;
         setu selll;
@@ -77,7 +77,8 @@ namespace Charamaker2
                 work.sp = (float)loopud.Value;
                 ScriptOptions a = ScriptOptions.Default
                 .WithReferences(Assembly.GetEntryAssembly())
-                .WithImports("System", "System.Collections.Generic", "Charamaker2.Character", "Charamaker2");
+                .WithImports("System", "System.Collections.Generic", "Charamaker2.Character", "Charamaker2"
+                , "Charamaker2.maker");
 
                 var Q = CSharpScript.Create(script, options: a, globalsType: typeof(motionmaker));
                 var runner = Q.CreateDelegate();

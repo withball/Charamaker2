@@ -1,6 +1,6 @@
-﻿namespace Charamaker2
+﻿namespace Charamaker2.maker
 {
-    partial class charamaker
+    public partial class charamaker
     {
         /// <summary> 
         /// 必要なデザイナー変数です。

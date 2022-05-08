@@ -8,11 +8,12 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Charamaker2.Character;
+using Charamaker2.maker;
 
-namespace Charamaker2
+namespace Charamaker2.maker
 {
 
-     partial class charamaker : UserControl
+    public  partial class charamaker : UserControl
     {
 
     
