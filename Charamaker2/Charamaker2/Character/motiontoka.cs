@@ -2154,6 +2154,7 @@ namespace Charamaker2.Character
 
         protected List<setu> tags = new List<setu>();
         int md = 0;
+        bool add = false;
         /// <summary>
         /// 
         /// </summary>
@@ -2162,9 +2163,10 @@ namespace Charamaker2.Character
         /// <param name="changescalex">幅方向の割合</param>
         /// <param name="changescaley">高さ方向の割合</param>
         /// <param name="mode">0で両方変更,1でwのみ,-1でhのみ</param>
+        /// <param name="addin">現在の中心点から追加するように変化させる</param>
         /// <param name="kouzokumo">後続にも同じ割合で効果を適用するか</param>
         /// <param name="stop">止めるか</param>
-        public Kscalechangeman(float t, string name, float changescalex, float changescaley, int mode = 0, bool kouzokumo = true, bool stop = false) : base(t, stop)
+        public Kscalechangeman(float t, string name, float changescalex, float changescaley, int mode = 0, bool addin = false, bool kouzokumo = true, bool stop = false) : base(t, stop)
         {
             md = mode;
 
@@ -2172,6 +2174,7 @@ namespace Charamaker2.Character
             nm = name;
             scalex = changescalex;
             scaley = changescaley;
+            add = addin;
         }
         /// <summary>
         /// コピーするためのコンストラクタ。
@@ -2190,7 +2193,7 @@ namespace Charamaker2.Character
             spty = new List<float>(s.spty);
             spdx = new List<float>(s.spdx);
             spdy = new List<float>(s.spdy);
-
+            add = s.add;
 
             tag = s.tag;
             tags = new List<setu>(s.tags);
@@ -2233,22 +2236,41 @@ namespace Charamaker2.Character
                     var ttt = c.getkijyun().core.GetSetu(tags[i].nm);
                     if (ttt != null)
                     {
-                        var scx = (ttt.p.w * scalex - tags[i].p.w);
-                        var scy = (ttt.p.h * scaley - tags[i].p.h);
+                        var scx = (ttt.p.w * scalex );
+                        var scy = (ttt.p.h * scaley );
+
+                        if (!add) 
+                        {
+                            scx += - tags[i].p.w;
+                            scy += - tags[i].p.h;
+                        }
                         if (md == 1) scy = 0;
                         if (md == -1) scx = 0;
                         spw.Add(scx / time);
                         sph.Add(scy / time);
 
-                        scx = (ttt.p.tx * scalex - tags[i].p.tx);
-                        scy = (ttt.p.ty * scaley - tags[i].p.ty);
+                        scx = (ttt.p.tx * scalex );
+                        scy = (ttt.p.ty * scaley );
+                        if (!add)
+                        {
+                            scx += -tags[i].p.tx;
+                            scy += -tags[i].p.ty;
+                        }
+
                         if (md == 1) scy = 0;
                         if (md == -1) scx = 0;
                         sptx.Add(scx / time);
                         spty.Add(scy / time);
 
-                        scx = (ttt.dx * scalex - tags[i].dx);
-                        scy = (ttt.dy * scaley - tags[i].dy);
+                        scx = (ttt.dx * scalex );
+                        scy = (ttt.dy * scaley );
+
+                        if (!add) 
+                        {
+                            scx += -tags[i].dx;
+                            scy += -tags[i].dy;
+                        }
+
                         if (md == 1) scy = 0;
                         if (md == -1) scx = 0;
                         spdx.Add(scx / time);
@@ -2273,24 +2295,39 @@ namespace Charamaker2.Character
 
                 {
                     var ttt = c.getkijyun();
-                    var scx = (ttt.w * scalex - c.w);
-                    var scy = (ttt.h * scaley - c.h);
+                    var scx = (ttt.w * scalex );
+                    var scy = (ttt.h * scaley );
+                    if (!add) 
+                    {
+                        scx -= c.w;
+                        scy -= c.h;
+                    }
                     if (md == 1) scy = 0;
                     if (md == -1) scx = 0;
                     spw.Add(scx / time);
                     sph.Add(scy / time);
 
 
-                    scx = (ttt.tx * scalex - c.tx);
-                    scy = (ttt.ty * scaley - c.ty);
+                    scx = (ttt.tx * scalex );
+                    scy = (ttt.ty * scaley );
+                    if (!add)
+                    {
+                        scx -= c.tx;
+                        scy -= c.ty;
+                    }
                     if (md == 1) scy = 0;
                     if (md == -1) scx = 0;
                     sptx.Add(scx / time);
                     spty.Add(scy / time);
 
                     //ここはつかわないあたいだけどいれろく
-                    scx = (ttt.w * scalex - c.w);
-                    scy = (ttt.h * scaley - c.h);
+                    scx = (ttt.w * scalex );
+                    scy = (ttt.h * scaley );
+                    if (!add)
+                    {
+                        scx -= c.w;
+                        scy -= c.h;
+                    }
                     if (md == 1) scy = 0;
                     if (md == -1) scx = 0;
                     spdx.Add(scx / time);
@@ -2303,22 +2340,40 @@ namespace Charamaker2.Character
                     if (ttt != null)
                     {
 
-                        var scx = (ttt.p.w * scalex - tags[i].p.w);
-                        var scy = (ttt.p.h * scaley - tags[i].p.h);
+                        var scx = (ttt.p.w * scalex );
+                        var scy = (ttt.p.h * scaley );
+                        if (!add)
+                        {
+                            scx += -tags[i].p.w;
+                            scy += -tags[i].p.h;
+                        }
+
                         if (md == 1) scy = 0;
                         if (md == -1) scx = 0;
                         spw.Add(scx / time);
                         sph.Add(scy / time);
 
-                        scx = (ttt.p.tx * scalex - tags[i].p.tx);
-                        scy = (ttt.p.ty * scaley - tags[i].p.ty);
+                        scx = (ttt.p.tx * scalex );
+                        scy = (ttt.p.ty * scaley );
+                        if (!add)
+                        {
+                            scx += -tags[i].p.tx;
+                            scy += -tags[i].p.ty;
+                        }
+
                         if (md == 1) scy = 0;
                         if (md == -1) scx = 0;
                         sptx.Add(scx / time);
                         spty.Add(scy / time);
 
-                        scx = (ttt.dx * scalex - tags[i].dx);
-                        scy = (ttt.dy * scaley - tags[i].dy);
+                        scx = (ttt.dx * scalex );
+                        scy = (ttt.dy * scaley );
+                        if (!add)
+                        {
+                            scx += -tags[i].dx;
+                            scy += -tags[i].dy;
+                        }
+
                         if (md == 1) scy = 0;
                         if (md == -1) scx = 0;
                         spdx.Add(scx / time);
@@ -2426,7 +2481,7 @@ namespace Charamaker2.Character
         /// <param name="changescalex">基準の幅に対する変化xの割合</param>
         /// <param name="changescaley">基準の高さに対する変化yの割合</param>
         /// <param name="mode">0で両方、1でxのみ,-1でyのみ変更</param>
-        /// <param name="addin">現在の中心点から突かするように変化させる</param>
+        /// <param name="addin">現在の中心点から追加するように変化させる</param>
         /// <param name="stop">止めるか</param>
         public Ktyusinchangeman(float t, string name, float changescalex, float changescaley, int mode = 0, bool addin = false, bool stop = false) : base(t, stop)
         {

@@ -185,11 +185,11 @@ namespace GameSet1
         /// <summary>
         /// 今の物理的なあたり判定に使うやーつ
         /// </summary>
-        public Shape Acore { get { return ab.getatari(""); } }
+        public Shape Acore { get { return ab.core; } }
         /// <summary>
         /// 昔の物理的なあたり判定に使うやーつ
         /// </summary>
-        public Shape PAcore { get { if (pab != null) return pab.core; return ab.getatari(""); } }
+        public Shape PAcore { get { if (pab != null) return pab.core; return ab.core; } }
 
         /// <summary>
         /// イベントを司るもの。継承したやつ使うならsetEEventerをオーバーライドしろ
@@ -371,7 +371,7 @@ namespace GameSet1
         {
 
             if (t == typeof(Waza)) return new List<Waza>(_wazas);
-            if (!t.IsSubclassOf(t)) return new List<Waza>();
+            if (!t.IsSubclassOf(typeof(Waza))) return new List<Waza>();
             var lis = new List<Waza>();
             Type tt;
             foreach (var a in _wazas) 
@@ -383,6 +383,35 @@ namespace GameSet1
                 }
             }
             return lis;
+        }
+        /// <summary>
+        /// タイプで絞り込んで技のリストを取得する
+        /// </summary>
+        /// <typeparam name="T">タイプ</typeparam>
+        /// <returns>技のリスト</returns>
+        public List<T> getwazalis<T>()
+        where T : Waza
+        {
+            var res = new List<T>();
+            if (typeof(T) == typeof(Waza))
+            {
+                foreach (var a in _wazas)
+                {
+                    res.Add((T)a);
+                }
+                return res;
+            }
+
+            Type tt;
+            foreach (var a in _wazas)
+            {
+                tt = a.GetType();
+                if (tt == typeof(T) || tt.IsSubclassOf(typeof(T)))
+                {
+                    res.Add((T)a);
+                }
+            }
+            return res;
         }
         /// <summary>
         /// 技を追加する。基本Waza.add(e)で呼び出せ
@@ -408,6 +437,41 @@ namespace GameSet1
             return _wazas.Remove(w);
         }
 
+        /// <summary>
+        /// この瞬間にずれさせる。
+        /// </summary>
+        /// <param name="tekiyous">ずれを適用する奴ら。</param>
+        /// <param name="sugekae">あたり判定をすげかえるんだったらこれ</param>
+        /// <param name="Psugekae">あたり判定をすげかえるんだったらこれ</param>
+        public void zurentekiyou(List<Entity> tekiyous, Shape sugekae = null,Shape Psugekae=null)
+        {
+            Shape HPAC = PAcore, HAC = Acore;
+            if (sugekae!=null) 
+            {
+                ab.coresugekae(sugekae);
+                
+            }
+            if (Psugekae != null)
+            {
+                pab.coresugekae(Psugekae);
+
+            }
+            if (this.Acore != null&&this.PAcore!=null)
+            {
+                foreach (var a in tekiyous)
+                {
+                    if (a.PAcore != null && a.Acore != null&& a.Acore.atarun2(a.PAcore, this.Acore, this.PAcore)) 
+                    {
+                        this.bif.zuren(this,a);
+                    }
+                }
+            }
+            
+            
+            ab.coresugekae(HAC);
+            pab.coresugekae(HPAC);
+
+        }
     }
    
 
@@ -449,6 +513,8 @@ namespace GameSet1
                 shapes.Add(a.clone());
             }
         }
+
+
     }
     /// <summary>
     /// キャラクターと図形を結び付けてあたり判定と化させるためのクラス
@@ -479,6 +545,20 @@ namespace GameSet1
         /// 物理的判定をするあたり判定
         /// </summary>
         public Shape core { get { return _core; } }
+
+        /// <summary>
+        /// あたり判定を行うコアをすげかえる。コレは一時的なものなので、必ず戻すように。
+        /// frameでも揃えられるわけじゃないし、setuListに追加されるわけでもない。
+        /// 一時的に物理判定を使いたいときとかに使ってね。
+        /// </summary>
+        /// <param name="tmp">入れ替える奴</param>
+        /// <returns>入れ替え前の奴</returns>
+        internal Shape coresugekae(Shape tmp) 
+        {
+            var res=this._core;
+            _core = tmp;
+            return res;
+        }
 
         /// <summary>
         /// あたり判定を得る
@@ -760,6 +840,31 @@ namespace GameSet1
             {
                 this.vx += vx * weight / (weight + this.wei);
                 this.vy += vy * weight / (weight + this.wei);
+            }
+        }
+        /// <summary>
+        /// 重さに応じて加速できたりする。こちらは加速度として処理する。（つまりaxみたいに毎フレーム呼び出される奴はこっち使え）
+        /// </summary>
+        /// <param name="e">二度手間だけどお願い。そういう仕組みなんだ</param>
+        /// <param name="vx">x方向の加速度</param>
+        /// <param name="vy">y方向の加速度</param>
+        /// <param name="weight">加速の重さ。0以下でvxyをそのままぶち込む</param>
+        /// <param name="cl">加速の重さ。0以下でvxyをそのままぶち込む</param>
+        public void kasoku(Entity e,float vx, float vy, float weight ,float cl)
+        {
+            if (weight <= 0)
+            {
+                e.c.x += vx * cl * cl / 2;
+                e.c.y += vy * cl * cl / 2;
+                this.vx += vx * cl;
+                this.vy += vy * cl;
+            }
+            else
+            {
+                e.c.x += vx * weight / (weight + this.wei) * cl * cl / 2;
+                e.c.y += vy * weight / (weight + this.wei) * cl * cl / 2;
+                this.vx += vx * cl * weight / (weight + this.wei);
+                this.vy += vy * cl * weight / (weight + this.wei);
             }
         }
 

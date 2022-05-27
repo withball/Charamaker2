@@ -12,22 +12,41 @@ namespace GameSet1
     public class Waza
     {
         /// <summary>
+        /// Wazaがaddされたときのイベント
+        /// </summary>
+        public event EventHandler<EEventArgs> added;
+        /// <summary>
+        /// Wazaがremoveされたときのイベント
+        /// </summary>
+        public event EventHandler<EEventArgs> removed;
+
+        /// <summary>
+        /// Wazaがframeされたときのイベント
+        /// </summary>
+        public event EventHandler<EEventArgs> framed;
+
+        /// <summary>
         /// 便利ショトカeのEM
         /// </summary>
-        protected EntityManager EM { get { return e.EM; } }
+        public EntityManager EM { get { return e.EM; } }
 
         /// <summary>
         /// 便利ショトカeのEMのhyoji
         /// </summary>
-        protected Charamaker2.hyojiman hyoji { get { return e.EM.hyoji; } }
+        public Charamaker2.hyojiman hyoji { get { return e.EM.hyoji; } }
         /// <summary>
         /// 現在時間
         /// </summary>
-        protected float timer=0;
+        public float timer=0;
+        /// <summary>
+        /// 技の残り時間
+        /// </summary>
+        public float nokori { get { return end - timer; } }
+
         /// <summary>
         /// 終了時間
         /// </summary>
-        protected float end;
+        public float end;
         /// <summary>
         /// 普通のコンストラクタ
         /// </summary>
@@ -40,7 +59,7 @@ namespace GameSet1
         /// <summary>
         /// この技が追加されてるエンテティ
         /// </summary>
-        protected Entity e { get { return _e; } }
+        public Entity e { get { return _e; } }
         /// <summary>
         /// 技をエンテティに追加する。複数のに追加しないでね
         /// 追加できたらOnaddを呼び出す。
@@ -107,7 +126,7 @@ namespace GameSet1
         /// <param name="cl">クロック時間</param>
         virtual protected void onFrame(float cl) 
         {
-            
+            framed?.Invoke(this,new EEventArgs(e, null, cl));
             List<Entity> a;
             foreach (var b in ataris)
             {
@@ -130,7 +149,7 @@ namespace GameSet1
         /// </summary>
         virtual protected void onAdd()
         {
-
+            added?.Invoke(this,new EEventArgs(e));
         }
         /// <summary>
         /// 技がエンテティから削除されたときに発動するメソッド
@@ -139,7 +158,7 @@ namespace GameSet1
         /// </summary>
         virtual protected void onRemove()
         {
-
+            removed?.Invoke(this, new EEventArgs(e));
         }
         /// <summary>
         /// ListEntityに対してあたり判定でフィルターを掛ける
@@ -362,7 +381,7 @@ namespace GameSet1
         /// <param name="lis">フィルターをかける奴</param>
         /// <param name="num">フィルターを掛けるatarisのナンバー</param>
         /// <param name="exist">atarisにある場合リストに残すモード</param>
-        protected void atarisfilter<T>(List<T> lis, int num = 0, bool exist = false)
+        public void atarisfilter<T>(List<T> lis, int num = 0, bool exist = false)
                   where T : Entity
         {
             for (int i = lis.Count - 1; i >= 0; i--)
@@ -370,6 +389,47 @@ namespace GameSet1
                 if (atarisAru(lis[i], num) != exist)
                 {
                     lis.RemoveAt(i);
+                }
+            }
+        }
+
+        /// <summary>
+        /// リスト二つでフィルターを掛ける。両方被りがないことを想定。
+        /// </summary>
+        /// <param name="lis">フィルター対象</param>
+        /// <param name="filter">フィルター</param>
+        /// <param name="aru">フィルターにある奴を残す</param>
+        static public void listfilter(List<Entity> lis, List<Entity> filter, bool aru = true)
+        {
+            if (aru)
+            {
+                for (int i = lis.Count - 1; i >= 0; i--)
+                {
+                    if (filter.Contains(lis[i]))
+                    {
+                        filter.Remove(lis[i]);
+                    }
+                    else
+                    {
+                        lis.RemoveAt(i);
+                    }
+
+                }
+            }
+            else
+            {
+                for (int i = lis.Count - 1; i >= 0; i--)
+                {
+                    if (filter.Contains(lis[i]))
+                    {
+                        filter.Remove(lis[i]);
+                        lis.RemoveAt(i);
+                    }
+                    else
+                    {
+
+                    }
+
                 }
             }
         }
@@ -393,7 +453,7 @@ namespace GameSet1
         /// <param name="e">追加するエンテティ</param>
         /// <param name="time">なにクロック時間残るか</param>
         /// <param name="i">atarisナンバー</param>
-        protected void atarisAdd(Entity e, float time, int i = 0)
+        public void atarisAdd(Entity e, float time, int i = 0)
         {
             if (!ataris.ContainsKey(i))
             {
@@ -413,11 +473,40 @@ namespace GameSet1
             }
         }
         /// <summary>
+        /// atarisに追加する
+        /// </summary>
+        /// <param name="e">追加するエンテティ</param>
+        /// <param name="time">なにクロック時間残るか</param>
+        /// <param name="i">atarisナンバー</param>
+        public void atarisAddRange(List<Entity> e, float time, int i = 0)
+        {
+            if (!ataris.ContainsKey(i))
+            {
+                ataris.Add(i, new Dictionary<Entity, float>());
+                
+                e.ForEach((a)=>ataris[i].Add(a, time));
+            }
+            else
+            {
+                foreach (var a in e)
+                {
+                    if (!ataris[i].ContainsKey(a))
+                    {
+                        ataris[i].Add(a, time);
+                    }
+                    else if (ataris[i][a] < time)
+                    {
+                        ataris[i][a] = time;
+                    }
+                }
+            }
+        }
+        /// <summary>
         /// atarisから消す
         /// </summary>
         /// <param name="e">消すエンテティ</param>
         /// <param name="i">atarisナンバー</param>
-        protected void atarisRemove(Entity e, int i = 0)
+        public void atarisRemove(Entity e, int i = 0)
         {
             if (ataris.ContainsKey(i))
             {
@@ -428,7 +517,7 @@ namespace GameSet1
         /// atarisをクリアする
         /// </summary>
         /// <param name="i">atarisナンバー</param>
-        protected void atarisClear(int i = 0)
+        public void atarisClear(int i = 0)
         {
             if (ataris.ContainsKey(i))
             {
@@ -438,7 +527,7 @@ namespace GameSet1
         /// <summary>
         /// atarisを完全に消す
         /// </summary>
-        protected void atarisClearAll()
+        public void atarisClearAll()
         {
             foreach (var a in ataris)
             {
@@ -451,7 +540,7 @@ namespace GameSet1
         /// <param name="e">調べるエンテティ</param>
         /// <param name="i">atarisナンバー</param>
         /// <returns>あったのか？</returns>
-        protected bool atarisAru(Entity e, int i = 0)
+        public bool atarisAru(Entity e, int i = 0)
         {
             if (ataris.ContainsKey(i))
             {
@@ -464,7 +553,7 @@ namespace GameSet1
         /// </summary>
         /// <param name="i">atarisナンバー</param>
         /// <returns>りすと！</returns>
-        protected List<Entity> atarislist(int i = 0)
+        public List<Entity> atarislist(int i = 0)
         {
             if (ataris.ContainsKey(i))
             {
@@ -476,7 +565,7 @@ namespace GameSet1
         /// atarisの全てのリストを結合して持ってくる
         /// </summary>
         /// <returns>Entityが重複してるかもしれないリスト</returns>
-        protected List<Entity> atarislistall()
+        public List<Entity> atarislistall()
         {
             var res = new List<Entity>();
             foreach (var a in ataris)
@@ -490,7 +579,7 @@ namespace GameSet1
         /// </summary>
         /// <param name="e">Entity</param>
         /// <returns>ナンバー関係なくあるか</returns>
-        protected bool atarisDorearu(Entity e)
+        public bool atarisDorearu(Entity e)
         {
             foreach (var a in ataris)
             {
@@ -503,7 +592,7 @@ namespace GameSet1
         /// </summary>
         /// <param name="kugiriko">区切り時間</param>
         /// <returns>区切り時間が-1かtimerが区切り時間未満だとfalse</returns>
-        protected bool kugirin(float kugiriko)
+        public bool kugirin(float kugiriko)
         {
             return timer >= kugiriko && kugiriko >= 0;
         }

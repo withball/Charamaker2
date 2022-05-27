@@ -33,7 +33,11 @@ namespace GameSet1
         /// <summary>
         /// 現在ロードしてるセーブデータ
         /// </summary>
-        static public SD S;
+        static public SD S { get { return _S; } set { _S = value; } }
+        /// <summary>
+        /// ロードされたセーブデータ。
+        /// </summary>
+        static protected SD _S;
         float mastervol = 1, kouvol = 1, bgmvol = 0.3f, gasitu = 1f;
         /// <summary>
         /// マスターボリューム

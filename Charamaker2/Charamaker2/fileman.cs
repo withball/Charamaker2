@@ -1059,6 +1059,11 @@ namespace Charamaker2
             }
 
         }
+        /// <summary>
+        /// なんとなくの確率でTrueを返す
+        /// </summary>
+        /// <param name="per">パーセント(100で確実よもちろん)</param>
+        /// <returns></returns>
         static public bool percentin(float per)
         {
             var a = r.NextDouble() * 100;

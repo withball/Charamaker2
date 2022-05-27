@@ -171,7 +171,7 @@ namespace Charamaker2
         /// <param name="mirror">反転しているか</param>
         /// <param name="opacity">不透明度</param>
         /// <param name="tex">テクスチャーの名前</param>
-        /// <param name="texture">テクスチャーの辞書</param>
+        /// <param name="texture">テクスチャーの辞書。new Dictionarystringstring{{"def","redbit"}}って感じで</param>
         public picture(float xx, float yy, float zz, float ww, float hh, float ttx, float tty, double sita, bool mirror, float opacity, string tex, Dictionary<string, string> texture):base(xx,yy,zz)
         {
           

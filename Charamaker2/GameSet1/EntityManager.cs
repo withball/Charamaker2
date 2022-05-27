@@ -14,14 +14,14 @@ namespace GameSet1
         /// 直接扱うときは注意。getから呼べばコピーが出るよ。
         /// </summary>
         public readonly List<Entity> Entities = new List<Entity>();
-        
-  
+
+
 
         Dictionary<string, List<Entity>> EDB = new Dictionary<string, List<Entity>>();
         Dictionary<string, bool> EDBF = new Dictionary<string, bool>();
 
         Dictionary<string, List<Entity>> CEDB = new Dictionary<string, List<Entity>>();
-        Dictionary<Type, List<Entity>> TEDB = new Dictionary<Type, List<Entity>>() {{typeof(Entity),new List<Entity>() } };
+        Dictionary<Type, List<Entity>> TEDB = new Dictionary<Type, List<Entity>>() { { typeof(Entity), new List<Entity>() } };
         /// <summary>
         /// エンテティをデータベースにぶち込むメソッド。
         /// 一生変わらない特性はここで振り分ける
@@ -29,7 +29,7 @@ namespace GameSet1
         /// <param name="e"></param>
         /// <param name="add">先頭に入れるならfalse</param>
         /// <returns>既に追加されていなかったか</returns>
-        virtual public bool entadd(Entity e,bool add) 
+        virtual public bool entadd(Entity e, bool add)
         {
             if (!Entities.Contains(e))
             {
@@ -39,8 +39,8 @@ namespace GameSet1
                 } else
                 {
                     Entities.Insert(0, e);
-                }   
-                var a = ARhuri(e); 
+                }
+                var a = ARhuri(e);
                 if (add)
                 {
                     foreach (var b in a)
@@ -52,10 +52,10 @@ namespace GameSet1
                 {
                     foreach (var b in a)
                     {
-                        CEDB[b].Insert(0,e);
+                        CEDB[b].Insert(0, e);
                     }
                 }
-                
+
                 {
                     Type t = e.GetType();
                     {
@@ -65,7 +65,7 @@ namespace GameSet1
                         {
                             TEDB.Add(pre, new List<Entity>());
                             pre = t.BaseType;
-                        } 
+                        }
                     }
 
                     if (add)
@@ -84,11 +84,11 @@ namespace GameSet1
                         {
                             if (t == aa || t.IsSubclassOf(aa))
                             {
-                                TEDB[aa].Insert(0,e);
+                                TEDB[aa].Insert(0, e);
                             }
                         }
                     }
-                 
+
                 }
                 return true;
             }
@@ -111,8 +111,8 @@ namespace GameSet1
                 }
                 {
                     Type t = e.GetType();
-                   
-                  
+
+
                     foreach (var aa in TEDB.Keys)
                     {
                         if (t == aa || t.IsSubclassOf(aa))
@@ -130,10 +130,10 @@ namespace GameSet1
         /// </summary>
         /// <param name="e">振り分けるエンテティ</param>
         /// <returns>どのCEDBに入れるか</returns>
-        virtual protected List<string> ARhuri(Entity e) 
+        virtual protected List<string> ARhuri(Entity e)
         {
             var res = new List<string>();
-            
+
             return res;
 
         }
@@ -149,11 +149,11 @@ namespace GameSet1
         /// </summary>
         /// <param name="c">コンスタントのか（毎フレームごとの検査は必要ない奴のこと）</param>
         /// <param name="name">その名前</param>
-        protected void add(string name,bool c=false)
+        protected void add(string name, bool c = false)
         {
-            if (c) 
+            if (c)
             {
-                CEDB.Add(name,new List<Entity>());
+                CEDB.Add(name, new List<Entity>());
             }
             else
             {
@@ -167,7 +167,7 @@ namespace GameSet1
         virtual protected void setDB()
         {
             add("moves");
-            add("atarens"); 
+            add("atarens");
             add("atarerus");
             add("overweights");
         }
@@ -199,12 +199,12 @@ namespace GameSet1
         /// <typeparam name="T">Entity、もしくは継承したクラス</typeparam>
         /// <returns>リストだよ</returns>
         public List<T> getTypeEnts<T>()
-            where T:Entity
+            where T : Entity
         {
-            var t=typeof(T);
-            if (TEDB.ContainsKey(t)) 
+            var t = typeof(T);
+            if (TEDB.ContainsKey(t))
             {
-                return new List<T>(TEDB[t].ConvertAll(a=>(T)a));
+                return new List<T>(TEDB[t].ConvertAll(a => (T)a));
             }
             return new List<T>();
         }
@@ -222,6 +222,8 @@ namespace GameSet1
             }
             return new List<Entity>();
         }
+       
+
         /// <summary>
         /// なにかしら呼び出す
         /// </summary>
@@ -287,6 +289,8 @@ namespace GameSet1
 
             return null;
         }
+
+
 
 
     }

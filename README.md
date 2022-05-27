@@ -61,7 +61,7 @@ filemanを使用する際にSystem.Numericsが解決できませんみたいな�
 \Visual Studio 2019\Templates\ProjectTemplates
 <br>
 にGameSet1Project.zipを置いてください。<br>
-インストールとかしてないので参照がおかしなことになってると思います。なのでDDebug内の同名の奴を参照してあげてください<br>
+それをもとに新規プロジェクトを作成すると、インストールとかしてないのでCharamakaer2,Gameset1の参照がおかしなことになってると思います。なのでResource内の同名のファイルに参照を変更してあげてください<br>
 Resourceの中にリソースフォルダ群を置いといてあるのでそちらも.exeの横においてご活用ください。
 
 

@@ -58,10 +58,17 @@ namespace GameSet1
             sm.s = this;
             if (!started)
             {
-                
-                if (next == null) next = this;
+                onstart();
+                //if (next == null) next = this;
                 _started = true;
             }
+        }
+        /// <summary>
+        /// シーンの正しきスタート時に呼び出される。標準では何もしない
+        /// </summary>
+        virtual protected void onstart() 
+        {
+        
         }
 
         /// <summary>
@@ -80,9 +87,18 @@ namespace GameSet1
         {
             if (started)
             {
+                onend();
                 next.start();
                 _started = false;
             }
+        }
+
+        /// <summary>
+        /// シーンの正しきエンド時に呼び出される。標準では何もしない
+        /// </summary>
+        virtual protected void onend()
+        {
+
         }
     }
 }

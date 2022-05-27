@@ -57,7 +57,7 @@ namespace Charamaker2.maker
                 + "scalechangeman(time,middletime,setuname,XXchangescaleXX,YYchangescaleYY,後続も同じ効果を適用するか=true,stop=false):指定した節以下のサイズ、中心の位置、節の位置をいっきに変更する指定した節が\"\"の時はすべてに適用される。また効果はtime時間で大きくなりmiddleが終わるまでそのまんま。その後time時間で元の大きさに戻る。middle=-1で元には戻らなくなる。" + Environment.NewLine
                 + "tyusinchangeman(time,middletime,setuname,tyusinwariai,bool Y=false,add=false,stop=false):指定した節の中心の位置を指定した位置に変更する（add=trueにすると移動する形になる）。指定した節が\"\"の時はキャラに適用される。また効果はtime時間でずれてmiddleが終わるまでそのまんま。その後time時間で元の中心に戻る。middle=-1で元には戻らなくなる。" + Environment.NewLine
                 + "dxchangeman(time,middletime,setuname,dxwariai(root依存),bool Y=false,add=false,stop=false):指定した節のdx,dyの位置を指定した位置に変更する（add=trueにすると移動する形になる）。指定した節が\"\"の時はしっぱい。また効果はtime時間でずれてmiddleが終わるまでそのまんま。その後time時間で元の中心に戻る。middle=-1で元には戻らなくなる。" + Environment.NewLine
-                + "Kscalechangeman(time,setuname,XXX,YYY,mode=0 (1 X -1 Y),後続も同じ効果を適用するか=true,stop=false):指定した節以下のサイズを基準相対で変更" + Environment.NewLine
+                + "Kscalechangeman(time,setuname,XXX,YYY,mode=0 (1 X -1 Y),後続も同じ効果を適用するか=true,追加する形でスケール=false,stop=false):指定した節以下のサイズを基準相対で変更" + Environment.NewLine
                 + "Ktyusinchangeman(time,setuname,XXX,YYY,mode=0 (1 X -1 Y),基準の中心から変更=false stop=false):指定した節(\"\"でキャラ)の中心を基準相対で変更" + Environment.NewLine
                 + "Kdxychangeman(time,setuname,XXX,YYY,mode=0 (1 X -1 Y),基準のdxyから変更=false, stop=false):指定した節のdxdyを基準相対で変更" + Environment.NewLine
                 + "new yureman(回数, 角速度, 角度, 揺れの幅, setuname,幅を大きさ依存に変える=false,角度を相対的にする=false,stop=false):節をいい感じに揺らすsetuname=\"\"のときはキャラが揺れる" + Environment.NewLine

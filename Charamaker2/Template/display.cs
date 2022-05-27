@@ -107,11 +107,11 @@ namespace Template
         public SScene(SceneManager sm):base(sm ) 
         {
         }
-        Entity me=new Entity(new character(0,0,50,50,25,25,0,new setu("core",0,0,new picture(0,0,0,0,0,0,0,0,false,0,"def",new Dictionary<string, string> { { "def", "nothing" } })))
+        Entity me=new Entity(new character(0,0,50,50,25,25,0,new setu("core",0,0,new picture(0,0,0,0,0,0,0,0,false,0,"def",new Dictionary<string, string> { { "def", "redbit" } })))
             ,new ABrecipie(new List<string> {"" },new List<Shape> {new Rectangle(0,0,0,0,0) }),new buturiinfo(atag:"me"));
-        Entity he = new Entity(new character(100, 100, 50, 20, 25, 10, 0, new setu("core", 0, 0, new picture(0, 0, 0, 0, 0, 0, 0, 0, false, 0, "def", new Dictionary<string, string> { { "def", "nothing" } })))
+        Entity he = new Entity(new character(100, 100, 50, 20, 25, 10, 0, new setu("core", 0, 0, new picture(0, 0, 0, 0, 0, 0, 0, 0, false, 0, "def", new Dictionary<string, string> { { "def", "bluebit" } })))
            , new ABrecipie(new List<string> { "" }, new List<Shape> { new Rectangle(0, 0, 0, 0, 0) }), new buturiinfo(atag: "he"));
-        Entity he2 = new Entity(new character(100, 100, 50, 20, 25, 10, 0, new setu("core", 0, 0, new picture(0, 0, 0, 0, 0, 0, 0, 0, false, 0, "def", new Dictionary<string, string> { { "def", "nothing" } })))
+        Entity he2 = new Entity(new character(100, 100, 50, 20, 25, 10, 0, new setu("core", 0, 0, new picture(0, 0, 0, 0, 0, 0, 0, 0, false, 0, "def", new Dictionary<string, string> { { "def", "yellowbit" } })))
             , new ABrecipie(new List<string> { "" }, new List<Shape> { new Triangle(0, 0, 0, 0, 0,0,-1) }), new buturiinfo(-1,atag: "he2"));
 
         public override void start()
@@ -128,7 +128,7 @@ namespace Template
         }
         public override void frame(inputin i, float cl)
         {
-            base.frame(i, cl);
+            base.frame(i, cl);//ここにhyojiman.hyojiがある。
             if (i.ok(Keys.A, itype.ing))
             {
                 me.c.idouxy(-4 * cl, 0);
@@ -193,7 +193,7 @@ namespace Template
             base.onFrame(cl);
             if (e.atariable) 
             {
-                //これクソ重いよ。画像がなくても描画するための苦肉の策なんだ
+                //これクソ重いよ。ただあたり判定を把握するのにはヨシ
                 e.Acore.drawshape(hyoji,R,1,1,1,true);
             }
         }
