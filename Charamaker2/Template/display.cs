@@ -37,9 +37,11 @@ namespace Template
             InitializeComponent();
             this.ClientSize=new System.Drawing.Size(size.Width,size.Height);
             //SD.setup();
-            //SD.S.setvols();
+           
             fileman.setinguping(this,1/*SD.S.gsit*/);
-           // FP.seting(new List<string>(),new List<string> { "settingtext" });
+            //SD.S.setvols();
+
+            // FP.seting(new List<string>(),new List<string> { "settingtext" });
             //通信用 C2WebRTCP2P.supertusin.setup();
             new SScene(sm).start();
         }
@@ -114,7 +116,7 @@ namespace Template
         Entity he2 = new Entity(new character(100, 100, 50, 20, 25, 10, 0, new setu("core", 0, 0, new picture(0, 0, 99999, 50, 50, 25, 25, 0, false, 1, "def", new Dictionary<string, string> { { "def", "yellowbit" } })))
             , new ABrecipie(new List<string> { "" }, new List<Shape> { new Triangle(0, 0, 0, 0, 0,0,-1) }), new buturiinfo(-1,atag: "he2"));
 
-        public override void start()
+        protected override void onstart()
         {
             em = new EntityManager(hyo);
             next = new SScene(sm);
@@ -124,7 +126,7 @@ namespace Template
             new shapedraw().add(me);
             new shapedraw().add(he); 
             new shapedraw().add(he2);
-            base.start();
+            base.onstart();
         }
         public override void frame(inputin i, float cl)
         {
