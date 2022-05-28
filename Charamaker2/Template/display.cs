@@ -107,11 +107,11 @@ namespace Template
         public SScene(SceneManager sm):base(sm ) 
         {
         }
-        Entity me=new Entity(new character(0,0,50,50,25,25,0,new setu("core",0,0,new picture(0,0,0,0,0,0,0,0,false,0,"def",new Dictionary<string, string> { { "def", "redbit" } })))
+        Entity me=new Entity(new character(0,0,50,50,25,25,0,new setu("core",0,0,new picture(0,0,1,50,50,25,25,0,false,1,"def",new Dictionary<string, string> { { "def", "redbit" } })))
             ,new ABrecipie(new List<string> {"" },new List<Shape> {new Rectangle(0,0,0,0,0) }),new buturiinfo(atag:"me"));
-        Entity he = new Entity(new character(100, 100, 50, 20, 25, 10, 0, new setu("core", 0, 0, new picture(0, 0, 0, 0, 0, 0, 0, 0, false, 0, "def", new Dictionary<string, string> { { "def", "bluebit" } })))
+        Entity he = new Entity(new character(100, 100, 50, 20, 25, 10, 0, new setu("core", 0, 0, new picture(0, 0, 0, 50, 50, 25, 25, 0, false, 1, "def", new Dictionary<string, string> { { "def", "bluebit" } })))
            , new ABrecipie(new List<string> { "" }, new List<Shape> { new Rectangle(0, 0, 0, 0, 0) }), new buturiinfo(atag: "he"));
-        Entity he2 = new Entity(new character(100, 100, 50, 20, 25, 10, 0, new setu("core", 0, 0, new picture(0, 0, 0, 0, 0, 0, 0, 0, false, 0, "def", new Dictionary<string, string> { { "def", "yellowbit" } })))
+        Entity he2 = new Entity(new character(100, 100, 50, 20, 25, 10, 0, new setu("core", 0, 0, new picture(0, 0, 99999, 50, 50, 25, 25, 0, false, 1, "def", new Dictionary<string, string> { { "def", "yellowbit" } })))
             , new ABrecipie(new List<string> { "" }, new List<Shape> { new Triangle(0, 0, 0, 0, 0,0,-1) }), new buturiinfo(-1,atag: "he2"));
 
         public override void start()
