@@ -74,6 +74,7 @@ Resourceの中にリソースフォルダ群を置いといてあるのでそち
 
 # About通信
 P2P通信を可能にするやつを作りました。仕様上サーバーからクライアントにhyojimanをクライアントがサーバーにinputinを送るだけですが割と何とかなると思います。<br>
+実行した際に、mrwebrtc.dllが見つかりませんというエラーが起こることがあります。その場合packages\Microsoft.MixedReality.WebRTC.2.0.2\runtimes\win10\natibにあるそいつを.exeファイル下に持っていきましょう。<br>
 通信はIPなど含まれたメッセージを何かしらの手段で相手に伝え、相手がそれを入力、つまり人力シェイクハンドで行います。なので通信するためにはSTUNサーバー以外必要ありません。<br>
 こちらの機能はMicrosoft.MixedReality.WebRTCを使用しております。<br>
 
