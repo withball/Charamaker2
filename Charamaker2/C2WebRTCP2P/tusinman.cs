@@ -80,7 +80,7 @@ namespace C2WebRTCP2P
         static  serverman3 sv;
         static  clientman3 cl;
         /// <summary>
-        /// 接続したのちに使用する。通信を開始する。
+        /// 通信を確立したのちに使用する。接続を開始する。
         /// </summary>
         static public void starts() 
         {
@@ -88,13 +88,24 @@ namespace C2WebRTCP2P
             if (cl != null) cl.resetcount();
         }
         /// <summary>
+        /// 通信を確立したのちに使用する。接続を停止する。
+        /// </summary>
+        static public void ends()
+        {
+            if (sv != null) sv.termcount();
+            if (cl != null) cl.termcount();
+        }
+        /// <summary>
         /// 接続してる情報をリセットする
         /// </summary>
         static public void clear() 
         {
-
             sv?.dispose(); 
             cl?.dispose();
+            sv = null;
+            cl = null;
+
+            tuusinform.cleanupforms();
         }
         /// <summary>
         /// 通信を開始したのちに使用する。hyojimanを受け取る
@@ -152,6 +163,7 @@ namespace C2WebRTCP2P
         /// <summary>
         /// サーバーを立てる。
         /// 通信の接続はtuusinformで行う
+        /// もう立ってるなら前のは削除する
         /// </summary>
         static public void setsv()
         {
@@ -165,6 +177,7 @@ namespace C2WebRTCP2P
         /// <summary>
         /// クライアントを立てる。
         /// 通信の接続はtuusinformで行う
+        /// もう立ってるなら前のは削除する
         /// </summary>
         static public void setcli()
         {
@@ -186,6 +199,10 @@ namespace C2WebRTCP2P
         /// 通信しているかの判定に使用するカウントをリセットする
         /// </summary>
         public void resetcount() { cou = 0; jyu.Clear(); }
+        /// <summary>
+        /// 通信しているかの判定に使用するカウントを終わらせる
+        /// </summary>
+        public void termcount() { cou = maxcou+1; jyu.Clear(); }
 
         /// <summary>
         /// 通信が確立されているか

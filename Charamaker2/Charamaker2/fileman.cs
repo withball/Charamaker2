@@ -41,7 +41,7 @@ namespace Charamaker2
         /// <summary>
         /// おおもとのレンダー
         /// </summary>
-        static public ID2D1RenderTarget render{get {return rendertarget;} }
+        static public ID2D1RenderTarget render { get { return rendertarget; } }
         /// <summary>
         /// ガシーツ
         /// </summary>
@@ -62,7 +62,7 @@ namespace Charamaker2
         /// <param name="Hand">ハンドラー</param>
         /// <param name="wi">画面の幅</param>
         /// <param name="hei">画面の高さ</param>
-        static private void resizen(float bairitu,IntPtr Hand,float wi,float hei)
+        static private void resizen(float bairitu, IntPtr Hand, float wi, float hei)
         {
             D2D1.D2D1CreateFactory<ID2D1Factory>(FactoryType.SingleThreaded, out fac);
             var renpro = new RenderTargetProperties();
@@ -78,10 +78,9 @@ namespace Charamaker2
         /// hyojimanを取得する
         /// </summary>
         /// <returns>新しいhyojiman</returns>
-        static public hyojiman makehyojiman() 
+        static public hyojiman makehyojiman()
         {
-            var aa = new hyojiman(rendertarget);
-            aa.bairitu = gasyu;
+            var aa = new hyojiman(rendertarget,gasyu);
             return aa;
         }
         /// <summary>
@@ -90,12 +89,12 @@ namespace Charamaker2
         /// </summary>
         /// <param name="f">素となるフォームとかユーザーコントロール</param>
         /// <param name="bai">画質の倍率</param>
-        static public void setinguping(ContainerControl f,float bai=1)
+        static public void setinguping(ContainerControl f, float bai = 1)
         {
             Console.WriteLine("fileman setup go");
             _CC = f;
             resizen(bai, f.Handle, f.ClientSize.Width, f.ClientSize.Height);
-            fileman.resetfileman( f.Handle);
+            fileman.resetfileman(f.Handle);
             Console.WriteLine("fileman setup ok");
 
         }
@@ -150,21 +149,21 @@ namespace Charamaker2
         /// <summary>
         /// ビットマップを読み込むときに使うクロマキーの色
         /// </summary>
-        static public Color3 clmcol = new Color3(0,254,254);
+        static public Color3 clmcol = new Color3(0, 254, 254);
         /// <summary>
         /// テクスチャーのサイズを取得する
         /// </summary>
         /// <param name="file">そのテクスチャー</param>
         /// <returns></returns>
-        static public System.Drawing.Size gettexsize(string file) 
+        static public System.Drawing.Size gettexsize(string file)
         {
 
             var a = ldtex(file);
-            if (a!=null) 
+            if (a != null)
             {
                 return a.PixelSize;
             }
-            return new System.Drawing.Size();
+            return new System.Drawing.Size(1,1);
         }
 
         /// <summary>
@@ -181,7 +180,7 @@ namespace Charamaker2
             if (!texs.ContainsKey(file) || reset)
             {
                 Console.WriteLine(file + "load sitao!");
-                string fi = @".\tex\" + file ;
+                string fi = @".\tex\" + file;
                 // System.Drawing.Imageを使ってファイルから画像を読み込む
                 if (System.IO.File.Exists(fi))
                 {
@@ -259,7 +258,7 @@ namespace Charamaker2
 
             System.Windows.Forms.SaveFileDialog sfd = new SaveFileDialog();
             sfd.InitialDirectory = @".\character";
-            sfd.FileName = "character" + DateTime.Now.Year + DateTime.Now.Month + DateTime.Now.Day + "_" + DateTime.Now.Hour + DateTime.Now.Minute + DateTime.Now.Second+".c2c";
+            sfd.FileName = "character" + DateTime.Now.Year + DateTime.Now.Month + DateTime.Now.Day + "_" + DateTime.Now.Hour + DateTime.Now.Minute + DateTime.Now.Second + ".c2c";
             if (sfd.ShowDialog() == DialogResult.OK)
             {
                 //指定したパスにファイルを保存する
@@ -283,7 +282,7 @@ namespace Charamaker2
             character res = null;
             System.Windows.Forms.OpenFileDialog sfd = new OpenFileDialog();
             sfd.InitialDirectory = @".\character";
-            sfd.FileName = "character" + DateTime.Now.Year + DateTime.Now.Month + DateTime.Now.Day + "_" + DateTime.Now.Hour + DateTime.Now.Minute + DateTime.Now.Second+".c2c";
+            sfd.FileName = "character" + DateTime.Now.Year + DateTime.Now.Month + DateTime.Now.Day + "_" + DateTime.Now.Hour + DateTime.Now.Minute + DateTime.Now.Second + ".c2c";
             if (sfd.ShowDialog() == DialogResult.OK)
             {
                 string file = sfd.SafeFileName;
@@ -314,7 +313,7 @@ namespace Charamaker2
                             characters[file] = (character)loadedData;
                         }
                     }
-                    catch (Exception e){ Console.WriteLine(e.ToString()); }
+                    catch (Exception e) { Console.WriteLine(e.ToString()); }
 
                 }
                 if (characters.ContainsKey(file))
@@ -338,7 +337,7 @@ namespace Charamaker2
             saveData.text = s;
             System.Windows.Forms.SaveFileDialog sfd = new SaveFileDialog();
             sfd.InitialDirectory = @".\motion";
-            sfd.FileName = "motion" + DateTime.Now.Year + DateTime.Now.Month + DateTime.Now.Day + "_" + DateTime.Now.Hour + DateTime.Now.Minute + DateTime.Now.Second+".c2m";
+            sfd.FileName = "motion" + DateTime.Now.Year + DateTime.Now.Month + DateTime.Now.Day + "_" + DateTime.Now.Hour + DateTime.Now.Minute + DateTime.Now.Second + ".c2m";
             if (sfd.ShowDialog() == DialogResult.OK)
             {
                 //指定したパスにファイルを保存する
@@ -363,7 +362,7 @@ namespace Charamaker2
             motionsaveman res = null;
             System.Windows.Forms.OpenFileDialog sfd = new OpenFileDialog();
             sfd.InitialDirectory = @".\motion";
-            sfd.FileName = "motion" + DateTime.Now.Year + DateTime.Now.Month + DateTime.Now.Day + "_" + DateTime.Now.Hour + DateTime.Now.Minute + DateTime.Now.Second+".c2m";
+            sfd.FileName = "motion" + DateTime.Now.Year + DateTime.Now.Month + DateTime.Now.Day + "_" + DateTime.Now.Hour + DateTime.Now.Minute + DateTime.Now.Second + ".c2m";
             if (sfd.ShowDialog() == DialogResult.OK)
             {
                 string file = sfd.SafeFileName;
@@ -396,7 +395,7 @@ namespace Charamaker2
                     catch (Exception e) { Console.WriteLine(e.ToString()); }
                     res = (motionsaveman)loadedData;
                 }
-                
+
 
             }
             return new motionsaveman(res);
@@ -408,7 +407,7 @@ namespace Charamaker2
         /// <param name="sp">モーションのスピード</param>
         /// <param name="reset">再ロードする</param>
         /// <returns>ロードしたモーション</returns>
-        static public motion ldmotion(string file, float sp = 1, bool reset = false) 
+        static public motion ldmotion(string file, float sp = 1, bool reset = false)
         {
             return loadmotion(file, sp, reset).m;
         }
@@ -426,7 +425,7 @@ namespace Charamaker2
             if (a != ".c2m") file += ".c2m";
             //   Console.WriteLine(file + " motion load");
             motionsaveman res = null;
-         
+
             if (!motions.ContainsKey(file) || reset)
             {
                 Object loadedData = null;
@@ -470,10 +469,10 @@ namespace Charamaker2
             }
             else return null;
         }
-   
+
         // バージョン違いとかから強制的に移植するときにこんな風なのを書く例としてのこしとーく
-  
-        
+
+
         /*static public void kyusai()
         {
          //   string[] filesM = System.IO.Directory.GetFiles(@".\motion", "*", System.IO.SearchOption.AllDirectories);
@@ -564,14 +563,14 @@ namespace Charamaker2
                 }
             }
         }*/
-        
-       /// <summary>
-       /// 作成したキャラクターをロードする。
-       /// </summary>
-       /// <param name="file">.\character\*.c2cの*部分.c2cは書いてもいいし</param>
-       /// <param name="scale">キャラクターのスケール</param>
-       /// <param name="reset">再ロードする</param>
-       /// <returns>ロードしたキャラクター</returns>
+
+        /// <summary>
+        /// 作成したキャラクターをロードする。
+        /// </summary>
+        /// <param name="file">.\character\*.c2cの*部分.c2cは書いてもいいし</param>
+        /// <param name="scale">キャラクターのスケール</param>
+        /// <param name="reset">再ロードする</param>
+        /// <returns>ロードしたキャラクター</returns>
         static public character loadcharacter(string file, float scale = 1, bool reset = false)
         {
 
@@ -638,19 +637,19 @@ namespace Charamaker2
         /// </summary>
         static public float glovolbgm { get { return _glovolbgm; } set { _glovolbgm = value; if (_glovolbgm < 0) _glovolbgm = 0; if (_glovolbgm > 1) _glovolbgm = 1; } }
         static float _glovolbgm = 0.3f;
-    /// <summary>
-    /// 音をロードする。ロードするだけ
-    /// </summary>
-    /// <param name="file">.\oto\*.wavの*部分</param>
+        /// <summary>
+        /// 音をロードする。ロードするだけ
+        /// </summary>
+        /// <param name="file">.\oto\*.wavの*部分</param>
         static void loadoto(string file)
         {
             var a = Path.GetExtension(file);
             if (a != ".wav") file += ".wav";
 
 
-             Console.WriteLine(file + "  otoload");
-            if (File.Exists(@".\oto\" + file ) == false) return;
-            var reader = new BinaryReader(File.OpenRead(@".\oto\" + file ));
+            Console.WriteLine(file + "  otoload");
+            if (File.Exists(@".\oto\" + file) == false) return;
+            var reader = new BinaryReader(File.OpenRead(@".\oto\" + file));
 
             // Read in the wave file header.
             var chunkId = new string(reader.ReadChars(4));
@@ -738,6 +737,7 @@ namespace Charamaker2
         /// <param name="vol">この音のボリューム</param>
         static public void playoto(string file, float vol = 1)
         {
+            if (file == "nothing") return;
             var a = Path.GetExtension(file);
             if (a != ".wav") file += ".wav";
 
@@ -756,8 +756,20 @@ namespace Charamaker2
             {
                 var otoman = otos[file];
 
-                var nbuf = audio.CreateSourceVoice(otoman.wvf);
+                int kannin = maxsameoto;
+                
+                for (int i = oton.Count-1;i>=0 ; i--) 
+                {
+                    if (kannin-- == 0) 
+                    {
+                        oton[i].dispo();
+                        oton.RemoveAt(i);
 
+                        kannin++;
+                    }
+                }
+
+                var nbuf = audio.CreateSourceVoice(otoman.wvf);
 
 
                 nbuf.SubmitSourceBuffer(otoman.buf);
@@ -767,9 +779,10 @@ namespace Charamaker2
 
                 nbuf.SetVolume(vol);
                 oton.Add(new otoman(nbuf, otoman.wvf, otoman.buf));
-
                 nbuf.Start();
-                if (oton.Count > 50)
+
+
+                if (oton.Count > maxoto)
                 {
                     oton[0].dispo();
                     oton.RemoveAt(0);
@@ -777,6 +790,14 @@ namespace Charamaker2
                 }
             }
         }
+        /// <summary>
+        /// 同時にならすことのできる音の数
+        /// </summary>
+        public static int maxoto = 50;
+        /// <summary>
+        /// 同時にならすことのできる同じ音の数
+        /// </summary>
+        public static int maxsameoto = 3;
 
         static otoman bgmman;
         static string nowbgm = "";
@@ -787,6 +808,7 @@ namespace Charamaker2
         /// <param name="butu">おなじbgmを流したときに最初から再生するか</param>
         static public void playbgm(string file, bool butu = false)
         {
+            if (file == "nothing") return;
             var a = Path.GetExtension(file);
             if (a != ".wav") file += ".wav";
             if (file == ".wav")
@@ -853,9 +875,9 @@ namespace Charamaker2
         /// audioのあれ
         /// </summary>
         static IXAudio2 audio;
-/// <summary>
-/// 音を合成したときの奴を表す奴
-/// </summary>
+        /// <summary>
+        /// 音を合成したときの奴を表す奴
+        /// </summary>
         static IXAudio2MasteringVoice MV;
 
         /// <summary>
@@ -868,24 +890,24 @@ namespace Charamaker2
                     {"yellow",System.Drawing.Color.Yellow },{"cyan",System.Drawing.Color.Cyan },{"purple",System.Drawing.Color.Purple },
                     {"aqua",System.Drawing.Color.Aqua },{"brown",System.Drawing.Color.Brown },{"crimson",System.Drawing.Color.Crimson },
                     {"pink",System.Drawing.Color.Pink },{"orange",System.Drawing.Color.Orange },{"indigo",System.Drawing.Color.Indigo }
-                    
+
                 };
 
         /// <summary>
         /// ランダム変数に現在時刻をシードであれする
         /// </summary>
-        public static void setrandomseed() 
+        public static void setrandomseed()
         {
-            r = new Random(DateTime.Now.Year + DateTime.Now.Month+ DateTime.Now.Day+ DateTime.Now.Hour+ DateTime.Now.Minute + DateTime.Now.Second);
+            r = new Random(DateTime.Now.Year + DateTime.Now.Month + DateTime.Now.Day + DateTime.Now.Hour + DateTime.Now.Minute + DateTime.Now.Second);
         }
 
         /// <summary>
         /// ファイルマンを初期化する
         /// </summary>
         /// <param name="hand"></param>
-        static private void resetfileman( IntPtr hand)
+        static private void resetfileman(IntPtr hand)
         {
-            
+
             if (audio != null)
             {
                 audio.Dispose();
@@ -909,7 +931,7 @@ namespace Charamaker2
 
                 }
             }
-          
+
 
             foreach (var a in otos)
             {
@@ -950,7 +972,7 @@ namespace Charamaker2
             //ファイルを読込
             try
             {
-                using (var r = new System.IO.StreamReader(@".\movie\" + file ))
+                using (var r = new System.IO.StreamReader(@".\movie\" + file))
                 {
                     loaddata = r.ReadToEnd();
                 }
@@ -971,12 +993,18 @@ namespace Charamaker2
             return new movie.Movie(runner);
 
         }
+
+        /// <summary>
+        /// loadfiketokaの時に呼び出されるイベント。
+        /// </summary>
+        static public EventHandler<loadfileEventArgs> loading;
         /// <summary>
         /// tex,oto,character,motionフォルダにあるアイテムを全てロードする
+        /// event
         /// </summary>
         static public void loadfiletoka()
         {
-              var m = new motion();
+            var m = new motion();
             m.addmoves(new texpropman(200, "a", 471, 0.5f));
             m.addmoves(new moveman(1, true));
             m.addmoves(new idouman(200, 0, 0, 360 / 100));
@@ -986,14 +1014,15 @@ namespace Charamaker2
 
 
 
-            if (Directory.Exists(@".\motion")) 
+            if (Directory.Exists(@".\motion"))
             {
                 string[] filesM = System.IO.Directory.GetFiles(@".\motion", "*.c2m", System.IO.SearchOption.AllDirectories);
                 for (int i = 0; i < filesM.Count(); i++)
                 {
                     Console.WriteLine(filesM[i]);
                     loadmotion(filesM[i].Replace(@".\motion\", @""));
-                } 
+                    loading.Invoke(null, new loadfileEventArgs(filesM.Length, 1,i, filesM[i]));
+                }
             }
             if (Directory.Exists(@".\oto"))
             {
@@ -1002,6 +1031,7 @@ namespace Charamaker2
                 {
                     Console.WriteLine(filesO[i]);
                     loadoto(filesO[i].Replace(@".\oto\", @""));
+                    loading.Invoke(null, new loadfileEventArgs(filesO.Length, 1, i, filesO[i]));
                 }
             }
             if (Directory.Exists(@".\tex"))
@@ -1012,6 +1042,7 @@ namespace Charamaker2
 
                     Console.WriteLine(filesT[i]);
                     ldtex(filesT[i].Replace(@".\tex\", @""));
+                    loading.Invoke(null, new loadfileEventArgs(filesT.Length, 1, i, filesT[i]));
                 }
             }
             if (Directory.Exists(@".\character"))
@@ -1022,21 +1053,9 @@ namespace Charamaker2
 
                     Console.WriteLine(filesC[i]);
                     loadcharacter(filesC[i].Replace(@".\character\", @""));
+                    loading.Invoke(null, new loadfileEventArgs(filesC.Length, 1, i, filesC[i]));
                 }
             }
-          
-            
-            foreach (var a in characters)
-            {
-                foreach (var b in a.Value.core.getallsetu())
-                {
-                    foreach (var c in b.p.textures)
-                    {
-                        ldtex(c.Value);
-                    }
-                }
-            }
-         
         }
         /// <summary>
         /// 0~wの範囲でランダムな整数を発生させる
@@ -1060,6 +1079,38 @@ namespace Charamaker2
 
         }
         /// <summary>
+        /// +1か-1を返す
+        /// </summary>
+        /// <param name="per">+1を返す確率</param>
+        /// <returns></returns>
+        static public float plusminus(float per=50)
+        {
+            var a = r.NextDouble() * 100;
+            if (per >= a) 
+            {
+                return 1;
+            }
+            return -1;
+
+        }
+        /// <summary>
+        /// +1か-1を返す
+        /// </summary>
+        /// <param name="ok">+1を返すか</param>
+        /// <param name="plus">ok=trueの解き返すほう</param>
+        /// <returns></returns>
+        static public float plusminus(bool ok,bool plus=true)
+        {
+            if (plus) 
+            {
+                if (ok) return 1;
+                return -1;
+            }
+            if (ok) return -1;
+            return 1;
+
+        }
+        /// <summary>
         /// なんとなくの確率でTrueを返す
         /// </summary>
         /// <param name="per">パーセント(100で確実よもちろん)</param>
@@ -1069,9 +1120,9 @@ namespace Charamaker2
             var a = r.NextDouble() * 100;
             return per >= a;
         }
-     
+
     }
-    
+
     /// <summary>
     /// 鳴らした音を保存しとくクラス
     /// </summary>
@@ -1098,9 +1149,9 @@ namespace Charamaker2
                 sorce.Dispose();
             }
         }
-      
 
-       
+
+
     }
     /// <summary>
     /// モーションをセーブするためのクラス
@@ -1116,6 +1167,56 @@ namespace Charamaker2
             text = mm.text;
             m = new motion(mm.m);
         }
+    }
+    /// <summary>
+    /// loadfiletokaのときのイベント
+    /// </summary>
+    public class loadfileEventArgs 
+    {
+        /// <summary>
+        /// 普通のコンストラクタ
+        /// </summary>
+        /// <param name="max">最大ファイルの数</param>
+        /// <param name="num">今ロードしたファイルの数</param>
+        /// <param name="loaded">ロードを終えたファイルの数</param>
+        /// <param name="filename">ロードしたファイルの名前の代表</param>
+        public loadfileEventArgs(int max,int num,int loaded,string filename) 
+        {
+            this.max = max;
+            this.num = num;
+            this.loaded = loaded;
+            name = filename;
+            type = name.Replace("*."," ");
+        }
+        /// <summary>
+        /// ロードするファイルの総数
+        /// </summary>
+        public int max;
+        /// <summary>
+        /// ロードしたファイルの数
+        /// </summary>
+        public int num;
+        /// <summary>
+        /// ロードを終えたファイルの数
+        /// </summary>
+        public int loaded;
+        /// <summary>
+        /// ロードしたファイルの名前の代表
+        /// </summary>
+        public string name;
+        /// <summary>
+        /// ロードしたファイルの拡張子
+        /// </summary>
+        public string type;
+        /// <summary>
+        /// 既にロードしたファイルの比
+        /// </summary>
+        public float loadedhi { get { if (max <= 0) return 1;return loaded / max; } }
+        /// <summary>
+        /// 今ロードしたファイルの比
+        /// </summary>
+        public float numhi { get { if (max <= 0) return 1; return num / max; } }
+
     }
 
 }

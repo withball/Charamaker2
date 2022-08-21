@@ -12,7 +12,7 @@ inamibgm3:前の奴は諸事情で\nつけれなかったからなぁ
 inamigasitu1:再起動してから反映されるからな
 inamigasitu2:まあ特に変えなくて問題ないと思うぞ
 inamigasitu3:ウィンドウサイズ自体は\nいつでも変えれるからな
-inamikeykaeri:帰りたいなら何もないところで\n割り当てられてないキーを押しまくれ
+inamikeykaeri:帰りたいなら何もないところで\nテキトーなキーを押しまくれ
 inamikeywhat:そいつをどれにするんだ？
 inamikeyno1:次は割り当てられてないやつを押せ
 inamikeyno2:変えねぇのかよ

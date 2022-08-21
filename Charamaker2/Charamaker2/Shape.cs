@@ -159,6 +159,19 @@ namespace Charamaker2.Shapes
             x = p.x;
             y = p.y;
         }
+        /// <summary>
+        /// 中心の座標を変えずにサイズを拡大縮小する
+        /// </summary>
+        /// <param name="sc">スケール</param>
+        public void scale(float sc) 
+        {
+            float x=gettx();
+            float y=getty();
+            w = this.w * sc;
+            h = this.h * sc;
+
+            settxy(x, y);
+        }
 
         /// <summary>
         /// 図形を描画する

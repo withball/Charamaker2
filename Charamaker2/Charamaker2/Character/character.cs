@@ -234,8 +234,11 @@ namespace Charamaker2.Character
         /// <param name="typ">中心点の位置y</param>
         /// <param name="opa">透明度</param>
         /// <param name="rad">角度</param>
+        /// <param name="tx">中心の位置x</param>
+        /// <param name="ty">中心の位置y</param>
+        /// <param name="mirror">反転</param>
         /// <returns></returns>
-        public static character onepicturechara(string tex, float widthscale,float z=0,bool hin=false,float txp=0.5f,float typ=0.5f,float opa=1,double rad=0) 
+        public static character onepicturechara(string tex, float widthscale, float z = 0, bool hin = false, float txp = 0.5f, float typ = 0.5f, float opa = 1, double rad = 0, float tx = 0,float ty=0,bool mirror=false) 
         {
 
             var si = fileman.gettexsize(tex);
@@ -250,11 +253,51 @@ namespace Charamaker2.Character
             } 
             
             var res = new character(0, 0, si.Width * scale, si.Height * scale, si.Width * scale * txp, si.Height * scale * typ, rad,
-                new setu("core", 0, 0, new picture(0, 0, z, si.Width * scale, si.Height * scale, si.Width * scale * txp, si.Height * scale * typ
-                , rad, false, opa, "def", new Dictionary<string, string> { { "def", tex } })));
-          
+                new setu("core", 0, 0, picture.onetexpic(tex,widthscale,z,hin,txp,typ,opa,rad,0,0,mirror)));
+            res.settxy(tx, ty);
             return res;
         }
+
+        /// <summary>
+        ///図形と図形の重心の距離を測る
+        /// </summary>
+        /// <param name="s">その図形の片割れ</param>
+        /// <returns>距離</returns>
+        public float kyori(character s)
+        {
+            return (float)Math.Sqrt(Math.Pow(s.gettx() - gettx(), 2) + Math.Pow(s.getty() - getty(), 2));
+        }
+
+        /// <summary>
+        /// 図形の重心とある座標の距離を測る
+        /// </summary>
+        /// <param name="px">そのx座標</param>
+        /// <param name="py">そのy座標</param>
+        /// <returns>距離</returns>
+        public float kyori(float px, float py)
+        {
+            return (float)Math.Sqrt(Math.Pow(px - gettx(), 2) + Math.Pow(py - getty(), 2));
+        }
+        /// <summary>
+        /// 図形と図形の重心の紡ぐ線の角度を計る
+        /// </summary>
+        /// <param name="s">その図形</param>
+        /// <returns>角度</returns>
+        public double nasukaku(character s)
+        {
+            return (float)Math.Atan2(s.getty() - getty(), s.gettx() - gettx());
+        }
+        /// <summary>
+        /// 図形の重心とある座標の紡ぐ線の角度を測る
+        /// </summary>
+        /// <param name="px">そのx座標</param>
+        /// <param name="py">そのy座標</param>
+        /// <returns>角度</returns>
+        public double nasukaku(float px, float py)
+        {
+            return (float)Math.Atan2(py - getty(), px - gettx());
+        }
+
         /// <summary>
         /// xy座標
         /// </summary>
@@ -516,7 +559,7 @@ namespace Charamaker2.Character
         public void refreshtokijyun(hyojiman hyo)
         {
             character c = getkijyun();
-            character pre = new character(this, false);
+            character pre = new character(this, true,false);
             w = c.w;
             h = c.h;
             tx = c.tx;
@@ -538,7 +581,7 @@ namespace Charamaker2.Character
         public void refreshtokijyun(bool OPA = true, bool TEX = true)
         {
             character c = getkijyun();
-            character pre = new character(this, false);
+            character pre = new character(this, true, false);
             w = c.w;
             h = c.h;
             tx = c.tx;
@@ -600,7 +643,7 @@ namespace Charamaker2.Character
         /// <param name="c">コピー元</param>
         public void copykakudo(character c)
         {
-            if (c.premir) 
+            if (c.premir!=premir) 
             {
                 c.kijyuhanten();
             }
@@ -616,7 +659,7 @@ namespace Charamaker2.Character
                 }
             }
             rad = c.rad;
-            if (c.premir)
+            if (c.premir != premir)
             {
 
                 c.kijyuhanten();

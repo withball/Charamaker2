@@ -80,6 +80,7 @@ namespace Charamaker2.input
 
             x = moto.x;
             y = moto.y;
+            tag = moto.tag;
         }
         /// <summary>
         /// ナマでキーを押す。
@@ -531,6 +532,10 @@ namespace Charamaker2.input
             return null;
 
         }
+        /// <summary>
+        /// 通信するときとかに情報を乗せる用
+        /// </summary>
+        public string tag = "";
 
         /// <summary>
         /// 変換する前の入力キー・ボタンをテキストとして取得しようとする

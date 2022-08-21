@@ -17,6 +17,86 @@ namespace GameSet1
         public Scene s=null;
         
     }
+  
+    
+    /// <summary>
+    ///背景をランダム生成するためのピース 
+    /// </summary>
+    public class haikeiseiser
+    {
+        /// <summary>
+        /// テクスチャーの名前
+        /// </summary>
+        public string name;
+        /// <summary>
+        ///基本のサイズ 
+        /// </summary>
+        public float size;
+        /// <summary>
+        /// サイズのブレ
+        /// </summary>
+        public float sizebure;
+        /// <summary>
+        /// スクロール割合x
+        /// </summary>
+        public float scrollwarix;
+        /// <summary>
+        /// スクロール割合y
+        /// </summary>
+        public float scrollwariy;
+        /// <summary>
+        /// スクロール割合xのブレ
+        /// </summary>
+        public float scrollwarixbure;
+        /// <summary>
+        /// スクロール割合yのブレ
+        /// </summary>
+        public float scrollwariybure;
+        /// <summary>
+        /// 角度
+        /// </summary>
+        public double rad;
+        /// <summary>
+        /// 角度のブレ
+        /// </summary>
+        public double radbure;
+        /// <summary>
+        /// 不透明度
+        /// </summary>
+        public float opa;
+        /// <summary>
+        /// 不透明度のブレ
+        /// </summary>
+        public float opabure;
+        /// <summary>
+        /// 普通のコンストラクタ
+        /// </summary>
+        /// <param name="texnm">テクスチャーの名前</param>
+        /// <param name="si">基本の大きさ</param>
+        /// <param name="bure">大きさのブレ(+-)</param>
+        /// <param name="scx">スクロール割合x</param>
+        /// <param name="scy">スクロール割合y</param>
+        /// <param name="scxbure">スクロール割合xのブレ</param>
+        /// <param name="scybure">スクロール割合yのブレ</param>
+        /// <param name="rad">角度</param>
+        /// <param name="radbure">角度のブレ</param>
+        /// <param name="opa">不透明度</param>
+        /// <param name="opabure">不透明度のブレ</param>
+        public haikeiseiser(string texnm, float si, float bure, float scx, float scy, double rad = 0, float opa = 1, float scxbure=0,float scybure=0,double radbure=0,float opabure=0)
+        {
+            name = texnm;
+            size = si;
+            sizebure = bure;
+            scrollwarix = scx;
+            scrollwariy = scy;
+            scrollwarixbure = scxbure;
+            scrollwariybure = scybure;
+            this.rad = rad;
+            this.radbure = radbure;
+            this.opa = opa;
+            this.opabure = opabure;
+        }
+    }
     /// <summary>
     /// シーンだお
     /// </summary>
@@ -38,8 +118,10 @@ namespace GameSet1
         /// 普通のコンストラクタ
         /// </summary>
         /// <param name="s">シーンマネージャ</param>
-        public Scene(SceneManager s) 
+        /// <param name="next">次のシーン</param>
+        public Scene(SceneManager s,Scene next=null) 
         {
+            this.next = next;
             sm = s;
             hyo = fileman.makehyojiman();
         }
@@ -99,6 +181,58 @@ namespace GameSet1
         virtual protected void onend()
         {
 
+        }
+
+        /// <summary>
+        /// 背景を生成するいい感じに
+        /// </summary>
+        /// <param name="yline">生成するyの中心地</param>
+        /// <param name="ybure">生成するyのブレ(+-)</param>
+        /// <param name="sx">生成するxの始点</param>
+        /// <param name="ex">生成するxの終点</param>
+        /// <param name="ikutu">一度にいくつ画像を生成するか</param>
+        /// <param name="kaisuu">何度画像生成を行うか</param>
+        /// <param name="haikeis">生成する背景のリスト</param>
+        /// <param name="assyuku">背景のスクロール割合に応じて生成位置を圧縮するか(太陽とか意外はやったほうがいい)</param>
+        public void haikeiseiser(float yline, float ybure, float sx, float ex, float ikutu, float kaisuu, List<haikeiseiser> haikeis, bool assyuku = true)
+        {
+            hyojiman hyojiman = hyo;
+            float dx = (ex - sx) / ikutu;
+            int cou = 0;
+            if (haikeis.Count > 0 && dx > 0)
+            {
+
+                for (int yuyu = 0; yuyu < kaisuu; yuyu++)
+                {
+                    float tx = 0;
+                    for (int i = 0; i < ikutu; i++)
+                    {
+                        tx += fileman.r.Next() % (dx + (dx * i - tx));
+                        int ttt = fileman.r.Next() % haikeis.Count;
+                        float si = haikeis[ttt].size;
+                        if (haikeis[ttt].sizebure > 0) si += (float)fileman.r.NextDouble()*(haikeis[ttt].sizebure * 2 ) - haikeis[ttt].sizebure;
+                        // Console.WriteLine(si + " sizedayodayotiahsk.,smala");
+                        bool mir = fileman.percentin(50);
+
+                        float ty = yline;
+                        if (ybure > 0) ty += fileman.r.Next() % (ybure * 2 + 1) - ybure;
+                        float pppxpxpx = (sx + tx);
+                        if (assyuku) pppxpxpx *= haikeis[ttt].scrollwarix;
+
+                        float opa = haikeis[ttt].opa+(float)fileman.r.NextDouble()*(haikeis[ttt].opabure*2)- haikeis[ttt].opabure;
+                        double kaku = haikeis[ttt].rad+fileman.r.NextDouble() * (haikeis[ttt].radbure*2) - haikeis[ttt].radbure;
+
+                        float scx =  haikeis[ttt].scrollwarix+ (float)fileman.r.NextDouble() * (haikeis[ttt].scrollwarixbure * 2) - haikeis[ttt].scrollwarixbure;
+                        float scy = haikeis[ttt].scrollwariy+ (float)fileman.r.NextDouble() * (haikeis[ttt].scrollwariybure * 2) - haikeis[ttt].scrollwariybure ;
+
+                        var p = new picture(pppxpxpx, ty - si, -100000 + cou, si, si, 0, si, kaku, mir, opa, haikeis[ttt].name, new Dictionary<string, string> { { haikeis[ttt].name, haikeis[ttt].name } });
+                        new haikeidraws(scx,scy, p)
+                            .add(hyojiman);
+                        //    Console.WriteLine(pppxpxpx+" :HAIKEISEISEI: "+(ty-si));
+                        cou++;
+                    }
+                }
+            }
         }
     }
 }

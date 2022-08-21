@@ -222,7 +222,7 @@ namespace GameSet1
             
         }
         /// <summary>
-        /// コピーするためのコンストラクタ
+        /// コピーするためのコンストラクタ。当たりバインディングはリセットされる
         /// </summary>
         /// <param name="E">コピー元</param>
         public Entity(Entity E)
@@ -257,13 +257,14 @@ namespace GameSet1
        virtual public void endframe(float cl) 
         {
             c.soroeru();
+
             setab(false);
-          
             foreach (var a in wazas)
             {
                 a.frame(cl);
             }
             EEV.frame(this, cl);
+            
             setpab();
         }
         /// <summary>
@@ -329,6 +330,7 @@ namespace GameSet1
 
         /// <summary>
         /// add()がtrueだったら呼び出されるメソッド
+        /// 標準ではabのリセットとキャラの表示
         /// </summary>
         virtual protected void onAdd()
         {
@@ -442,9 +444,12 @@ namespace GameSet1
         /// </summary>
         /// <param name="tekiyous">ずれを適用する奴ら。</param>
         /// <param name="sugekae">あたり判定をすげかえるんだったらこれ</param>
-        /// <param name="Psugekae">あたり判定をすげかえるんだったらこれ</param>
-        public void zurentekiyou(List<Entity> tekiyous, Shape sugekae = null,Shape Psugekae=null)
+        /// <param name="Psugekae">これも前のすでに同じエンテティの当たりバインディングにある奴を使和ナイト機能しない</param>
+        /// <param name="hansya">ついでに反射もさせるか</param>
+        /// <returns>ヒットしたエンテティ</returns>
+        public List<Entity> zurentekiyou(List<Entity> tekiyous, Shape sugekae = null,Shape Psugekae=null,bool hansya=false)
         {
+            var res = new List<Entity>();
             Shape HPAC = PAcore, HAC = Acore;
             if (sugekae!=null) 
             {
@@ -460,18 +465,26 @@ namespace GameSet1
             {
                 foreach (var a in tekiyous)
                 {
+                   // Console.WriteLine((a.PAcore != null) + "paiza"+(a.Acore != null) +" iahsfu "+ a.Acore.atarun2(a.PAcore, this.Acore, this.PAcore));
                     if (a.PAcore != null && a.Acore != null&& a.Acore.atarun2(a.PAcore, this.Acore, this.PAcore)) 
                     {
-                        this.bif.zuren(this,a);
+                        //Console.WriteLine("zanza");
+                        var saa=this.bif.zuren(this, a);
+                        res.Add(a);
+                        if (hansya && saa) 
+                        {
+                            this.bif.hansya(this, a);
+                        }
                     }
                 }
             }
-            
+          //  Console.WriteLine(res.Count+" asdl;fmka; ");
             
             ab.coresugekae(HAC);
             pab.coresugekae(HPAC);
-
+            return res;
         }
+
     }
    
 
@@ -553,7 +566,7 @@ namespace GameSet1
         /// </summary>
         /// <param name="tmp">入れ替える奴</param>
         /// <returns>入れ替え前の奴</returns>
-        internal Shape coresugekae(Shape tmp) 
+        public Shape coresugekae(Shape tmp) 
         {
             var res=this._core;
             _core = tmp;
@@ -849,7 +862,7 @@ namespace GameSet1
         /// <param name="vx">x方向の加速度</param>
         /// <param name="vy">y方向の加速度</param>
         /// <param name="weight">加速の重さ。0以下でvxyをそのままぶち込む</param>
-        /// <param name="cl">加速の重さ。0以下でvxyをそのままぶち込む</param>
+        /// <param name="cl">今何フレーム経過してんのよ</param>
         public void kasoku(Entity e,float vx, float vy, float weight ,float cl)
         {
             if (weight <= 0)
@@ -916,8 +929,8 @@ namespace GameSet1
         /// <param name="c">対象のキャラクター</param>
         public void frame(float cl, character c)
         {
-            vx -= vx * teikou;
-            vy -= vy * teikou;
+            vx *= (float) Math.Pow(1-teikou, cl);
+            vy *= (float) Math.Pow(1-teikou, cl);
 
             c.settxy(c.gettx()+vx * cl + ax * cl * cl / 2, c.getty()+ vy * cl + ay * cl * cl / 2);
        

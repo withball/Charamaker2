@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using Charamaker2.input;
+using Charamaker2.Shapes;
 
 namespace GameSet1
 {
@@ -15,6 +16,22 @@ namespace GameSet1
     /// </summary>
     public static class FP
     {
+        /// <summary>
+        /// テキストファイルを普通に読み込む
+        /// </summary>
+        /// <param name="path">読み込むパス</param>
+        /// <returns>読み込んだテキスト</returns>
+        static public string loadtext(string path)
+        {
+            var res = "";
+
+            using (var fs = new StreamReader(@".\" + path + ".txt"))
+            {
+                res = fs.ReadToEnd();
+            }
+            res=res.Replace("\r", "");
+            return res;
+        }
         /// <summary>
         /// エンテティの未来の位置を予測する。空気抵抗ががばがばなの許して。
         /// </summary>
@@ -122,6 +139,52 @@ namespace GameSet1
 
             return kaku;
         }
+        /// <summary>
+        /// エンテティを一方向に動かして地形でずらすメソッド
+        /// </summary>
+        /// <param name="e">対象</param>
+        /// <param name="EM">地形を入れたマネージャー</param>
+        /// <param name="s">どの形でやるか(クローンされるから安心！)</param>
+        /// <param name="zure1x">Xずらす</param>
+        /// <param name="zure1y">Yずらす</param>
+        /// <param name="tais">ずらす形のもと(""でキャラクターそのもの)</param>
+        /// <param name="mode">0でxy両方、1でxのみ、-1でyのみ変化</param>
+        static public void zuresaseEntity(Entity e,EntityManager EM,Shape s,float zure1x,float zure1y,string tais="",int mode=0) 
+        {
+            var tt = e.c.GetSetu(tais);
+            float x = e.c.x, y = e.c.y;
+            if (tais == "") tt = null;
+            Shape ssss = s.clone(),psss=s.clone();
+            if (tt == null)
+            {
+                psss.setto(e.c);
+            }
+            else 
+            {
+                psss.setto(tt.p);
+            }
+
+            e.c.settxy(e.c.gettx() +zure1x , e.c.getty() + zure1y);
+            if (tt == null)
+            {
+                ssss.setto(e.c);
+            }
+            else 
+            {
+                ssss.setto(tt.p);
+            }
+            var lis = EM.overweights;
+            Waza.atypefilter(lis, e.bif);
+            e.zurentekiyou(lis, ssss, psss);
+            if (mode == 1)
+            {
+                e.c.y = y;
+            }
+            else if(mode==-1)
+            {
+                e.c.x = x;
+            }
+        }
 
         /// <summary>
         /// 特殊なシーケンスを使うときとかだけ参照してね。(\nは標準で変換されるよ)
@@ -135,9 +198,11 @@ namespace GameSet1
         /// パラメータを取得する
         /// </summary>
         /// <param name="name">パラメータの名前</param>
+        /// <param name="i">パラメータのi番目(name+i)されるだけ</param>
         /// <returns>floatで帰ってくる無い場合は死ぬ</returns>
-        static public float PR(string name)
+        static public float PR(string name,int i=0)
         {
+            name += i.ToString();
             try
             {
                 return param[name];
@@ -152,14 +217,33 @@ namespace GameSet1
         /// テキストを取得する
         /// </summary>
         /// <param name="name">テキストの名前</param>
-        /// <param name="ipcs">入力の変換(nullでしない)</param>
+
+        /// <param name="ipcs">入力の変換([Key:Q],[Mus:Left]をへんかん)</param>
+        /// /// <param name="percents">数値の変換([print:%f]をへんかん)</param>
         /// <returns>stringで帰ってくる無い場合は変な文字列</returns>
-        static public string GT(string name, List<IPC> ipcs = null)
+        static public string GT(string name, List<IPC> ipcs = null,params float[] percents)
         {
             if (texts.ContainsKey(name))
             {
-                if (ipcs != null) return IPC.convertstringinput(ipcs, texts[name]);
-                return texts[name];
+                var res = texts[name];
+                if (ipcs != null) res=IPC.convertstringinput(ipcs, res);
+
+                foreach (var a in percents)
+                {
+                   var idx = res.IndexOf("[print:%f]");
+                
+                    if (idx >= 0)
+                    {
+                        res = res.Remove(idx, 10);
+                        res = res.Insert(idx, a.ToString());
+                    }
+                    else 
+                    {
+                        res += "print:%fがおかしいってママが言ってた!";
+                    }
+                }
+
+                return res;
             }
             else
             {
@@ -200,10 +284,13 @@ namespace GameSet1
                             var lis = load.Split(':');
                             if (lis.Length == 2)
                             {
-
-                                param.Add(lis[0], Convert.ToSingle(lis[1]));
-                                //  Console.WriteLine(lis[0] + "　　vcvxzxbbzx   " + lis[1]);
-
+                                var ps = lis[1].Split(',');
+                                param.Add(lis[0] , Convert.ToSingle(ps[0]));
+                                for (int i = 0; i < ps.Length; i++)
+                                {
+                                    param.Add(lis[0]+i.ToString(), Convert.ToSingle(ps[i]));
+                                    //  Console.WriteLine(lis[0] + "　　vcvxzxbbzx   " + lis[1]);
+                                }
                             }
 
                         }
@@ -223,7 +310,31 @@ namespace GameSet1
                                 if (load[ii] == ':')
                                 {
                                     if (!texts.ContainsKey(load.Substring(0, ii)))
-                                        texts.Add(load.Substring(0, ii), load.Substring(ii + 1));
+                                    {
+                                        int idx ;
+                                        var tx = load.Substring(ii + 1);
+                                        while ((idx=tx.IndexOf("[param:"))>=0) 
+                                        {
+                                            var texx = tx.Substring(idx);
+                                            var end=tx.IndexOf("]");
+                                            if (end == -1) end = tx.Length -1;
+                                          
+                                            texx = tx.Substring(idx, end - idx+1);
+
+                                            //Console.WriteLine(6 + " akgijaoij " + (end - idx-1) + " asf" + texx.Length);
+                                            var paramname = texx.Substring(7,end-idx-6-1);
+                                            if (param.ContainsKey(paramname))
+                                            {
+                                                tx=tx.Replace(texx, param[paramname].ToString());
+                                            }
+                                            else 
+                                            {
+                                                tx=tx.Replace(texx, "?"+paramname+"?");
+                                            }
+
+                                        }
+                                        texts.Add(load.Substring(0, ii), tx);
+                                    }
                                     break;
                                 }
                             }
@@ -268,6 +379,87 @@ namespace GameSet1
 
             return res;
 
+        }
+        /// <summary>
+        /// 三角波的コサイン
+        /// </summary>
+        /// <param name="sita">角度-1~1</param>
+        /// <returns>コサイン</returns>
+        static public float Scos(float sita) 
+        {
+           var s= new sankakuha();
+            s.Time = sita;
+            return s.C;
+        }
+        /// <summary>
+        /// 三角波的サイン
+        /// </summary>
+        /// <param name="sita">角度-1~1</param>
+        /// <returns>サイン</returns>
+        static public float Ssin(float sita)
+        {
+            var s = new sankakuha();
+            s.Time = sita;
+            return s.S;
+        }
+    }
+    /// <summary>
+    /// 三角波を回せるクラス。
+    /// 角度は-1~1
+    /// </summary>
+    public class sankakuha
+    {
+        float time = 0;
+        /// <summary>
+        /// 時間、横軸
+        /// </summary>
+        public float Time
+        {
+            get { return time; }
+            set
+            {
+                time = value;
+                while (time < -1) time += 2;
+                while (time > 1) time -= 2;
+            }
+        }
+        /// <summary>
+        /// コサインバージョン
+        /// </summary>
+        public float C
+        {
+            get
+
+            {
+                if (time > 0)
+                {
+                    return 1 - time * 2;
+                }
+                else
+                {
+
+                    return 1 + time * 2;
+                }
+            }
+        }
+        /// <summary>
+        /// サインバージョン
+        /// </summary>
+        public float S
+        {
+            get
+
+            {
+                if (-0.5f < time || time < 0.5f)
+                {
+                    return 1 + time * 2;
+                }
+                else
+                {
+
+                    return 1 - time * 2;
+                }
+            }
         }
     }
 }

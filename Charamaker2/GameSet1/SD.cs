@@ -95,6 +95,17 @@ namespace GameSet1
         }
 
         /// <summary>
+        /// セーブしたときに呼び出されるメソッド
+        /// </summary>
+        protected virtual void onsave() { }
+
+        /// <summary>
+        /// ロードしたときに呼び出されるメソッド
+        /// </summary>
+        protected virtual void onload() { }
+
+
+        /// <summary>
         /// セーブする
         /// </summary>
         /// <param name="name">ファイルの名前</param>
@@ -104,8 +115,9 @@ namespace GameSet1
         {
 
             var saveData = S;
+            S?.onsave();
             string dir = @".\save\";
-          
+                
             if (Directory.Exists(dir))
             {
             }
@@ -174,7 +186,7 @@ namespace GameSet1
                 }
                 SD.S = res;
             }
-
+            SD.S?.onload();
 
         }
 

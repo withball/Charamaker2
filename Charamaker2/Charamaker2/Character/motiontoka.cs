@@ -35,12 +35,12 @@ namespace Charamaker2.Character
         /// <summary>
         /// 普通の空のコンストラクタ
         /// </summary>
-        public motion() { }
+        public motion() { addmoves(new moveman(0, false)); }
         /// <summary>
         /// 一個だけのmoveの時に便利なコンストラクタ
         /// </summary>
         /// <param name="mv">一番最初に追加するムーブ</param>
-        public motion(moveman mv) { addmoves(mv); }
+        public motion(moveman mv) { addmoves(new moveman(0, false)); addmoves(mv); }
         /// <summary>
         /// コピーするためのコンストラクタ
         /// </summary>
@@ -241,6 +241,17 @@ namespace Charamaker2.Character
         /// </summary>
         /// <param name="c"></param>
         virtual protected void hukkyuu(character c) { }
+
+        /// <summary>
+        /// 即座にムーブを適用する
+        /// </summary>
+        /// <param name="c">適用するキャラクター</param>
+        /// <param name="cl">フレームする時間</param>
+        public void startAndFrame(character c,float cl) 
+        {
+            this.start(c);
+            this.frame(c, cl);
+        }
     }
     /// <summary>
     /// キャラクターを移動指せるムーブ
@@ -3407,6 +3418,45 @@ namespace Charamaker2.Character
                 fileman.playoto(oto,vol);
             }
             else { bool butu = vol < 0; fileman.playbgm(oto,butu); }
+        }
+    }
+    /// <summary>
+    /// キャラクターをリフレッシュするムーブ
+    /// </summary>
+    [Serializable]
+    public class refreshman : moveman
+    {
+        /// <summary>
+        /// 普通のコンストラクタ
+        /// </summary>
+        /// <param name="timer">STOP時間</param>
+        public refreshman(float timer) : base(timer, true)
+        {
+        }
+        /// <summary>
+        /// コピーするためのコンストラクタ。
+        /// </summary>
+        /// <param name="s">コピー元</param>
+        public refreshman(refreshman s) : base(s)
+        {
+            
+        }
+        /// <summary>
+        /// 空のコンストラクタ
+        /// </summary>
+        public refreshman() : base() { }
+        public override void start(character c)
+        {
+            base.start(c);
+        }
+        public override void frame(character c, float cl)
+        {
+            base.frame(c, cl);
+
+            if (this.owari)
+            {
+                c.refreshtokijyun();
+            }
         }
     }
     /// <summary>

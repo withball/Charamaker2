@@ -18,8 +18,23 @@ namespace C2WebRTCP2P
 	
     public partial class tuusinform : Form
     {
-
-        bool sv;
+		/// <summary>
+		/// 呼び出した通信フォームのリスト
+		/// 後で通信の情報をリセットしたときとかに一斉に閉じるために使う
+		/// </summary>
+		static List<tuusinform> forms = new List<tuusinform>();
+		/// <summary>
+		/// 通信フォーム共を綺麗に閉じる。
+		/// </summary>
+		public static void cleanupforms() 
+		{
+			foreach (var ai in forms) 
+			{
+				ai.Close();
+			}
+			forms.Clear();
+		}
+		bool sv;
 		PeerConnection wow;
 		/// <summary>
 		/// Peerconectionを操作して通信の接続を行うクラス
@@ -45,6 +60,7 @@ namespace C2WebRTCP2P
 			{
 				this.Text = supertusin.formmess[1];
 			}
+			forms.Add(this);
 		}
 		private void sdpready(SdpMessage s) 
 		{
@@ -180,7 +196,25 @@ namespace C2WebRTCP2P
 
         }
 
-        private void ticked(object sender, EventArgs e)
+		private void InitializeComponent2()
+		{
+            this.SuspendLayout();
+            // 
+            // tuusinform
+            // 
+            this.ClientSize = new System.Drawing.Size(278, 244);
+            this.Name = "tuusinform";
+            this.Load += new System.EventHandler(this.tuusinform_Load_2);
+            this.ResumeLayout(false);
+
+		}
+
+		private void tuusinform_Load_2(object sender, EventArgs e)
+		{
+
+		}
+
+		private void ticked(object sender, EventArgs e)
         {
 			textBox1.Text = tucon.tosend(tex1+tex2);
 

@@ -157,6 +157,40 @@ namespace Charamaker2
         /// テクスチャーの塊
         /// </summary>
         public Dictionary<string, string> textures = new Dictionary<string, string>();
+
+        /// <summary>
+        /// 一枚のテクスチャでピクチャーを生成する
+        /// </summary>
+        /// <param name="tex">テクスチャー</param>
+        /// <param name="z">Z</param>
+        /// <param name="widthscale">横幅をここにそろえる</param>
+        /// <param name="hin">やっぱ縦幅にする</param>
+        /// <param name="txp">中心点の位置x</param>
+        /// <param name="typ">中心点の位置y</param>
+        /// <param name="opa">透明度</param>
+        /// <param name="rad">角度</param>
+        /// <param name="tx">中心の位置x</param>
+        /// <param name="ty">中心の位置y</param>
+        /// <param name="mirror">反転</param>
+        /// <returns></returns>
+        static public picture onetexpic(string tex, float widthscale, float z = 0, bool hin = false, float txp = 0.5f, float typ = 0.5f, float opa = 1, double rad = 0,float tx=0,float ty=0,bool mirror=false) 
+        {
+            var si = fileman.gettexsize(tex);
+            float scale;
+            if (hin)
+            {
+                scale = widthscale / (float)si.Height;
+            }
+            else
+            {
+                scale = widthscale / (float)si.Width;
+            }
+            var p= new picture(0, 0, z, si.Width * scale, si.Height * scale, si.Width * scale * txp, si.Height * scale * typ
+                    , rad, mirror, opa, "def", new Dictionary<string, string> { { "def", tex } });
+            p.settxy(tx, ty);
+            return p;
+        }
+        
         /// <summary>
         /// ピクチャーを作るためのコンストラクタ
         /// </summary>
@@ -292,6 +326,7 @@ namespace Charamaker2
         /// <returns>描画したか</returns>
         public override bool draw(hyojiman hyo,float cl,bool draw) 
         {
+            float bairitu = hyo.Tbai;
             if (hyo == null||!draw) return false ;
 
             if (this.OPA > 0 &&
@@ -312,16 +347,16 @@ namespace Charamaker2
                         var x = p.getcx(p.w / 2, p.h / 2);
                         var y = p.getcy(p.w / 2, p.h / 2);
                         float si = bmprt.Bitmap.Size.Width;
-                        var btmpos = new RawRectF((x - hyo.camx)*hyo.bairitu-si/2, (y - hyo.camy)*hyo.bairitu-si/2, (x - hyo.camx) * hyo.bairitu + si / 2, (y - hyo.camy) * hyo.bairitu + si / 2);
+                        var btmpos = new RawRectF((x - hyo.camx)*bairitu-si/2, (y - hyo.camy)*bairitu-si/2, (x - hyo.camx) * bairitu + si / 2, (y - hyo.camy) * bairitu + si / 2);
                         var bitmon = new RawRectF(0, 0, bmprt.Size.Width, bmprt.Size.Height);
                         hyo.render.DrawBitmap(bmprt.Bitmap, btmpos, this.OPA, BitmapInterpolationMode.Linear, bitmon);
                         */
 
-                        var a = Matrix3x2.CreateRotation((float)p.RAD, new Vector2((p.x * hyo.bairitu - hyo.camx * hyo.bairitu) + (p.tx * 0) * hyo.bairitu, (p.y * hyo.bairitu - hyo.camy * hyo.bairitu) + (p.ty * 0) * hyo.bairitu));
+                        var a = Matrix3x2.CreateRotation((float)p.RAD, new Vector2((p.x * bairitu - hyo.camx * bairitu) + (p.tx * 0) * bairitu, (p.y * bairitu - hyo.camy * bairitu) + (p.ty * 0) * bairitu));
                         if (p.mir)
                         {
                             a = Matrix3x2.Multiply(new Matrix3x2(-1, 0, 0, 1, 0, 0), a);
-                            a = Matrix3x2.Multiply(Matrix3x2.CreateTranslation(-(p.x + p.w / 2 - hyo.camx) * 2 * hyo.bairitu, 0), a);
+                            a = Matrix3x2.Multiply(Matrix3x2.CreateTranslation(-(p.x + p.w / 2 - hyo.camx) * 2 * bairitu, 0), a);
 
 
                         }
@@ -329,7 +364,7 @@ namespace Charamaker2
                         {
                             a = Matrix3x2.Multiply(new Matrix3x2(-1, 0, 0, 1, 0, 0), a);
 
-                            a = Matrix3x2.Multiply(Matrix3x2.CreateTranslation(-(p.x + p.w / 2 - hyo.camx) * 2 * hyo.bairitu, 0), a);
+                            a = Matrix3x2.Multiply(Matrix3x2.CreateTranslation(-(p.x + p.w / 2 - hyo.camx) * 2 * bairitu, 0), a);
 
 
                         }
@@ -338,7 +373,7 @@ namespace Charamaker2
                         {
                             a = Matrix3x2.Multiply(Matrix3x2.CreateScale(1, -1), a);
 
-                            a = Matrix3x2.Multiply(Matrix3x2.CreateTranslation(0, -(p.y + p.h / 2 - hyo.camy) * 2 * hyo.bairitu), a);
+                            a = Matrix3x2.Multiply(Matrix3x2.CreateTranslation(0, -(p.y + p.h / 2 - hyo.camy) * 2 * bairitu), a);
 
 
                         }
@@ -349,8 +384,8 @@ namespace Charamaker2
 
 
                         hyo.render.DrawBitmap(bitmap
-                            , new RawRectF((p.x * hyo.bairitu - hyo.camx * hyo.bairitu), (p.y * hyo.bairitu - hyo.camy * hyo.bairitu)
-                            , (p.x * hyo.bairitu + p.w * hyo.bairitu - hyo.camx * hyo.bairitu), (p.y * hyo.bairitu + p.h * hyo.bairitu - hyo.camy * hyo.bairitu))
+                            , new RawRectF((p.x * bairitu - hyo.camx * bairitu), (p.y * bairitu - hyo.camy * bairitu)
+                            , (p.x * bairitu + p.w * bairitu - hyo.camx * bairitu), (p.y * bairitu + p.h * bairitu - hyo.camy * bairitu))
                             , this.OPA, BitmapInterpolationMode.Linear
                             , new RawRectF(0, 0, bitmap.Size.Width, bitmap.Size.Height));
                         
@@ -413,7 +448,7 @@ namespace Charamaker2
                 return null;
             }
             int won = 10;
-            var siz = ((int)(Math.Sqrt(p.w * p.w + p.h * p.h) * hyo.bairitu / won)) * won + won;
+            var siz = ((int)(Math.Sqrt(p.w * p.w + p.h * p.h) * hyo.Tbai / won)) * won + won;
 
 
             int size = siz;
@@ -455,11 +490,11 @@ namespace Charamaker2
 
 
             }
-            var bb = Matrix3x2.CreateTranslation((size - p.w * hyo.bairitu) / 2f, (size - p.h * hyo.bairitu) / 2f);
+            var bb = Matrix3x2.CreateTranslation((size - p.w * hyo.Tbai) / 2f, (size - p.h * hyo.Tbai) / 2f);
             a = Matrix3x2.Multiply(bb, a);
 
 
-            var c = Matrix3x2.CreateScale(p.w * hyo.bairitu / bitmap.Size.Width, p.h * hyo.bairitu / bitmap.Size.Height);
+            var c = Matrix3x2.CreateScale(p.w * hyo.Tbai / bitmap.Size.Width, p.h * hyo.Tbai / bitmap.Size.Height);
             a = Matrix3x2.Multiply(c, a);
 
             var transe = new Matrix3x2(a.M11, a.M12, a.M21, a.M22, a.M31, a.M32);
@@ -677,9 +712,21 @@ namespace Charamaker2
         /// <summary>
         /// レンダーの描画を開始する。enddrawの間に描画を記述する
         /// </summary>
-        public void begindraw()
+        /// <param name="resethaikei">resethaikeiも呼び出すか</param>
+        public void begindraw(bool resethaikei=false)
         {
             render.BeginDraw();
+            if (resethaikei) 
+            {
+                this.resethaikei();
+            }
+        }
+        /// <summary>
+        /// 背景をリセットする。begindrawは呼び出しといてね
+        /// </summary>
+        public void resethaikei() 
+        {
+            render.Clear(new Color4(HR, HG, HB, 1));
         }
 
         /// <summary>
@@ -779,9 +826,19 @@ namespace Charamaker2
         bool resetpicsman;
         bool resethaikeipicsman;
         /// <summary>
-        /// 拡大率
+        /// 拡大率。オブジェクトの大きさを一定にしたいときはこっちを参照
         /// </summary>
         public float bairitu = 1;
+        /// <summary>
+        /// 画面の画質も含めた本当の拡大率。ガチ描画の時には使う
+        /// </summary>
+        public float Tbai { get { return bairitu * gasitu; } }
+
+        /// <summary>
+        /// 画質
+        /// </summary>
+        public readonly float gasitu;
+
         /// <summary>
         /// いろいろ載せられるタグ。
         /// </summary>
@@ -798,11 +855,11 @@ namespace Charamaker2
         /// <summary>
         /// ウィンドウの座標での幅
         /// </summary>
-        public float ww { get { return render.PixelSize.Width / bairitu; } }
+        public float ww { get { return render.PixelSize.Width / Tbai; } }
         /// <summary>
         /// ウィンドウの座標での高さ
         /// </summary>
-        public float wh { get { return render.PixelSize.Height / bairitu; } }
+        public float wh { get { return render.PixelSize.Height / Tbai; } }
 
         /// <summary>
         /// 同時に表示できる描画オブジェクトの限界量
@@ -820,11 +877,11 @@ namespace Charamaker2
             if (w == 0) return;
             if (h)
             {
-                bairitu = render.PixelSize.Height * fileman.gasitu /w;
+                bairitu = render.PixelSize.Height  /w;
             }
             else
             {
-                bairitu = render.PixelSize.Width * fileman.gasitu / w;
+                bairitu = render.PixelSize.Width  / w;
             }
         }
 
@@ -832,10 +889,12 @@ namespace Charamaker2
         /// 表示マンのコンストラクタ
         /// </summary>
         /// <param name="ren"></param>
-        public hyojiman(ID2D1RenderTarget ren)
+        /// <param name="gasitu"></param>
+        public hyojiman(ID2D1RenderTarget ren,float gasitu)
         {
             reset();
             render = ren;
+            this.gasitu = gasitu;
         }
         /// <summary>
         /// コピーのためのコンストラクタ
@@ -882,6 +941,7 @@ namespace Charamaker2
             HR = moto.HR; HG = moto.HG; HB = moto.HB;
             resethaikeipicsman = moto.resethaikeipicsman;
             resetpicsman = moto.resetpicsman;
+            bairitu = moto.bairitu;
          
         }
         /// <summary>
@@ -996,8 +1056,7 @@ namespace Charamaker2
             }
             if (begin)
             {
-                render.BeginDraw();
-                render.Clear(new Color4(HR, HG, HB, 1));
+                begindraw(true);
             }
 
             float kugiriman = 0f;
@@ -1012,14 +1071,14 @@ namespace Charamaker2
                     render.Transform = Matrix3x2.CreateTranslation(0, 0);
                     kugiriman += 0.1f;
 
-                    render.FillRectangle(new System.Drawing.RectangleF(0, 0, ww * bairitu, wh * bairitu), haikeislb);
+                    render.FillRectangle(new System.Drawing.RectangleF(0, 0, ww * Tbai, wh * Tbai), haikeislb);
 
                 }
                 haikeipics[i].draw(this, cl,draw);
             }
             //  Console.WriteLine("asfn"+kugiriman);
             render.Transform = Matrix3x2.CreateTranslation(0, 0);
-            render.FillRectangle(new RawRectF(0, 0, ww * bairitu, wh * bairitu), haikeislb);
+            render.FillRectangle(new RawRectF(0, 0, ww * Tbai, wh * Tbai), haikeislb);
             haikeislb.Dispose();
 
 
@@ -1040,7 +1099,7 @@ namespace Charamaker2
 
             if (end)
             {
-                render.EndDraw();
+                enddraw();
             }
 
 
@@ -1439,14 +1498,30 @@ namespace Charamaker2
     [Serializable]
     public class message : drawings
     {
+
+        /// <summary>
+        /// メッセージに記述できる最大の文字数
+        /// </summary>
+        static public int maxmoji = 5000;
+
         /// <summary>
         /// 何文字の幅か
         /// </summary>
-        protected int nmoji;
+        private int _nmoji;
         /// <summary>
         /// 文字数で表す文字列の中心
         /// </summary>
-        protected int tyusin;
+        private int _tyusin;
+        /// <summary>
+        /// 何文字の幅か
+        /// </summary>
+        protected int nmoji { get { return _nmoji; }set { _nmoji = value;_nmoji = Math.Min(_nmoji, maxmoji); } }
+
+        /// <summary>
+        /// 文字数で表す文字列の中心
+        /// </summary>
+        protected int tyusin { get { return _tyusin; } set { _tyusin = value; _tyusin = Math.Min(_tyusin, maxmoji); } }
+
         /// <summary>
         /// 文字のサイズ
         /// </summary>
@@ -1519,7 +1594,7 @@ namespace Charamaker2
         /// <summary>
         /// 文字のサイズ
         /// </summary>
-        public float SIZE { get { return size; } }
+        public float SIZE { get { return size; }set { size = value; } }
         /// <summary>
         /// バイト的なカウント
         /// </summary>
@@ -1617,8 +1692,10 @@ namespace Charamaker2
             sita = sitazoroe;
             
             size = ookisa;
+            
             nmoji = mojisuu;
             tyusin = tyusindoko;
+
             speed = hyojispeed;
             time = hyojitime;
             R = RR;
@@ -1782,14 +1859,13 @@ namespace Charamaker2
                     if (w < cou) w = cou;
                     float tya = ((nmoji - cou) * (hi));
                     // Console.WriteLine(tya + " tyaaa "+ nmoji +" tamukenkayo "+cou+" "+ hi+" "+tyusin);
-                    for (int t = 0; t < tya; t++)
+                    if (sts[i].Count() > 0)
                     {
+                        var tempn = new string(' ',(int)Math.Round(tya));
 
-                        if (sts[i].Count() > 0)
-                        {
-                            sts[i] = sts[i].Insert(0, " ");
-                        }
+                        sts[i] = tempn + sts[i];
                     }
+
                 }
             }
             string res = "";
@@ -1832,7 +1908,7 @@ namespace Charamaker2
         {
 
             var render = hyo.render;
-            float bairitu = hyo.bairitu;
+            float bairitu = hyo.Tbai;
             timer += cl;
 
 
@@ -1875,11 +1951,11 @@ namespace Charamaker2
             {
                 //   Console.WriteLine(opa + " :dwad: " + timer + " :dawf: " + instart);
                 {
-                    var a = Matrix3x2.CreateRotation((float)rad, new Vector2((x * hyo.bairitu - hyo.camx * hyo.bairitu), (y * hyo.bairitu - hyo.camy * hyo.bairitu)));
+                    var a = Matrix3x2.CreateRotation((float)rad, new Vector2((x * bairitu - hyo.camx * bairitu), (y * bairitu - hyo.camy * bairitu)));
                     if (mirror)
                     {
                         a = Matrix3x2.Multiply(new Matrix3x2(-1, 0, 0, 1, 0, 0), a);
-                        a = Matrix3x2.Multiply(Matrix3x2.CreateTranslation(-(x - hyo.camx) * 2 * hyo.bairitu, 0), a);
+                        a = Matrix3x2.Multiply(Matrix3x2.CreateTranslation(-(x - hyo.camx) * 2 * bairitu, 0), a);
 
 
                     }
