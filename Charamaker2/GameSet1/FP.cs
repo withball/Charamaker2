@@ -190,6 +190,11 @@ namespace GameSet1
         /// 特殊なシーケンスを使うときとかだけ参照してね。(\nは標準で変換されるよ)
         /// </summary>
         static public Dictionary<string, string> texts = new Dictionary<string, string>();
+
+        /// <summary>
+        /// 特殊なシーケンスを使うときとかだけ参照してね。(\nは標準で変換されるよ)
+        /// </summary>
+        static public Dictionary<string, float> textsparam = new Dictionary<string, float>();
         /// <summary>
         /// あんま参照しないでね。
         /// </summary>
@@ -212,6 +217,45 @@ namespace GameSet1
                 Console.WriteLine(name + " ne-yo");
                 throw eee;
             }
+        }
+        /// <summary>
+         /// パラメータがあるか確認する
+         /// </summary>
+         /// <param name="name">パラメータの名前</param>
+         /// <param name="i">パラメータのi番目(name+i)されるだけ</param>
+         /// <returns>/returns>
+        static public bool PRExists(string name, int i = 0)
+        {
+            return param.ContainsKey(name + i.ToString());
+        }
+        /// <summary>
+        /// テキストの方に記述されたパラメータを取得する
+        /// </summary>
+        /// <param name="name">パラメータの名前</param>
+        /// <param name="i">パラメータのi番目(name+i)されるだけ</param>
+        /// <returns>floatで帰ってくる無い場合は死ぬ</returns>
+        static public float TPR(string name, int i = 0)
+        {
+            name += i.ToString();
+            try
+            {
+                return textsparam[name];
+            }
+            catch (Exception eee)
+            {
+                Console.WriteLine(name + " ne-yo");
+                throw eee;
+            }
+        }
+        /// <summary>
+        /// テキストの方に記述されたパラメータがあるか確認する
+        /// </summary>
+        /// <param name="name">パラメータの名前</param>
+        /// <param name="i">パラメータのi番目(name+i)されるだけ</param>
+        /// <returns></returns>
+        static public bool TPRExists(string name, int i = 0)
+        {
+            return textsparam.ContainsKey(name + i.ToString());
         }
         /// <summary>
         /// テキストを取得する
@@ -270,13 +314,14 @@ namespace GameSet1
             {
 
                 texts.Clear();
-
+                textsparam.Clear();
                 param.Clear();
                 foreach (var a in paramn)
                 {
                     using (var fs = new StreamReader(@".\" + a + ".txt"))
                     {
                         string load;
+                        string region = "";
                         while ((load = fs.ReadLine()) != null)
                         {
 
@@ -284,12 +329,23 @@ namespace GameSet1
                             var lis = load.Split(':');
                             if (lis.Length == 2)
                             {
-                                var ps = lis[1].Split(',');
-                                param.Add(lis[0] , Convert.ToSingle(ps[0]));
-                                for (int i = 0; i < ps.Length; i++)
+                                if (lis[0] == "#region")
                                 {
-                                    param.Add(lis[0]+i.ToString(), Convert.ToSingle(ps[i]));
-                                    //  Console.WriteLine(lis[0] + "　　vcvxzxbbzx   " + lis[1]);
+                                    if (lis.Length == 1) region = "";
+                                    else region = lis[1];
+                                }
+                                else
+                                {
+
+
+                                    var ps = lis[1].Split(',');
+                                    Console.WriteLine(region + lis[0]+" ::desuyanparam");
+                                    param.Add(region+lis[0], Convert.ToSingle(ps[0]));
+                                    for (int i = 0; i < ps.Length; i++)
+                                    {
+                                        param.Add(region+lis[0] + i.ToString(), Convert.ToSingle(ps[i]));
+                                        //  Console.WriteLine(lis[0] + "　　vcvxzxbbzx   " + lis[1]);
+                                    }
                                 }
                             }
 
@@ -301,46 +357,75 @@ namespace GameSet1
                     using (var fs = new StreamReader(@".\" + a + ".txt"))
                     {
                         string load;
+                        string region = "";
                         while ((load = fs.ReadLine()) != null)
                         {
-                            // Console.WriteLine(load);
-                            load = load.Replace(@"\n", "\n");
-                            for (int ii = 0; ii < load.Length; ii++)
+                            var lis = load.Split(':');
+                            if (lis[0] == "#region")
                             {
-                                if (load[ii] == ':')
+                                if (lis.Length == 1) region = "";
+                                else region = lis[1];
+                            }
+                            else
+                            {
+
+                                
+                                load = load.Replace(@"\n", "\n");
+                                for (int ii = 0; ii < load.Length; ii++)
                                 {
-                                    if (!texts.ContainsKey(load.Substring(0, ii)))
+                                    if (load[ii] == ':')
                                     {
-                                        int idx ;
-                                        var tx = load.Substring(ii + 1);
-                                        while ((idx=tx.IndexOf("[param:"))>=0) 
+                                        if (load.Substring(0, ii)[0] == '#')
                                         {
-                                            var texx = tx.Substring(idx);
-                                            var end=tx.IndexOf("]");
-                                            if (end == -1) end = tx.Length -1;
-                                          
-                                            texx = tx.Substring(idx, end - idx+1);
-
-                                            //Console.WriteLine(6 + " akgijaoij " + (end - idx-1) + " asf" + texx.Length);
-                                            var paramname = texx.Substring(7,end-idx-6-1);
-                                            if (param.ContainsKey(paramname))
+                                            var ps = lis[1].Split(',');
+                                            Console.WriteLine(region + lis[0]+"::desuyanSTRINGparam");
+                                            for (int i = 0; i < ps.Length; i++)
                                             {
-                                                tx=tx.Replace(texx, param[paramname].ToString());
+                                                textsparam.Add(region + lis[0].Substring(1) + i.ToString(), Convert.ToSingle(ps[i]));
+                                                //  Console.WriteLine(lis[0] + "　　vcvxzxbbzx   " + lis[1]);
                                             }
-                                            else 
-                                            {
-                                                tx=tx.Replace(texx, "?"+paramname+"?");
-                                            }
-
                                         }
-                                        texts.Add(load.Substring(0, ii), tx);
+                                        else
+                                        {
+                                            if (!texts.ContainsKey(region+load.Substring(0, ii)))
+                                            {
+                                                int idx;
+                                                var tx = load.Substring(ii + 1);
+                                                while ((idx = tx.IndexOf("[param:")) >= 0)
+                                                {
+                                                    var texx = tx.Substring(idx);
+                                                    var end = tx.IndexOf("]");
+                                                    if (end == -1) end = tx.Length - 1;
+
+                                                    texx = tx.Substring(idx, end - idx + 1);
+
+                                                    //Console.WriteLine(6 + " akgijaoij " + (end - idx-1) + " asf" + texx.Length);
+                                                    var paramname = texx.Substring(7, end - idx - 6 - 1);
+                                                    if (param.ContainsKey(paramname))
+                                                    {
+                                                        tx = tx.Replace(texx, param[paramname].ToString());
+                                                    }
+                                                    else
+                                                    {
+                                                        tx = tx.Replace(texx, "?" + paramname + "?");
+                                                    }
+
+                                                }
+                                                Console.WriteLine(region + load.Substring(0, ii)+"::desuyoString");
+                                                texts.Add(region + load.Substring(0, ii), tx);
+                                            }
+                                        }
+                                        break;
                                     }
-                                    break;
                                 }
                             }
 
                         }
                     }
+                }
+                foreach (var a in texts) 
+                {
+                   // Console.WriteLine(a.Key+":"+a.Value);
                 }
             }
             catch (Exception e)

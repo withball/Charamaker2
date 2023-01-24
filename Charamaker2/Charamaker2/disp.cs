@@ -67,7 +67,7 @@ namespace Charamaker2
         private void resized(object sender, EventArgs e)
         {
 
-            this.Size = new Size((int)(this.Size.Width), (int)(this.Size.Width * 670.0 / 970));
+           // this.Size = new Size((int)(this.Size.Width), (int)(this.Size.Width * 670.0 / 970));
 
         }
         private void gasituchange(object sender, EventArgs e)

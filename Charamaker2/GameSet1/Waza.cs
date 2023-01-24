@@ -2,6 +2,7 @@
 using Charamaker2.Shapes;
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Text;
 
 namespace GameSet1
@@ -11,6 +12,42 @@ namespace GameSet1
     /// </summary>
     public class Waza
     {
+        #region operator
+        /// <summary>
+        /// 元の技が時間で終わったときにaddとframeを発動させる。
+        /// </summary>
+        /// <param name="moto"></param>
+        /// <param name="add"></param>
+        /// <returns></returns>
+        static public Waza operator +(Waza moto, Waza add) 
+        {
+            moto.ended += (s,t)=> { add.add(moto.e);add.frame(t.cl); };
+            return moto;
+        }
+        /// <summary>
+        /// 元の技が時間で終わったときにEntityをAddする。
+        /// </summary>
+        /// <param name="moto"></param>
+        /// <param name="add"></param>
+        /// <returns></returns>
+        static public Waza operator +(Waza moto, Entity add)
+        {
+            moto.ended += (s, t) => { add.add(moto.EM); };
+            return moto;
+        }
+        /// <summary>
+        /// 元の技が時間で終わったときに発動する。
+        /// </summary>
+        /// <param name="moto"></param>
+        /// <param name="add"></param>
+        /// <returns></returns>
+        static public Waza operator +(Waza moto,Func<object> add)
+        {
+            moto.ended += (s, t) => { add.Invoke(); };
+            return moto;
+        }
+        #endregion
+
         /// <summary>
         /// Wazaがaddされたときのイベント
         /// </summary>
@@ -19,6 +56,10 @@ namespace GameSet1
         /// Wazaがremoveされたときのイベント
         /// </summary>
         public event EventHandler<EEventArgs> removed;
+        /// <summary>
+        /// Wazaが時間で死んだときのイベント
+        /// </summary>
+        public event EventHandler<EEventArgs> ended;
 
         /// <summary>
         /// Wazaがframeされたときのイベント
@@ -53,7 +94,14 @@ namespace GameSet1
         /// <param name="end">終了時間</param>
         public Waza(float end) 
         {
-            this.end = end;
+            if (end < 0)
+            {
+                this.end = 9999999999999;
+            }
+            else
+            {
+                this.end = end;
+            }
         }
         private Entity _e=null;
         /// <summary>
@@ -79,6 +127,22 @@ namespace GameSet1
 
         }
         /// <summary>
+        /// addしてframeする
+        /// </summary>
+        /// <param name="e"></param>
+        /// <param name="time"></param>
+        /// <returns></returns>
+        public bool addAndFrame(Entity e, float time) 
+        {
+            if (add(e)) 
+            {
+                frame(time);
+                return true;
+            }
+            return false; 
+        }
+
+        /// <summary>
         /// 技をエンテティから削除する。
         /// 削除できたらonRemoveを呼び出す
         /// </summary>
@@ -99,11 +163,21 @@ namespace GameSet1
         /// </summary>
         /// <param name="cl">このぐらい消費したいです！</param>
         /// <returns>消費できる時間</returns>
-        protected float nokoritime(float cl) 
+       public float nokoritime(float cl) 
         {
-            var t = end - timer;
+            return nokoritime(cl, end);
+        }
+        /// <summary>
+        /// 残りの消費できる時間を算出する
+        /// </summary>
+        /// <param name="cl">このぐらい消費したいです！</param>
+        /// <param name="endin">区切りの時間</param>
+        /// <returns>消費できる時間</returns>
+        public float nokoritime(float cl,float endin)
+        {
+            var t = endin - timer;
             if (t < 0) t = 0;
-            if (t< cl) return t;
+            if (t < cl) return t;
             return cl;
         }
         /// <summary>
@@ -114,10 +188,14 @@ namespace GameSet1
         virtual public void frame(float cl) 
         {
             float cll = nokoritime(cl);
-            timer += cl;
             onFrame(cll);
-           
-            if (timer >= end) remove();
+
+            timer += cl;
+            if (timer >= end)
+            {
+                ended?.Invoke(this, new EEventArgs(e,null,cl));
+                remove();
+            }
         }
         /// <summary>
         /// フレーム処理の時に呼び出されるメソッド
@@ -127,18 +205,22 @@ namespace GameSet1
         virtual protected void onFrame(float cl) 
         {
             framed?.Invoke(this,new EEventArgs(e, null, cl));
-            List<Entity> a;
-            foreach (var b in ataris)
+           // Console.WriteLine(e.c.getty() + "@poppqqqopo@ ");
+            if (!atarisconnected)
             {
-                a = new List<Entity>(b.Value.Keys);
-
-                for (int i = a.Count - 1; i >= 0; i--)
+                List<Entity> a;
+                foreach (var b in ataris)
                 {
+                    a = new List<Entity>(b.Value.Keys);
+
+                    for (int i = a.Count - 1; i >= 0; i--)
+                    {
 
 
-                    b.Value[a[i]] -= cl;
-                    if (b.Value[a[i]] <= 0) b.Value.Remove(a[i]);
+                        b.Value[a[i]] -= cl;
+                        if (b.Value[a[i]] <= 0) b.Value.Remove(a[i]);
 
+                    }
                 }
             }
         }
@@ -265,6 +347,7 @@ namespace GameSet1
                         if ((LS[j].atarun2(LPS[j], SE[t], PSE[t])))
                         {
                             rem = false;
+                            break;
                         }
                     }
                 }
@@ -343,6 +426,7 @@ namespace GameSet1
                     if ((LS[j].atarun2(LPS[j], s,pres)))
                     {
                         rem = false;
+                        break;
                     }
 
                 }
@@ -435,13 +519,15 @@ namespace GameSet1
         }
 
         /// <summary>
-        /// atarisを他の技と共有
+        /// このatarisを他の技のatarisとする。この技でatarisのframeが二度とおこなわれなくなるのでちうい
         /// </summary>
         /// <param name="w">共有元</param>
         public void atarisconnectto(Waza w)
         {
             ataris = w.ataris;
+            atarisconnected = true;
         }
+        bool atarisconnected = false;
         /// <summary>
         /// 技を適用した奴を保存しておくリスト。
         /// タイマーにも使える
@@ -451,10 +537,14 @@ namespace GameSet1
         /// atarisに追加する
         /// </summary>
         /// <param name="e">追加するエンテティ</param>
-        /// <param name="time">なにクロック時間残るか</param>
+        /// <param name="time">なにクロック時間残るか,0より小さければ999999999999999</param>
         /// <param name="i">atarisナンバー</param>
         public void atarisAdd(Entity e, float time, int i = 0)
         {
+            if (time < 0) 
+            {
+                time = 999999999999999;
+            }
             if (!ataris.ContainsKey(i))
             {
                 ataris.Add(i, new Dictionary<Entity, float>());

@@ -19,6 +19,12 @@ using Vortice.DCommon;
 using Microsoft.CodeAnalysis.Scripting;
 
 using Microsoft.CodeAnalysis.CSharp.Scripting;
+using System.Xml.Linq;
+using System.Drawing;
+using Vortice.WIC;
+using System.Security.Policy;
+using System.Drawing.Imaging;
+using SharpGen.Runtime;
 
 namespace Charamaker2
 {
@@ -37,24 +43,20 @@ namespace Charamaker2
         /// <summary>
         /// もちろん保存しないといけないレンダーターゲット
         /// </summary>
-        static ID2D1HwndRenderTarget rendertarget;
-        /// <summary>
-        /// おおもとのレンダー
-        /// </summary>
-        static public ID2D1RenderTarget render { get { return rendertarget; } }
+        static List<ID2D1RenderTarget> rendertargets=new List<ID2D1RenderTarget>();
         /// <summary>
         /// ガシーツ
         /// </summary>
-        static float gasyu = 1;
+        static List<float> gasyu =new List<float>();
         /// <summary>
         /// セットアップされたフォーム
         /// </summary>
-        static public ContainerControl CC { get { return _CC; } }
-        static ContainerControl _CC;
+        static List<ContainerControl> _CC=new List<ContainerControl>();
+
         /// <summary>
-        /// 画質の倍率
+        /// 何もないことを示す魔法の言葉
         /// </summary>
-        static public float gasitu { get { return gasyu; } }
+        public const string nothing = "nothing";
         /// <summary>
         /// 画面のサイズを設定し、hyojimanを生成可能にする。
         /// </summary>
@@ -71,17 +73,38 @@ namespace Charamaker2
             System.Drawing.Size si = new System.Drawing.Size((int)(wi * bairitu), (int)(hei * bairitu));
             hrenpro.PixelSize = si;
 
-            rendertarget = fac.CreateHwndRenderTarget(renpro, hrenpro);
-            gasyu = bairitu;
+            rendertargets.Add(fac.CreateHwndRenderTarget(renpro, hrenpro));
+            gasyu.Add(bairitu);
         }
         /// <summary>
         /// hyojimanを取得する
         /// </summary>
+        /// <param name="numberoftarget">何番目の画面か</param>
         /// <returns>新しいhyojiman</returns>
-        static public hyojiman makehyojiman()
+        static public hyojiman makehyojiman(int numberoftarget=0)
         {
-            var aa = new hyojiman(rendertarget,gasyu);
+            var aa = new hyojiman(rendertargets[numberoftarget], gasyu[numberoftarget]);
             return aa;
+        }
+        /// <summary>
+        /// ピクチャーとして扱えるPhyojimanを取得する
+        /// </summary>
+        /// <param name="tex">ピクチャーのテクスチャ</param>
+        /// <param name="w">幅(-1で自動)</param>
+        /// <param name="h">高さ(-1で自動)</param>
+        /// <param name="numberoftarget">何番目の画面か</param>
+        /// <param name="auto">Phuojimanを自動的にhyojiをするか</param>
+        /// <returns>新しいhyojiman</returns>
+        static public Phyojiman makePhyojiman(string tex=fileman.nothing,bool auto=true,int w=-1,int h=-1,int numberoftarget = 0)
+        {
+            var hyo = makehyojiman(numberoftarget);
+            
+            var size = hyo.render.PixelSize;
+            if (w > 0) size.Width = w;
+            if (h > 0) size.Height = h;
+            var bt = hyo.render.CreateCompatibleRenderTarget(size, CompatibleRenderTargetOptions.None);
+            hyo.render = bt;
+            return new Phyojiman(picture.onetexpic(tex,hyo.ww),hyo,auto);
         }
         /// <summary>
         /// セットアップをする。
@@ -92,13 +115,36 @@ namespace Charamaker2
         static public void setinguping(ContainerControl f, float bai = 1)
         {
             Console.WriteLine("fileman setup go");
-            _CC = f;
+            _CC.Add(f);
             resizen(bai, f.Handle, f.ClientSize.Width, f.ClientSize.Height);
             fileman.resetfileman(f.Handle);
             Console.WriteLine("fileman setup ok");
-
+            
         }
-
+        /// <summary>
+        /// 新しいウィンドウに対して画面を操れるようにする。
+        /// </summary>
+        /// <param name="f">素となるフォームとかユーザーコントロール</param>
+        /// <param name="bai">画質の倍率</param>
+        static public void setNewWindow(ContainerControl f, float bai) 
+        {
+            _CC.Add(f);
+            resizen(bai, f.Handle, f.ClientSize.Width, f.ClientSize.Height);
+        }
+        /// <summary>
+        /// ウィンドウを消したいな
+        /// </summary>
+        /// <param name="f">消したいウィンドウ</param>
+        static public void deleteOldWindow(ContainerControl f)
+        {
+            var i = _CC.IndexOf(f);
+            if (i != -1) 
+            {
+                _CC.RemoveAt(i);
+                gasyu.RemoveAt(i);
+                rendertargets.RemoveAt(i);
+            }
+        }
         /// <summary>
         /// 読み込んだテクスチャーを保存しとく
         /// </summary>
@@ -125,23 +171,71 @@ namespace Charamaker2
         static public Random r = new Random();
 
 
+
+
+        /// <summary>
+        /// 画面のスクリーンショットを取る。effectcharaがぶれるバグあり！
+        /// </summary>
+        /// <param name="h">保存する表示マン</param>
+        /// <param name="format">保存フォーマット</param>
+        static public void screenShot(hyojiman h, string format = "bmp")
+        {
+            /*
+            var bt = h.render.CreateCompatibleRenderTarget(size, CompatibleRenderTargetOptions.None);
+            //  var bt = new ID2D1BitmapRenderTarget(bm.NativePointer);
+
+
+            h.hyoji2(bt, 0, true, true, false, false, true);
+            */
+
+            string dir = @".\shots\";
+
+            if (Directory.Exists(dir))
+            {
+            }
+            else
+            {
+                Directory.CreateDirectory(dir);
+            }
+
+
+            string name = DateTime.Now.ToString() + "." + format;
+            var bt = h.getbitmap();
+            var size = bt.PixelSize;
+            var pxs = GetPixels(bt.Bitmap, bt);
+            var save = new Bitmap(size.Width, size.Height);
+            for (int y = 0; y < size.Height; y++)
+            {
+                for (int x = 0; x < size.Width; x++)
+                {
+                    //  Console.WriteLine(pxs[y][x].A+" al:skfa :");
+                    save.SetPixel(x, y, System.Drawing.Color.FromArgb((int)(pxs[y][x].A)
+                        , (int)(pxs[y][x].R), (int)(pxs[y][x].G), (int)(pxs[y][x].B))
+                        );
+                }
+            }
+            name = name.Replace("/", "_");
+            name = name.Replace(" ", "_");
+            name = name.Replace(":", "_");
+            Console.WriteLine(dir + name);
+            save.Save(dir + name);
+
+
+        }
         /// <summary>
         /// texsに色のついたビットを追加する。
         /// </summary>
         /// <param name="bitname">bitname+"bit"</param>
         /// <param name="color">色</param>
-        static private void settextobit(string bitname, Color color)
+        static private void settextobit(string bitname, System.Drawing.Color color)
         {
             using (var tempStream = new DataStream(1, true, true))
             {
                 int rgba = color.R | (color.G << 8) | (color.B << 16) | (color.A << 24);
                 tempStream.Write(rgba);
-                var bitmapProperties = new BitmapProperties(new PixelFormat(Vortice.DXGI.Format.R8G8B8A8_UNorm, Vortice.DCommon.AlphaMode.Premultiplied));
-                if (!texs.ContainsKey(bitname + "bit.bmp"))
-                {
-                    Console.WriteLine(bitname + "bit" + " set!!");
-                    texs.Add(bitname + "bit.bmp", rendertarget.CreateBitmap(new System.Drawing.Size(1, 1), tempStream.BasePointer, sizeof(int), bitmapProperties));
-                }
+                var bitmapProperties = new BitmapProperties(new Vortice.DCommon.PixelFormat(Vortice.DXGI.Format.R8G8B8A8_UNorm, Vortice.DCommon.AlphaMode.Premultiplied));
+                regestBmp(bitname + "bit.bmp", rendertargets[0].CreateBitmap(new System.Drawing.Size(1, 1), tempStream.BasePointer, sizeof(int), bitmapProperties));
+               
             }
 
         }
@@ -165,7 +259,77 @@ namespace Charamaker2
             }
             return new System.Drawing.Size(1,1);
         }
+        /// <summary>
+        /// テクスチャの色を取得する。透過色はA=0;
+        ///  毎回ロードするし、多分重い。redBitとかは無理というかする必要なくね
+        /// </summary>
+        /// <param name="file">ファイル</param>
+        /// <returns></returns>
+        static public List<List<System.Drawing.Color>> GetPixels(string file) 
+        {
+            var res = new List<List<System.Drawing.Color>>();
+            var aa = Path.GetExtension(file);
+            if (aa != ".bmp") { file += ".bmp"; }
+            {
+                if (file != nothing + ".bmp")
+                {
+                    Console.WriteLine(file + "PixelLoad!");
+                }
+                string fi = @".\tex\" + file;
+                // System.Drawing.Imageを使ってファイルから画像を読み込む
+                if (System.IO.File.Exists(fi))
+                {
+                    using (var bitmap = (System.Drawing.Bitmap)System.Drawing.Image.FromFile(fi))
+                    {
+                        // BGRA から RGBA 形式へ変換する
+                        // 1行のデータサイズを算出
+                        int stride = bitmap.Width * sizeof(int);
+                        using (var tempStream = new DataStream(bitmap.Height * stride, true, true))
+                        {
+                            // 読み込み元のBitmapをロックする
+                            var sourceArea = new System.Drawing.Rectangle(0, 0, bitmap.Width, bitmap.Height);
+                            var bitmapData = bitmap.LockBits(sourceArea, System.Drawing.Imaging.ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format32bppPArgb);
 
+                            // 変換処理
+                            for (int y = 0; y < bitmap.Height; y++)
+                            {
+                                res.Add(new List<System.Drawing.Color>());
+                                int offset = bitmapData.Stride * y;
+                                for (int x = 0; x < bitmap.Width; x++)
+                                {
+
+                                    // 1byteずつデータを読み込む
+                                    byte B = Marshal.ReadByte(bitmapData.Scan0, offset++);
+                                    byte G = Marshal.ReadByte(bitmapData.Scan0, offset++);
+                                    byte R = Marshal.ReadByte(bitmapData.Scan0, offset++);
+                                    byte A = Marshal.ReadByte(bitmapData.Scan0, offset++);
+                                    //Console.WriteLine(B + " " + G + " " + R + " " + A);
+
+                                    if (R == clmcol.R && G == clmcol.G && B == clmcol.B) res[y].Add(System.Drawing.Color.FromArgb(0,R, G, B));
+                                    else res[y].Add(System.Drawing.Color.FromArgb(R, G, B));
+
+
+                                }
+                            }
+                            // 読み込み元のBitmapのロックを解除する
+                            bitmap.UnlockBits(bitmapData);
+                            tempStream.Position = 0;
+
+                            // 変換したデータからBitmapを生成して返す
+
+                        }
+                    }
+                }
+               
+            }
+            // Console.WriteLine(texs.Count() + "texcount");
+            return res;
+
+        }
+
+
+
+       
         /// <summary>
         /// bitmapテクスチャーを読み込む。既に読み込んでいた場合は読み込まずに返す。
         /// .bmpはつけてもつけなくてもいい
@@ -175,11 +339,9 @@ namespace Charamaker2
         /// <returns>clmcolを透明にしたビットマップ</returns>
         static public ID2D1Bitmap ldtex(string file, bool reset = false)
         {
-            var aa = Path.GetExtension(file);
-            if (aa != ".bmp") file += ".bmp";
+            file = dotset(file);
             if (!texs.ContainsKey(file) || reset)
             {
-                Console.WriteLine(file + "load sitao!");
                 string fi = @".\tex\" + file;
                 // System.Drawing.Imageを使ってファイルから画像を読み込む
                 if (System.IO.File.Exists(fi))
@@ -228,15 +390,11 @@ namespace Charamaker2
                             // 変換したデータからBitmapを生成して返す
 
                             var size = new System.Drawing.Size(bitmap.Width, bitmap.Height);
-                            var bitmapProperties = new BitmapProperties(new PixelFormat(Vortice.DXGI.Format.R8G8B8A8_UNorm, Vortice.DCommon.AlphaMode.Premultiplied));
+                            var bitmapProperties = new BitmapProperties(new Vortice.DCommon.PixelFormat(Vortice.DXGI.Format.R8G8B8A8_UNorm, Vortice.DCommon.AlphaMode.Premultiplied));
 
-                            var result = rendertarget.CreateBitmap(size, tempStream.BasePointer, stride, bitmapProperties);
-                            if (texs.ContainsKey(file))
-                            {
-                                texs[file].Dispose();
-                                texs[file] = result;
-                            }
-                            else texs.Add(file, result);
+                            var result = rendertargets[0].CreateBitmap(size, tempStream.BasePointer, stride, bitmapProperties);
+                            regestBmp(file,result);
+                           
                         }
                     }
                 }
@@ -248,6 +406,72 @@ namespace Charamaker2
             // Console.WriteLine(texs.Count() + "texcount");
             return texs[file];
         }
+
+        static string dotset(string name) 
+        {
+
+            var aa = Path.GetExtension(name);
+
+            if (aa != ".bmp"&&aa!=".png") name += ".bmp";
+            return name;
+        }
+
+        /// <summary>
+        /// bmpをtexsに登録する
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="bmp"></param>
+        static public void regestBmp(string name,ID2D1Bitmap bmp) 
+        {
+            name = dotset(name);
+
+            if (texs.ContainsKey(name))
+            {
+                texs[name].Dispose();
+                texs[name] = bmp;
+            }
+            else
+            {
+                Console.WriteLine(name + "load sitao!");
+                texs.Add(name, bmp);
+            }
+        }
+       
+        static List<List<Color4>> GetPixels(ID2D1Bitmap image, ID2D1RenderTarget renderTarget)
+        {
+            var deviceContext2d = renderTarget.QueryInterface<ID2D1DeviceContext>();
+            var bitmapProperties = new BitmapProperties1();
+            bitmapProperties.BitmapOptions = BitmapOptions.CannotDraw | BitmapOptions.CpuRead;
+            bitmapProperties.PixelFormat = image.PixelFormat;
+            
+            var bitmap1 = deviceContext2d.CreateBitmap( new Size((int)image.Size.Width, (int)image.Size.Height),image.NativePointer
+                ,sizeof(int),ref bitmapProperties);
+
+            
+            bitmap1.CopyFromBitmap(renderTarget.CreateSharedBitmap(image, new BitmapProperties(image.PixelFormat))
+            );
+            var map = bitmap1.Map(MapOptions.Read);
+            var size = (int)image.Size.Width * (int)image.Size.Height * 4;
+            byte[] bytes = new byte[size];
+            Marshal.Copy(map.Bits, bytes, 0, size);
+            bitmap1.Unmap();
+            bitmap1.Dispose();
+            deviceContext2d.Dispose();
+            var res = new List<List<Color4>>();
+            for(int y = 0; y < image.PixelSize.Height; y++) 
+            {
+                res.Add(new List<Color4>());
+                for (int x = 0; x < image.PixelSize.Width; x++) 
+                {
+                    var position = (y * (int)image.Size.Width + x) * 4;
+                    res[y].Add(
+                        new Color4(bytes[position + 2], bytes[position + 1], bytes[position + 0], bytes[position + 3]));
+                
+                }
+            }
+            return res;
+        }
+
         /// <summary>
         /// 作成したキャラクターをダイアログから保存する。拡張子は.c2cにしなよ
         /// </summary>
@@ -271,6 +495,28 @@ namespace Charamaker2
                 }
                 fileStream.Close();
             }
+        }
+        /// <summary>
+        /// 作成したキャラクターをダイアログから保存する。拡張子は.c2cにしなよ
+        /// </summary>
+        /// <param name="path">保存するパス</param>
+        /// <param name="c">保存するキャラクター</param>
+        static public void savecharacter(string path, character c)
+        {
+            var saveData = c;
+
+            Stream fileStream = new FileStream(path, FileMode.OpenOrCreate);
+
+            //指定したパスにファイルを保存する
+            BinaryFormatter bF = new BinaryFormatter();
+            if (saveData != null)
+            {
+                bF.Serialize(fileStream, saveData);
+                Console.WriteLine("save : OKay. Chipping arouuund kick my brains around the floor");
+            }
+            fileStream.Close();
+            float tt = 0;
+            new tyusinchangeman(tt, 0, "hair", -0.1f, true, true, false);
         }
         /// <summary>
         /// キャラクターをダイアログからロードする。.c2cとか関係なくロードできるのかな？
@@ -350,6 +596,29 @@ namespace Charamaker2
                 }
                 fileStream.Close();
             }
+        }
+        /// <summary>
+        /// 作成したモーションをスクリプトと合わせてセーブする。拡張子は.c2mにしなよ
+        /// </summary>
+        /// <param name="path">保存するパス</param>
+        /// <param name="s">モーションを作ったスクリプト</param>
+        /// <param name="m">モーション本体</param>
+        static public void savemotion(string path, string s, motion m)
+        {
+            var saveData = new motionsaveman();
+            saveData.m = m;
+            saveData.text = s;
+
+            //指定したパスにファイルを保存する
+            Stream fileStream = new FileStream(path,FileMode.OpenOrCreate);
+            BinaryFormatter bF = new BinaryFormatter();
+            if (saveData.m != null)
+            {
+                bF.Serialize(fileStream, saveData);
+                Console.WriteLine("save : OK ");
+            }
+            fileStream.Close();
+
         }
         /// <summary>
         /// モーションをダイアログからロードする。
@@ -583,29 +852,32 @@ namespace Charamaker2
 
                 string dir = @".\character\" + file;
 
-
-
-                //ファイルを読込
-                try
+                if (System.IO.File.Exists(dir))
                 {
-                    BinaryFormatter binaryFormatter = new BinaryFormatter();
-                    using (var fs = File.OpenRead(dir))
-                    {
 
-                        loadedData = binaryFormatter.Deserialize(fs);
-                        fs.Close();
-                    }
-                    if (!characters.ContainsKey(file))
+
+
+                    //ファイルを読込
+                    try
                     {
-                        characters.Add(file, new character((Character.character)loadedData));
+                        BinaryFormatter binaryFormatter = new BinaryFormatter();
+                        using (var fs = File.OpenRead(dir))
+                        {
+
+                            loadedData = binaryFormatter.Deserialize(fs);
+                            fs.Close();
+                        }
+                        if (!characters.ContainsKey(file))
+                        {
+                            characters.Add(file, new character((Character.character)loadedData));
+                        }
+                        else
+                        {
+                            characters[file] = new character((Character.character)loadedData);
+                        }
                     }
-                    else
-                    {
-                        characters[file] = new character((Character.character)loadedData);
-                    }
+                    catch (Exception e) { Console.WriteLine(e.ToString()); }
                 }
-                catch (Exception e) { Console.WriteLine(e.ToString()); }
-
             }
             if (characters.ContainsKey(file))
             {
@@ -737,7 +1009,7 @@ namespace Charamaker2
         /// <param name="vol">この音のボリューム</param>
         static public void playoto(string file, float vol = 1)
         {
-            if (file == "nothing") return;
+            if (file == nothing) return;
             var a = Path.GetExtension(file);
             if (a != ".wav") file += ".wav";
 
@@ -808,7 +1080,7 @@ namespace Charamaker2
         /// <param name="butu">おなじbgmを流したときに最初から再生するか</param>
         static public void playbgm(string file, bool butu = false)
         {
-            if (file == "nothing") return;
+            if (file == nothing) return;
             var a = Path.GetExtension(file);
             if (a != ".wav") file += ".wav";
             if (file == ".wav")
@@ -883,7 +1155,7 @@ namespace Charamaker2
         /// <summary>
         /// 基本的なビットのあれよ。名前とか
         /// </summary>
-        static public Dictionary<string, Color> basebitnames = new Dictionary<string, Color>
+        static public Dictionary<string, System.Drawing.Color> basebitnames = new Dictionary<string, System.Drawing.Color>
                 {
                     {"red",System.Drawing.Color.Red },{"blue",System.Drawing.Color.Blue },{"green",System.Drawing.Color.Green },
                     {"white",System.Drawing.Color.White },{"gray",System.Drawing.Color.Gray },{"black",System.Drawing.Color.Black },
@@ -993,7 +1265,7 @@ namespace Charamaker2
             return new movie.Movie(runner);
 
         }
-
+        
         /// <summary>
         /// loadfiketokaの時に呼び出されるイベント。
         /// </summary>
@@ -1064,18 +1336,7 @@ namespace Charamaker2
         /// <returns></returns>
         static public float whrandhani(float w)
         {
-            if (w == 0)
-            {
-                return 0;
-            }
-            else if (w < 0)
-            {
-                return -(r.Next() % (Math.Abs(w) + 1));
-            }
-            else
-            {
-                return r.Next() % (w + 1);
-            }
+            return (float)r.NextDouble() * w;
 
         }
         /// <summary>
@@ -1121,6 +1382,35 @@ namespace Charamaker2
             return per >= a;
         }
 
+        /// <summary>
+        /// モーションをスクリプトから作る
+        /// </summary>
+        /// <param name="script">スクリプトか？</param>
+        /// <param name="speed">再生速度</param>
+        /// <param name="yobidasi">呼び出してくれるクラス</param>
+        /// <returns></returns>
+        static public motion buildMotion(string script,float speed=1) 
+        {
+//            var work = new motion();
+//            work.sp = speed;
+
+            script = "var work=new motion();\n"+script+";\nreturn work;";
+            ScriptOptions a = ScriptOptions.Default
+            .WithReferences(Assembly.GetEntryAssembly())
+            .WithImports("System", "System.Collections.Generic", "Charamaker2.Character", "Charamaker2"
+            , "Charamaker2.maker");
+
+            var Q = CSharpScript.Create(script, options: a);
+            var runner = Q.CreateDelegate();
+            var run = (Delegate)runner;
+            //runner();
+            var ret = (motion)runner().Result;
+            if (ret != null)
+            {
+                ret.sp = speed;
+            }
+            return ret;
+        }
     }
 
     /// <summary>

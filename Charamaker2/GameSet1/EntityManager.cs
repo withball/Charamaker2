@@ -1,4 +1,5 @@
 ﻿using Charamaker2;
+using Charamaker2.Shapes;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -185,7 +186,7 @@ namespace GameSet1
         /// フレーム処理の時に呼び出す奴
         /// フラグをfalseにするだけ
         /// </summary>
-        public void frame()
+        virtual public void frame()
         {
             var a = new List<string>(EDBF.Keys);
             foreach (var b in a)
@@ -289,9 +290,7 @@ namespace GameSet1
 
             return null;
         }
-
-
-
+        
 
     }
     /// <summary>
@@ -307,7 +306,7 @@ namespace GameSet1
         /// <summary>
         /// エンテティをまとめてるやつ
         /// </summary>
-        protected EntityDataBase EDB=new EntityDataBase();
+        protected EntityDataBase EDB = new EntityDataBase();
 
         /// <summary>
         /// 普通のコンストラクタ
@@ -317,7 +316,7 @@ namespace GameSet1
         {
             hyo = hyou;
         }
-  
+
         /// <summary>
         /// エンテティのリスト
         /// </summary>
@@ -357,7 +356,7 @@ namespace GameSet1
         /// <returns>リストだよ</returns>
         public List<Entity> getTypeEnts(Type T)
         {
-           
+
             return EDB.getTypeEnts(T);
         }
 
@@ -367,7 +366,7 @@ namespace GameSet1
         /// <param name="T">タイプ</param>
         /// <param name="e">調査対象</param>
         /// <returns>当てはまってら</returns>
-        public bool istyped(Type T,Entity e)
+        public bool istyped(Type T, Entity e)
         {
             return EDB.getTypeEnts(T).Contains(e);
         }
@@ -379,17 +378,17 @@ namespace GameSet1
         /// <param name="e">ぶち込むやつ</param>
         /// <param name="add">先頭に加えたい場合はfalse</param>
         /// <returns>もうぶち込まれてたらfalse</returns>
-        internal bool add(Entity e,bool add)
+        internal bool add(Entity e, bool add)
         {
-          
-            return EDB.entadd(e,add);
+
+            return EDB.entadd(e, add);
         }
         /// <summary>
         /// エンテティをを削除する。基本ENtity.REmoveを呼べ
         /// </summary>
         /// <param name="e">削除する奴</param>
         /// <returns>そもそも存在していなかったらfalse</returns>
-         internal bool remoeve(Entity e)
+        internal bool remoeve(Entity e)
         {
 
             return EDB.entremove(e);
@@ -401,8 +400,8 @@ namespace GameSet1
         /// </summary>
         public void reset()
         {
-           
-            
+
+
             EDB.frame();
             foreach (var a in ents)
             {
@@ -410,7 +409,7 @@ namespace GameSet1
             }
             hyo.reset();
             EDB.frame();
-        
+
         }
         /// <summary>
         /// 当たったよっていうなんかデータ
@@ -437,12 +436,12 @@ namespace GameSet1
             if (atalis.ContainsKey(korega)) return atalis[korega].Contains(koreni);
             return false;
         }
-       
+
 
         /// <summary>
         /// 反射のなんかデータ
         /// </summary>
-       protected Dictionary<Entity, List<Entity>> hansyasu = new Dictionary<Entity, List<Entity>>();
+        protected Dictionary<Entity, List<Entity>> hansyasu = new Dictionary<Entity, List<Entity>>();
 
         /// <summary>
         /// 反射処理をおこなったかを記憶させる
@@ -465,7 +464,7 @@ namespace GameSet1
             if (hansyasu.ContainsKey(korega)) return hansyasu[korega];
             return new List<Entity>();
         }
-
+        /*
         /// <summary>
         /// フレーム処理
         /// </summary>
@@ -576,8 +575,159 @@ namespace GameSet1
           
             foreach (var a in elis) a.endframe(cl);
            
+        }*/
+        /// <summary>
+        /// すべての物体を重ならないように動かす
+        /// </summary>
+        /// <param name="es">軽い順</param>
+        protected void zurasiall(List<Entity> es)
+        {
+            int i;
+
+
+            //  foreach (var a in es) Console.WriteLine(a.bif.wei+" a sa ");
+            //  Console.WriteLine(es.Count + " :;asdlgka:p ");
+           
+            for (i = 0; i < es.Count; i++)
+            {
+
+                // if (es[i].bif.ovw) break;
+                for (int t = 0; t < es.Count; t++)
+                {
+
+                    if (i != t && !es[i].bif.isgrouped(es[t]))
+                    {
+                        if (es[t].bif.different(es[i].bif))
+                        {
+                            var kek = Shape.atarun(es[t].Acore, es[t].PAcore, es[i].Acore, es[i].PAcore);
+                            //  Console.WriteLine("asfkjaijfia "+kek);
+                            if (kek)
+                            {
+                                //     Console.WriteLine("aslkgapo");
+                                var l = es[t].bif.zuren(es[t], es[i], true);
+
+                            }
+                        }
+                    }
+                    else
+                    {
+                        break;
+                    }
+
+                }
+            }
+           
+           
+            for (i = 0; i < es.Count; i++)
+            {
+                es[i].bif.groupclear();
+                es[i].bif.energyConserv(es[i]);
+            }
+
         }
-    
+        /// <summary>
+        /// すべての物体を反射させる
+        /// </summary>
+        /// <param name="es">軽い順</param>
+        protected void hansyaall(List<Entity>es )
+        {
+            
+            for (int i = 0; i < es.Count; i++)
+            {
+                if (es[i].bif.ovw) break;
+                for (int t = i + 1; t < es.Count; t++)
+                {
+                    if (es[t].bif.different(es[i].bif))
+                    {
+                        es[i].bif.setsessyoku(es[i], es[t]);
+                    }
+                }
+            }
+
+
+            
+                for (int i = 0; i < es.Count; i++)
+            {
+
+                if (es[i].bif.ovw)
+                {
+                    break;
+                }//	TRACE(_T("%f :asfas: %f\n"), es[i]->vx, es[i]->vy);
+                //es[i]->sessyokukaiten(cl);
+
+                for (int t = i + 1; t < es.Count; t++)
+                {
+                    
+                    es[i].bif.SessyokuHansya(es[i], es[t]);
+
+                }
+            }
+
+
+            foreach (var a in es)
+            {
+                a.bif.resetsessyokus();
+
+               //  Console.WriteLine(a.Acore.getCenter().ToString() + " daaa");
+            }
+        }
+        /// <summary>
+        /// すべての物体をずらし、物理系のほかのもする
+        /// </summary>
+        protected void buturiall(float cl)
+        {
+            var es = atarerus;
+
+            var e = new supersort<Entity>();
+            foreach (var a in es)
+            {
+                e.add(a, a.bif.wei);
+                a.bif.setEnergyPoint(a);
+            }
+            e.sort(false);
+            es = e.getresult();
+            zurasiall(es);
+            hansyaall(es);
+        } 
+        /// <summary>
+        /// フレーム処理
+        /// </summary>
+        /// <param name="cl">クロック時間</param>
+       virtual public void frame(float cl)
+        {
+            EDB.frame();
+            var es = ents;
+            foreach(var a in new List<Entity>(es))
+            {
+                //Console.WriteLine(a.Acore.getCenter().ToString() + " Qaaa");
+                a.frame(cl);
+               // Console.WriteLine(a.Acore.getCenter().ToString() + " Qaaa");
+            }
+           // Console.WriteLine("framed!");
+           
+                //Console.WriteLine(aslfka+"asl:kgaso "+aslfka);
+             buturiall(cl);
+            // Console.WriteLine(aslfka+"asl:kgaso QQQQQQQQQQQ"+aslfka);
+
+            //Console.WriteLine("buturied!");
+
+            foreach (var a in new List<Entity>(es))
+            {
+             //  Console.WriteLine(a.Acore.getCenter().ToString() + " daaa");
+            
+                a.endframe(cl);
+
+                //  Console.WriteLine(a.Acore.getCenter().ToString() + " daaa");
+            }
+         //   Console.WriteLine("endframed!");
+            // Console.WriteLine(" sakdaso @@@");
+        }
+
     }
+
+
+
+    
+    
 
 }

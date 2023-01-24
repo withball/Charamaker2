@@ -62,6 +62,7 @@
             this.kijyunb = new System.Windows.Forms.Button();
             this.refreshb = new System.Windows.Forms.Button();
             this.TexSizeLabel = new System.Windows.Forms.Label();
+            this.quickloadB = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.dxbox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.zbox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.opabox)).BeginInit();
@@ -525,6 +526,15 @@
             this.TexSizeLabel.TabIndex = 41;
             this.TexSizeLabel.Text = "0,0";
             // 
+            // quickloadB
+            // 
+            this.quickloadB.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.quickloadB.Location = new System.Drawing.Point(46, 600);
+            this.quickloadB.Name = "quickloadB";
+            this.quickloadB.Size = new System.Drawing.Size(671, 25);
+            this.quickloadB.TabIndex = 42;
+            this.quickloadB.KeyDown += new System.Windows.Forms.KeyEventHandler(this.quickload);
+            // 
             // charamaker
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 18F);
@@ -532,6 +542,7 @@
             this.AutoValidate = System.Windows.Forms.AutoValidate.EnableAllowFocusChange;
             this.BackColor = System.Drawing.Color.Transparent;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.Controls.Add(this.quickloadB);
             this.Controls.Add(this.TexSizeLabel);
             this.Controls.Add(this.refreshb);
             this.Controls.Add(this.kijyunb);
@@ -620,5 +631,6 @@
         private System.Windows.Forms.Button kijyunb;
         private System.Windows.Forms.Button refreshb;
         private System.Windows.Forms.Label TexSizeLabel;
+        private System.Windows.Forms.TextBox quickloadB;
     }
 }

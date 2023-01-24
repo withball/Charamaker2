@@ -10,6 +10,46 @@
             要件としてあるのはstart,endで開始終了ができ、frameでhyojimanのcamがずれても対応できるってこと。
             </summary>
         </member>
+        <member name="M:GameSet1.benriUI.bennriUI.onclick(System.Single,System.Single,Charamaker2.Character.character,GameSet1.ABrecipie)">
+            <summary>
+            キャラクターでクリック判定を取る
+            </summary>
+            <param name="x">ポインタx</param>
+            <param name="y">ポインタy</param>
+            <param name="c">キャラクター</param>
+            <param name="abr">判定を取る節の名前とかを含んだレシピ</param>
+            <returns></returns>
+        </member>
+        <member name="M:GameSet1.benriUI.bennriUI.onclick(System.Single,System.Single,Charamaker2.picture,GameSet1.ABrecipie)">
+            <summary>
+            キャラクターでクリック判定を取る
+            </summary>
+            <param name="x">ポインタx</param>
+            <param name="y">ポインタy</param>
+            <param name="c">キャラクター</param>
+            <param name="abr">判定を取る節の名前とかを含んだレシピ</param>
+            <returns></returns>
+        </member>
+        <member name="M:GameSet1.benriUI.bennriUI.onclick(Charamaker2.Character.character,GameSet1.ABrecipie,Charamaker2.Character.character,GameSet1.ABrecipie)">
+            <summary>
+            キャラクターでクリック判定を取る
+            </summary>
+            <param name="c1">ポインタx</param>
+            <param name="abr1">判定を取る節の名前とかを含んだレシピ</param>
+            <param name="c2">キャラクター</param>
+            <param name="abr2">判定を取る節の名前とかを含んだレシピ</param>
+            <returns></returns>
+        </member>
+        <member name="M:GameSet1.benriUI.bennriUI.onclick(Charamaker2.picture,GameSet1.ABrecipie,Charamaker2.picture,GameSet1.ABrecipie)">
+            <summary>
+            キャラクターでクリック判定を取る
+            </summary>
+            <param name="c1">ポインタx</param>
+            <param name="abr1">判定を取る節の名前とかを含んだレシピ</param>
+            <param name="c2">キャラクター</param>
+            <param name="abr2">判定を取る節の名前とかを含んだレシピ</param>
+            <returns></returns>
+        </member>
         <member name="F:GameSet1.benriUI.bennriUI.hyo">
             <summary>
             表示マン
@@ -405,6 +445,18 @@
             昔の物理的なあたり判定に使うやーつ
             </summary>
         </member>
+        <member name="M:GameSet1.Entity.okariAB(GameSet1.Entity)">
+            <summary>
+            あたり判定をお借りする。お借り状態から抜け出すにはchangeAB
+            </summary>
+            <param name="e">お借り元</param>
+        </member>
+        <member name="M:GameSet1.Entity.changeAB(GameSet1.ABrecipie)">
+            <summary>
+            あたりバインディングを変更する。お借りしてた場合リセット
+            </summary>
+            <param name="a"></param>
+        </member>
         <member name="F:GameSet1.Entity._EEV">
             <summary>
             イベントを司るもの。継承したやつ使うならsetEEventerをオーバーライドしろ
@@ -566,6 +618,20 @@
             <param name="setunames">対象の節の名前""でキャラクターそのもの</param>
             <param name="shapetemples">図形のテンプレート大きさとか座標は気にしない</param>
         </member>
+        <member name="M:GameSet1.ABrecipie.#ctor(System.Collections.Generic.List{System.String},Charamaker2.Shapes.Shape)">
+            <summary>
+            普通のコンストラクタ
+            </summary>
+            <param name="setunames">対象の節の名前""でキャラクターそのもの</param>
+            <param name="shapetemple">図形のテンプレート大きさとか座標は気にしない</param>
+        </member>
+        <member name="M:GameSet1.ABrecipie.#ctor(Charamaker2.Shapes.Shape,System.String[])">
+            <summary>
+            普通のコンストラクタ
+            </summary>
+            <param name="setunames">対象の節の名前""でキャラクターそのもの</param>
+            <param name="shapetemple">図形のテンプレート大きさとか座標は気にしない</param>
+        </member>
         <member name="M:GameSet1.ABrecipie.#ctor(GameSet1.ABrecipie)">
             <summary>
             コピーするためのコンストラクタ。当たりバインディングに追加するときとか呼び出される
@@ -660,6 +726,40 @@
             あたり判定である図形共をキャラクターに合わせる。
             </summary>
         </member>
+        <member name="T:GameSet1.TouchPoint">
+            <summary>
+            接点を保存するクラス
+            </summary>
+        </member>
+        <member name="F:GameSet1.TouchPoint.xy">
+            <summary>
+            接点の座標
+            </summary>
+        </member>
+        <member name="F:GameSet1.TouchPoint.line">
+            <summary>
+            接している辺の情報
+            </summary>
+        </member>
+        <member name="F:GameSet1.TouchPoint.e">
+            <summary>
+            誰との接点か、誰の頂点によって接触しているか
+            </summary>
+        </member>
+        <member name="F:GameSet1.TouchPoint.from">
+            <summary>
+            誰との接点か、誰の頂点によって接触しているか
+            </summary>
+        </member>
+        <member name="M:GameSet1.TouchPoint.#ctor(Charamaker2.Shapes.FXY,Charamaker2.Shapes.lineX,GameSet1.Entity,GameSet1.Entity)">
+            <summary>
+            普通のコンストラクタ
+            </summary>
+            <param name="fxy">接点の位置</param>
+            <param name="linex">接戦</param>
+            <param name="from">誰による頂点で接触したか</param>
+            <param name="e">接触相手</param>
+        </member>
         <member name="T:GameSet1.buturiinfo">
             <summary>
             物理をやるインフォメーション
@@ -670,7 +770,7 @@
             御存じ速度加速度
             </summary>
         </member>
-        <member name="F:GameSet1.buturiinfo.vy">
+        <member name="F:GameSet1.buturiinfo._vy">
             <summary>
             御存じ速度加速度
             </summary>
@@ -745,6 +845,13 @@
             <summary>
             重さが最大かどうか
             </summary>
+        </member>
+        <member name="M:GameSet1.buturiinfo.overweights(System.Single)">
+            <summary>
+            その重さが無限かどうか調べる。
+            </summary>
+            <param name="weight"></param>
+            <returns></returns>
         </member>
         <member name="F:GameSet1.buturiinfo.atag">
             <summary>
@@ -824,22 +931,121 @@
             <param name="cl">クロックの長さ</param>
             <param name="c">対象のキャラクター</param>
         </member>
-        <member name="M:GameSet1.buturiinfo.zuren(GameSet1.Entity,GameSet1.Entity)">
+        <member name="M:GameSet1.buturiinfo.idou(GameSet1.Entity,System.Single,System.Single)">
+            <summary>
+            ちゃんと移動させるメソッド。Acoreもcharacterも動かす
+            しかし、abを基準に移動するため、waza.framedとかで軽率に呼び出すと死ぬ
+            </summary>
+            <param name="thiis">設計理念上こうなってしまったんや済まない</param>
+            <param name="x"></param>
+            <param name="y"></param>
+        </member>
+        <member name="M:GameSet1.buturiinfo.zuren(GameSet1.Entity,GameSet1.Entity,System.Boolean)">
             <summary>
             相手と自分をなんか計算してずらす！
             ちなみにここでは大丈夫だけどataribinding.coreを動かしたらcharasetしないと移動が反映されないからちうい
             </summary>
             <param name="thiis">自分。重ね重ねっちゃうけどお願い</param>
             <param name="e">相手</param>
+            <param name="group">グループとして当たるか</param>
             <returns>ずらしたかどうか</returns>
         </member>
-        <member name="M:GameSet1.buturiinfo.hansya(GameSet1.Entity,GameSet1.Entity)">
+        <member name="M:GameSet1.buturiinfo.hansya(GameSet1.Entity,GameSet1.Entity,Charamaker2.Shapes.lineX)">
             <summary>
             自分と対象ので反射を引き起こす。回転は考慮に入ってないつらいから
             </summary>
             <param name="thiis">自分。重ね重ねっちゃうけどお願い</param>
             <param name="e">あいて</param>
+            <param name="line">ぶつかった辺</param>
             <returns>反射が起きたかどうか</returns>
+        </member>
+        <member name="M:GameSet1.buturiinfo.hansya(GameSet1.Entity,GameSet1.Entity,System.Double)">
+            <summary>
+            自分と対象ので反射を引き起こす。回転は考慮に入ってないつらいから
+            </summary>
+            <param name="thiis">自分。重ね重ねっちゃうけどお願い</param>
+            <param name="e">あいて</param>
+            <param name="rad">ぶつかった辺の角度</param>
+            <returns>反射が起きたかどうか</returns>
+        </member>
+        <member name="M:GameSet1.buturiinfo.groupidou(GameSet1.Entity,System.Single,System.Single)">
+            <summary>
+            構成しているグループごと移動させる
+            </summary>
+            <param name="thiis">ごめん</param>
+            <param name="x">移動距離</param>
+            <param name="y"></param>
+        </member>
+        <member name="P:GameSet1.buturiinfo.groupwei">
+            <summary>
+            グループ合計の重さを取得する
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:GameSet1.buturiinfo.groupclear">
+            <summary>
+            グループをリセットする
+            </summary>
+        </member>
+        <member name="M:GameSet1.buturiinfo.groupAdd(GameSet1.Entity,GameSet1.Entity)">
+            <summary>
+            グループを追加する。両方にグループが追加されるから安心！
+            </summary>
+            <param name="thiis">ごめん</param>
+            <param name="e">グループする相手</param>
+        </member>
+        <member name="M:GameSet1.buturiinfo.isgrouped(GameSet1.Entity)">
+            <summary>
+            グループになっているか
+            </summary>
+            <param name="e"></param>
+            <returns></returns>
+        </member>
+        <member name="M:GameSet1.buturiinfo.sessyokuAdd(Charamaker2.Shapes.FXY,Charamaker2.Shapes.lineX,GameSet1.Entity,GameSet1.Entity)">
+            <summary>
+            接触点を追加する
+            </summary>
+            <param name="where">追加する接触点の座標</param>
+            <param name="l">接触する辺</param>
+            <param name="from">誰の接点から接触するのか</param>
+            <param name="e">接触相手</param>
+        </member>
+        <member name="M:GameSet1.buturiinfo.setsessyoku(GameSet1.Entity,GameSet1.Entity)">
+            <summary>
+            接触点をセットする。当然両者のAcoreは存在してるよね？
+            </summary>
+            <param name="thiis">当たるエンテティ</param>
+            <param name="E">接点をセットする相手</param>
+            <returns></returns>
+        </member>
+        <member name="M:GameSet1.buturiinfo.SessyokuHansya(GameSet1.Entity,GameSet1.Entity)">
+            <summary>
+            接触点によって反射を行う
+            </summary>
+            <param name="thiis">このbifの所属してるやつだよ！</param>
+            <param name="e">反射相手</param>
+        </member>
+        <member name="M:GameSet1.buturiinfo.resetsessyokus">
+            <summary>
+            接触点をクリアする
+            </summary>
+        </member>
+        <member name="F:GameSet1.buturiinfo.energyPoint">
+            <summary>
+            接触点をリセットする
+            </summary>
+        </member>
+        <member name="M:GameSet1.buturiinfo.setEnergyPoint(GameSet1.Entity)">
+            <summary>
+            atarableに付けてね
+            位置エネルギーの基準点をセットする
+            </summary>
+        </member>
+        <member name="M:GameSet1.buturiinfo.energyConserv(GameSet1.Entity)">
+            <summary>
+            位置エネルギーを保存する.
+            atarableに付けてね
+            </summary>
         </member>
         <member name="T:GameSet1.EntityDataBase">
             <summary>
@@ -1067,6 +1273,23 @@
             <param name="korega">これ</param>
             <returns></returns>
         </member>
+        <member name="M:GameSet1.EntityManager.zurasiall(System.Collections.Generic.List{GameSet1.Entity})">
+            <summary>
+            すべての物体を重ならないように動かす
+            </summary>
+            <param name="es">軽い順</param>
+        </member>
+        <member name="M:GameSet1.EntityManager.hansyaall(System.Collections.Generic.List{GameSet1.Entity})">
+            <summary>
+            すべての物体を反射させる
+            </summary>
+            <param name="es">軽い順</param>
+        </member>
+        <member name="M:GameSet1.EntityManager.buturiall(System.Single)">
+            <summary>
+            すべての物体をずらし、物理系のほかのもする
+            </summary>
+        </member>
         <member name="M:GameSet1.EntityManager.frame(System.Single)">
             <summary>
             フレーム処理
@@ -1131,6 +1354,11 @@
             特殊なシーケンスを使うときとかだけ参照してね。(\nは標準で変換されるよ)
             </summary>
         </member>
+        <member name="F:GameSet1.FP.textsparam">
+            <summary>
+            特殊なシーケンスを使うときとかだけ参照してね。(\nは標準で変換されるよ)
+            </summary>
+        </member>
         <member name="F:GameSet1.FP.param">
             <summary>
             あんま参照しないでね。
@@ -1143,6 +1371,23 @@
             <param name="name">パラメータの名前</param>
             <param name="i">パラメータのi番目(name+i)されるだけ</param>
             <returns>floatで帰ってくる無い場合は死ぬ</returns>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:GameSet1.FP.PRExists(System.String,System.Int32)" -->
+        <member name="M:GameSet1.FP.TPR(System.String,System.Int32)">
+            <summary>
+            テキストの方に記述されたパラメータを取得する
+            </summary>
+            <param name="name">パラメータの名前</param>
+            <param name="i">パラメータのi番目(name+i)されるだけ</param>
+            <returns>floatで帰ってくる無い場合は死ぬ</returns>
+        </member>
+        <member name="M:GameSet1.FP.TPRExists(System.String,System.Int32)">
+            <summary>
+            テキストの方に記述されたパラメータがあるか確認する
+            </summary>
+            <param name="name">パラメータの名前</param>
+            <param name="i">パラメータのi番目(name+i)されるだけ</param>
+            <returns></returns>
         </member>
         <member name="M:GameSet1.FP.GT(System.String,System.Collections.Generic.List{Charamaker2.input.IPC},System.Single[])">
             <summary>
@@ -1300,9 +1545,59 @@
             <param name="opa">不透明度</param>
             <param name="opabure">不透明度のブレ</param>
         </member>
+        <member name="M:GameSet1.haikeiseiser.haikeisei(System.Single,System.Single,System.Single,System.Single,System.Single,System.Single,System.Collections.Generic.List{GameSet1.haikeiseiser},System.Boolean)">
+            <summary>
+            背景を生成するいい感じに
+            </summary>
+            <param name="yline">生成するyの中心地</param>
+            <param name="ybure">生成するyのブレ(+-)</param>
+            <param name="sx">生成するxの始点</param>
+            <param name="ex">生成するxの終点</param>
+            <param name="ikutu">一度にいくつ画像を生成するか</param>
+            <param name="kaisuu">何度画像生成を行うか</param>
+            <param name="haikeis">生成する背景のリスト</param>
+            <param name="assyuku">背景のスクロール割合に応じて生成位置を圧縮するか(太陽とか以外はやったほうがいい)</param>
+        </member>
+        <member name="T:GameSet1.sceneframepack">
+            <summary>
+            scene.onframeで主に使う
+            </summary>
+        </member>
+        <member name="F:GameSet1.sceneframepack.i">
+            <summary>
+            インプット
+            </summary>
+        </member>
+        <member name="F:GameSet1.sceneframepack.cl">
+            <summary>
+            フレーム時間
+            </summary>
+        </member>
+        <member name="M:GameSet1.sceneframepack.#ctor(Charamaker2.input.inputin,System.Single)">
+            <summary>
+            
+            </summary>
+            <param name="i"></param>
+            <param name="cl"></param>
+        </member>
         <member name="T:GameSet1.Scene">
             <summary>
             シーンだお
+            </summary>
+        </member>
+        <member name="E:GameSet1.Scene.onStarts">
+            <summary>
+            onstartの際に呼び出される
+            </summary>
+        </member>
+        <member name="E:GameSet1.Scene.onEnds">
+            <summary>
+            onendの際に呼び出される
+            </summary>
+        </member>
+        <member name="E:GameSet1.Scene.onframe">
+            <summary>
+            frameの際に呼び出される
             </summary>
         </member>
         <member name="F:GameSet1.Scene.sm">
@@ -1346,7 +1641,7 @@
         </member>
         <member name="M:GameSet1.Scene.frame(Charamaker2.input.inputin,System.Single)">
             <summary>
-            画面の描画。標準は画面表示だけよ
+            画面の描画。標準は画面表示とonframeだけよ
             </summary>
             <param name="i">入力情報</param>
             <param name="cl">クロック時間</param>
@@ -1360,19 +1655,6 @@
             <summary>
             シーンの正しきエンド時に呼び出される。標準では何もしない
             </summary>
-        </member>
-        <member name="M:GameSet1.Scene.haikeiseiser(System.Single,System.Single,System.Single,System.Single,System.Single,System.Single,System.Collections.Generic.List{GameSet1.haikeiseiser},System.Boolean)">
-            <summary>
-            背景を生成するいい感じに
-            </summary>
-            <param name="yline">生成するyの中心地</param>
-            <param name="ybure">生成するyのブレ(+-)</param>
-            <param name="sx">生成するxの始点</param>
-            <param name="ex">生成するxの終点</param>
-            <param name="ikutu">一度にいくつ画像を生成するか</param>
-            <param name="kaisuu">何度画像生成を行うか</param>
-            <param name="haikeis">生成する背景のリスト</param>
-            <param name="assyuku">背景のスクロール割合に応じて生成位置を圧縮するか(太陽とか意外はやったほうがいい)</param>
         </member>
         <member name="T:GameSet1.SD">
             <summary>
@@ -1460,10 +1742,184 @@
             <param name="file">ファイルの名前</param>
             <typeparam name="T">セーブデータのタイプ</typeparam>
         </member>
+        <member name="T:GameSet1.storyTeller.StoryScene">
+            <summary>
+            ストーリーシーン
+            </summary>
+        </member>
+        <member name="F:GameSet1.storyTeller.StoryScene.cam">
+            <summary>
+            カメラの制御
+            </summary>
+        </member>
+        <member name="F:GameSet1.storyTeller.StoryScene.charas">
+            <summary>
+            追加するキャラクターのテンプレート
+            </summary>
+        </member>
+        <member name="F:GameSet1.storyTeller.StoryScene.draws">
+            <summary>
+            追加する主に文字のテンプレート
+            </summary>
+        </member>
+        <member name="M:GameSet1.storyTeller.StoryScene.#ctor(Charamaker2.hyojiman)">
+            <summary>
+            普通のコンストラクタ カメラがセットされる
+            </summary>
+            <param name="hyoji"></param>
+        </member>
+        <member name="M:GameSet1.storyTeller.StoryScene.#ctor(GameSet1.storyTeller.StoryScene)">
+            <summary>
+            コピーコンストラクタ
+            </summary>
+            <param name="s"></param>
+        </member>
+        <member name="M:GameSet1.storyTeller.StoryScene.withhaikei(Charamaker2.hyojiman,System.String)">
+            <summary>
+            背景とともにシーンを作る
+            </summary>
+            <param name="hyoji"></param>
+            <param name="haikei"></param>
+            <returns></returns>
+        </member>
+        <member name="M:GameSet1.storyTeller.StoryScene.start">
+            <summary>
+            シーンを始める
+            </summary>
+        </member>
+        <member name="M:GameSet1.storyTeller.StoryScene.setbgm(System.String)">
+            <summary>
+            bgmをつける
+            </summary>
+            <param name="bg"></param>
+        </member>
+        <member name="M:GameSet1.storyTeller.StoryScene.frame(GameSet1.Scene,System.Single)">
+            <summary>
+            フレーム処理
+            </summary>
+            <param name="s"></param>
+            <param name="cl"></param>
+        </member>
+        <member name="M:GameSet1.storyTeller.StoryScene.intochara(System.String,System.Single,System.Single,System.Boolean,System.Single)">
+            <summary>
+            キャラクターをいい感じに召喚する
+            </summary>
+            <param name="name">ファイル</param>
+            <param name="wp">ウィンドウのうちの位置</param>
+            <param name="ground">地面の位置</param>
+            <param name="scale">大きさ</param>
+            <param name="mirror">ミラー</param>
+            <returns>出したキャラクター</returns>
+        </member>
+        <member name="M:GameSet1.storyTeller.StoryScene.intoserif(System.String,System.String,System.Single,System.Single,System.Single,System.Single)">
+            <summary>
+            セリフをいい感じに召還する
+            </summary>
+            <param name="who">名前ウィンドウ""だとなしになる</param>
+            <param name="nakami">中身</param>
+            <param name="wp">始め位置これはそのまま幅にもなりにける</param>
+            <param name="hp">始め高さ</param>
+            <param name="size">文字の大きさ</param>
+            <param name="speed">表示速度</param>
+            <returns>出したメッセージ</returns>
+        </member>
+        <member name="M:GameSet1.storyTeller.StoryScene.intoserif2(System.String,System.String,System.Single,System.Single,System.Single,System.Single)">
+            <summary>
+            文字が1重のセリフとかを召喚する
+            </summary>
+            <param name="who">名前ウィンドウ""だとなしになる</param>
+            <param name="nakami">セリフの中身</param>
+            <param name="wp">開始地点そのまま大きさに</param>
+            <param name="hp">始めの高さ</param>
+            <param name="size">文字のサイズ</param>
+            <param name="speed">文字の表示速度</param>
+            <returns></returns>
+        </member>
+        <member name="M:GameSet1.storyTeller.StoryScene.intohaikei(System.String)">
+            <summary>
+            背景をセットする
+            </summary>
+            <param name="pic">背景のテクスチャ</param>
+            <returns>背景となったキャラ</returns>
+        </member>
+        <member name="M:GameSet1.storyTeller.StoryScene.owattemasuka">
+            <summary>
+            全てのアニメーションが終了しているか判定するとともに終わらせる
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:GameSet1.storyTeller.StoryScene.StoryTeller.kousinchara(Charamaker2.Character.character,System.Boolean,System.Single)">
+            <summary>
+            キャラクターの更新を行う
+            </summary>
+            <param name="c"></param>
+            <param name="refresh">表情とかをリセットするか</param>
+            <param name="superframe">何フレームでやるか</param>
+        </member>
+        <member name="M:GameSet1.storyTeller.StoryScene.StoryTeller.kouzoken(Charamaker2.Character.character,Charamaker2.Character.character)">
+            <summary>
+            角度だけ反映させたあれをキャラを作る
+            </summary>
+            <param name="mae"></param>
+            <param name="ato"></param>
+        </member>
+        <member name="M:GameSet1.storyTeller.StoryScene.StoryTeller.copyen(Charamaker2.Character.character,System.Boolean)">
+            <summary>
+            キャラをコピーする
+            </summary>
+            <param name="mae"></param>
+            <returns></returns>
+        </member>
+        <member name="M:GameSet1.storyTeller.StoryScene.StoryTeller.copyen(Charamaker2.Character.character,GameSet1.storyTeller.StoryScene,System.Boolean)">
+            <summary>
+            キャラをコピーする
+            </summary>
+            <param name="mae"></param>
+            <param name="sss"></param>
+            <returns></returns>
+        </member>
+        <member name="M:GameSet1.storyTeller.StoryScene.StoryTeller.haikeitazusaen(System.String)">
+            <summary>
+            背景を携えてシーンを作る 追加もする
+            </summary>
+            <param name="haikei"></param>
+            <returns></returns>
+        </member>
+        <member name="M:GameSet1.storyTeller.StoryScene.StoryTeller.copyScene(GameSet1.storyTeller.StoryScene)">
+            <summary>
+            シーンをコピーする。追加もする
+            </summary>
+            <param name="s"></param>
+            <returns></returns>
+        </member>
         <member name="T:GameSet1.Waza">
             <summary>
             エンテティに追加していろいろ動作させるクラス
             </summary>
+        </member>
+        <member name="M:GameSet1.Waza.op_Addition(GameSet1.Waza,GameSet1.Waza)">
+            <summary>
+            元の技が時間で終わったときにaddとframeを発動させる。
+            </summary>
+            <param name="moto"></param>
+            <param name="add"></param>
+            <returns></returns>
+        </member>
+        <member name="M:GameSet1.Waza.op_Addition(GameSet1.Waza,GameSet1.Entity)">
+            <summary>
+            元の技が時間で終わったときにEntityをAddする。
+            </summary>
+            <param name="moto"></param>
+            <param name="add"></param>
+            <returns></returns>
+        </member>
+        <member name="M:GameSet1.Waza.op_Addition(GameSet1.Waza,System.Func{System.Object})">
+            <summary>
+            元の技が時間で終わったときに発動する。
+            </summary>
+            <param name="moto"></param>
+            <param name="add"></param>
+            <returns></returns>
         </member>
         <member name="E:GameSet1.Waza.added">
             <summary>
@@ -1473,6 +1929,11 @@
         <member name="E:GameSet1.Waza.removed">
             <summary>
             Wazaがremoveされたときのイベント
+            </summary>
+        </member>
+        <member name="E:GameSet1.Waza.ended">
+            <summary>
+            Wazaが時間で死んだときのイベント
             </summary>
         </member>
         <member name="E:GameSet1.Waza.framed">
@@ -1524,6 +1985,14 @@
             <param name="e">追加するエンテティ</param>
             <returns>追加されたかどうか</returns>
         </member>
+        <member name="M:GameSet1.Waza.addAndFrame(GameSet1.Entity,System.Single)">
+            <summary>
+            addしてframeする
+            </summary>
+            <param name="e"></param>
+            <param name="time"></param>
+            <returns></returns>
+        </member>
         <member name="M:GameSet1.Waza.remove">
             <summary>
             技をエンテティから削除する。
@@ -1536,6 +2005,14 @@
             残りの消費できる時間を算出する
             </summary>
             <param name="cl">このぐらい消費したいです！</param>
+            <returns>消費できる時間</returns>
+        </member>
+        <member name="M:GameSet1.Waza.nokoritime(System.Single,System.Single)">
+            <summary>
+            残りの消費できる時間を算出する
+            </summary>
+            <param name="cl">このぐらい消費したいです！</param>
+            <param name="endin">区切りの時間</param>
             <returns>消費できる時間</returns>
         </member>
         <member name="M:GameSet1.Waza.frame(System.Single)">
@@ -1613,7 +2090,7 @@
         </member>
         <member name="M:GameSet1.Waza.atarisconnectto(GameSet1.Waza)">
             <summary>
-            atarisを他の技と共有
+            このatarisを他の技のatarisとする。この技でatarisのframeが二度とおこなわれなくなるのでちうい
             </summary>
             <param name="w">共有元</param>
         </member>
@@ -1628,7 +2105,7 @@
             atarisに追加する
             </summary>
             <param name="e">追加するエンテティ</param>
-            <param name="time">なにクロック時間残るか</param>
+            <param name="time">なにクロック時間残るか,0より小さければ999999999999999</param>
             <param name="i">atarisナンバー</param>
         </member>
         <member name="M:GameSet1.Waza.atarisAddRange(System.Collections.Generic.List{GameSet1.Entity},System.Single,System.Int32)">

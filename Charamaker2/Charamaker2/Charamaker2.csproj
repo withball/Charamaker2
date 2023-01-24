@@ -162,6 +162,7 @@
       <DependentUpon>charamaker.cs</DependentUpon>
     </Compile>
     <Compile Include="Shape.cs" />
+    <Compile Include="SuperSort.cs" />
     <EmbeddedResource Include="disp.resx">
       <DependentUpon>disp.cs</DependentUpon>
     </EmbeddedResource>

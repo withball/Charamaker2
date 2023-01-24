@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Charamaker2.Shapes;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -262,9 +263,28 @@ namespace Charamaker2.input
             pm = new List<MouseButtons>(m);
 
         }
+        /// <summary>
+        /// 生の入力から座標をもらってくる。UI座標の時使え
+        /// </summary>
+        /// <param name="hyo"></param>
+        /// <returns></returns>
+        static public float rawX(hyojiman hyo) 
+        {
+           // Console.WriteLine(raw.x + "  a;sfkapo ");
+            return raw.x * hyo.ww;
+        }
 
         /// <summary>
-        /// マウスの座標をカーソルからセットする。
+        /// 生の入力から座標をもらってくる。UI座標の時使え
+        /// </summary>
+        /// <param name="hyo"></param>
+        /// <returns></returns>
+        static public float rawY(hyojiman hyo)
+        {
+            return raw.y * hyo.wh;
+        }
+        /// <summary>
+        /// マウスの座標をカーソルからセットする。rawにもセットされる
         /// </summary>
         /// <param name="hyojiman">活動制限のためのhyojiman</param>
         /// <param name="f">座標変換のためのフォーム</param>
@@ -272,7 +292,8 @@ namespace Charamaker2.input
         public void setpointer(hyojiman hyojiman, Form f,bool gamennai=true)
         {
             var cu = f.PointToClient(Cursor.Position);
-
+            raw.x = cu.X / (float)f.ClientRectangle.Width;
+            raw.y = cu.Y / (float)f.ClientRectangle.Height;
             x = cu.X * (hyojiman.ww / f.ClientRectangle.Width);
             y = cu.Y * (hyojiman.wh / f.ClientRectangle.Height);
             if (gamennai)

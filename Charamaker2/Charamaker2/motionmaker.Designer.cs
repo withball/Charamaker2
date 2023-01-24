@@ -34,11 +34,16 @@
             this.loadb = new System.Windows.Forms.Button();
             this.saveb = new System.Windows.Forms.Button();
             this.loopud = new System.Windows.Forms.NumericUpDown();
+            this.getsetusB = new System.Windows.Forms.Button();
+            this.quickload = new System.Windows.Forms.TextBox();
+            this.timelabel = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.loopud)).BeginInit();
             this.SuspendLayout();
             // 
             // scriptbox
             // 
+            this.scriptbox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.scriptbox.Font = new System.Drawing.Font("MS UI Gothic", 14F);
             this.scriptbox.Location = new System.Drawing.Point(13, 10);
             this.scriptbox.Multiline = true;
@@ -51,7 +56,8 @@
             // 
             // applyb
             // 
-            this.applyb.Location = new System.Drawing.Point(1136, 616);
+            this.applyb.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.applyb.Location = new System.Drawing.Point(1136, 628);
             this.applyb.Name = "applyb";
             this.applyb.Size = new System.Drawing.Size(88, 35);
             this.applyb.TabIndex = 1;
@@ -61,8 +67,11 @@
             // 
             // exbox
             // 
+            this.exbox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.exbox.Font = new System.Drawing.Font("MS UI Gothic", 14F);
-            this.exbox.Location = new System.Drawing.Point(18, 621);
+            this.exbox.Location = new System.Drawing.Point(19, 648);
             this.exbox.Multiline = true;
             this.exbox.Name = "exbox";
             this.exbox.ScrollBars = System.Windows.Forms.ScrollBars.Both;
@@ -71,7 +80,8 @@
             // 
             // loadb
             // 
-            this.loadb.Location = new System.Drawing.Point(1136, 802);
+            this.loadb.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.loadb.Location = new System.Drawing.Point(1136, 777);
             this.loadb.Name = "loadb";
             this.loadb.Size = new System.Drawing.Size(88, 35);
             this.loadb.TabIndex = 3;
@@ -81,7 +91,8 @@
             // 
             // saveb
             // 
-            this.saveb.Location = new System.Drawing.Point(1136, 713);
+            this.saveb.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.saveb.Location = new System.Drawing.Point(1136, 726);
             this.saveb.Name = "saveb";
             this.saveb.Size = new System.Drawing.Size(88, 35);
             this.saveb.TabIndex = 4;
@@ -91,13 +102,14 @@
             // 
             // loopud
             // 
+            this.loopud.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.loopud.DecimalPlaces = 2;
             this.loopud.Increment = new decimal(new int[] {
             1,
             0,
             0,
             65536});
-            this.loopud.Location = new System.Drawing.Point(1104, 668);
+            this.loopud.Location = new System.Drawing.Point(1104, 686);
             this.loopud.Maximum = new decimal(new int[] {
             10,
             0,
@@ -112,11 +124,44 @@
             0,
             0});
             // 
+            // getsetusB
+            // 
+            this.getsetusB.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.getsetusB.Location = new System.Drawing.Point(1136, 838);
+            this.getsetusB.Name = "getsetusB";
+            this.getsetusB.Size = new System.Drawing.Size(88, 40);
+            this.getsetusB.TabIndex = 6;
+            this.getsetusB.Text = "getsetus";
+            this.getsetusB.UseVisualStyleBackColor = true;
+            this.getsetusB.Click += new System.EventHandler(this.getsetusB_Click);
+            // 
+            // quickload
+            // 
+            this.quickload.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.quickload.Location = new System.Drawing.Point(19, 597);
+            this.quickload.Name = "quickload";
+            this.quickload.Size = new System.Drawing.Size(1079, 25);
+            this.quickload.TabIndex = 7;
+            this.quickload.KeyDown += new System.Windows.Forms.KeyEventHandler(this.quickmotionload);
+            // 
+            // timelabel
+            // 
+            this.timelabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.timelabel.AutoSize = true;
+            this.timelabel.Location = new System.Drawing.Point(1121, 597);
+            this.timelabel.Name = "timelabel";
+            this.timelabel.Size = new System.Drawing.Size(0, 18);
+            this.timelabel.TabIndex = 8;
+            // 
             // motionmaker
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1236, 890);
+            this.Controls.Add(this.timelabel);
+            this.Controls.Add(this.quickload);
+            this.Controls.Add(this.getsetusB);
             this.Controls.Add(this.loopud);
             this.Controls.Add(this.saveb);
             this.Controls.Add(this.loadb);
@@ -126,6 +171,7 @@
             this.Name = "motionmaker";
             this.Text = "motionmaker";
             this.Load += new System.EventHandler(this.motionmaker_Load);
+            this.Resize += new System.EventHandler(this.resized);
             ((System.ComponentModel.ISupportInitialize)(this.loopud)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -140,5 +186,8 @@
         private System.Windows.Forms.Button loadb;
         private System.Windows.Forms.Button saveb;
         private System.Windows.Forms.NumericUpDown loopud;
+        private System.Windows.Forms.Button getsetusB;
+        private System.Windows.Forms.TextBox quickload;
+        private System.Windows.Forms.Label timelabel;
     }
 }

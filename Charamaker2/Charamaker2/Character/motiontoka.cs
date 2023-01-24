@@ -69,12 +69,29 @@ namespace Charamaker2.Character
             if (!owari) moves[idx].start(c);
         }
         /// <summary>
+        /// モーションを始めるためのメソッド
+        /// </summary>
+        /// <param name="c">モーション適用対象</param>
+        public void startAndFrame(character c,float time)
+        {
+
+            idx = 0;
+            sidx = 0;
+            if (!owari) moves[idx].start(c);
+            frame(c, time);
+        }
+        /// <summary>
         /// モーションを進める
         /// </summary>
         /// <param name="c">モーション適用対象</param>
         /// <param name="cl">時間のスピード</param>
-        public void frame(character c,float cl=1)
+        /// <param name="tanitu">falseならc.startmotion,endmotionを忘れずに</param>
+        public void frame(character c,float cl=1,bool tanitu=true)
         {
+            if (tanitu)
+            {
+                c.startmotion();
+            }
             if (sp <= 0)
             {
                 sidx = moves.Count();
@@ -104,6 +121,10 @@ namespace Charamaker2.Character
                 }
             }
             if (owari && loop) start(c);
+            if (tanitu)
+            {
+                c.endmotion();
+            }
         }
         /// <summary>
         /// ムーブを追加する
@@ -140,6 +161,51 @@ namespace Charamaker2.Character
             }
         }
 
+        /// <summary>
+        /// 現在のモーションが終了するまで止まるmovemanを手に入れる
+        /// 
+        /// </summary>
+        /// <param name="wari">最大の時間に対する割合</param>
+        /// <param name="sp">待つ時間をsp倍にする</param>
+        public moveman getsuperstop(float wari=1,float sp=1) 
+        {
+            return new moveman(endtime * wari*sp, true);
+        }
+        /// <summary>
+        /// 現在のモーションが完全に終了する時間(speedは考慮してない)
+        /// </summary>
+        public float rawendtime
+        {
+            get
+            {
+                float time = 0;
+                float stops = 0;
+                foreach (var a in moves)
+                {
+
+                    {
+                        time = Math.Max(a.time + stops, time);
+                    }
+                    if (a.st)
+                    {
+                        stops += a.time;
+                    }
+
+                }
+                return time;
+            }
+        }
+        /// <summary>
+        /// 現在のモーションが完全に終了する時間(speedは考慮してる)
+        /// </summary>
+        public float endtime
+        {
+            get
+            {
+               
+                return rawendtime/sp;
+            }
+        }
     }
     /// <summary>
     /// 基底のムーブ。持ってる機能はモーションの読み込みを止めるだけ。
@@ -167,6 +233,8 @@ namespace Charamaker2.Character
         /// モーションの読み込みを止めているか
         /// </summary>
         public bool STOP { get { return st && !owari; } }
+
+
         /// <summary>
         /// クロックしたときに残り時間をいい感じに取得する
         /// </summary>
@@ -249,8 +317,10 @@ namespace Charamaker2.Character
         /// <param name="cl">フレームする時間</param>
         public void startAndFrame(character c,float cl) 
         {
+            c.startmotion();
             this.start(c);
             this.frame(c, cl);
+            c.endmotion();
         }
     }
     /// <summary>
@@ -685,6 +755,8 @@ namespace Charamaker2.Character
         protected setu tag;
         protected List<setu> tags;
         public bool sai;
+        public double kijyun;
+        public bool SM = false;
         /// <summary>
         /// 普通のコンストラクタ
         /// </summary>
@@ -694,12 +766,15 @@ namespace Charamaker2.Character
         /// <param name="sitasp">回転速度(°)</param>
         /// <param name="saitan">最短経路で回転するか</param>
         /// <param name="stop">止める</param>
-        public radtoman(float t, string name, double sitato, double sitasp, bool saitan = true, bool stop = false) : base(t, stop)
+        /// <param name="superkijyun">この角度を基準(0度)として回す471で機能オフ</param>
+        public radtoman(float t, string name, double sitato, double sitasp, bool saitan = true, bool stop = false,float superkijyun=471) : base(t, stop)
         {
             radto = Math.PI * sitato / 180;
             radsp = Math.PI * sitasp / 180;
             sai = saitan;
             nm = name;
+            SM = !(superkijyun == 471);
+            kijyun = superkijyun*Math.PI/180;
         }
         /// <summary>
         /// コピーするためのコンストラクタ。
@@ -713,7 +788,8 @@ namespace Charamaker2.Character
             nm = r.nm;
             tag = r.tag;
             tags = r.tags;
-
+            kijyun = r.kijyun;
+            SM = r.SM;
         }
         /// <summary>
         /// 空のコンストラクタ
@@ -755,7 +831,20 @@ namespace Charamaker2.Character
         }
         public override void frame(character c, float cl)
         {
-
+            
+            var radto = this.radto;
+            if (SM) 
+            {
+                if (c.mirror)
+                {
+                    radto = -(Math.PI + radto);
+                    radto += kijyun;
+                }
+                else 
+                {
+                    radto += kijyun;
+                }
+            }
             var t = getnokotime(cl);
 
             if (tag != null)
@@ -850,6 +939,7 @@ namespace Charamaker2.Character
         }
 
     }
+
     /// <summary>
     /// テクスチャーの反転、不透明度を操るムーブ
     /// </summary>
@@ -2177,7 +2267,7 @@ namespace Charamaker2.Character
         /// <param name="addin">現在の中心点から追加するように変化させる</param>
         /// <param name="kouzokumo">後続にも同じ割合で効果を適用するか</param>
         /// <param name="stop">止めるか</param>
-        public Kscalechangeman(float t, string name, float changescalex, float changescaley, int mode = 0, bool addin = false, bool kouzokumo = true, bool stop = false) : base(t, stop)
+        public Kscalechangeman(float t, string name, float changescalex, float changescaley, int mode = 0, bool kouzokumo = true, bool addin = false, bool stop = false) : base(t, stop)
         {
             md = mode;
 

@@ -36,14 +36,30 @@ namespace Template
         {
             InitializeComponent();
             this.ClientSize=new System.Drawing.Size(size.Width,size.Height);
-            //SD.setup();
            
             fileman.setinguping(this,1/*SD.S.gsit*/);
             //SD.S.setvols();
-
+         //  SD.setup<SD>();
+          //  SD.savesave<SD>();
             // FP.seting(new List<string>(),new List<string> { "settingtext" });
             //通信用 C2WebRTCP2P.supertusin.setup();
-            new SScene(sm).start();
+            var s = loop();
+            s.start();
+          
+        }
+        protected Scene loop() 
+        {
+           
+            var s = new SScene(sm);
+            
+            s.onEnds += (ob, sm) =>
+            {
+                var sss =loop();
+
+                s.next = sss;
+
+            };
+            return s;
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -53,8 +69,10 @@ namespace Template
 
         private void clocked(object sender, EventArgs e)
         {
+            
             i.setpointer(sm.s.hyo, this);
             sm.s.frame(i, 1);
+            
             i.topre();
             //セッティング用inputin.raw.topre();
         }
@@ -108,58 +126,136 @@ namespace Template
         EntityManager em;
         public SScene(SceneManager sm):base(sm ) 
         {
-        }
-        Entity me=new Entity(new character(0,0,50,50,25,25,0,new setu("core",0,0,new picture(0,0,1,50,50,25,25,0,false,1,"def",new Dictionary<string, string> { { "def", "redbit" } })))
-            ,new ABrecipie(new List<string> {"" },new List<Shape> {new Rectangle(0,0,0,0,0) }),new buturiinfo(atag:"me"));
-        Entity he = new Entity(new character(100, 100, 50, 20, 25, 10, 0, new setu("core", 0, 0, new picture(0, 0, 0, 50, 50, 25, 25, 0, false, 1, "def", new Dictionary<string, string> { { "def", "bluebit" } })))
-           , new ABrecipie(new List<string> { "" }, new List<Shape> { new Rectangle(0, 0, 0, 0, 0) }), new buturiinfo(atag: "he"));
-        Entity he2 = new Entity(new character(100, 100, 50, 20, 25, 10, 0, new setu("core", 0, 0, new picture(0, 0, 99999, 50, 50, 25, 25, 0, false, 1, "def", new Dictionary<string, string> { { "def", "yellowbit" } })))
-            , new ABrecipie(new List<string> { "" }, new List<Shape> { new Triangle(0, 0, 0, 0, 0,0,-1) }), new buturiinfo(-1,atag: "he2"));
+         
 
+        }
+        Entity me=new Entity(new character(100,101,100,50,50,25,0,new setu("core",0,0,new picture(0,0,1,100,50,50,25,0,false,1,"def",new Dictionary<string, string> { { "def", "redbit" } })))
+            ,new ABrecipie(new List<string> {"" },new List<Shape> {new Triangle(0,0,0,0,0) })
+            ,new buturiinfo(2,0.00f,1f,0,0,0,0,1,atag:"me"));
+        Entity he = new Entity(new character(400, 400, 50, 20, 25, 10, 0, new setu("core", 0, 0, new picture(0, 0, 0, 50, 50, 25, 25, 0, false, 1, "def", new Dictionary<string, string> { { "def", "bluebit" } })))
+           , new ABrecipie(new List<string> { "" }, new List<Shape> { new Rectangle(0, 0, 0, 0, 0) }), new buturiinfo(atag: "he"));
+       
         protected override void onstart()
         {
             em = new EntityManager(hyo);
             next = new SScene(sm);
             me.add(em);
-            he.add(em); 
-            he2.add(em);
-            new shapedraw().add(me);
-            new shapedraw().add(he); 
-            new shapedraw().add(he2);
+       //    he.add(em); 
+              new shapedraw().add(me);
+            new shapedraw().add(he);
+
+            {
+                var e = new Entity(character.onepicturechara("redbit", 1, 0)
+              , new ABrecipie(new List<string> { "" }, new List<Shape> { new Rectangle(0, 0, 0, 0, 0) }), new buturiinfo(-1, 0, 1, 0.1f,0, 0, atag: "he2"));
+                e.c.addmotion(new scalechangeman(1,-1,"",hyo.ww,hyo.wh));
+                e.frame(100);
+                e.endframe(100);
+                e.c.setcxy(hyo.ww*0, hyo.wh*0.8f, e.c.w *0, e.c.h * 0);
+
+                e.add(em);
+            }
+            /*{
+                var e = new Entity(character.onepicturechara("redbit", 1, 0)
+              , new ABrecipie(new List<string> { "" }, new List<Shape> { new Rectangle(0, 0, 0, 0, 0) }), new buturiinfo(-1, 0, 1, 0.1f, 0, 0, atag: "he2"));
+                e.c.addmotion(new scalechangeman(1, -1, "", hyo.ww, hyo.wh));
+                e.frame(100);
+                e.endframe(100);
+                e.c.setcxy(hyo.ww * 0.01f, hyo.wh * 0.0f, e.c.w * 1, e.c.h * 0);
+
+                e.add(em);
+            }
+            {
+                var e = new Entity(character.onepicturechara("redbit", 1, 0)
+              , new ABrecipie(new List<string> { "" }, new List<Shape> { new Rectangle(0, 0, 0, 0, 0) }), new buturiinfo(-1, 0, 1, 0.1f, 0, 0, atag: "he2"));
+                e.c.addmotion(new scalechangeman(1, -1, "", hyo.ww, hyo.wh));
+                e.frame(100);
+                e.endframe(100);
+                e.c.setcxy(hyo.ww * (1-0.01f), hyo.wh * 0.0f, e.c.w * 0, e.c.h * 0);
+
+                e.add(em);
+            }*/
+
             base.onstart();
         }
+        int ako = 0;
         public override void frame(inputin i, float cl)
         {
+        
             base.frame(i, cl);//ここにhyojiman.hyojiがある。
             if (i.ok(Keys.A, itype.ing))
             {
                 me.c.idouxy(-4 * cl, 0);
             }
-            if (i.ok(Keys.W, itype.ing))
+            if (i.ok(Keys.W, itype.down))
             {
-                me.c.idouxy(0, -4 * cl);
+                var m = new Waza(1);
+                m.framed += (a, b) => {
+                    me.c.idouxy(0, -300 * b.cl);
+                };
+                
+                (new Waza(10)+m).add(me);
             }
             if (i.ok(Keys.D, itype.ing))
             {
                 me.c.idouxy(4 * cl, 0);
             }
+            if (i.ok(Keys.D2,itype.down))
+            {
+                me.c.scalechange(2);
+            }
             if (i.ok(Keys.S, itype.ing))
             {
-                me.c.idouxy(0, 4 * cl);
+                var m = new Waza(100);
+                m.framed += (a, b) => { 
+                me.c.idouxy(0, 4 * cl); };
+                m.add(me);
             }
             if (i.ok(Keys.Q, itype.ing))
             {
-                me.c.RAD -= 0.1 * cl;
+                new idouman(1, 0, 0, -1*cl).startAndFrame(me.c, 100);
             }
             if (i.ok(Keys.E, itype.ing))
             {
-                me.c.RAD += 0.1 * cl;
+                new idouman(1, 0, 0, 1 * cl).startAndFrame(me.c, 100);
+            }
+            if (i.ok(Keys.Z, itype.ing))
+            {
+                me.c.w -= 0.5f * cl;
+            }
+            if (i.ok(Keys.C, itype.ing))
+            {
+                me.c.w += 0.5f * cl;
             }
             if (i.ok(Keys.Escape, itype.down))
             {
                 end();
             }
-            em.frame(1);
+            if (i.ok(Keys.M, itype.down))
+            {
+                me.c.mirror = !me.c.mirror;
+            }
+            if (i.ok(MouseButtons.Left, itype.down))
+            {
+                var mom= new Entity(new character(100, 0, 50, 50, 25, 25, 0, new setu("core", 0, 0, new picture(0, 0, 1, 50, 50, 25, 25, 0, false, 1, "def", new Dictionary<string, string> { { "def", "redbit" } })))
+          , new ABrecipie(new List<string> { "" }, new List<Shape> { new Rectangle(0, 0, 0, 0, 0) })
+          , new buturiinfo(3, 0.01f, 1f, 0.5f, 0, 0, 0, 1, atag: ako++.ToString()));
+                mom.c.addmotion(new radtoman(1,"",fileman.whrandhani(0),360));
+                mom.c.settxy(i.x, i.y);
+                
+                mom.add(em);
+            }
+            if (i.ok(MouseButtons.Right, itype.down))
+            {
+                var mom = new Entity(new character(100, 0, 50, 50, 25, 25, 0, new setu("core", 0, 0, new picture(0, 0, 1, 50, 50, 25, 25, 0, false, 1, "def", new Dictionary<string, string> { { "def", "redbit" } })))
+          , new ABrecipie(new List<string> { "" }, new List<Shape> { new Rectangle(0, 0, 0, 0, 0) })
+          , new buturiinfo(3, 0.00f, 0f, 0f, 0, 10, 0, 0, atag: fileman.r.Next().ToString()));
+                mom.c.addmotion(new radtoman(1, "", fileman.whrandhani(0), 360));
+                mom.c.settxy(i.x, i.y);
+
+                mom.add(em);
+            }
+           // if (i.ok(Keys.Space, itype.ing))
+           em.frame(1);
         }
     }
     class shapedraw : Waza 
@@ -196,7 +292,7 @@ namespace Template
             if (e.atariable) 
             {
                 //これクソ重いよ。ただあたり判定を把握するのにはヨシ
-                e.Acore.drawshape(hyoji,R,1,1,1,true);
+                Shape.gousei(e.Acore,e.PAcore).drawshape(hyoji,R,1,1,1,3,true);
             }
         }
     }

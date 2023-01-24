@@ -11,6 +11,8 @@ using System.Windows.Forms;
 using Microsoft.CodeAnalysis.CSharp.Scripting;
 using Microsoft.CodeAnalysis.Scripting;
 using System.Reflection;
+using System.IO;
+using System.Runtime.CompilerServices;
 
 namespace Charamaker2.maker
 {
@@ -70,22 +72,9 @@ namespace Charamaker2.maker
          
             try
             {
-                work = new motion();
-
-                string script = scriptbox.Text;
-                string tmp = script;
-                work.sp = (float)loopud.Value;
-                ScriptOptions a = ScriptOptions.Default
-                .WithReferences(Assembly.GetEntryAssembly())
-                .WithImports("System", "System.Collections.Generic", "Charamaker2.Character", "Charamaker2"
-                , "Charamaker2.maker");
-
-                var Q = CSharpScript.Create(script, options: a, globalsType: typeof(motionmaker));
-                var runner = Q.CreateDelegate();
-                var run = (Delegate)runner;
-                runner(this);
-
-                sel.addmotion(work);
+                var mot=fileman.buildMotion(scriptbox.Text,(float)this.loopud.Value);
+                sel.addmotion(mot);
+                setmotionjouhou(mot);
             }
             catch (Exception ex)
             {
@@ -98,17 +87,8 @@ namespace Charamaker2.maker
         {
             try
             {
-                work = new motion();
-
                 string script = scriptbox.Text;
-                ScriptOptions a = ScriptOptions.Default
-                .WithReferences(Assembly.GetEntryAssembly())
-                .WithImports("System", "System.Collections.Generic", "Charamaker2.Character", "Charamaker2");
-
-                var Q = CSharpScript.Create(script, options: a, globalsType: typeof(motionmaker));
-                var runner = Q.CreateDelegate();
-                var run = (Delegate)runner;
-                runner(this);
+                work = fileman.buildMotion(script);
 
                 fileman.savemotion(script, work);
 
@@ -117,7 +97,7 @@ namespace Charamaker2.maker
             }
             catch { exbox.Text += "no"; }
         }
-        public motion motionmake(string script) 
+        internal motion motionmake(string script) 
         {
             try
             {
@@ -143,11 +123,13 @@ namespace Charamaker2.maker
            
 
                 var l =fileman.loadmotion(true);
-                if (l != null)
-                {
-                    work = l.m;
-                    scriptbox.Text = l.text;
-                }
+            if (l != null)
+            {
+                work = l.m;
+                scriptbox.Text = l.text;
+
+                setmotionjouhou(l);
+            }
 
             
            
@@ -156,6 +138,75 @@ namespace Charamaker2.maker
         private void scriptbox_TextChanged(object sender, EventArgs e)
         {
 
+        }
+
+        private void getsetusB_Click(object sender, EventArgs e)
+        {
+            string seturist="List<string>setus=new List<string>{";
+            var lis = this.sel.getallsetu();
+                for (int i=0;i<lis.Count;i++) 
+            {
+
+                seturist += "\"" + lis[i].nm + "\"";
+                if (i < lis.Count - 1) 
+                {
+                    seturist += ",";
+                }
+            }
+            seturist += "};\n";
+            scriptbox.Text = seturist+scriptbox.Text;
+        }
+
+        private void quickmotionload(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter) 
+            {
+               var m= fileman.loadmotion(quickload.Text);
+                if (m != null)
+                {
+                    exbox.Text = m.text;
+                    setmotionjouhou(m);
+                    Clipboard.SetText(m.text);
+
+                }
+                else 
+                {
+                    if (Directory.Exists(@".\motion\"+quickload.Text))
+                    {
+                        exbox.Text = "";
+                        string[] filesM = System.IO.Directory.GetFiles(@".\motion\"+quickload.Text, "*.c2m", System.IO.SearchOption.AllDirectories);
+                        for (int i = 0; i < filesM.Count(); i++)
+                        {
+                            exbox.Text += filesM[i].Replace(@".\motion\", @"") + Environment.NewLine;
+
+                        }
+                    }
+                }
+         
+            }
+          
+        }
+        /// <summary>
+        /// モーションの情報を表示する
+        /// </summary>
+        /// <param name="m"></param>
+        protected void setmotionjouhou(motion m) 
+        {
+            timelabel.Text = m.rawendtime.ToString();
+        }
+        
+        /// <summary>
+        /// モーションの情報を表示する
+        /// </summary>
+        /// <param name="m"></param>
+        protected void setmotionjouhou(motionsaveman m)
+        {
+            setmotionjouhou(m.m);
+        }
+
+        private void resized(object sender, EventArgs e)
+        {
+            
         }
     }
 }

@@ -140,7 +140,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1578, 944);
+            this.ClientSize = new System.Drawing.Size(1578, 1000);
             this.Controls.Add(this.gasitubox);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.letsgobutton);

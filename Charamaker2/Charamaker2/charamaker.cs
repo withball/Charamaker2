@@ -70,7 +70,7 @@ namespace Charamaker2.maker
 
                 }
 
-
+                temp.setkijyuns();
 
 
                 temp.resethyoji(hyojiman);
@@ -280,7 +280,7 @@ namespace Charamaker2.maker
 
                 
                 sel.x = (float)((NumericUpDown)sender).Value;
-
+             
 
             }
         }
@@ -660,6 +660,39 @@ namespace Charamaker2.maker
         private void chararefresh(object sender, EventArgs e)
         {
             sel.refreshtokijyun();
+        }
+
+        private void quickload(object sender, KeyEventArgs e)
+        {
+            var l = fileman.loadcharacter(quickloadB.Text, reset: true);
+            if (l != null)
+            {
+                var a = l.core.dx;
+                sel.sinu(hyojiman);
+                sel = l;
+
+                sel.resethyoji(hyojiman);
+
+
+                loaded = new character(sel);
+                sentaku(sel);
+                hyojiman.resetpics();
+                motionmakerwow();
+            }
+            else 
+            {
+                var ssou=fileman.ldtex(quickloadB.Text);
+                if (ssou != null)
+                {
+                    sel.sinu(hyojiman);
+                    var si = fileman.gettexsize(quickloadB.Text);
+                    loaded = character.onepicturechara(quickloadB.Text, si.Width);
+                    sel = loaded;
+                    sel.resethyoji(hyojiman);
+                    sentaku(sel);
+                    motionmakerwow();
+                }
+            }
         }
     }
 }

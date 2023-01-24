@@ -60,10 +60,10 @@ namespace Charamaker2.Character
         public setu(setu s)
         {
             nm = s.nm;
-            p =  (picture)Activator.CreateInstance( s.p.GetType(),s.p);
+            p =  (picture)s.p.clone();
             foreach (var a in s.sts)
             {
-                sts.Add((setu)Activator.CreateInstance(a.GetType(),a));
+                sts.Add(a.clone());
             }
             dx = s.dx;
             dy = s.dy;
@@ -214,6 +214,14 @@ namespace Charamaker2.Character
             dx = s.dx;
             dy = s.dy;
         }
+        /// <summary>
+        /// クローンするメソッド
+        /// </summary>
+        /// <returns></returns>
+        virtual public setu clone() 
+        {
+            return new setu(this);
+        }
 
     }
     /// <summary>
@@ -255,6 +263,21 @@ namespace Charamaker2.Character
             var res = new character(0, 0, si.Width * scale, si.Height * scale, si.Width * scale * txp, si.Height * scale * typ, rad,
                 new setu("core", 0, 0, picture.onetexpic(tex,widthscale,z,hin,txp,typ,opa,rad,0,0,mirror)));
             res.settxy(tx, ty);
+            return res;
+        }
+        /// <summary>
+        /// ピクチャー一枚だけのキャラクターを作る
+        /// </summary>
+        /// <param name="pic">ピクチャー</param>
+        /// <returns></returns>
+        public static character onepicturechara(picture pic)
+        {
+
+         
+
+            var res = new character(0, 0, pic.w, pic.h, pic.tx, pic.ty, pic.RAD,
+                new setu("core", 0, 0, pic));
+            res.settxy(pic.gettx(), pic.getty());
             return res;
         }
 
@@ -377,10 +400,10 @@ namespace Charamaker2.Character
             tx = c.tx;
             ty = c.ty;
             rad = c.rad;
-            core = (setu)Activator.CreateInstance(c.core.GetType(),c.core);
+            core = (setu)c.core.clone();
             
             _mirror = c._mirror;
-            premir = c.premir;
+            premir = c._mirror;
             if (setkijyun)
             {
                 if (c.kijyun == null) setkijyuns();
@@ -552,43 +575,23 @@ namespace Charamaker2.Character
                 }
             }
         }
+     
+
         /// <summary>
         /// 角度以外の要素を基準に整える
-        /// </summary>
-        /// <param name="hyo">あると便利</param>
-        public void refreshtokijyun(hyojiman hyo)
-        {
-            character c = getkijyun();
-            character pre = new character(this, true,false);
-            w = c.w;
-            h = c.h;
-            tx = c.tx;
-            ty = c.ty;
-            rad = c.rad;
-            
-
-            this.sinu(hyo);
-            core = (setu)Activator.CreateInstance(kijyun.core.GetType(),kijyun.core);
-            this.resethyoji(hyo);
-            this.copykakudo(pre);
-        }
-
-        /// <summary>
-        /// 角度や以外の要素を基準に整える
         /// </summary>
         /// <param name="OPA">不透明度も同一とするか</param>
         /// <param name="TEX">テクスチャーも同一とするか</param>
         public void refreshtokijyun(bool OPA = true, bool TEX = true)
         {
             character c = getkijyun();
-            character pre = new character(this, true, false);
             w = c.w;
             h = c.h;
             tx = c.tx;
             ty = c.ty;
             rad = c.rad;
-            premir = false;
-
+            //premir =false;
+           // Console.WriteLine("QQQQQQQ");
 
             foreach (var a in kijyun.core.getallsetu())
             {
@@ -597,8 +600,10 @@ namespace Charamaker2.Character
                 {
                     float opa = b.p.OPA;
                     string tex = b.p.texname;
-
+                    double kaku = b.p.RAD;
                     b.copy(a);
+                    b.p.RAD = kaku;
+                    if(mirror) b.p.mir=!b.p.mir;
                     if (!OPA)
                     {
                         b.p.OPA = opa;
@@ -610,7 +615,7 @@ namespace Charamaker2.Character
                     }
                 }
             }
-            this.copykakudo(pre);
+            
         }
 
    
@@ -643,9 +648,10 @@ namespace Charamaker2.Character
         /// <param name="c">コピー元</param>
         public void copykakudo(character c)
         {
-            if (c.premir!=premir) 
+            if (c.mirror != mirror)
             {
-                c.kijyuhanten();
+
+             //   c.kijyuhanten();
             }
             foreach (var a in c.core.getallsetu())
             {
@@ -659,17 +665,17 @@ namespace Charamaker2.Character
                 }
             }
             rad = c.rad;
-            if (c.premir != premir)
+            if (c.mirror != mirror)
             {
 
-                c.kijyuhanten();
+              //  c.kijyuhanten();
             }
         }
         /// <summary>
         /// hyojimanに全ての節のピクチャーを追加する。
         /// </summary>
         /// <param name="hyojiman">追加するところ</param>
-        public void resethyoji(hyojiman hyojiman)
+        virtual public void resethyoji(hyojiman hyojiman)
         {
             var l = core.getallsetu();
             foreach (var lll in l)
@@ -699,13 +705,8 @@ namespace Charamaker2.Character
         /// <param name="cl">モーションに使うクロック</param>
         virtual public void frame(float cl=1)
         {
-
-            if (premir)
-            {
-                premir = false;
-                
-                kijyuhanten();
-            }
+            startmotion(true);
+            
             for (int i = motions.Count() - 1; i >= 0; i--)
             {
                 motions[i].frame(this,cl);
@@ -715,14 +716,34 @@ namespace Charamaker2.Character
 
                 }
             }
-            if (mirror)
+            endmotion(true);
+           
+           
+        }
+        /// <summary>
+        /// モーションを動かす前に呼ぶじゃないと反転がおかしくなる
+        /// </summary>
+        /// <param name="gati">こちらはcharacter.frame内のみで呼びます。ほっといて！</param>
+        public void startmotion(bool gati = false) 
+        {
+            if (premir)
             {
-                premir = true;
+                kijyuhanten();
+                if (gati) premir = false;
+            }
+        }
+        /// <summary>
+        /// モーションを動かした後に呼ぶじゃないと反転がおかしくなる
+        /// </summary>
+        /// <param name="gati">こちらはcharacter.frame内のみで呼びます。ほっといて！</param>
+        public void endmotion(bool gati=false)
+        {
+            if ((gati&&mirror)||(!gati&&premir))
+            {
+                if(gati)premir = true;
                 kijyuhanten();
             }
             soroeru();
-           
-
         }
         /// <summary>
         /// 基準をもとに反転を行う
@@ -995,7 +1016,14 @@ namespace Charamaker2.Character
         {
             foreach (var a in motions) a.removemoves(t);
         }
-
+        /// <summary>
+        /// クローンするメソッド
+        /// </summary>
+        /// <returns></returns>
+       virtual public character clone() 
+        {
+            return new character(this);
+        }
     }
     /// <summary>
     /// カメラを自動的に追跡してくれるキャラクター。effectcharaのついてくキャラをこいつにして追跡する節をcoreにするといい感じ。
@@ -1025,9 +1053,19 @@ namespace Charamaker2.Character
             hyojiman.effects.Add(this);
             frame();
         }
-    /// <summary>
-    /// 空のコンストラクタ
-    /// </summary>
+
+        public camchara(camchara cam) : base(cam)
+        {
+            hyojiman = cam.hyojiman;
+          
+            time = cam.time;
+            resethyoji(hyojiman);
+            hyojiman.effects.Add(this);
+            frame();
+        }
+        /// <summary>
+        /// 空のコンストラクタ
+        /// </summary>
         public camchara() { }
         /// <summary>
         /// フレーム処理
@@ -1038,7 +1076,10 @@ namespace Charamaker2.Character
             base.frame(cl);
             settxy(hyojiman.camx, hyojiman.camy);
         }
-
+        public override character clone()
+        {
+            return new camchara(this);
+        }
     }
     /// <summary>
     /// エッフェクト。フレーム処理はhyojiman側で行われる。
@@ -1205,6 +1246,10 @@ namespace Charamaker2.Character
             hyojiman.effects.Remove(this);
 
         }
+        public override character clone()
+        {
+            return new effectchara(this);
+        }
 
     }
     /// <summary>
@@ -1296,6 +1341,10 @@ namespace Charamaker2.Character
             }
             ds.Clear();
         }
+        public override character clone()
+        {
+            return new haikeieff(this);
+        }
     }
     /// <summary>
     /// いい感じにセリフを表示するためのクラス。使うに堪えない
@@ -1303,38 +1352,43 @@ namespace Charamaker2.Character
     [Serializable]
     public class serif : effectchara
     {
-
-       public message m;
+        /// <summary>
+        /// セリフの中身
+        /// </summary>
+        public message m;
         /// <summary>
         /// メッセージの方のタイマー
         /// </summary>
-        public float TIMEA{get{ return m.TIMEA; } }
+        public float TIMEA { get { return m.TIMEA; } }
         /// <summary>
         /// サイズと高さ
         /// </summary>
-       protected float size,takasa;
-      /// <summary>
-      /// 普通のコンストラクタ
-      /// </summary>
-      /// <param name="hyo">追加する表示マン</param>
-      /// <param name="time">生存時間</param>
-      /// <param name="tuiteku">ついていくキャラクター</param>
-      /// <param name="habamoji">文字の幅</param>
-      /// <param name="speed">一文字が表示されるために必要な時間</param>
-      /// <param name="text">セリフの内容</param>
-      /// <param name="scale">文字の大きさ（基本はキャラクターの大きさに依存）</param>
-      /// <param name="takaa">セリフが表示される高さ</param>
-      /// <param name="textuer">ウィンドウのテクスチャー</param>
-        public serif(hyojiman hyo,float time, character tuiteku ,int habamoji,float speed,string text,float scale=1,float takaa=1,string textuer="serifwindow") : base(hyo,100,tuiteku.x,tuiteku.y,0,0,0,0,0,new setu("window",0,0,new picture(0,-10000,2000,0,0,0,0,0,false,1,"def",new Dictionary<string, string> { {"def", textuer } }),new List<setu>()),tuiteku )
+        protected float size, takasa;
+        /// <summary>
+        /// 普通のコンストラクタ
+        /// <paramref name="z">z</paramref>
+        /// <param name="hyo">追加する表示マン</param>
+        /// <param name="time">生存時間</param>
+        /// <param name="tuiteku">ついていくキャラクター</param>
+        /// <param name="habamoji">文字の幅</param>
+        /// <param name="speed">一文字が表示されるために必要な時間</param>
+        /// <param name="text">セリフの内容</param>
+        /// <param name="scale">文字の大きさ（基本はキャラクターの大きさに依存）</param>
+        /// <param name="R">色</param>
+        /// <param name="G">色</param>
+        /// <param name="B">色</param>
+        /// <param name="takaa">セリフが表示される高さ</param>
+        /// <param name="textuer">ウィンドウのテクスチャー</param>
+        public serif(hyojiman hyo, float time, character tuiteku, int habamoji, float speed, string text, float scale = 1, float R=0,float G=0,float B=0,float takaa = 1, float z = 99999, string textuer = "serifwindow") : base(hyo, 100, tuiteku.x, tuiteku.y, 0, 0, 0, 0, 0, new setu("window", 0, 0, new picture(0, -10000, z, 0, 0, 0, 0, 0, false, 1, "def", new Dictionary<string, string> { { "def", textuer } }), new List<setu>()), tuiteku,"",false,false)
         {
-            
+
             takasa = takaa;
             size = scale;
-            float si = (tuiteku.w + tuiteku.h)/5*size;
+            float si = (tuiteku.w + tuiteku.h) / 5 * size;
             if (si <= 0) si = 1;
-            m = new message(tuiteku.x,tuiteku.y,(int)si,habamoji,0,speed,time,text,0,0,0,true,2001);
-            hyo.addpicture(m);
-          
+            m = new message(tuiteku.x, tuiteku.y, (int)si, habamoji, 0, speed, time, text, R, G, B, true, z);
+            add();
+
         }
         /// <summary>
         /// コピーするためのコンストラクタ
@@ -1360,10 +1414,17 @@ namespace Charamaker2.Character
         /// フレーム処理。文字に応じてウィンドウの幅を変えたり
         /// </summary>
         /// <param name="cl">クロック</param>
-        public override void frame(float cl=1)
+        public override void frame(float cl = 1)
         {
             base.frame(cl);
-            
+            SetSerif();
+        }
+     
+        /// <summary>
+        /// セリフの座標とかをちゃんとセットする
+        /// </summary>
+        protected void SetSerif()
+        {
             if (m.sinderu) time =0;
             else { time = 100; }
             core.p.w = m.W + m.SIZE/10;
@@ -1374,13 +1435,25 @@ namespace Charamaker2.Character
             m.x = core.p.x + m.SIZE/10;
             m.y = core.p.y;
         }
+        
         public override void sinu(hyojiman hyojiman)
         {
     
             base.sinu(hyojiman);
             m.remove(hyojiman);
         }
-       
+        public override void resethyoji(hyojiman hyojiman)
+        {
+            m.add(hyojiman);
+            base.resethyoji(hyojiman);
+            SetSerif();
+
+        }
+        public override character clone()
+        {
+            return new serif(this);
+        }
+
     }
 
 
