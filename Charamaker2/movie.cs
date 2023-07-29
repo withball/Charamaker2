@@ -51,7 +51,8 @@ namespace Charamaker2.movie
         }
         public void start(hyojiman h) 
         {
-            hyojiman = new hyojiman(h);
+            hyojiman = fileman.makehyojiman();
+            hyojiman.truecopy(h);
             moto = h;
 
 

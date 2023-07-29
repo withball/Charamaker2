@@ -16,6 +16,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
 using System.Drawing;
 using System.Web;
+using Charamaker2.Shapes;
 
 namespace Charamaker2
 {
@@ -87,6 +88,17 @@ namespace Charamaker2
         /// </summary>
         /// <returns></returns>
         public abstract drawings clone();
+      
+        /// <summary>
+        /// 表示マンにて表示されている範囲に入っているか調べる
+        /// </summary>
+        /// <param name="hyo"></param>
+        /// <returns></returns>
+
+        public virtual bool inHyoji(hyojiman hyo) 
+        {
+            return true;
+        }
     }
 
     /// <summary>
@@ -114,6 +126,7 @@ namespace Charamaker2
         /// メッセージ
         /// </summary>
         public message m;
+      
         /// <summary>
         /// 普通のコンストラクタ
         /// </summary>
@@ -122,6 +135,7 @@ namespace Charamaker2
         public messagepicture(picture p, message m) :base(p)
         {
             this.m = m;
+            
         }   /// <summary>
             /// ピクチャーをコピーするときのコンストラクタ
             /// </summary>
@@ -132,8 +146,9 @@ namespace Charamaker2
         }
         public override bool add(hyojiman hyo)
         {
+            var res= base.add(hyo); 
             m?.add(hyo);
-            return base.add(hyo);
+            return res;
         }
         public override bool remove(hyojiman hyo)
         {
@@ -144,18 +159,28 @@ namespace Charamaker2
         /// 空のコンストラクタ
         /// </summary>
         public messagepicture():base() { }
+        /// <summary>
+        /// メッセージを整える
+        /// </summary>
+        protected void setmessage() 
+        {
+            m.x = this.gettx();
+            m.y = this.getty();
+            m.rad = rad;
+            m.opa = opa;
+            m.SIZE = w*2 / m.nmoji;
+           
+        }
         public override bool draw(hyojiman hyo, float cl, bool draw)
         {
+            var res= base.draw(hyo, cl, draw); 
             if (m != null)
             {
-                m.x = this.gettx();
-                m.y = this.getty();
-                m.rad = rad;
-                m.opa = opa;
-                m.SIZE = w / m.nmoji;
+                setmessage();
                 m.draw(hyo, cl, draw);
+                //   Console.WriteLine(z + " :QEWR: " + m.z+"  "+dz);
             }
-            return base.draw(hyo, cl, draw);
+            return res;
         }
         public override drawings clone()
         {
@@ -427,6 +452,21 @@ namespace Charamaker2
             }
             return false;
         }
+
+
+        /// <summary>
+        /// 表示の範囲に入っているかチェックする
+        /// </summary>
+        /// <param name="hyo">どの表示マンか</param>
+        /// <returns></returns>
+        override public bool inHyoji(hyojiman hyo) 
+        {
+            return Math.Abs((getcx(w / 2, h / 2)) - (hyo.ww / 2 + hyo.camx)) * 2 <= hyo.ww + Math.Abs(w * Math.Cos(RAD)) + Math.Abs(h * Math.Sin(RAD))
+                 && Math.Abs((getcy(w / 2, h / 2)) - (hyo.wh / 2 + hyo.camy)) * 2 <= hyo.wh + Math.Abs(w * Math.Sin(RAD)) + Math.Abs(h * Math.Cos(RAD));
+
+
+        }
+
         /// <summary>
         /// ビットマップを描画するぞ
         /// </summary>
@@ -437,10 +477,7 @@ namespace Charamaker2
         {
             float bairitu = hyo.Tbai;
             var p = this;
-            if (this.OPA > 0 &&
-              Math.Abs((getcx(w / 2, h / 2)) - (hyo.ww / 2 + hyo.camx)) * 2 <= hyo.ww + Math.Abs(w * Math.Cos(RAD)) + Math.Abs(h * Math.Sin(RAD)) &&
-              Math.Abs((getcy(w / 2, h / 2)) - (hyo.wh / 2 + hyo.camy)) * 2 <= hyo.wh + Math.Abs(w * Math.Sin(RAD)) + Math.Abs(h * Math.Cos(RAD))
-              )
+            if (this.OPA > 0 && inHyoji(hyo))
             {
                 //  bmprt = byoga(hyo, this, bmprt);
 
@@ -753,11 +790,36 @@ namespace Charamaker2
 
             return res;
         }
+
+        /// <summary>
+        /// 表示マンの表示できる範囲に入っているか調べる
+        /// </summary>
+        /// <param name="hyo"></param>
+        /// <returns></returns>
+         public bool inHyoji(hyojiman hyo)
+        {
+
+            float tx = hyo.camx, ty = hyo.camy;
+            float xx = d.x, yy = d.y;
+
+            hyo.camx = (hyo.camx + hyo.ww / 2) * x;
+            hyo.camy = (hyo.camy + hyo.wh / 2) * y;
+            d.x += hyo.ww / 2;
+            d.y += hyo.wh / 2;
+            var res = d.inHyoji(hyo);
+            hyo.camx = tx;
+            hyo.camy = ty;
+            d.x = xx;
+            d.y = yy;
+
+            return res;
+        }
+
         /// <summary>
         /// 頑張ってクローン
         /// </summary>
         /// <returns></returns>
-       virtual public haikeidraws clone() 
+        virtual public haikeidraws clone() 
         {
             return new haikeidraws(this);
         }
@@ -859,7 +921,18 @@ namespace Charamaker2
                     hj.hyoji(cl, draw:draw) ;
                     
                 }
-                drawbitmap(hj.getbitmap().Bitmap,hyo);
+                var bmpp = hj.getbitmap();
+                if (bmpp == null)
+                {
+                    var rd = (ID2D1BitmapRenderTarget)fileman.getBitmapRender(hyo.render,"Hyojitemp");
+
+                    drawbitmap(rd.Bitmap, hyo);
+                }
+                else 
+                {
+                    drawbitmap(bmpp, hyo);
+                }
+              
 
             //    Console.WriteLine(hj.ww+"aksgdja"+hj.render.PixelSize.Width);
             //    Console.WriteLine(x+"::"+y + "aksgdja" + w);
@@ -907,24 +980,30 @@ namespace Charamaker2
         {
             render.EndDraw();
         }
+        readonly bool destroyRender=false;
 
         /// <summary>
-        /// ガンバってビットマップを取り出す。
+        /// この表示マンの表示を別レンダーに生き写す
         /// </summary>
-        /// <returns></returns>
-        virtual public ID2D1BitmapRenderTarget getbitmap() 
+        /// <returns>このビットマップはDisposeしてね</returns>
+        virtual public void ikiutusi(ID2D1RenderTarget render) 
+        {
+           
+
+            hyoji2(render, 0, true, true, false, otoOptin.ordinal,true);
+            
+        }
+        /// <summary>
+        /// ビットマップレンダーならビットマップをもらう。
+        /// </summary>
+        /// <returns>ないならnull</returns>
+        virtual public ID2D1Bitmap getbitmap()
         {
             if (render.GetType() == typeof(ID2D1BitmapRenderTarget)) 
             {
-                return ((ID2D1BitmapRenderTarget)render);
+                return ((ID2D1BitmapRenderTarget)render).Bitmap;
             }
-            var size = render.PixelSize;
-            var bt = render.CreateCompatibleRenderTarget(size, CompatibleRenderTargetOptions.None);
-            //  var bt = new ID2D1BitmapRenderTarget(bm.NativePointer);
-
-
-            hyoji2(bt, 0, true, true, false, otoOptin.ordinal,true);
-            return bt;
+            return null;
         }
 
 
@@ -1047,7 +1126,7 @@ namespace Charamaker2
         /// レンダー
         /// </summary>
         [NonSerialized]
-        public ID2D1RenderTarget render;
+        public ID2D1RenderTarget render=null;
         /// <summary>
         /// ウィンドウの座標での幅
         /// </summary>
@@ -1056,6 +1135,17 @@ namespace Charamaker2
         /// ウィンドウの座標での高さ
         /// </summary>
         public float wh { get { return render.PixelSize.Height / Tbai; } }
+
+        /// <summary>
+        /// 画質を考慮したピクセルサイズ
+        /// </summary>
+        public Size gasituSize { get { return render.PixelSize ; } }
+
+        /// <summary>
+        /// 本来のピクセルサイズ
+        /// </summary>
+        public Size TrueSize { get { return new Size((int)Math.Round(render.PixelSize.Width/gasitu)
+            , (int)Math.Round(render.PixelSize.Height / gasitu)); } }
 
         /// <summary>
         /// 同時に表示できる描画オブジェクトの限界量
@@ -1086,46 +1176,23 @@ namespace Charamaker2
         /// </summary>
         /// <param name="ren"></param>
         /// <param name="gasitu"></param>
-        public hyojiman(ID2D1RenderTarget ren,float gasitu)
+        /// <param name="destroyRender">レンダーを死ぬとき破壊するか</param>
+        public hyojiman(ID2D1RenderTarget ren,float gasitu,bool destroyRender=false)
         {
             reset();
             render = ren;
+            this.destroyRender = destroyRender;
             this.gasitu = gasitu;
         }
-        /// <summary>
-        /// コピーのためのコンストラクタ
-        /// </summary>
-        /// <param name="h">コピー元</param>
-        public hyojiman(hyojiman h)
-        {
-            pics = new List<drawings>(h.pics);
-            haikeipics = new List<haikeidraws>(h.haikeipics);
-            effects = new List<effectchara>(h.effects);
-            otos = new List<string>(h.otos);
-            otovols = new List<float>(h.otovols);
-            volume = h.volume;
-
-            bgm = h.bgm;
-            butu = h.butu;
-            tag = h.tag;
-
-            haikeibokasi = h.haikeibokasi;
-            camx = h.camx;
-            camy = h.camy;
-            HR = h.HR; HG = h.HG; HB = h.HB;HOpa = h.HOpa;
-            resethaikeipicsman = h.resethaikeipicsman;
-            resetpicsman = h.resetpicsman;
-            bairitu = h.bairitu;
-            skipn = h.skipn;
-            render = h.render;
-            maxdraws = h.maxdraws;
-        }
+        
+        
         /// <summary>
         /// 通信を受け取ったときにコピーするためのメソッド。
         /// </summary>
         /// <param name="moto">コピー元</param>
         public void tusinhyoji(hyojiman moto)
         {
+
             pics = moto.pics;
             haikeipics = moto.haikeipics;
             otos = moto.otos;
@@ -1144,6 +1211,34 @@ namespace Charamaker2
             bairitu = moto.bairitu;
          
         }
+        /// <summary>
+        /// 別の表示マンをちゃんとコピーする
+        /// </summary>
+        /// <param name="h">コピー元</param>
+        public void truecopy(hyojiman h) 
+        {
+            pics = new List<drawings>(h.pics);
+            haikeipics = new List<haikeidraws>(h.haikeipics);
+            effects = new List<effectchara>(h.effects);
+            otos = new List<string>(h.otos);
+            otovols = new List<float>(h.otovols);
+            volume = h.volume;
+
+            bgm = h.bgm;
+            butu = h.butu;
+            tag = h.tag;
+
+            haikeibokasi = h.haikeibokasi;
+            camx = h.camx;
+            camy = h.camy;
+            HR = h.HR; HG = h.HG; HB = h.HB; HOpa = h.HOpa;
+            resethaikeipicsman = h.resethaikeipicsman;
+            resetpicsman = h.resetpicsman;
+            bairitu = h.bairitu;
+            skipn = h.skipn;
+            maxdraws = h.maxdraws;
+        }
+
         /// <summary>
         /// ちょっと変なコピー。hyojiを行う前に分裂させ、1フレーム限りのエフェクト(UIとか)を乗せてhyojiしたのちnisehyojiし通信するとよき
         /// </summary>
@@ -1199,7 +1294,26 @@ namespace Charamaker2
         }
        public  enum otoOptin 
         {
-             ordinal,PlayandDontRemove,Dont
+            /// <summary>
+            /// 普通
+            /// </summary>
+             ordinal,
+             /// <summary>
+             /// 再生するけどそのまんま。録画を再生するときに。
+             /// </summary>
+            PlayandDontRemove,
+            /// <summary>
+            /// 何もしない。保存される
+            /// </summary>
+            Dont,
+            /// <summary>
+            /// BGMだけ再生し、残りは破棄する。シーンのスキップに。
+            /// </summary>
+            OnlyBgm,
+            /// <summary>
+            /// 全てを破棄する
+            /// </summary>
+            BreakAll
         }
 
 
@@ -1237,11 +1351,13 @@ namespace Charamaker2
             {
                 for (int i = 0; i < otos.Count; i++)
                 {
-                    if (draw) fileman.playoto(otos[i], otovols[i] * volume);
+                    if (oO==otoOptin.ordinal||oO==otoOptin.PlayandDontRemove) fileman.playoto(otos[i], otovols[i] * volume);
                 }
 
-                if (bgm != "") if (draw) fileman.playbgm(bgm, butu);
-                if (oO == otoOptin.ordinal)
+                if (bgm != "") 
+                    if (oO==otoOptin.ordinal|| oO == otoOptin.PlayandDontRemove||oO==otoOptin.OnlyBgm) 
+                        fileman.playbgm(bgm, butu);
+                if (oO == otoOptin.ordinal||oO==otoOptin.OnlyBgm||oO==otoOptin.BreakAll)
                 {
                     bgm = "";
                     otos.Clear();
@@ -1365,14 +1481,22 @@ namespace Charamaker2
             clearpics();
             clearhaikeipics();
             effects.Clear();
-            bgm = "";
-            butu = false;
-            otos.Clear();
-            otovols.Clear();
+            resetoto();
             haikeipics.Clear();
             pics.Clear();
             camx = 0;
             camy = 0;
+        }
+        /// <summary>
+        /// 音、BGMをリセットする
+        /// </summary>
+        public void resetoto() 
+        {
+            bgm = "";
+            butu = false;
+            otos.Clear();
+            otovols.Clear();
+
         }
 
         /// <summary>
@@ -1773,6 +1897,16 @@ namespace Charamaker2
             y -= this.camy;
             return hyo.camy + (y * hyo.wh / this.wh);
         }
+        /// <summary>
+        /// 表示マンを図形に変換する。
+        /// 表示領域にキャラクターが含まれるか判定したいときに使ってね
+        /// </summary>
+        /// <returns></returns>
+        public Shape ToShape() 
+        {
+            var rad = 0;
+            return new Shapes.Rectangle(camx,camy,ww,wh,rad);
+        }
 
     }
     /// <summary>
@@ -1808,11 +1942,11 @@ namespace Charamaker2
         /// <summary>
         /// 文字のサイズ
         /// </summary>
-        protected float size;
+        public float size;
         /// <summary>
         /// RGBでしかない
         /// </summary>
-        protected float R, G, B;
+        public float R, G, B;
         /// <summary>
         /// 表示するテキスト
         /// </summary>
@@ -1926,6 +2060,9 @@ namespace Charamaker2
         /// </summary>
         public float H { get { return size * sts.Count; } }
         
+        /// <summary>
+        /// 下ぞろえをするときに移動する距離
+        /// </summary>
         protected float sitazoroeman {get{ return size * (sts.Count - 1); } }
         /// <summary>
         /// 文字を書き始めるx
@@ -2055,6 +2192,14 @@ namespace Charamaker2
         {
             if (timer > text.Length * speed) timer = text.Length * speed;
         }
+        /// <summary>
+        /// テキストを表示しきるのにかかる時間。
+        /// </summary>
+        public float texthyojitime { get {
+                return
+                    text.Length * speed;
+                
+            } }
         /// <summary>
         /// テキストを作り出す
         /// </summary>

@@ -57,6 +57,10 @@ namespace Charamaker2.Character
                 moves.Add((moveman)Activator.CreateInstance(t, a));
             }
         }
+        virtual public motion clone() 
+        {
+            return new motion(this);
+        }
         /// <summary>
         /// モーションを始めるためのメソッド
         /// </summary>
@@ -103,10 +107,20 @@ namespace Charamaker2.Character
                 for (int i = sidx; i <= idx && i < moves.Count; i++)
                 {
 
-
                     if (!moves[i].owari)
                     {
-                        moves[i].frame(c, sp*cl);
+                        if (moves[i].STOP)
+                        {
+                            float clm = moves[i].getnokotime(cl);
+
+                            moves[i].frame(c, sp * cl);
+                            cl -= clm;
+                        }
+                        else 
+                        {
+
+                            moves[i].frame(c, sp * cl);
+                        }
                     }
                     else if (sidx == i)
                     {
@@ -733,6 +747,44 @@ namespace Charamaker2.Character
                         }
                     }
 
+
+                }
+            }
+            else if(nm=="")
+            {
+                if (Math.Abs(Math.Atan2(Math.Sin(c.RAD - radto), Math.Cos(c.RAD - radto))) <= Math.Abs(radsp * 1.1 * t))
+                {
+
+                    double sp = c.RAD - radto;
+                    c.RAD -= sp;
+                    foreach (var a in tags)
+                    {
+                        a.p.RAD -= sp;
+
+                    }
+                }
+                else
+                {
+                    if (sai)
+                    {
+                        if (Math.Atan2(Math.Sin(c.RAD - radto), Math.Cos(c.RAD - radto)) < 0)
+                        {
+                            radsp = Math.Abs(radsp);
+
+                        }
+                        else
+                        {
+                            radsp = -Math.Abs(radsp);
+
+                        }
+
+                    }
+                    c.RAD += radsp * t;
+                    foreach (var a in tags)
+                    {
+                        a.p.RAD += radsp * t;
+
+                    }
 
                 }
             }

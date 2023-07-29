@@ -116,6 +116,22 @@ namespace Charamaker2.input
             up(i, rawconv);
         }
         /// <summary>
+        /// 今の全てのボタンを上げる
+        /// </summary>
+        public void upall() 
+        {
+            this.k.Clear();
+            this.m.Clear();
+        }
+        /// <summary>
+        /// 前の全てのボタンを上げる
+        /// </summary>
+        public void preupall()
+        {
+            this.pk.Clear();
+            this.pm.Clear();
+        }
+        /// <summary>
         /// 変換器をもとにキーを押す。変換器にない入力はそのままになる。
         /// </summary>
         /// <param name="i">押すキー</param>

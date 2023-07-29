@@ -140,9 +140,9 @@ namespace Template
             em = new EntityManager(hyo);
             next = new SScene(sm);
             me.add(em);
-       //    he.add(em); 
-              new shapedraw().add(me);
-            new shapedraw().add(he);
+           he.add(em); 
+           //   new shapedraw().add(me);
+          //  new shapedraw().add(he);
 
             {
                 var e = new Entity(character.onepicturechara("redbit", 1, 0)
@@ -205,10 +205,10 @@ namespace Template
             }
             if (i.ok(Keys.S, itype.ing))
             {
-                var m = new Waza(100);
-                m.framed += (a, b) => { 
-                me.c.idouxy(0, 4 * cl); };
-                m.add(me);
+                 var m = new Waza(100);
+                 m.framed += (a, b) => { 
+                 me.c.idouxy(0, 4 * cl); };
+                 m.add(me);
             }
             if (i.ok(Keys.Q, itype.ing))
             {

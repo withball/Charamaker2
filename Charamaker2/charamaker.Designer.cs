@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(charamaker));
             this.ticker = new System.Windows.Forms.Timer(this.components);
             this.setubox = new System.Windows.Forms.ComboBox();
             this.texturebox = new System.Windows.Forms.TextBox();
@@ -63,6 +64,8 @@
             this.refreshb = new System.Windows.Forms.Button();
             this.TexSizeLabel = new System.Windows.Forms.Label();
             this.quickloadB = new System.Windows.Forms.TextBox();
+            this.PshotB = new System.Windows.Forms.Button();
+            this.BshotB = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dxbox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.zbox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.opabox)).BeginInit();
@@ -83,8 +86,9 @@
             // 
             // setubox
             // 
+            this.setubox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.setubox.FormattingEnabled = true;
-            this.setubox.Location = new System.Drawing.Point(859, 20);
+            this.setubox.Location = new System.Drawing.Point(1186, 58);
             this.setubox.Name = "setubox";
             this.setubox.Size = new System.Drawing.Size(121, 26);
             this.setubox.TabIndex = 0;
@@ -92,7 +96,8 @@
             // 
             // texturebox
             // 
-            this.texturebox.Location = new System.Drawing.Point(859, 314);
+            this.texturebox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.texturebox.Location = new System.Drawing.Point(1186, 350);
             this.texturebox.Name = "texturebox";
             this.texturebox.Size = new System.Drawing.Size(150, 25);
             this.texturebox.TabIndex = 9;
@@ -100,8 +105,9 @@
             // 
             // texsbox
             // 
+            this.texsbox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.texsbox.FormattingEnabled = true;
-            this.texsbox.Location = new System.Drawing.Point(859, 359);
+            this.texsbox.Location = new System.Drawing.Point(1186, 395);
             this.texsbox.Name = "texsbox";
             this.texsbox.Size = new System.Drawing.Size(171, 26);
             this.texsbox.TabIndex = 11;
@@ -109,14 +115,16 @@
             // 
             // addtexnamebox
             // 
-            this.addtexnamebox.Location = new System.Drawing.Point(859, 402);
+            this.addtexnamebox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.addtexnamebox.Location = new System.Drawing.Point(1186, 438);
             this.addtexnamebox.Name = "addtexnamebox";
             this.addtexnamebox.Size = new System.Drawing.Size(150, 25);
             this.addtexnamebox.TabIndex = 12;
             // 
             // texremb
             // 
-            this.texremb.Location = new System.Drawing.Point(1111, 359);
+            this.texremb.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.texremb.Location = new System.Drawing.Point(1438, 395);
             this.texremb.Name = "texremb";
             this.texremb.Size = new System.Drawing.Size(75, 34);
             this.texremb.TabIndex = 13;
@@ -126,7 +134,8 @@
             // 
             // texaddb
             // 
-            this.texaddb.Location = new System.Drawing.Point(1111, 411);
+            this.texaddb.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.texaddb.Location = new System.Drawing.Point(1438, 447);
             this.texaddb.Name = "texaddb";
             this.texaddb.Size = new System.Drawing.Size(75, 34);
             this.texaddb.TabIndex = 14;
@@ -136,14 +145,16 @@
             // 
             // texpathbox
             // 
-            this.texpathbox.Location = new System.Drawing.Point(859, 433);
+            this.texpathbox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.texpathbox.Location = new System.Drawing.Point(1186, 469);
             this.texpathbox.Name = "texpathbox";
             this.texpathbox.Size = new System.Drawing.Size(150, 25);
             this.texpathbox.TabIndex = 16;
             // 
             // seturemvb
             // 
-            this.seturemvb.Location = new System.Drawing.Point(1086, 15);
+            this.seturemvb.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.seturemvb.Location = new System.Drawing.Point(1413, 50);
             this.seturemvb.Name = "seturemvb";
             this.seturemvb.Size = new System.Drawing.Size(75, 34);
             this.seturemvb.TabIndex = 17;
@@ -153,7 +164,8 @@
             // 
             // setuaddb
             // 
-            this.setuaddb.Location = new System.Drawing.Point(1046, 55);
+            this.setuaddb.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.setuaddb.Location = new System.Drawing.Point(1373, 100);
             this.setuaddb.Name = "setuaddb";
             this.setuaddb.Size = new System.Drawing.Size(75, 34);
             this.setuaddb.TabIndex = 18;
@@ -163,20 +175,22 @@
             // 
             // newsetubox
             // 
-            this.newsetubox.Location = new System.Drawing.Point(859, 64);
+            this.newsetubox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.newsetubox.Location = new System.Drawing.Point(1186, 100);
             this.newsetubox.Name = "newsetubox";
             this.newsetubox.Size = new System.Drawing.Size(150, 25);
             this.newsetubox.TabIndex = 19;
             // 
             // dxbox
             // 
+            this.dxbox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.dxbox.DecimalPlaces = 2;
             this.dxbox.Increment = new decimal(new int[] {
             1,
             0,
             0,
             65536});
-            this.dxbox.Location = new System.Drawing.Point(859, 104);
+            this.dxbox.Location = new System.Drawing.Point(1186, 140);
             this.dxbox.Maximum = new decimal(new int[] {
             10000000,
             0,
@@ -194,13 +208,14 @@
             // 
             // zbox
             // 
+            this.zbox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.zbox.DecimalPlaces = 2;
             this.zbox.Increment = new decimal(new int[] {
             1,
             0,
             0,
             65536});
-            this.zbox.Location = new System.Drawing.Point(1086, 314);
+            this.zbox.Location = new System.Drawing.Point(1413, 350);
             this.zbox.Maximum = new decimal(new int[] {
             10000000,
             0,
@@ -218,13 +233,14 @@
             // 
             // opabox
             // 
+            this.opabox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.opabox.DecimalPlaces = 4;
             this.opabox.Increment = new decimal(new int[] {
             1,
             0,
             0,
             131072});
-            this.opabox.Location = new System.Drawing.Point(1086, 262);
+            this.opabox.Location = new System.Drawing.Point(1413, 298);
             this.opabox.Maximum = new decimal(new int[] {
             1,
             0,
@@ -237,13 +253,14 @@
             // 
             // tybox
             // 
+            this.tybox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.tybox.DecimalPlaces = 2;
             this.tybox.Increment = new decimal(new int[] {
             1,
             0,
             0,
             65536});
-            this.tybox.Location = new System.Drawing.Point(1086, 210);
+            this.tybox.Location = new System.Drawing.Point(1413, 246);
             this.tybox.Maximum = new decimal(new int[] {
             10000000,
             0,
@@ -261,13 +278,14 @@
             // 
             // txbox
             // 
+            this.txbox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.txbox.DecimalPlaces = 2;
             this.txbox.Increment = new decimal(new int[] {
             1,
             0,
             0,
             65536});
-            this.txbox.Location = new System.Drawing.Point(859, 210);
+            this.txbox.Location = new System.Drawing.Point(1186, 246);
             this.txbox.Maximum = new decimal(new int[] {
             10000000,
             0,
@@ -285,13 +303,14 @@
             // 
             // hbox
             // 
+            this.hbox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.hbox.DecimalPlaces = 2;
             this.hbox.Increment = new decimal(new int[] {
             1,
             0,
             0,
             65536});
-            this.hbox.Location = new System.Drawing.Point(1086, 158);
+            this.hbox.Location = new System.Drawing.Point(1413, 194);
             this.hbox.Maximum = new decimal(new int[] {
             10000000,
             0,
@@ -309,13 +328,14 @@
             // 
             // wbox
             // 
+            this.wbox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.wbox.DecimalPlaces = 2;
             this.wbox.Increment = new decimal(new int[] {
             1,
             0,
             0,
             65536});
-            this.wbox.Location = new System.Drawing.Point(859, 158);
+            this.wbox.Location = new System.Drawing.Point(1186, 194);
             this.wbox.Maximum = new decimal(new int[] {
             10000000,
             0,
@@ -333,13 +353,14 @@
             // 
             // dybox
             // 
+            this.dybox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.dybox.DecimalPlaces = 2;
             this.dybox.Increment = new decimal(new int[] {
             1,
             0,
             0,
             65536});
-            this.dybox.Location = new System.Drawing.Point(1086, 104);
+            this.dybox.Location = new System.Drawing.Point(1413, 140);
             this.dybox.Maximum = new decimal(new int[] {
             10000000,
             0,
@@ -357,8 +378,9 @@
             // 
             // radbox
             // 
+            this.radbox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.radbox.DecimalPlaces = 4;
-            this.radbox.Location = new System.Drawing.Point(859, 262);
+            this.radbox.Location = new System.Drawing.Point(1186, 298);
             this.radbox.Maximum = new decimal(new int[] {
             360,
             0,
@@ -376,7 +398,8 @@
             // 
             // resetmotionb
             // 
-            this.resetmotionb.Location = new System.Drawing.Point(832, 597);
+            this.resetmotionb.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.resetmotionb.Location = new System.Drawing.Point(1159, 633);
             this.resetmotionb.Name = "resetmotionb";
             this.resetmotionb.Size = new System.Drawing.Size(121, 36);
             this.resetmotionb.TabIndex = 29;
@@ -386,7 +409,8 @@
             // 
             // motionmakerb
             // 
-            this.motionmakerb.Location = new System.Drawing.Point(1086, 600);
+            this.motionmakerb.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.motionmakerb.Location = new System.Drawing.Point(1413, 636);
             this.motionmakerb.Name = "motionmakerb";
             this.motionmakerb.Size = new System.Drawing.Size(121, 33);
             this.motionmakerb.TabIndex = 30;
@@ -396,7 +420,8 @@
             // 
             // loadb
             // 
-            this.loadb.Location = new System.Drawing.Point(859, 654);
+            this.loadb.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.loadb.Location = new System.Drawing.Point(1186, 690);
             this.loadb.Name = "loadb";
             this.loadb.Size = new System.Drawing.Size(121, 36);
             this.loadb.TabIndex = 31;
@@ -406,7 +431,8 @@
             // 
             // saveb
             // 
-            this.saveb.Location = new System.Drawing.Point(1086, 654);
+            this.saveb.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.saveb.Location = new System.Drawing.Point(1413, 690);
             this.saveb.Name = "saveb";
             this.saveb.Size = new System.Drawing.Size(121, 36);
             this.saveb.TabIndex = 32;
@@ -416,13 +442,14 @@
             // 
             // hyojibairituud
             // 
+            this.hyojibairituud.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.hyojibairituud.DecimalPlaces = 1;
             this.hyojibairituud.Increment = new decimal(new int[] {
             1,
             0,
             0,
             65536});
-            this.hyojibairituud.Location = new System.Drawing.Point(1057, 0);
+            this.hyojibairituud.Location = new System.Drawing.Point(1384, 16);
             this.hyojibairituud.Maximum = new decimal(new int[] {
             10,
             0,
@@ -445,10 +472,11 @@
             // 
             // pointcb
             // 
+            this.pointcb.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.pointcb.AutoSize = true;
             this.pointcb.Checked = true;
             this.pointcb.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.pointcb.Location = new System.Drawing.Point(859, 3);
+            this.pointcb.Location = new System.Drawing.Point(1186, 17);
             this.pointcb.Name = "pointcb";
             this.pointcb.Size = new System.Drawing.Size(71, 22);
             this.pointcb.TabIndex = 34;
@@ -458,7 +486,8 @@
             // 
             // nmchangeb
             // 
-            this.nmchangeb.Location = new System.Drawing.Point(1134, 55);
+            this.nmchangeb.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.nmchangeb.Location = new System.Drawing.Point(1459, 100);
             this.nmchangeb.Name = "nmchangeb";
             this.nmchangeb.Size = new System.Drawing.Size(75, 34);
             this.nmchangeb.TabIndex = 35;
@@ -468,7 +497,8 @@
             // 
             // moviebutton
             // 
-            this.moviebutton.Location = new System.Drawing.Point(1111, 451);
+            this.moviebutton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.moviebutton.Location = new System.Drawing.Point(1438, 487);
             this.moviebutton.Name = "moviebutton";
             this.moviebutton.Size = new System.Drawing.Size(75, 34);
             this.moviebutton.TabIndex = 36;
@@ -478,7 +508,8 @@
             // 
             // charareset
             // 
-            this.charareset.Location = new System.Drawing.Point(959, 600);
+            this.charareset.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.charareset.Location = new System.Drawing.Point(1286, 636);
             this.charareset.Name = "charareset";
             this.charareset.Size = new System.Drawing.Size(121, 33);
             this.charareset.TabIndex = 37;
@@ -488,8 +519,9 @@
             // 
             // mirrorcheck
             // 
+            this.mirrorcheck.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.mirrorcheck.AutoSize = true;
-            this.mirrorcheck.Location = new System.Drawing.Point(859, 493);
+            this.mirrorcheck.Location = new System.Drawing.Point(1186, 529);
             this.mirrorcheck.Name = "mirrorcheck";
             this.mirrorcheck.Size = new System.Drawing.Size(78, 22);
             this.mirrorcheck.TabIndex = 38;
@@ -499,7 +531,8 @@
             // 
             // kijyunb
             // 
-            this.kijyunb.Location = new System.Drawing.Point(920, 542);
+            this.kijyunb.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.kijyunb.Location = new System.Drawing.Point(1247, 578);
             this.kijyunb.Name = "kijyunb";
             this.kijyunb.Size = new System.Drawing.Size(89, 31);
             this.kijyunb.TabIndex = 39;
@@ -509,7 +542,8 @@
             // 
             // refreshb
             // 
-            this.refreshb.Location = new System.Drawing.Point(1032, 542);
+            this.refreshb.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.refreshb.Location = new System.Drawing.Point(1359, 578);
             this.refreshb.Name = "refreshb";
             this.refreshb.Size = new System.Drawing.Size(89, 31);
             this.refreshb.TabIndex = 40;
@@ -519,8 +553,9 @@
             // 
             // TexSizeLabel
             // 
+            this.TexSizeLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.TexSizeLabel.AutoSize = true;
-            this.TexSizeLabel.Location = new System.Drawing.Point(1043, 493);
+            this.TexSizeLabel.Location = new System.Drawing.Point(1370, 529);
             this.TexSizeLabel.Name = "TexSizeLabel";
             this.TexSizeLabel.Size = new System.Drawing.Size(30, 18);
             this.TexSizeLabel.TabIndex = 41;
@@ -529,19 +564,44 @@
             // quickloadB
             // 
             this.quickloadB.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.quickloadB.Location = new System.Drawing.Point(46, 600);
+            this.quickloadB.Location = new System.Drawing.Point(46, 807);
             this.quickloadB.Name = "quickloadB";
             this.quickloadB.Size = new System.Drawing.Size(671, 25);
             this.quickloadB.TabIndex = 42;
             this.quickloadB.KeyDown += new System.Windows.Forms.KeyEventHandler(this.quickload);
+            // 
+            // PshotB
+            // 
+            this.PshotB.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.PshotB.Location = new System.Drawing.Point(46, 756);
+            this.PshotB.Name = "PshotB";
+            this.PshotB.Size = new System.Drawing.Size(75, 35);
+            this.PshotB.TabIndex = 43;
+            this.PshotB.Text = "png";
+            this.PshotB.UseVisualStyleBackColor = true;
+            this.PshotB.Click += new System.EventHandler(this.PshotB_Click);
+            // 
+            // BshotB
+            // 
+            this.BshotB.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.BshotB.Location = new System.Drawing.Point(138, 756);
+            this.BshotB.Name = "BshotB";
+            this.BshotB.Size = new System.Drawing.Size(75, 35);
+            this.BshotB.TabIndex = 44;
+            this.BshotB.Text = "bmp";
+            this.BshotB.UseVisualStyleBackColor = true;
+            this.BshotB.Click += new System.EventHandler(this.BshotB_Click);
             // 
             // charamaker
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoValidate = System.Windows.Forms.AutoValidate.EnableAllowFocusChange;
-            this.BackColor = System.Drawing.Color.Transparent;
+            this.BackColor = System.Drawing.SystemColors.Control;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.ClientSize = new System.Drawing.Size(1578, 844);
+            this.Controls.Add(this.BshotB);
+            this.Controls.Add(this.PshotB);
             this.Controls.Add(this.quickloadB);
             this.Controls.Add(this.TexSizeLabel);
             this.Controls.Add(this.refreshb);
@@ -575,12 +635,15 @@
             this.Controls.Add(this.texsbox);
             this.Controls.Add(this.texturebox);
             this.Controls.Add(this.setubox);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MaximizeBox = false;
             this.MaximumSize = new System.Drawing.Size(3000, 3000);
             this.Name = "charamaker";
-            this.Size = new System.Drawing.Size(1212, 693);
+            this.Text = "Charamaker";
             this.Load += new System.EventHandler(this.UserControl1_Load);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.keydown);
             this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.mousedown);
+            this.Resize += new System.EventHandler(this.resized);
             ((System.ComponentModel.ISupportInitialize)(this.dxbox)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.zbox)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.opabox)).EndInit();
@@ -632,5 +695,7 @@
         private System.Windows.Forms.Button refreshb;
         private System.Windows.Forms.Label TexSizeLabel;
         private System.Windows.Forms.TextBox quickloadB;
+        private System.Windows.Forms.Button PshotB;
+        private System.Windows.Forms.Button BshotB;
     }
 }

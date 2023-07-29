@@ -5,8 +5,10 @@ using Charamaker2.Character;
 using Charamaker2.Shapes;
 using DevExpress.Data.Linq.Helpers;
 using DevExpress.Office.Utils;
+using DevExpress.Utils.Text;
 using DevExpress.Xpo.DB;
 using DevExpress.XtraEditors;
+using static System.Windows.Forms.LinkLabel;
 
 namespace GameSet1
 {
@@ -118,6 +120,168 @@ namespace GameSet1
     /// </summary>
     public class Entity
     {
+        #region statics
+
+        /// <summary>
+        /// エンテティの未来の位置を予測する。空気抵抗ががばがばなの許して。
+        /// </summary>
+        /// <typeparam name="T">このタイプへとコピーする</typeparam>
+        /// <param name="e">コピー元エンテティ</param>
+        /// <param name="time">何秒後か</param>
+        /// <param name="cl">時間の精度になるね</param>
+        /// <returns>何秒か動いたエンテティ</returns>
+        static public T entitysimulate<T>(T e, float time, float cl)
+            where T : Entity
+        {
+            var res = (T)Activator.CreateInstance(typeof(T), e);
+            while (time > 0)
+            {
+                res.frame(cl);
+                time -= cl;
+            }
+            return res;
+        }
+        /// <summary>
+        /// エンテティが飛んでいくとして、その狙った地点に当てるためにはどの角度で打ち出せばいいかを教えてくれる。。
+        /// </summary>
+
+
+
+        /// <summary>
+        /// エンテティが飛んでいくとして、その狙った地点に当てるためにはどの角度で打ち出せばいいかを教えてくれる。。
+        /// </summary>
+        /// <typeparam name="T">このタイプへとコピーする</typeparam>
+        /// <param name="e">コピー元エンテティ</param>
+        /// <param name="x">目標x</param>
+        /// <param name="y">目標y</param>
+        /// <param name="speed">与えたい速度</param>
+        /// <param name="time">何秒後までか</param>
+        /// <param name="cl">精度になるね</param>
+        /// <param name="kuri">何回繰り返しシミュレートするか</param>
+        /// <returns>いい角度</returns>
+        static public double entitysimulate<T>(T e, float x, float y, float speed, float time, float cl, int kuri = 5)
+            where T : Entity
+        {
+
+
+            double kaku = Math.Atan2(y - e.c.getty(), x - e.c.gettx());
+            float tumi = 0;
+
+            bool st = x - e.c.gettx() > 0;
+
+
+            for (int i = 0; i < kuri; i++)
+            {
+                float pretumi;
+                {
+                    var res = (T)Activator.CreateInstance(typeof(T), e);
+                    res.bif.kasoku(speed * (float)Math.Cos(kaku), speed * (float)Math.Sin(kaku));
+
+
+                    bool now = x - e.c.gettx() > 0;
+                    float nowtime = time;
+
+                    while (now == st && nowtime > 0)
+                    {
+                        res.frame(cl);
+
+                        now = x - res.c.gettx() > 0;
+                        nowtime -= cl;
+
+                    }
+
+                    pretumi = (y - res.c.getty());
+
+                    tumi += pretumi;
+                    kaku = Math.Atan2(y + tumi - e.c.getty(), x - e.c.gettx());
+                }
+
+                {
+                    var res = (T)Activator.CreateInstance(typeof(T), e);
+                    res.bif.kasoku(speed * (float)Math.Cos(kaku), speed * (float)Math.Sin(kaku));
+
+
+                    bool now = x - e.c.gettx() > 0;
+                    float nowtime = time;
+
+                    while (now == st && nowtime > 0)
+                    {
+                        res.frame(cl);
+
+                        now = x - res.c.gettx() > 0;
+                        nowtime -= cl;
+
+                    }
+                    float nowtumi = (y - res.c.getty());
+                    if (Math.Abs(pretumi) < Math.Abs(nowtumi))
+                    {
+                        tumi -= pretumi;
+                        tumi -= pretumi;
+                        kaku = Math.Atan2(y + tumi - e.c.getty(), x - e.c.gettx());
+                        //  Console.WriteLine("reverse!");
+                    }
+                    //     Console.WriteLine(res.c.gettx()+" :xy: "+res.c.getty()+" -> "+x+" :xy: "+y);
+                }
+                //  Console.WriteLine((x - e.c.gettx())+" :x y: " + (y + tumi - e.c.getty()) + " sal "+tumi + " kaku-> " + (kaku / Math.PI * 180+" simulating!"));
+            }
+
+            //  Console.WriteLine((x - e.c.gettx()) + " :x y: " + (y + tumi - e.c.getty()) + " sal " + tumi + " kaku-> " + (kaku / Math.PI * 180 + " SSSSSSS"));
+
+            return kaku;
+        }
+        /// <summary>
+        /// エンテティを一方向に動かして地形でずらすメソッド。
+        /// ワープした扱いになる
+        /// </summary>
+        /// <param name="e">対象</param>
+        /// <param name="EM">地形を入れたマネージャー</param>
+        /// <param name="s">どの形でやるか(クローンされるから安心！)</param>
+        /// <param name="zure1x">Xずらす</param>
+        /// <param name="zure1y">Yずらす</param>
+        /// <param name="tais">ずらす形のもと(""でキャラクターそのもの)</param>
+        /// <param name="mode">0でxy両方、1でxのみ、-1でyのみ変化</param>
+        /// <returns>当たった地形たち</returns>
+        static public List<Entity> zuresaseEntity(Entity e, EntityManager EM, Shape s, float zure1x, float zure1y, string tais = "", int mode = 0)
+        {
+            var tt = e.c.GetSetu(tais);
+            float x = e.c.x, y = e.c.y;
+            if (tais == "") tt = null;
+            Shape ssss = s.clone(), psss = s.clone();
+            if (tt == null)
+            {
+                psss.setto(e.c);
+            }
+            else
+            {
+                psss.setto(tt.p);
+            }
+
+            e.c.settxy(e.c.gettx() + zure1x, e.c.getty() + zure1y);
+            if (tt == null)
+            {
+                ssss.setto(e.c);
+            }
+            else
+            {
+                ssss.setto(tt.p);
+            }
+            var lis = EM.overweights;
+            Waza.atypefilter(lis, e.bif);
+           var res= e.zurentekiyou(lis, ssss, psss);
+            if (mode == 1)
+            {
+                e.c.y = y;
+            }
+            else if (mode == -1)
+            {
+                e.c.x = x;
+            }
+            e.c.soroeru();
+            e.warped();
+            return res;
+        }
+
+        #endregion
         /// <summary>
         /// エンテティのもとになるキャラクター
         /// そのものが物理判定なのよ
@@ -271,7 +435,7 @@ namespace GameSet1
         }
 
         /// <summary>
-        /// フレーム処理
+        /// フレーム処理。endframeも後で一気に呼び出してね。
         /// </summary>
         /// <param name="cl">フレームの長さ</param>
         virtual public void frame(float cl)
@@ -286,7 +450,7 @@ namespace GameSet1
 
         }
         /// <summary>
-        /// エンテティが、物理的に移動した後に起こるフレーム
+        /// エンテティが、物理的に移動した後に起こるフレーム。
         /// </summary>
         /// <param name="cl">クロックの長さ</param>
        virtual public void endframe(float cl) 
@@ -307,6 +471,16 @@ namespace GameSet1
             c.soroeru();
             kirikaewpab();
             setab(false);
+        }
+        /// <summary>
+        /// エンテティをワープさせたいときに呼び出すメソッド
+        /// 逆にこれを介さず移動させると地形とかに引っかかる
+        /// </summary>
+        public void warped() 
+        {
+            _pab.frame();
+            _ab.frame();
+            _Wpab.frame();
         }
         void setwpab() 
         {
@@ -506,7 +680,7 @@ namespace GameSet1
 
 
         /// <summary>
-        /// この瞬間にずれさせる。
+        /// この瞬間にずれさせる。pabとか移動した後にリセット
         /// </summary>
         /// <param name="tekiyous">ずれを適用する奴ら。</param>
         /// <param name="sugekae">あたり判定をすげかえるんだったらこれ</param>
@@ -531,12 +705,19 @@ namespace GameSet1
             {
                 foreach (var a in tekiyous)
                 {
-                   // Console.WriteLine((a.PAcore != null) + "paiza"+(a.Acore != null) +" iahsfu "+ a.Acore.atarun2(a.PAcore, this.Acore, this.PAcore));
+                    // Console.WriteLine((a.PAcore != null) + "paiza"+(a.Acore != null) +" iahsfu "+ a.Acore.atarun2(a.PAcore, this.Acore, this.PAcore));
+                    var aas=Shape.gousei(Acore, PAcore);
+                    var bbs= Shape.gousei(a.Acore, a.PAcore);
+                   
                     if (a.PAcore != null && a.Acore != null&& Shape.atarun(a.Acore,a.PAcore, this.Acore, this.PAcore)) 
                     {
                         //Console.WriteLine("zanza");
-                        var saa=this.bif.zuren(this, a,false);
-                        if(saa!=null)Console.WriteLine(saa.ToString());
+                        var py = this.Acore.y;
+                        //Console.WriteLine(py + " cha2222-> " + this.Acore.y);
+                        var saa=this.bif.zuren2(this, a,false);
+                      //  Console.WriteLine(py + " cha2-> " + this.Acore.y);
+                        // if(saa!=null)Console.WriteLine(saa.ToString()+"");
+                       // Console.WriteLine("tyoinertoeappt");
                         res.Add(a);
                         if (hansya &&saa!=null) 
                         {
@@ -549,6 +730,9 @@ namespace GameSet1
             
             ab.coresugekae(HAC);
             pab.coresugekae(HPAC);
+
+            ab.frame();
+            pab.frame();
             return res;
         }
 
@@ -1112,31 +1296,32 @@ namespace GameSet1
         /// <returns>ずらしたかどうか</returns>
         public lineX zuren(Entity thiis,Entity e,bool group)
         {
+            //return zuren2(thiis, e, group);
             if (!e.atariable || !thiis.atariable || (thiis.bif.ovw && e.bif.ovw))
             {
 
-               // Console.WriteLine("ZOUiojoijN");
+                // Console.WriteLine("ZOUiojoijN");
                 return null;
             }
-            if (group) 
+            if (group)
             {
-                if (buturiinfo.overweights(e.bif.groupwei)&& buturiinfo.overweights(thiis.bif.groupwei)) 
+                if (buturiinfo.overweights(e.bif.groupwei) && buturiinfo.overweights(thiis.bif.groupwei))
                 {
                     //Console.WriteLine("ZOUN");
                     return null;
                 }
             }
-            bool ok1=false, ok2 = false;
+            bool ok1 = false, ok2 = false;
             bool ok12 = false, ok22 = false;
 
-            FXY idou=new FXY(0, 0);
+            FXY idou = new FXY(0, 0);
             FXY idou2 = new FXY(0, 0);
-            lineX line1,line2;
+            lineX line1, line2;
             {
                 line1 = e.Acore.getnearestline(thiis.PAcore.getCenter());
                 var points = thiis.Acore.getzettaipoints(false);
 
-               // Console.WriteLine(line1.ToString() + " asd ");
+                // Console.WriteLine(line1.ToString() + " asd ");
                 //TRACE(_T("!!!!!!!!!!!!!\n"));
                 for (int i = 1; i < points.Count - 1; i++)
                 {
@@ -1151,7 +1336,7 @@ namespace GameSet1
                         ok1 = true;
                         ok12 = true;
                     }
-                    else if(!float.IsNaN(tmp.Y)) 
+                    else if (!float.IsNaN(tmp.Y))
                     {
                         ok12 = true;
                     }
@@ -1167,9 +1352,9 @@ namespace GameSet1
                 for (int i = 1; i < points.Count - 1; i++)
                 {
 
-                   // Console.WriteLine(points[i].ToString() + " :E");
+                    // Console.WriteLine(points[i].ToString() + " :E");
                     var tmp = Shape.getzurasi(points[i], line2);
-                     //  Console.WriteLine(tmp.X + " sey " + tmp.Y);
+                    //  Console.WriteLine(tmp.X + " sey " + tmp.Y);
                     if (!float.IsNaN(tmp.X) && tmp.length >= idou2.length)
                     {
 
@@ -1189,14 +1374,14 @@ namespace GameSet1
             //	idou.y += idou2.y;
             // if (thiis.bif.ovw || e.bif.ovw)
             //    Console.WriteLine(idou.ToString() + "asfa" + idou2.ToString());
-          /*  if (idou.length > 50||idou2.length>50)
-            {
-                Console.WriteLine(ok1 + " KKKKKKKKKK " + ok2);
-                Console.WriteLine(idou.X + " a:fkqqql " + idou.Y );
-                Console.WriteLine(line1.ToString() + "  ::linee");
-                Console.WriteLine(idou2.X + " a:fqkqql " + idou2.Y);
-                Console.WriteLine(line2.ToString() + "  ::linee2");
-            }*/
+            /*  if (idou.length > 50||idou2.length>50)
+              {
+                  Console.WriteLine(ok1 + " KKKKKKKKKK " + ok2);
+                  Console.WriteLine(idou.X + " a:fkqqql " + idou.Y );
+                  Console.WriteLine(line1.ToString() + "  ::linee");
+                  Console.WriteLine(idou2.X + " a:fqkqql " + idou2.Y);
+                  Console.WriteLine(line2.ToString() + "  ::linee2");
+              }*/
             if (!ok12 || !ok22) return null;
             if (ok1 && ok2)
             {
@@ -1208,15 +1393,15 @@ namespace GameSet1
                     line1 = line2;
                 }
             }
-            else if(!ok1) 
+            else if (!ok1)
             {
                 idou.X = idou2.X;
                 idou.Y = idou2.Y;
                 line1 = line2;
             }
-          //  if (idou.X == 0 && idou.Y == 0) return null;
-         //   if(thiis.bif.ovw||e.bif.ovw)
-          //  Console.WriteLine("idou:->" +idou.ToString());
+            //  if (idou.X == 0 && idou.Y == 0) return null;
+            //   if(thiis.bif.ovw||e.bif.ovw)
+            //  Console.WriteLine("idou:->" +idou.ToString());
 
             //TRACE(_T("%d idou %f::%f\n"),notNAN,idou.x,idou.y);
 
@@ -1256,7 +1441,7 @@ namespace GameSet1
                 }
                 //this.idouAdd(idouinfo(idou, Entity::overweight));
             }
-            else if (thiis.bif.ovw) 
+            else if (thiis.bif.ovw)
             {
                 if (group)
                 {
@@ -1275,7 +1460,8 @@ namespace GameSet1
                     e.bif.idou(e, -idou.X, -idou.Y);
                 }
             }
-            else {
+            else
+            {
                 // Console.WriteLine(thiis.PAcore.gettx() + " :XY: " + thiis.PAcore.getty() + " <PRE> "
                 //  + e.PAcore.gettx() + " :XY: " + e.PAcore.getty());
                 //  Console.WriteLine(thiis.Acore.gettx() + " :XY: " + thiis.Acore.getty() + " <bef> "
@@ -1284,8 +1470,8 @@ namespace GameSet1
                 var hi = thisweight / (thisweight + eweight);
                 if (group)
                 {
-                    thiis.bif.groupidou(thiis,(1 - hi) * idou.X, (1 - hi) * idou.Y);
-                    e.bif.groupidou(e,-(hi) * idou.X, -(hi) * idou.Y);
+                    thiis.bif.groupidou(thiis, (1 - hi) * idou.X, (1 - hi) * idou.Y);
+                    e.bif.groupidou(e, -(hi) * idou.X, -(hi) * idou.Y);
 
 
                     if (idou.X != 0 || idou.Y != 0)
@@ -1295,31 +1481,278 @@ namespace GameSet1
                 }
                 else
                 {
-                    thiis.bif.idou(thiis,(1 - hi) * idou.X, (1 - hi) * idou.Y);
+                    thiis.bif.idou(thiis, (1 - hi) * idou.X, (1 - hi) * idou.Y);
 
-                    e.bif.idou(e,(-hi) * idou.X, (-hi) * idou.Y);
+                    e.bif.idou(e, (-hi) * idou.X, (-hi) * idou.Y);
                 }
 
-            //    Console.WriteLine(thiis.Acore.gettx() + " :XY: " + thiis.Acore.getty() + " <aft> "
-            //        + e.Acore.gettx() + " :XY: " + e.Acore.getty());
+                //    Console.WriteLine(thiis.Acore.gettx() + " :XY: " + thiis.Acore.getty() + " <aft> "
+                //        + e.Acore.gettx() + " :XY: " + e.Acore.getty());
 
                 //	TRACE(_T("%f ZOY %f + %f\n"),idou.x, (1 - hi) * idou.x, (hi) * idou.x);
             }
-           
-               // Console.WriteLine(idou.X + " a:fkl " + idou.Y + " :: " + thisweight + " -> " + eweight);
-               // Console.WriteLine(line1.ToString()+"  ::linee");
-            
+
+            // Console.WriteLine(idou.X + " a:fkl " + idou.Y + " :: " + thisweight + " -> " + eweight);
+            // Console.WriteLine(line1.ToString()+"  ::linee");
+
             //var line = e.s.getnearestline(this.s.getCenter());
             return line1;
         }
         /// <summary>
-        /// 自分と対象ので反射を引き起こす。回転は考慮に入ってないつらいから
+        /// 相手と自分をなんか計算してずらす！
+        /// ちなみにここでは大丈夫だけどataribinding.coreを動かしたらcharasetしないと移動が反映されないからちうい
         /// </summary>
         /// <param name="thiis">自分。重ね重ねっちゃうけどお願い</param>
-        /// <param name="e">あいて</param>
-        /// <param name="line">ぶつかった辺</param>
-        /// <returns>反射が起きたかどうか</returns>
-        public bool hansya(Entity thiis, Entity e, lineX line) 
+        /// <param name="e">相手</param>
+        /// <param name="group">グループとして当たるか</param>
+        /// <returns>ずらしたかどうか</returns>
+        public lineX zuren2(Entity thiis, Entity e, bool group)
+        {
+            if (!e.atariable || !thiis.atariable || (thiis.bif.ovw && e.bif.ovw))
+            {
+
+                //  Console.WriteLine("ZOUiojoijN");
+                return null;
+            }
+            if (group)
+            {
+                if (buturiinfo.overweights(e.bif.groupwei) && buturiinfo.overweights(thiis.bif.groupwei))
+                {
+                    //  Console.WriteLine("ZOUN");
+                    return null;
+                }
+            }
+            FXY idou = new FXY(0, 0);
+            lineX line1;
+
+            List<lineX> lines1 = new List<lineX>();
+            List<FXY> idous1 = new List<FXY>();
+            List<lineX> lines2 = new List<lineX>();
+            List<FXY> idous2 = new List<FXY>();
+            // Console.WriteLine("!!!!!!!QQQQQ!!");
+            {
+                line1 = null;
+                var points = thiis.Acore.getzettaipoints();
+                var Ppoints = thiis.PAcore.getzettaipoints();
+
+                //  Ppoints.AddRange(new List<FXY> { this.pres.getCenter(), this.pres.getCenter(), this.pres.getCenter(), this.pres.getCenter() });
+                // Console.WriteLine(line1.ToString() + " asd "+points.Count);
+                //TRACE(_T("!!!!!!!!!!!!!\n"));
+
+                for (int i = 0; i < points.Count; i++)
+                {
+                    var templine = e.Acore.getnearestline(Ppoints[i]);
+                    //    Console.WriteLine(templine.ToString()+" by " + Ppoints[i].ToString());
+
+                    int idx = -1;
+                    for (int ii = 0; ii < lines1.Count; ++ii)
+                    {
+                        if (templine == lines1[ii])
+                        {
+                            idx = ii;
+                            break;
+                        }
+                    }
+                    if (idx >= 0)
+                    {/*
+                            if (idous1[idx].length < tmp.length)
+                            {
+                                idous1[idx] = tmp;
+                            }*/
+                    }
+                    else
+                    {
+                        var tmp = Shape.getzurasi(points[i], templine);
+                        if (!float.IsNaN(tmp.X))
+                        {
+                            lines1.Add(templine);
+                            idous1.Add(tmp);
+                            idx = idous1.Count - 1;
+                            for (int t = 0; t < points.Count; t++)
+                            {
+                                tmp = Shape.getzurasi(points[t], templine);
+                                if (!float.IsNaN(tmp.X) && idous1[idx].length < tmp.length)
+                                {
+                                    idous1[idx] = tmp;
+                                }
+                            }
+                        }
+                    }
+
+                }
+            }
+            // Console.WriteLine("!!!!!!!!!");
+            {
+                var points = e.Acore.getzettaipoints();
+                var Ppoints = e.PAcore.getzettaipoints();
+                //  points.AddRange(e.s.getzettaipoints());
+                //  Ppoints.AddRange(e.pres.getzettaipoints());
+                //Ppoints.AddRange(new List<FXY>{e.pres.getCenter(), e.pres.getCenter() , e.pres.getCenter() , e.pres.getCenter() });
+                //  Console.WriteLine(line2.ToString()+" asd "+points.Count);
+
+                for (int i = 0; i < points.Count; i++)
+                {
+                    var templine = thiis.Acore.getnearestline(Ppoints[i]);
+                    int idx = -1;
+                    for (int ii = 0; ii < lines2.Count; ++ii)
+                    {
+                        if (templine == lines2[ii])
+                        {
+                            idx = ii;
+                            break;
+                        }
+                    }
+                    if (idx >= 0)
+                    {
+                        /*
+                        if (idous2[idx].length < tmp.length)
+                        {
+                            idous2[idx] = tmp;
+                        }*/
+                    }
+                    else
+                    {
+                        var tmp = Shape.getzurasi(points[i], templine);
+                        if (!float.IsNaN(tmp.X))
+                        {
+                            lines2.Add(templine);
+                            idous2.Add(tmp);
+                            idx = idous2.Count - 1;
+                            for (int t = 0; t < points.Count; t++)
+                            {
+                                tmp = Shape.getzurasi(points[t], templine);
+                                if (!float.IsNaN(tmp.X) && idous2[idx].length < tmp.length)
+                                {
+                                    idous2[idx] = tmp;
+                                }
+                            }
+                        }
+                    }
+
+                }
+            }
+            lines1.AddRange(lines2);
+            idous1.AddRange(idous2);
+            if (lines1.Count == 0)
+            {
+                //  Console.WriteLine(ok12+" :notok12121232131: "+ok22);
+                return null;
+            }
+            //  Console.WriteLine(idou.ToString()+ok1 + " :idou 2:" + idou2.ToString()+ok2);
+            line1 = lines1[0];
+            idou = idous1[0];
+            for (int i = 1; i < lines1.Count; i++)
+            {
+                if (idou.length > idous1[i].length)
+                {
+                    line1 = lines1[i];
+                    idou = idous1[i];
+                }
+            }
+
+            float eweight;
+            float thisweight;
+
+            if (group)
+            {
+                eweight = e.bif.groupwei;
+                thisweight = thiis.bif.groupwei;
+            }
+            else
+            {
+
+                eweight = e.bif.wei;
+                thisweight = thiis.bif.wei;
+            }
+
+            if (e.bif.ovw)
+            {
+                //	TRACE(_T("SOY\n"));
+                if (group)
+                {
+                    if (thiis.bif.ovw)
+                    {
+                        thiis.bif.idou(thiis, idou.X, idou.Y);
+                    }
+                    else
+                    {
+
+                        thiis.bif.groupidou(thiis, idou.X, idou.Y);
+                    }
+                }
+                else
+                {
+                    thiis.bif.idou(thiis, idou.X, idou.Y);
+                }
+                //this.idouAdd(idouinfo(idou, Entity::overweight));
+            }
+            else if (thiis.bif.ovw)
+            {
+                if (group)
+                {
+                    if (e.bif.ovw)
+                    {
+                        e.bif.idou(e, -idou.X, -idou.Y);
+                    }
+                    else
+                    {
+
+                        e.bif.groupidou(e, -idou.X, -idou.Y);
+                    }
+                }
+                else
+                {
+                    e.bif.idou(e, -idou.X, -idou.Y);
+                }
+            }
+            else
+            {
+                // Console.WriteLine(thiis.PAcore.gettx() + " :XY: " + thiis.PAcore.getty() + " <PRE> "
+                //  + e.PAcore.gettx() + " :XY: " + e.PAcore.getty());
+                //  Console.WriteLine(thiis.Acore.gettx() + " :XY: " + thiis.Acore.getty() + " <bef> "
+                //     + e.Acore.gettx() + " :XY: " + e.Acore.getty());
+                //Console.WriteLine(idou.ToString()+" al;fkapo ");
+                var hi = thisweight / (thisweight + eweight);
+                if (group)
+                {
+                    thiis.bif.groupidou(thiis, (1 - hi) * idou.X, (1 - hi) * idou.Y);
+                    e.bif.groupidou(e, -(hi) * idou.X, -(hi) * idou.Y);
+
+
+                    if (idou.X != 0 || idou.Y != 0)
+                    {
+                        thiis.bif.groupAdd(thiis, e);
+                    }
+                }
+                else
+                {
+                    thiis.bif.idou(thiis, (1 - hi) * idou.X, (1 - hi) * idou.Y);
+
+                    e.bif.idou(e, -(hi) * idou.X, -(hi) * idou.Y);
+                }
+
+                //    Console.WriteLine(thiis.Acore.gettx() + " :XY: " + thiis.Acore.getty() + " <aft> "
+                //        + e.Acore.gettx() + " :XY: " + e.Acore.getty());
+
+                //	TRACE(_T("%f ZOY %f + %f\n"),idou.x, (1 - hi) * idou.x, (hi) * idou.x);
+            }
+
+            //   Console.WriteLine(idou.X + " a:fkl " + idou.Y + " :: " + thisweight + " -> " + eweight);
+            // Console.WriteLine(line1.ToString()+"  ::linee");
+
+            //var line = e.s.getnearestline(this.s.getCenter());
+            return line1;
+        }
+
+       
+/// <summary>
+/// 自分と対象ので反射を引き起こす。回転は考慮に入ってないつらいから
+/// </summary>
+/// <param name="thiis">自分。重ね重ねっちゃうけどお願い</param>
+/// <param name="e">あいて</param>
+/// <param name="line">ぶつかった辺</param>
+/// <returns>反射が起きたかどうか</returns>
+public bool hansya(Entity thiis, Entity e, lineX line) 
         {
             //Console.WriteLine(line.ToString());
             if (line == null)
@@ -1870,5 +2303,6 @@ namespace GameSet1
             setEnergyPoint(thiis);
         }
         #endregion
+
     }
 }

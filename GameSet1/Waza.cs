@@ -2,8 +2,10 @@
 using Charamaker2.Shapes;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace GameSet1
 {
@@ -254,13 +256,43 @@ namespace GameSet1
         public static void atafilter<T>(List<T> lis, List<string> lisataris, Entity e, List<string> eataris, bool pre = true, bool not = false)
         where T:Entity
         {
+
+            var chunks = bunkatu(lis, 3);
+            lis.Clear();
+            var tasks = new List<Task>();
+            foreach (var a in chunks)
+            {
+                tasks.Add(new Task(() =>
+                {
+                    var ss = atafilter_0<T>(a, lisataris, e, eataris, pre, not);
+                    foreach (var b in ss) lis.Add(b);
+                }));
+
+
+            }
+            foreach (var a in tasks)
+            {
+                a.Start();
+            }
+
+            foreach (var a in tasks)
+            {
+                a.Wait();
+            }
+            
+
+        }
+
+        static List<T> atafilter_0<T>(List<T> lis, List<string> lisataris, Entity e, List<string> eataris, bool pre = true, bool not = false)
+         where T : Entity
+        {
             bool rem = false;
-            List<Shape> SE ;
+            List<Shape> SE;
             if (eataris == null)
             {
                 SE = e.ab.getallatari();
             }
-            else 
+            else
             {
                 SE = e.ab.getatari(eataris);
             }
@@ -272,7 +304,7 @@ namespace GameSet1
                 {
                     PSE = e.pab.getallatari();
                 }
-                else 
+                else
                 {
                     PSE = e.pab.getatari(eataris);
                 }
@@ -304,7 +336,7 @@ namespace GameSet1
                 {
                     LS = lis[i].ab.getallatari();
                 }
-                else 
+                else
                 {
                     LS = lis[i].ab.getatari(lisataris);
                 }
@@ -314,11 +346,11 @@ namespace GameSet1
                     {
                         LPS = lis[i].pab.getallatari();
                     }
-                    else 
+                    else
                     {
                         LPS = lis[i].pab.getatari(lisataris);
                     }
-                    
+
                     for (int j = LS.Count - 1; j >= 0; j--)
                     {
                         if (LS[j] == null || LPS[j] == null)
@@ -359,7 +391,29 @@ namespace GameSet1
 
 
 
+            }      //お守り。無くしたらnullになるっておかしくなる
+            foreach (var a in lis) ;
+            return lis;
+        }
+        /// <summary>
+        /// listを任意の数に分割する
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="lis"></param>
+        /// <param name="cou"></param>
+        /// <returns></returns>
+        public static List<List<T>> bunkatu<T>(List<T> lis, int cou) 
+        {
+            List<List<T>> llis = new List<List<T>>();
+            for (int i = 0; i < cou; i++) 
+            {
+                llis.Add(new List<T>());
             }
+            for (int i=0;i<lis.Count;i++) 
+            {
+                llis[i % cou].Add(lis[i]);
+            }
+            return llis;
         }
         /// <summary>
         /// ListEntityに対してあたり判定でフィルターを掛ける
@@ -370,12 +424,38 @@ namespace GameSet1
         /// <param name="pres">フィルターに使う図形の一フレーム前</param>
         /// <param name="pre">1フレーム前のも考慮するか</param>
         /// <param name="not">当たっていないやつを残すことにする</param>
-        public static void atafilter<T>(List<T> lis, List<string> lisataris, Shape s, Shape pres,bool pre = true, bool not = false)
+        public static void atafilter<T>(List<T> lis, List<string> lisataris, Shape s, Shape pres, bool pre = true, bool not = false)
+        where T : Entity
+        {
+            var chunks = bunkatu(lis, 3);
+            lis.Clear();
+            var tasks = new List<Task>();
+            foreach (var a in chunks)
+            {
+                tasks.Add(new Task(() =>
+                {
+                    var ss = atafilter_0<T>(a, lisataris, s, pres, pre, not);
+                    foreach (var b in ss) lis.Add(b);
+                }));
+
+
+            }
+            foreach (var a in tasks)
+            {
+                a.Start();
+            }
+
+            foreach (var a in tasks)
+            {
+                a.Wait();
+            }
+        }
+        static List<T> atafilter_0<T>(List<T> lis, List<string> lisataris, Shape s, Shape pres, bool pre = true, bool not = false)
         where T : Entity
         {
             bool rem = false;
             List<Shape> LS, LPS;
-           
+
 
             for (int i = lis.Count - 1; i >= 0; i--)
             {
@@ -423,7 +503,7 @@ namespace GameSet1
                 for (int j = 0; j < LS.Count && rem; j++)
                 {
 
-                    if ((LS[j].atarun2(LPS[j], s,pres)))
+                    if ((LS[j].atarun2(LPS[j], s, pres)))
                     {
                         rem = false;
                         break;
@@ -439,6 +519,7 @@ namespace GameSet1
 
 
             }
+            return lis;
         }
         /// <summary>
         /// ListEntityを当たりタイプでフィルターを掛ける

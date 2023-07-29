@@ -54,6 +54,22 @@ namespace Charamaker2.Shapes
         {
             return new FXY(a.X - b.X, a.Y - b.Y);
         }
+        public static bool operator ==(FXY a, FXY b)
+        {
+            bool anul = a is null;
+            bool bnul = b is null;
+            if (anul && bnul) return true;
+            if (anul || bnul) return false;
+            return a.X==b.X&&a.Y==b.Y;
+        }
+        public static bool operator !=(FXY a, FXY b)
+        {
+            bool anul = a is null;
+            bool bnul = b is null;
+            if (anul && bnul) return false;
+            if (anul || bnul) return true;
+            return !(a.X == b.X && a.Y == b.Y);
+        }
         public static FXY operator *(FXY a, float b)
         {
             return new FXY(a.X * b, a.Y * b);
@@ -62,6 +78,7 @@ namespace Charamaker2.Shapes
         {
             return new FXY(a.X / b, a.Y / b);
         }
+       
         override public string ToString() 
         {
             return X + " :XY: " + Y;
@@ -189,7 +206,44 @@ namespace Charamaker2.Shapes
         }
 
 
+        public bool crosses(lineX l)
+        {
+            double psx=this.begin.X, psy= this.begin.Y, pex= this.end.X, pey= this.end.Y
+                , qsx= l.begin.X, qsy= l.begin.Y, qex= l.end.X, qey= l.end.Y;
+            double c1 = (pex - psx) * (qsy - psy) - (pey - psy) * (qsx - psx);
 
+            double c2 = (pex - psx) * (qey - psy) - (pey - psy) * (qex - psx);
+
+            double c3 = (qex - qsx) * (psy - qsy) - (qey - qsy) * (psx - qsx);
+
+            double c4 = (qex - qsx) * (pey - qsy) - (qey - qsy) * (pex - qsx);
+
+            if (c1 * c2 < 0 && c3 * c4 < 0)
+            {
+
+
+                return true;
+            }
+            return false;
+        }
+
+        public static bool operator ==(lineX a, lineX b)
+        {
+            bool anul = a is null;
+            bool bnul = b is null;
+            if (anul && bnul) return true;
+            if (anul || bnul) return false;
+            return a.begin == b.begin&& a.end == b.end&&a.bs==b.bs;
+        }
+        public static bool operator !=(lineX a, lineX b)
+        {
+
+            bool anul = a is null;
+            bool bnul = b is null;
+            if (anul && bnul) return false;
+            if (anul || bnul) return true;
+            return a.begin != b.begin || a.end != b.end || a.bs != b.bs;
+        }
     };
 
     /// <summary>
@@ -200,7 +254,7 @@ namespace Charamaker2.Shapes
         #region statics
 
         /// <summary>
-        /// 図形二つの重なり
+        /// 図形二つの重なり。両側からやるよ
         /// </summary>
         /// <param name="a"></param>
         /// <param name="b"></param>
@@ -697,7 +751,7 @@ namespace Charamaker2.Shapes
         /// <param name="ww">幅</param>
         /// <param name="hh">高さ</param>
         /// <param name="radd">角度</param>
-        /// <param name="points">図形の頂点の相対座標(w,hに対する比)ども</param>
+        /// <param name="points">図形の頂点の相対座標(w,hに対する比)ども(0~1)</param>
         public Shape(float xx, float yy, float ww, float hh, double radd, List<FXY> points)
         {
 
@@ -907,7 +961,7 @@ namespace Charamaker2.Shapes
             }
         }
         /// <summary>
-        /// その図形が図形内にあるかのどうかの判定
+        /// その図形が図形内にあるかのどうかの判定。両側からやってくれる
         /// </summary>
         /// <param name="s">その図形</param>
         /// <param name="onis">1.0001とかでちょっとアバウトに判定してくれる</param>
@@ -935,6 +989,8 @@ namespace Charamaker2.Shapes
         virtual public bool onhani(float px, float py,float onis=1) 
         {
             FXY myCenter = new FXY(gettx(),getty());
+            float XXX = px - myCenter.X;
+            float YYY = py - myCenter.Y;
             var points = getzettaipoints(false);
             //TRACE(_T("%f :SOY: %f\n"), x, y);
             for (int i = 1; i < points.Count - 1; i++)
@@ -943,20 +999,22 @@ namespace Charamaker2.Shapes
                 float y1 = points[i].Y - myCenter.Y;
                 float x2 = points[i + 1].X - myCenter.X;
                 float y2 = points[i + 1].Y - myCenter.Y;
-                float XXX = px - myCenter.X;
-                float YYY = py - myCenter.Y;
+                //Console.WriteLine(x1 + "::" + y1 + " これがオン範囲のあれや！ " + x2 + " :: " + y2);
+               
                 float t, s;
                 if (y1 == 0)
                 {
                     s = YYY / y2;
-                    t = (XXX - x2 * s / x1);
+                    t = (XXX - x2 * s ) / x1;
                 }
                 else
                 {
                     s = (XXX - YYY * x1 / y1) / (x2 - y2 * x1 / y1);
                     t = (YYY - y2 * s) / y1;
                 }
-              //  Console.WriteLine(s+" +++ "+t+" = "+(s+t));
+
+                //Console.WriteLine(s+" +++ "+t+" = "+(s+t));
+                
                 if (s >= 0 && t >= 0 && s + t <= onis)
                 {
                    // Console.WriteLine(s + " :onEQQEQEWQEQEhani: " + t);
@@ -1159,22 +1217,22 @@ namespace Charamaker2.Shapes
 
 
         /// <summary>
-        /// 図形同士が重なっているか調べる
+        /// 図形同士が重なっているか調べる。両側からやる
         /// </summary>
         /// <param name="s"></param>
         /// <returns></returns>
         public bool kasanari(Shape s)
         {
-            if (atattenai(s)) return false;
-            var points = getzettaipoints(false);
-            var spoints = s.getzettaipoints(false);
-            foreach (var a in spoints) 
+            if (atattenai(s))
             {
-                if (this.onhani(a.X, a.Y))
-                {
-               //     Console.WriteLine("algka;oka");
-                    return true;
-                }
+                //Console.WriteLine("当たるわけねーだろ！");
+                return false;
+            }
+                var points = getzettaipoints(false);
+            var spoints = s.getzettaipoints(false);
+            if (onhani(s)) 
+            {
+                return true;
             }
             for (int i = 1; i < points.Count - 1; i++)
             {

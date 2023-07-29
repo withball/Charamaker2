@@ -28,9 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(display));
-            this.clocker = new System.Windows.Forms.Timer(this.components);
+            this.clocker = new System.Windows.Forms.Timer();
             this.SuspendLayout();
             // 
             // clocker
@@ -45,6 +44,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MaximizeBox = false;
             this.Name = "display";
             this.Text = "uoootempletoooo";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.closing);

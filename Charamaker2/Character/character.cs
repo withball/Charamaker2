@@ -503,6 +503,7 @@ namespace Charamaker2.Character
             core =(setu)Activator.CreateInstance(kijyun.core.GetType(),kijyun.core);
             this.resethyoji(hyo);
             premir = false;
+            soroeru();
         }
 
         /// <summary>
@@ -541,6 +542,7 @@ namespace Charamaker2.Character
                     }
                 }
             }
+            c.soroeru();
         }
         /// <summary>
         /// 不透明度のみを基準とそろえる
@@ -559,7 +561,7 @@ namespace Charamaker2.Character
             }
         }
        
-        // <summary>
+        /// <summary>
         /// ピクチャーのミラーのみを基準とそろえる
         /// </summary>
         public void refreshmir()
@@ -575,21 +577,22 @@ namespace Charamaker2.Character
                 }
             }
         }
-     
+
 
         /// <summary>
         /// 角度以外の要素を基準に整える
         /// </summary>
         /// <param name="OPA">不透明度も同一とするか</param>
         /// <param name="TEX">テクスチャーも同一とするか</param>
-        public void refreshtokijyun(bool OPA = true, bool TEX = true)
+        /// <param name="MIR">反転も同一とするか</param>
+        public void refreshtokijyun(bool OPA = true, bool TEX = true,bool MIR=true)
         {
             character c = getkijyun();
             w = c.w;
             h = c.h;
             tx = c.tx;
             ty = c.ty;
-            rad = c.rad;
+            //rad = c.rad;
             //premir =false;
            // Console.WriteLine("QQQQQQQ");
 
@@ -603,7 +606,10 @@ namespace Charamaker2.Character
                     double kaku = b.p.RAD;
                     b.copy(a);
                     b.p.RAD = kaku;
-                    if(mirror) b.p.mir=!b.p.mir;
+                    if (MIR)
+                    {
+                        if (mirror) b.p.mir = !b.p.mir;
+                    }
                     if (!OPA)
                     {
                         b.p.OPA = opa;
@@ -615,7 +621,7 @@ namespace Charamaker2.Character
                     }
                 }
             }
-            
+            soroeru();
         }
 
    
@@ -1364,6 +1370,7 @@ namespace Charamaker2.Character
         /// サイズと高さ
         /// </summary>
         protected float size, takasa;
+
         /// <summary>
         /// 普通のコンストラクタ
         /// <paramref name="z">z</paramref>
@@ -1379,7 +1386,7 @@ namespace Charamaker2.Character
         /// <param name="B">色</param>
         /// <param name="takaa">セリフが表示される高さ</param>
         /// <param name="textuer">ウィンドウのテクスチャー</param>
-        public serif(hyojiman hyo, float time, character tuiteku, int habamoji, float speed, string text, float scale = 1, float R=0,float G=0,float B=0,float takaa = 1, float z = 99999, string textuer = "serifwindow") : base(hyo, 100, tuiteku.x, tuiteku.y, 0, 0, 0, 0, 0, new setu("window", 0, 0, new picture(0, -10000, z, 0, 0, 0, 0, 0, false, 1, "def", new Dictionary<string, string> { { "def", textuer } }), new List<setu>()), tuiteku,"",false,false)
+        public serif(hyojiman hyo, float time, character tuiteku, int habamoji, float speed, string text, float scale = 1, float R = 0, float G = 0, float B = 0, float takaa = 1, float z = 99999, string textuer = "serifwindow", bool fade = false) : base(hyo, 100, tuiteku.x, tuiteku.y, 0, 0, 0, 0, 0, new setu("window", 0, 0, new picture(0, -10000, z, 0, 0, 0, 0, 0, false, 1, "def", new Dictionary<string, string> { { "def", textuer } }), new List<setu>()), tuiteku,"",false,false)
         {
 
             takasa = takaa;
@@ -1389,9 +1396,16 @@ namespace Charamaker2.Character
             m = new message(tuiteku.x, tuiteku.y, (int)si, habamoji, 0, speed, time, text, R, G, B, true, z);
             add();
 
+            if (fade) 
+            {
+                var mot=new motion(new moveman(m.texthyojitime, true));
+                mot.addmoves(new Kopaman(time, "", 0));
+                this.addmotion(mot);
+                m.setfadeout(m.texthyojitime, time);
+            }
         }
         /// <summary>
-        /// コピーするためのコンストラクタ
+        /// コピーするためのコンストラクタ。フェードがうまくコピーできないかも
         /// </summary>
         /// <param name="eff">コピー元</param>
         /// <param name="addy">追加するか</param>

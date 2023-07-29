@@ -371,6 +371,47 @@
             移動速度、加速度、とか持ってる奴。体力とかはオーバライドしてね。
             </summary>
         </member>
+        <member name="M:GameSet1.Entity.entitysimulate``1(``0,System.Single,System.Single)">
+            <summary>
+            エンテティの未来の位置を予測する。空気抵抗ががばがばなの許して。
+            </summary>
+            <typeparam name="T">このタイプへとコピーする</typeparam>
+            <param name="e">コピー元エンテティ</param>
+            <param name="time">何秒後か</param>
+            <param name="cl">時間の精度になるね</param>
+            <returns>何秒か動いたエンテティ</returns>
+        </member>
+        <member name="M:GameSet1.Entity.entitysimulate``1(``0,System.Single,System.Single,System.Single,System.Single,System.Single,System.Int32)">
+            <summary>
+            エンテティが飛んでいくとして、その狙った地点に当てるためにはどの角度で打ち出せばいいかを教えてくれる。。
+            </summary>
+            <summary>
+            エンテティが飛んでいくとして、その狙った地点に当てるためにはどの角度で打ち出せばいいかを教えてくれる。。
+            </summary>
+            <typeparam name="T">このタイプへとコピーする</typeparam>
+            <param name="e">コピー元エンテティ</param>
+            <param name="x">目標x</param>
+            <param name="y">目標y</param>
+            <param name="speed">与えたい速度</param>
+            <param name="time">何秒後までか</param>
+            <param name="cl">精度になるね</param>
+            <param name="kuri">何回繰り返しシミュレートするか</param>
+            <returns>いい角度</returns>
+        </member>
+        <member name="M:GameSet1.Entity.zuresaseEntity(GameSet1.Entity,GameSet1.EntityManager,Charamaker2.Shapes.Shape,System.Single,System.Single,System.String,System.Int32)">
+            <summary>
+            エンテティを一方向に動かして地形でずらすメソッド。
+            ワープした扱いになる
+            </summary>
+            <param name="e">対象</param>
+            <param name="EM">地形を入れたマネージャー</param>
+            <param name="s">どの形でやるか(クローンされるから安心！)</param>
+            <param name="zure1x">Xずらす</param>
+            <param name="zure1y">Yずらす</param>
+            <param name="tais">ずらす形のもと(""でキャラクターそのもの)</param>
+            <param name="mode">0でxy両方、1でxのみ、-1でyのみ変化</param>
+            <returns>当たった地形たち</returns>
+        </member>
         <member name="F:GameSet1.Entity._c">
             <summary>
             エンテティのもとになるキャラクター
@@ -488,15 +529,21 @@
         </member>
         <member name="M:GameSet1.Entity.frame(System.Single)">
             <summary>
-            フレーム処理
+            フレーム処理。endframeも後で一気に呼び出してね。
             </summary>
             <param name="cl">フレームの長さ</param>
         </member>
         <member name="M:GameSet1.Entity.endframe(System.Single)">
             <summary>
-            エンテティが、物理的に移動した後に起こるフレーム
+            エンテティが、物理的に移動した後に起こるフレーム。
             </summary>
             <param name="cl">クロックの長さ</param>
+        </member>
+        <member name="M:GameSet1.Entity.warped">
+            <summary>
+            エンテティをワープさせたいときに呼び出すメソッド
+            逆にこれを介さず移動させると地形とかに引っかかる
+            </summary>
         </member>
         <member name="M:GameSet1.Entity.setpab">
             <summary>
@@ -588,7 +635,7 @@
         </member>
         <member name="M:GameSet1.Entity.zurentekiyou(System.Collections.Generic.List{GameSet1.Entity},Charamaker2.Shapes.Shape,Charamaker2.Shapes.Shape,System.Boolean)">
             <summary>
-            この瞬間にずれさせる。
+            この瞬間にずれさせる。pabとか移動した後にリセット
             </summary>
             <param name="tekiyous">ずれを適用する奴ら。</param>
             <param name="sugekae">あたり判定をすげかえるんだったらこれ</param>
@@ -941,6 +988,16 @@
             <param name="y"></param>
         </member>
         <member name="M:GameSet1.buturiinfo.zuren(GameSet1.Entity,GameSet1.Entity,System.Boolean)">
+            <summary>
+            相手と自分をなんか計算してずらす！
+            ちなみにここでは大丈夫だけどataribinding.coreを動かしたらcharasetしないと移動が反映されないからちうい
+            </summary>
+            <param name="thiis">自分。重ね重ねっちゃうけどお願い</param>
+            <param name="e">相手</param>
+            <param name="group">グループとして当たるか</param>
+            <returns>ずらしたかどうか</returns>
+        </member>
+        <member name="M:GameSet1.buturiinfo.zuren2(GameSet1.Entity,GameSet1.Entity,System.Boolean)">
             <summary>
             相手と自分をなんか計算してずらす！
             ちなみにここでは大丈夫だけどataribinding.coreを動かしたらcharasetしないと移動が反映されないからちうい
@@ -1310,45 +1367,6 @@
             <param name="path">読み込むパス</param>
             <returns>読み込んだテキスト</returns>
         </member>
-        <member name="M:GameSet1.FP.entitysimulate``1(``0,System.Single,System.Single)">
-            <summary>
-            エンテティの未来の位置を予測する。空気抵抗ががばがばなの許して。
-            </summary>
-            <typeparam name="T">このタイプへとコピーする</typeparam>
-            <param name="e">コピー元エンテティ</param>
-            <param name="time">何秒後か</param>
-            <param name="cl">時間の精度になるね</param>
-            <returns>何秒か動いたエンテティ</returns>
-        </member>
-        <member name="M:GameSet1.FP.entitysimulate``1(``0,System.Single,System.Single,System.Single,System.Single,System.Single,System.Int32)">
-            <summary>
-            エンテティが飛んでいくとして、その狙った地点に当てるためにはどの角度で打ち出せばいいかを教えてくれる。。
-            </summary>
-            <summary>
-            エンテティが飛んでいくとして、その狙った地点に当てるためにはどの角度で打ち出せばいいかを教えてくれる。。
-            </summary>
-            <typeparam name="T">このタイプへとコピーする</typeparam>
-            <param name="e">コピー元エンテティ</param>
-            <param name="x">目標x</param>
-            <param name="y">目標y</param>
-            <param name="speed">与えたい速度</param>
-            <param name="time">何秒後までか</param>
-            <param name="cl">精度になるね</param>
-            <param name="kuri">何回繰り返しシミュレートするか</param>
-            <returns>いい角度</returns>
-        </member>
-        <member name="M:GameSet1.FP.zuresaseEntity(GameSet1.Entity,GameSet1.EntityManager,Charamaker2.Shapes.Shape,System.Single,System.Single,System.String,System.Int32)">
-            <summary>
-            エンテティを一方向に動かして地形でずらすメソッド
-            </summary>
-            <param name="e">対象</param>
-            <param name="EM">地形を入れたマネージャー</param>
-            <param name="s">どの形でやるか(クローンされるから安心！)</param>
-            <param name="zure1x">Xずらす</param>
-            <param name="zure1y">Yずらす</param>
-            <param name="tais">ずらす形のもと(""でキャラクターそのもの)</param>
-            <param name="mode">0でxy両方、1でxのみ、-1でyのみ変化</param>
-        </member>
         <member name="F:GameSet1.FP.texts">
             <summary>
             特殊なシーケンスを使うときとかだけ参照してね。(\nは標準で変換されるよ)
@@ -1360,6 +1378,11 @@
             </summary>
         </member>
         <member name="F:GameSet1.FP.param">
+            <summary>
+            あんま参照しないでね。
+            </summary>
+        </member>
+        <member name="F:GameSet1.FP.matrix">
             <summary>
             あんま参照しないでね。
             </summary>
@@ -1398,6 +1421,24 @@
             /// <param name="percents">数値の変換([print:%f]をへんかん)</param>
             <returns>stringで帰ってくる無い場合は変な文字列</returns>
         </member>
+        <member name="M:GameSet1.FP.GMT(System.String,System.String)">
+            <summary>
+            マトリックスからテキストを取得する
+            </summary>
+            <param name="table">テーブルの名前</param>
+            <param name="name">テキストの名前</param>
+            <returns>stringで帰ってくる無い場合は変な文字列</returns>
+        </member>
+        <member name="M:GameSet1.FP.GMP(System.String,System.String)">
+            <summary>
+            マトリックスからパラメータを取得する
+            </summary>
+            <param name="table">テーブルの名前</param>
+            <param name="name">テキストの名前</param>
+            <returns>stringで帰ってくる無い場合は変な文字列</returns>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:GameSet1.FP.TableExists(System.String)" -->
+        <!-- Badly formed XML comment ignored for member "M:GameSet1.FP.MatrixExists(System.String,System.String)" -->
         <member name="M:GameSet1.FP.nulltext(System.String)">
             <summary>
             テキストがnullかどうかを判定する
@@ -1405,12 +1446,14 @@
             <param name="text">そのテキスト</param>
             <returns>text=="テキストがないよって昨日ママに言われたんだ……"</returns>
         </member>
-        <member name="M:GameSet1.FP.seting(System.Collections.Generic.List{System.String},System.Collections.Generic.List{System.String})">
+        <member name="M:GameSet1.FP.seting(System.Collections.Generic.List{System.String},System.Collections.Generic.List{System.String},System.Collections.Generic.List{System.String})">
             <summary>
             ファイルを読み込む。[名前:パラメータとか　改行]のフォーマットで頼む。エラーで変なことになるからちうい！
+            もちろん全部リセットされるよ
             </summary>
             <param name="paramn">パラメータのファイル群(floatになる) health:10.0　ってな感じで</param>
             <param name="textsn">テキストのファイル群  serif1:やあ\n兄の仇！ ってな感じで</param>
+            <param name="scvs">csvのファイル群  左上に:nameでリージョン設定</param>
         </member>
         <member name="M:GameSet1.FP.resetrandomn(System.UInt32)">
             <summary>
@@ -1639,12 +1682,24 @@
             シーンの正しきスタート時に呼び出される。標準では何もしない
             </summary>
         </member>
+        <member name="F:GameSet1.Scene.onhyoji">
+            <summary>
+            表示マンへの描画をするか
+            </summary>
+        </member>
         <member name="M:GameSet1.Scene.frame(Charamaker2.input.inputin,System.Single)">
             <summary>
             画面の描画。標準は画面表示とonframeだけよ
             </summary>
             <param name="i">入力情報</param>
             <param name="cl">クロック時間</param>
+        </member>
+        <member name="M:GameSet1.Scene.onframeinvoke(Charamaker2.input.inputin,System.Single)">
+            <summary>
+            オンフレームをインボーク！
+            </summary>
+            <param name="i"></param>
+            <param name="cl"></param>
         </member>
         <member name="M:GameSet1.Scene.end">
             <summary>
@@ -2052,6 +2107,15 @@
             <param name="eataris">フィルターに使う奴の節の名前群,nullで全部</param>
             <param name="pre">1フレーム前のも考慮するか</param>
             <param name="not">当たっていないやつを残すことにする</param>
+        </member>
+        <member name="M:GameSet1.Waza.bunkatu``1(System.Collections.Generic.List{``0},System.Int32)">
+            <summary>
+            listを任意の数に分割する
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="lis"></param>
+            <param name="cou"></param>
+            <returns></returns>
         </member>
         <member name="M:GameSet1.Waza.atafilter``1(System.Collections.Generic.List{``0},System.Collections.Generic.List{System.String},Charamaker2.Shapes.Shape,Charamaker2.Shapes.Shape,System.Boolean,System.Boolean)">
             <summary>

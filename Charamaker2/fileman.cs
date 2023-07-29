@@ -29,6 +29,95 @@ using SharpGen.Runtime;
 namespace Charamaker2
 {
     /// <summary>
+    /// レンダーターゲットを管理するためのクラス
+    /// </summary>
+    class rendercontainer
+    {
+        public string name;
+        public ID2D1RenderTarget moto;
+        public ID2D1RenderTarget render;
+        /// <summary>
+        /// ウィンドウに根差したやつか
+        /// </summary>
+        public bool isWindow { get { return render.GetType() == typeof(ID2D1HwndRenderTarget); } }
+        /// <summary>
+        /// ビットマップに根差したやつか
+        /// </summary>
+        public bool isBitmap { get { return render.GetType() == typeof(ID2D1BitmapRenderTarget); } }
+        /// <summary>
+        /// 普通のコンストラクタ
+        /// </summary>
+        /// <param name="moto"></param>
+        /// <param name="render"></param>
+        /// <param name="name"></param>
+        public rendercontainer(ID2D1RenderTarget moto,ID2D1RenderTarget render,string name) 
+        {
+            this.moto = moto;
+            this.name = name;
+            this.render = render;
+        }
+        public bool ok(ID2D1RenderTarget moto,string name, int w, int h, bool window)
+        {
+          
+            return this.moto == moto && name == this.name
+                && (w == (int)this.render.PixelSize.Width || w <= 0)
+                && (h == (int)this.render.PixelSize.Height||h<=0)
+                && isWindow == window;
+        }
+
+    }
+    class renderList
+    {
+        List<rendercontainer> lis = new List<rendercontainer>();
+        /// <summary>
+        /// ビットマップをもらう
+        /// </summary>
+        /// <param name="moto">製造元となったレンダー</param>
+        /// <param name="name"></param>
+        /// <param name="w">-1ならフリー</param>
+        /// <param name="h"></param>
+        /// <param name="window">trueならウィンドウfalseならbitmap</param>
+        /// <returns>ないならnull</returns>
+        public ID2D1RenderTarget getRender(ID2D1RenderTarget moto,string name, int w=-1, int h=-1, bool window=true) 
+        {
+            foreach (var a in lis) 
+            {
+                if (a.ok(moto, name, w, h, window))
+                {
+                    return a.render;
+                }
+            }
+            return null;
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="moto">製造元となったレンダー</param>
+        /// <param name="render"></param>
+        /// <param name="name"></param>
+        public void addRender(ID2D1RenderTarget moto, ID2D1RenderTarget render, string name)
+        {
+            lis.Add(new rendercontainer(moto,render, name));
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="render">製造元から根こそぎ持ってくよ</param>
+        public void removeRender(ID2D1RenderTarget render)
+        {
+            for (int i = lis.Count - 1; i >= 0; i--) 
+            {
+                if (lis[i].render == render) 
+                {
+                    lis.RemoveAt(i);
+                }
+            }
+        }
+
+    }
+
+
+    /// <summary>
     /// ファイルの入出力・このシステムのセットアップを扱うクラス。
     /// setingupingでセットアップは完了する。
     /// character,motion,tex,oto,oto\bgmというフォルダがexeファイルと同じディレクトリに必要。
@@ -47,11 +136,13 @@ namespace Charamaker2
         /// <summary>
         /// ガシーツ
         /// </summary>
-        static List<float> gasyu =new List<float>();
+        public static List<float> gasyu =new List<float>();
         /// <summary>
         /// セットアップされたフォーム
         /// </summary>
         static List<ContainerControl> _CC=new List<ContainerControl>();
+
+        static renderList renderlist = new renderList();
 
         /// <summary>
         /// 何もないことを示す魔法の言葉
@@ -73,8 +164,11 @@ namespace Charamaker2
             System.Drawing.Size si = new System.Drawing.Size((int)(wi * bairitu), (int)(hei * bairitu));
             hrenpro.PixelSize = si;
 
+            int i = rendertargets.Count;
             rendertargets.Add(fac.CreateHwndRenderTarget(renpro, hrenpro));
             gasyu.Add(bairitu);
+            renderlist.addRender(rendertargets[i], rendertargets[i], i.ToString());
+
         }
         /// <summary>
         /// hyojimanを取得する
@@ -87,24 +181,81 @@ namespace Charamaker2
             return aa;
         }
         /// <summary>
+        ///     bmprenderをがっちゃする
+        /// </summary>
+        /// <param name="name">""でウィンドウの。あとはbitmapに</param>
+        /// <param name="w">幅(-1で自動)</param>
+        /// <param name="h">高さ(-1で自動)</param>
+        /// <param name="numberoftarget">何番目の画面か</param>
+        /// <returns></returns>
+        static public ID2D1RenderTarget getBitmapRender(string name = "", int w = -1, int h = -1, int numberoftarget = 0) 
+        {
+            var render = rendertargets[numberoftarget];
+            var gasitu = gasyu[numberoftarget];
+            var size = render.PixelSize;
+            if (w > 0) size.Width = (int)(w * gasitu);
+            if (h > 0) size.Height = (int)(h * gasitu);
+
+            ID2D1RenderTarget rend;
+            if (name == "")
+            {
+                rend = render;
+            }
+            else
+            {
+                // Console.WriteLine(name+" Seeking...");
+                rend = renderlist.getRender(render,name, w, h, false);
+                if (rend == null)
+                {
+                    var fom = new Vortice.DCommon.PixelFormat();
+                    Console.WriteLine(name + "render maked!");
+                    rend = render.CreateCompatibleRenderTarget(size,size
+                        ,fom
+                        , CompatibleRenderTargetOptions.None);
+                    renderlist.addRender(render,rend, name);
+                    
+                }
+            }
+           
+            return rend;
+        }
+        /// <summary>
+        ///     bmprenderをがっちゃする
+        /// </summary>
+        /// <param name="name">""でウィンドウのあとはbitmapに</param>
+        /// <param name="w">幅(-1で自動)</param>
+        /// <param name="h">高さ(-1で自動)</param>
+        /// <param name="number">番号の代わりに直接レンダー</param>
+        /// <returns></returns>
+        static public ID2D1RenderTarget getBitmapRender(ID2D1RenderTarget number,string name = "", int w = -1, int h = -1)
+        {
+            var numberoftarget = rendertargets.IndexOf(number);
+            numberoftarget = Math.Max(0, numberoftarget);
+            return getBitmapRender(name, w, h, numberoftarget);
+        }
+
+
+        /// <summary>
         /// ピクチャーとして扱えるPhyojimanを取得する
         /// </summary>
         /// <param name="tex">ピクチャーのテクスチャ</param>
+        /// <param name="name">""でウィンドウのあとはbitmapに</param>
         /// <param name="w">幅(-1で自動)</param>
         /// <param name="h">高さ(-1で自動)</param>
         /// <param name="numberoftarget">何番目の画面か</param>
         /// <param name="auto">Phuojimanを自動的にhyojiをするか</param>
         /// <returns>新しいhyojiman</returns>
-        static public Phyojiman makePhyojiman(string tex=fileman.nothing,bool auto=true,int w=-1,int h=-1,int numberoftarget = 0)
+        static public Phyojiman makePhyojiman(string tex=fileman.nothing,bool auto=true, string name = "",int w=-1,int h=-1,int numberoftarget = 0)
         {
-            var hyo = makehyojiman(numberoftarget);
+
+            //  Console.WriteLine("maked P!");
+            var rend = getBitmapRender(name, w, h, numberoftarget);
+
+            var hyo = new hyojiman(rend, gasyu[numberoftarget],true);
             
-            var size = hyo.render.PixelSize;
-            if (w > 0) size.Width = w;
-            if (h > 0) size.Height = h;
-            var bt = hyo.render.CreateCompatibleRenderTarget(size, CompatibleRenderTargetOptions.None);
-            hyo.render = bt;
-            return new Phyojiman(picture.onetexpic(tex,hyo.ww),hyo,auto);
+            var res= new Phyojiman(picture.onetexpic(tex, hyo.ww), hyo, auto);
+            
+            return res;
         }
         /// <summary>
         /// セットアップをする。
@@ -140,9 +291,11 @@ namespace Charamaker2
             var i = _CC.IndexOf(f);
             if (i != -1) 
             {
+                renderlist.removeRender(rendertargets[i]);
                 _CC.RemoveAt(i);
                 gasyu.RemoveAt(i);
                 rendertargets.RemoveAt(i);
+                
             }
         }
         /// <summary>
@@ -157,6 +310,32 @@ namespace Charamaker2
         /// 読み込んだキャラクターを保存しとく
         /// </summary>
         static Dictionary<string, character> characters = new Dictionary<string, character>();
+        /// <summary>
+        /// 読み込まれたキャラクターをアンロード。表情を追加したときとかに！
+        /// </summary>
+        static public void resetcharacters()
+        {
+            characters.Clear();
+        }
+        /// <summary>
+        /// 読み込まれたモーションをリセット
+        /// </summary>
+        static public void resetmotions()
+        {
+            motions.Clear();
+        }
+        /// <summary>
+        /// 読み込まれたテクスチャーをリセット
+        /// </summary>
+        static public void resettextures()
+        {
+            texs.Clear();
+            foreach (var a in basebitnames)
+            {
+                settextobit(a.Key, a.Value);
+            }
+        }
+
         /// <summary>
         /// 読み込んだ音を保存しとく
         /// </summary>
@@ -178,7 +357,8 @@ namespace Charamaker2
         /// </summary>
         /// <param name="h">保存する表示マン</param>
         /// <param name="format">保存フォーマット</param>
-        static public void screenShot(hyojiman h, string format = "bmp")
+        /// <param name="addname">追加で付ける名前</param>
+        static public void screenShot(hyojiman h, string format = "bmp",string addname="")
         {
             /*
             var bt = h.render.CreateCompatibleRenderTarget(size, CompatibleRenderTargetOptions.None);
@@ -198,12 +378,20 @@ namespace Charamaker2
                 Directory.CreateDirectory(dir);
             }
 
-
-            string name = DateTime.Now.ToString() + "." + format;
-            var bt = h.getbitmap();
-            var size = bt.PixelSize;
+            var Size = h.TrueSize;
+            //サイズの違いでバグる可能性あり！！！丸めてどうにかしたが、画質の値によっては今後もやばいぞ！
+            string name = addname+DateTime.Now.ToString() + "." + format;
+            var bt = (ID2D1BitmapRenderTarget)getBitmapRender("ScreenShot",Size.Width
+                , Size.Height);
+            h.ikiutusi(bt);
             var pxs = GetPixels(bt.Bitmap, bt);
+
+           var size = new Size(pxs[0].Count,pxs.Count);
+
             var save = new Bitmap(size.Width, size.Height);
+
+            //Console.WriteLine(size.Width + " a:ga:la " + size.Height);
+          //  Console.WriteLine(bt.Size.Width + " a:ga:la " + bt.Size.Height);
             for (int y = 0; y < size.Height; y++)
             {
                 for (int x = 0; x < size.Width; x++)
@@ -219,7 +407,7 @@ namespace Charamaker2
             name = name.Replace(":", "_");
             Console.WriteLine(dir + name);
             save.Save(dir + name);
-
+          
 
         }
         /// <summary>
@@ -268,8 +456,9 @@ namespace Charamaker2
         static public List<List<System.Drawing.Color>> GetPixels(string file) 
         {
             var res = new List<List<System.Drawing.Color>>();
-            var aa = Path.GetExtension(file);
-            if (aa != ".bmp") { file += ".bmp"; }
+            file = dotset(file);
+            file = slashformat(file);
+
             {
                 if (file != nothing + ".bmp")
                 {
@@ -339,10 +528,18 @@ namespace Charamaker2
         /// <returns>clmcolを透明にしたビットマップ</returns>
         static public ID2D1Bitmap ldtex(string file, bool reset = false)
         {
+            file = slashformat(file);
             file = dotset(file);
             if (!texs.ContainsKey(file) || reset)
             {
                 string fi = @".\tex\" + file;
+                if (!File.Exists(fi))
+                {
+                    Console.WriteLine("texture " + fi + " not exists");
+                    regestBmp(file, null); 
+                    return null;
+                }
+
                 // System.Drawing.Imageを使ってファイルから画像を読み込む
                 if (System.IO.File.Exists(fi))
                 {
@@ -406,13 +603,27 @@ namespace Charamaker2
             // Console.WriteLine(texs.Count() + "texcount");
             return texs[file];
         }
-
+        /// <summary>
+        /// スラッシュをバックスラッシュに変換する。
+        /// だってモーションとかの登録を入力パッスにしてるからさ、
+        /// \/が混じってると二回ロードしちゃうんだよな
+        /// </summary>
+        /// <returns></returns>
+        static string slashformat(string path) 
+        {
+            return path.Replace(@"/",@"\");
+        }
+        /// <summary>
+        /// .bmpをつける。.pngならそのまま
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
         static string dotset(string name) 
         {
 
             var aa = Path.GetExtension(name);
 
-            if (aa != ".bmp"&&aa!=".png") name += ".bmp";
+            if (aa != ".bmp"&&aa!=".png" && aa != ".jpg") name += ".bmp";
             return name;
         }
 
@@ -421,18 +632,23 @@ namespace Charamaker2
         /// </summary>
         /// <param name="name"></param>
         /// <param name="bmp"></param>
-        static public void regestBmp(string name,ID2D1Bitmap bmp) 
+        /// <param name="dispouwagaki">同じ名前のbmpを登録するときdisposeするか。Renderからのbmpを登録してる場所にはfalseじゃないとだめ</param>
+        static public void regestBmp(string name,ID2D1Bitmap bmp,bool dispouwagaki=true) 
         {
+
+            name = slashformat(name);
             name = dotset(name);
 
             if (texs.ContainsKey(name))
             {
-                texs[name].Dispose();
+
+                if(dispouwagaki)texs[name]?.Dispose();
                 texs[name] = bmp;
             }
             else
             {
-                Console.WriteLine(name + "load sitao!");
+                //if (bmp != null) Console.WriteLine(bmp.PixelSize.ToString());
+                Console.WriteLine(name + " load sitao!");
                 texs.Add(name, bmp);
             }
         }
@@ -444,14 +660,14 @@ namespace Charamaker2
             bitmapProperties.BitmapOptions = BitmapOptions.CannotDraw | BitmapOptions.CpuRead;
             bitmapProperties.PixelFormat = image.PixelFormat;
             
-            var bitmap1 = deviceContext2d.CreateBitmap( new Size((int)image.Size.Width, (int)image.Size.Height),image.NativePointer
+            var bitmap1 = deviceContext2d.CreateBitmap( image.PixelSize,image.NativePointer
                 ,sizeof(int),ref bitmapProperties);
 
             
             bitmap1.CopyFromBitmap(renderTarget.CreateSharedBitmap(image, new BitmapProperties(image.PixelFormat))
             );
             var map = bitmap1.Map(MapOptions.Read);
-            var size = (int)image.Size.Width * (int)image.Size.Height * 4;
+            var size = image.PixelSize.Width * image.PixelSize.Height * 4;
             byte[] bytes = new byte[size];
             Marshal.Copy(map.Bits, bytes, 0, size);
             bitmap1.Unmap();
@@ -463,7 +679,7 @@ namespace Charamaker2
                 res.Add(new List<Color4>());
                 for (int x = 0; x < image.PixelSize.Width; x++) 
                 {
-                    var position = (y * (int)image.Size.Width + x) * 4;
+                    var position = (y * image.PixelSize.Width + x) * 4;
                     res[y].Add(
                         new Color4(bytes[position + 2], bytes[position + 1], bytes[position + 0], bytes[position + 3]));
                 
@@ -678,7 +894,9 @@ namespace Charamaker2
         /// <returns>ロードしたモーション</returns>
         static public motion ldmotion(string file, float sp = 1, bool reset = false)
         {
-            return loadmotion(file, sp, reset).m;
+            var m = loadmotion(file, sp, reset);
+            if (m == null) return null;
+            return m.m;
         }
         /// <summary>
         /// モーションファイル(.c2m)をロードしそのまま返す。モーションの編集するならこっち。
@@ -692,6 +910,8 @@ namespace Charamaker2
 
             var a = Path.GetExtension(file);
             if (a != ".c2m") file += ".c2m";
+            file = slashformat(file);
+
             //   Console.WriteLine(file + " motion load");
             motionsaveman res = null;
 
@@ -700,7 +920,11 @@ namespace Charamaker2
                 Object loadedData = null;
                 string dir = @".\motion\" + file;
                 Console.WriteLine(file + " motion load");
-
+                if (!File.Exists(dir)) 
+                {
+                    Console.WriteLine("motion " + dir + " not exists" );
+                    return null;
+                }
 
 
                 //ファイルを読込
@@ -845,12 +1069,21 @@ namespace Charamaker2
 
             var a = Path.GetExtension(file);
             if (a != ".c2c") file += ".c2c";
+            file = slashformat(file);
+
             character res = null;
             if (!characters.ContainsKey(file) || reset)
             {
                 Object loadedData = null;
 
                 string dir = @".\character\" + file;
+
+                Console.WriteLine(file + " character load");
+                if (!File.Exists(dir))
+                {
+                    Console.WriteLine("character " + dir + " not exists");
+                    return null;
+                }
 
                 if (System.IO.File.Exists(dir))
                 {
@@ -917,6 +1150,7 @@ namespace Charamaker2
         {
             var a = Path.GetExtension(file);
             if (a != ".wav") file += ".wav";
+            file = slashformat(file);
 
 
             Console.WriteLine(file + "  otoload");
@@ -1012,6 +1246,7 @@ namespace Charamaker2
             if (file == nothing) return;
             var a = Path.GetExtension(file);
             if (a != ".wav") file += ".wav";
+            file = slashformat(file);
 
             vol = vol * glovolkou;
 
@@ -1074,16 +1309,23 @@ namespace Charamaker2
         static otoman bgmman;
         static string nowbgm = "";
         /// <summary>
+        /// bgmを止めるためのbgm
+        /// </summary>
+        public const string stopbgm = "stop";
+        /// <summary>
         /// bgmを流す。bgmは一つしか流せない
         /// </summary>
-        /// <param name="file">.\oto\bgm\*.wavの*部分。""とすることで無音にできる</param>
+        /// <param name="file">.\oto\bgm\*.wavの*部分。stopbgmとすることで無音にできる</param>
         /// <param name="butu">おなじbgmを流したときに最初から再生するか</param>
         static public void playbgm(string file, bool butu = false)
         {
             if (file == nothing) return;
             var a = Path.GetExtension(file);
             if (a != ".wav") file += ".wav";
-            if (file == ".wav")
+            file = slashformat(file);
+
+
+            if (file == stopbgm+".wav")
             {
                 nowbgm = "";
                 if (bgmman != null)
@@ -1237,6 +1479,7 @@ namespace Charamaker2
 
             var aa = Path.GetExtension(file);
             if (aa != ".txt") file += ".txt";
+            file = slashformat(file);
             string loaddata = "";
 
             string dir = @".\movie\" + file;
@@ -1293,7 +1536,7 @@ namespace Charamaker2
                 {
                     Console.WriteLine(filesM[i]);
                     loadmotion(filesM[i].Replace(@".\motion\", @""));
-                    loading.Invoke(null, new loadfileEventArgs(filesM.Length, 1,i, filesM[i]));
+                    loading?.Invoke(null, new loadfileEventArgs(filesM.Length, 1,i, filesM[i]));
                 }
             }
             if (Directory.Exists(@".\oto"))
@@ -1303,7 +1546,7 @@ namespace Charamaker2
                 {
                     Console.WriteLine(filesO[i]);
                     loadoto(filesO[i].Replace(@".\oto\", @""));
-                    loading.Invoke(null, new loadfileEventArgs(filesO.Length, 1, i, filesO[i]));
+                    loading?.Invoke(null, new loadfileEventArgs(filesO.Length, 1, i, filesO[i]));
                 }
             }
             if (Directory.Exists(@".\tex"))
@@ -1314,7 +1557,7 @@ namespace Charamaker2
 
                     Console.WriteLine(filesT[i]);
                     ldtex(filesT[i].Replace(@".\tex\", @""));
-                    loading.Invoke(null, new loadfileEventArgs(filesT.Length, 1, i, filesT[i]));
+                    loading?.Invoke(null, new loadfileEventArgs(filesT.Length, 1, i, filesT[i]));
                 }
             }
             if (Directory.Exists(@".\character"))
@@ -1325,7 +1568,7 @@ namespace Charamaker2
 
                     Console.WriteLine(filesC[i]);
                     loadcharacter(filesC[i].Replace(@".\character\", @""));
-                    loading.Invoke(null, new loadfileEventArgs(filesC.Length, 1, i, filesC[i]));
+                    loading?.Invoke(null, new loadfileEventArgs(filesC.Length, 1, i, filesC[i]));
                 }
             }
         }
@@ -1333,10 +1576,54 @@ namespace Charamaker2
         /// 0~wの範囲でランダムな整数を発生させる
         /// </summary>
         /// <param name="w"></param>
+        /// <param name="minusToo">-w~wの範囲にする</param>
         /// <returns></returns>
-        static public float whrandhani(float w)
+        static public float whrandhani(float w,bool minusToo=false)
         {
+            if (minusToo) 
+            {
+
+                return (float)r.NextDouble() * w*2-w;
+            }
             return (float)r.NextDouble() * w;
+
+        }
+        /// <summary>
+        /// Listからランダムに一つピックする
+        /// </summary>
+        /// <param name="list"></param>
+        /// <returns></returns>
+        static public T pickone<T>(List<T>list)
+         
+        {
+            if (list.Count > 0) 
+            {
+                return list[r.Next() % list.Count];
+            }
+            return default(T);
+        }
+        /// <summary>
+        /// 配列からランダムに一つピックする
+        /// </summary>
+        /// <param name="list"></param>
+        /// <returns></returns>
+        static public T pickone<T>(T[] list)
+
+        {
+            if (list.Length > 0)
+            {
+                return list[r.Next() % list.Length];
+            }
+            return default(T);
+        }
+        /// <summary>
+        /// nより小さい自然数数(0含む)を返す
+        /// </summary>
+        /// <param name="w"></param>
+        /// <returns></returns>
+        static public int randmods(int w)
+        {
+            return r.Next()%w;
 
         }
         /// <summary>

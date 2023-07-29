@@ -138,12 +138,6 @@
     <Compile Include="Character\character.cs" />
     <Compile Include="Character\motiontoka.cs" />
     <Compile Include="fileman.cs" />
-    <Compile Include="disp.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="disp.Designer.cs">
-      <DependentUpon>disp.cs</DependentUpon>
-    </Compile>
     <Compile Include="hyojiman.cs" />
     <Compile Include="inputin.cs" />
     <Compile Include="motionmaker.cs">
@@ -156,16 +150,13 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="charamaker.cs">
-      <SubType>UserControl</SubType>
+      <SubType>Form</SubType>
     </Compile>
     <Compile Include="charamaker.Designer.cs">
       <DependentUpon>charamaker.cs</DependentUpon>
     </Compile>
     <Compile Include="Shape.cs" />
     <Compile Include="SuperSort.cs" />
-    <EmbeddedResource Include="disp.resx">
-      <DependentUpon>disp.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="motionmaker.resx">
       <DependentUpon>motionmaker.cs</DependentUpon>
     </EmbeddedResource>

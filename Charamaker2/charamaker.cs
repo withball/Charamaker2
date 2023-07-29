@@ -13,29 +13,26 @@ using Charamaker2.maker;
 namespace Charamaker2.maker
 {
 
-    public  partial class charamaker : UserControl
+    public  partial class charamaker : Form
     {
 
     
         public character sel;
         setu rootselll;
         public setu selll;
-        disp display;
+        Size size = new Size(1200,675);
+       
         picture selpoi = new picture(0, 0, 10000, 4, 4, 2, 2, 0, true, 0.8f, "def", new Dictionary<string, string>{{"def","yellowbit"}, { "def2", "whitebit" } });
         picture rootpoi = new picture(0, 0, 10000, 4, 4, 2, 2, 0, false, 0.5f, "def", new Dictionary<string, string> { { "def", "redbit" },{ "def2", "blackbit" } });
         movie.Movie movie = null;
         hyojiman hyojiman;
         character loaded;
         List<motionmaker> makers = new List<motionmaker>();
-        public charamaker(disp f)
+        public charamaker()
         {
             InitializeComponent();
-            display = f;
-            int w = f.Size.Width;
-            int h = f.Size.Height;
+            this.ClientSize = new System.Drawing.Size(size.Width, size.Height);
             
-            this.Size = new Size(w, h);
-
             fileman.setinguping(this);
 
             hyojiman = fileman.makehyojiman();
@@ -81,8 +78,6 @@ namespace Charamaker2.maker
             hyojiman.addpicture(rootpoi);
             hyojiman.resetpics();
 
-         
-            haiti();
         }
 
         private void UserControl1_Load(object sender, EventArgs e)
@@ -91,49 +86,7 @@ namespace Charamaker2.maker
         }
 
 
-        private void haiti()
-        {
-            pointcb.Location = new Point(this.Size.Width - 300, 0);
-            hyojibairituud.Location = new Point(this.Size.Width-150, 0);
-            setubox.Location = new Point(this.Size.Width - 300, 40);
-            seturemvb.Location = new Point(this.Size.Width - 150, 40);
-            newsetubox.Location = new Point(this.Size.Width - 300, 80);
-            setuaddb.Location = new Point(this.Size.Width - 150, 80);
-            nmchangeb.Location = new Point(this.Size.Width - 100, 80);
-            dxbox.Location = new Point(this.Size.Width - 300, 120);
-            dybox.Location = new Point(this.Size.Width - 150, 120);
-            wbox.Location = new Point(this.Size.Width - 300, 160);
-            hbox.Location = new Point(this.Size.Width - 150, 160);
-            txbox.Location = new Point(this.Size.Width - 300, 200);
-            tybox.Location = new Point(this.Size.Width - 150, 200);
-            radbox.Location = new Point(this.Size.Width - 300, 240);
-            opabox.Location = new Point(this.Size.Width - 150, 240);
-            texturebox.Location = new Point(this.Size.Width - 300, 280);
-            zbox.Location = new Point(this.Size.Width - 150, 280);
-            texsbox.Location = new Point(this.Size.Width - 300, 320);
-
-            texremb.Location = new Point(this.Size.Width - 150, 320);
-            addtexnamebox.Location = new Point(this.Size.Width - 300, 400);
-            texaddb.Location = new Point(this.Size.Width - 150, 400);
-            moviebutton.Location = new Point(this.Size.Width - 150, 400);
-            texpathbox.Location = new Point(this.Size.Width - 300, 360);
-            moviebutton.Location = new Point(this.Size.Width - 150, 360);
-
-            mirrorcheck.Location = new Point(this.Size.Width - 300, 440);
-            TexSizeLabel.Location = new Point(this.Size.Width - 150, 440);
-
-            kijyunb.Location = new Point(this.Size.Width - 300, 520);
-            refreshb.Location = new Point(this.Size.Width - 150, 520);
-
-            resetmotionb.Location = new Point(this.Size.Width - 330, 560);
-            charareset.Location = new Point(this.Size.Width - 230, 560);
-            motionmakerb.Location = new Point(this.Size.Width - 150, 560);
-            
-            loadb.Location = new Point(this.Size.Width - 300, 600);
-            saveb.Location = new Point(this.Size.Width - 150, 600);
-            
-
-        }
+      
         private void sentaku(character c)
         {
 
@@ -202,7 +155,15 @@ namespace Charamaker2.maker
 
         private void frame(object sender, EventArgs e)
         {
-          
+            if (resizeddd > 0) 
+            {
+                resizeddd -= 1;
+                if (resizeddd <= 0) 
+                {
+                    superresize();
+                    resizeddd = 0;
+                }
+            }
 
 
             //pic.rad += 0.01;
@@ -573,23 +534,10 @@ namespace Charamaker2.maker
 
         private void keydown(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.Escape) 
-            {
-                this.sinu();
-            }
             if (e.KeyCode == Keys.Space) 
             {
                 if (movie != null) movie.waittimer = 0;
             }
-        }
-        public void sinu() 
-        {
-            display.reset();
-
-
-
-
-            this.Dispose();
         }
 
         private void mousedown(object sender, MouseEventArgs e)
@@ -622,6 +570,9 @@ namespace Charamaker2.maker
                 loaded = new character(sel);
                 hyojiman.resetpics();
                 motionmakerwow();*/
+                fileman.resetcharacters();
+                fileman.resetmotions();
+                fileman.resettextures();
             }
         }
         public void motionmakerwow() 
@@ -693,6 +644,30 @@ namespace Charamaker2.maker
                     motionmakerwow();
                 }
             }
+        }
+
+        private void PshotB_Click(object sender, EventArgs e)
+        {
+            fileman.screenShot(hyojiman, "png");
+        }
+
+        private void BshotB_Click(object sender, EventArgs e)
+        {
+            fileman.screenShot(hyojiman);
+        }
+        float resizeddd = 0;
+        private void resized(object sender, EventArgs e)
+        {
+            if (resizeddd <= 0) resizeddd = 20;
+
+            
+        }
+        void superresize() 
+        {
+            int sum = this.ClientSize.Width + this.ClientSize.Height;
+            if (size.Width != 0)
+                this.ClientSize = new System.Drawing.Size(sum * size.Width / (size.Width + size.Height), sum * size.Height / (size.Width + size.Height));
+
         }
     }
 }

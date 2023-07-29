@@ -245,7 +245,10 @@ namespace GameSet1
         {
             onStarts?.Invoke(this,sm);
         }
-
+        /// <summary>
+        /// 表示マンへの描画をするか
+        /// </summary>
+        public bool onhyoji = true;
         /// <summary>
         /// 画面の描画。標準は画面表示とonframeだけよ
         /// </summary>
@@ -253,8 +256,18 @@ namespace GameSet1
         /// <param name="cl">クロック時間</param>
         virtual public void frame(inputin i,float cl)
         {
-            hyo.hyoji(cl);
-            onframe?.Invoke(this,new sceneframepack(i,cl));
+            if(onhyoji) hyo.hyoji(cl);
+            onframeinvoke(i, cl);
+        }
+        /// <summary>
+        /// オンフレームをインボーク！
+        /// </summary>
+        /// <param name="i"></param>
+        /// <param name="cl"></param>
+        protected void onframeinvoke(inputin i,float cl) 
+        {
+
+            onframe?.Invoke(this, new sceneframepack(i, cl));
         }
         /// <summary>
         /// 標準はnextをスタートしてstartedをfalseにするだけ

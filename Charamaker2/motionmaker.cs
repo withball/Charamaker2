@@ -161,13 +161,13 @@ namespace Charamaker2.maker
         {
             if (e.KeyCode == Keys.Enter) 
             {
-               var m= fileman.loadmotion(quickload.Text);
+               var m= fileman.loadmotion(quickload.Text,reset:true);
                 if (m != null)
                 {
                     exbox.Text = m.text;
                     setmotionjouhou(m);
                     Clipboard.SetText(m.text);
-
+                    sel.addmotion(m.m);
                 }
                 else 
                 {

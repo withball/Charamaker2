@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Charamaker2.maker;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -20,7 +21,7 @@ namespace Charamaker2
             Application.SetCompatibleTextRenderingDefault(false);
             
           
-                Application.Run(new disp());
+                Application.Run(new charamaker());
             
             //   Console.WriteLine("yo! "+SharpDX.Diagnostics.ObjectTracker.ReportActiveObjects());
         }
