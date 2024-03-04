@@ -1,0 +1,99 @@
+[script]{
+// inami syaberu100
+for(int i=0;i<10;i++){
+work.addmoves(new texchangeman("head","def"));
+work.addmoves(new moveman(5,true));
+work.addmoves(new texchangeman("head","syaberu"));
+work.addmoves(new moveman(5,true));}
+work.addmoves(new texchangeman("head","def"));}
+
+[motion]{
+[sp]{1}[loop]{False}
+[moves]{
+ [Charamaker2.Character.moveman:0]{
+ [time]{0}[stop]{False}}
+ [Charamaker2.Character.texchangeman:1]{
+ [name]{head}[tex]{def}}
+ [Charamaker2.Character.moveman:2]{
+ [time]{5}[stop]{True}}
+ [Charamaker2.Character.texchangeman:3]{
+ [name]{head}[tex]{syaberu}}
+ [Charamaker2.Character.moveman:4]{
+ [time]{5}[stop]{True}}
+ [Charamaker2.Character.texchangeman:5]{
+ [name]{head}[tex]{def}}
+ [Charamaker2.Character.moveman:6]{
+ [time]{5}[stop]{True}}
+ [Charamaker2.Character.texchangeman:7]{
+ [name]{head}[tex]{syaberu}}
+ [Charamaker2.Character.moveman:8]{
+ [time]{5}[stop]{True}}
+ [Charamaker2.Character.texchangeman:9]{
+ [name]{head}[tex]{def}}
+ [Charamaker2.Character.moveman:10]{
+ [time]{5}[stop]{True}}
+ [Charamaker2.Character.texchangeman:11]{
+ [name]{head}[tex]{syaberu}}
+ [Charamaker2.Character.moveman:12]{
+ [time]{5}[stop]{True}}
+ [Charamaker2.Character.texchangeman:13]{
+ [name]{head}[tex]{def}}
+ [Charamaker2.Character.moveman:14]{
+ [time]{5}[stop]{True}}
+ [Charamaker2.Character.texchangeman:15]{
+ [name]{head}[tex]{syaberu}}
+ [Charamaker2.Character.moveman:16]{
+ [time]{5}[stop]{True}}
+ [Charamaker2.Character.texchangeman:17]{
+ [name]{head}[tex]{def}}
+ [Charamaker2.Character.moveman:18]{
+ [time]{5}[stop]{True}}
+ [Charamaker2.Character.texchangeman:19]{
+ [name]{head}[tex]{syaberu}}
+ [Charamaker2.Character.moveman:20]{
+ [time]{5}[stop]{True}}
+ [Charamaker2.Character.texchangeman:21]{
+ [name]{head}[tex]{def}}
+ [Charamaker2.Character.moveman:22]{
+ [time]{5}[stop]{True}}
+ [Charamaker2.Character.texchangeman:23]{
+ [name]{head}[tex]{syaberu}}
+ [Charamaker2.Character.moveman:24]{
+ [time]{5}[stop]{True}}
+ [Charamaker2.Character.texchangeman:25]{
+ [name]{head}[tex]{def}}
+ [Charamaker2.Character.moveman:26]{
+ [time]{5}[stop]{True}}
+ [Charamaker2.Character.texchangeman:27]{
+ [name]{head}[tex]{syaberu}}
+ [Charamaker2.Character.moveman:28]{
+ [time]{5}[stop]{True}}
+ [Charamaker2.Character.texchangeman:29]{
+ [name]{head}[tex]{def}}
+ [Charamaker2.Character.moveman:30]{
+ [time]{5}[stop]{True}}
+ [Charamaker2.Character.texchangeman:31]{
+ [name]{head}[tex]{syaberu}}
+ [Charamaker2.Character.moveman:32]{
+ [time]{5}[stop]{True}}
+ [Charamaker2.Character.texchangeman:33]{
+ [name]{head}[tex]{def}}
+ [Charamaker2.Character.moveman:34]{
+ [time]{5}[stop]{True}}
+ [Charamaker2.Character.texchangeman:35]{
+ [name]{head}[tex]{syaberu}}
+ [Charamaker2.Character.moveman:36]{
+ [time]{5}[stop]{True}}
+ [Charamaker2.Character.texchangeman:37]{
+ [name]{head}[tex]{def}}
+ [Charamaker2.Character.moveman:38]{
+ [time]{5}[stop]{True}}
+ [Charamaker2.Character.texchangeman:39]{
+ [name]{head}[tex]{syaberu}}
+ [Charamaker2.Character.moveman:40]{
+ [time]{5}[stop]{True}}
+ [Charamaker2.Character.texchangeman:41]{
+ [name]{head}[tex]{def}}
+ 
+}
+}

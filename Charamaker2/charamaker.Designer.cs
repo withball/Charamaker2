@@ -66,6 +66,7 @@
             this.quickloadB = new System.Windows.Forms.TextBox();
             this.PshotB = new System.Windows.Forms.Button();
             this.BshotB = new System.Windows.Forms.Button();
+            this.autoloadCB = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.dxbox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.zbox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.opabox)).BeginInit();
@@ -592,6 +593,17 @@
             this.BshotB.UseVisualStyleBackColor = true;
             this.BshotB.Click += new System.EventHandler(this.BshotB_Click);
             // 
+            // autoloadCB
+            // 
+            this.autoloadCB.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.autoloadCB.AutoSize = true;
+            this.autoloadCB.Location = new System.Drawing.Point(723, 807);
+            this.autoloadCB.Name = "autoloadCB";
+            this.autoloadCB.Size = new System.Drawing.Size(98, 22);
+            this.autoloadCB.TabIndex = 45;
+            this.autoloadCB.Text = "autoload";
+            this.autoloadCB.UseVisualStyleBackColor = true;
+            // 
             // charamaker
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 18F);
@@ -600,6 +612,7 @@
             this.BackColor = System.Drawing.SystemColors.Control;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(1578, 844);
+            this.Controls.Add(this.autoloadCB);
             this.Controls.Add(this.BshotB);
             this.Controls.Add(this.PshotB);
             this.Controls.Add(this.quickloadB);
@@ -697,5 +710,6 @@
         private System.Windows.Forms.TextBox quickloadB;
         private System.Windows.Forms.Button PshotB;
         private System.Windows.Forms.Button BshotB;
+        private System.Windows.Forms.CheckBox autoloadCB;
     }
 }

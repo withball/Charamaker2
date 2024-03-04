@@ -262,12 +262,14 @@ namespace Charamaker2
         /// 画像の表示、音の再生が使用可能になる。
         /// </summary>
         /// <param name="f">素となるフォームとかユーザーコントロール</param>
+        /// <param name="risouw">理想のクライアントサイズ</param>
+        /// <param name="risouh">理想のクライアントサイズ</param>
         /// <param name="bai">画質の倍率</param>
-        static public void setinguping(ContainerControl f, float bai = 1)
+        static public void setinguping(ContainerControl f,float risouw,float risouh, float bai = 1)
         {
             Console.WriteLine("fileman setup go");
             _CC.Add(f);
-            resizen(bai, f.Handle, f.ClientSize.Width, f.ClientSize.Height);
+            resizen(bai, f.Handle, risouw, risouh);
             fileman.resetfileman(f.Handle);
             Console.WriteLine("fileman setup ok");
             
@@ -301,15 +303,15 @@ namespace Charamaker2
         /// <summary>
         /// 読み込んだテクスチャーを保存しとく
         /// </summary>
-        static Dictionary<string, ID2D1Bitmap> texs = new Dictionary<string, ID2D1Bitmap>();
+        public static Dictionary<string, ID2D1Bitmap> texs = new Dictionary<string, ID2D1Bitmap>();
         /// <summary>
         /// 読み込んだモーションを保存しとく
         /// </summary>
-        static Dictionary<string, motionsaveman> motions = new Dictionary<string, motionsaveman>();
+        public static Dictionary<string, motionsaveman> motions = new Dictionary<string, motionsaveman>();
         /// <summary>
         /// 読み込んだキャラクターを保存しとく
         /// </summary>
-        static Dictionary<string, character> characters = new Dictionary<string, character>();
+        public static Dictionary<string, character> characters = new Dictionary<string, character>();
         /// <summary>
         /// 読み込まれたキャラクターをアンロード。表情を追加したときとかに！
         /// </summary>
@@ -339,11 +341,11 @@ namespace Charamaker2
         /// <summary>
         /// 読み込んだ音を保存しとく
         /// </summary>
-        static Dictionary<string, otoman> otos = new Dictionary<string, otoman>();
+        public static Dictionary<string, otoman> otos = new Dictionary<string, otoman>();
         /// <summary>
         /// 今ならしている音を保存しとく。ちゃんとメモリ開放できるように。
         /// </summary>
-        static List<otoman> oton = new List<otoman>();
+       static List<otoman> oton = new List<otoman>();
         /// <summary>
         /// 乱数ロット
         /// </summary>
@@ -614,13 +616,21 @@ namespace Charamaker2
             return path.Replace(@"/",@"\");
         }
         /// <summary>
+        /// バックスラッシュをスラッシュに変換する。
+        /// これでfolder\nantokaが勘違いされなくなる
+        /// </summary>
+        /// <returns></returns>
+        public static string nonbackslash(string path)
+        {
+            return path.Replace(@"\", @"/");
+        }
+        /// <summary>
         /// .bmpをつける。.pngならそのまま
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
         static string dotset(string name) 
         {
-
             var aa = Path.GetExtension(name);
 
             if (aa != ".bmp"&&aa!=".png" && aa != ".jpg") name += ".bmp";
@@ -692,24 +702,32 @@ namespace Charamaker2
         /// 作成したキャラクターをダイアログから保存する。拡張子は.c2cにしなよ
         /// </summary>
         /// <param name="c">保存するキャラクター</param>
+        [Obsolete("c3cファイルのみ読み込めるloadcharacter3を使用してください。c2cファイルを使用しないでください")]
         static public void savecharacter(character c)
         {
             var saveData = c;
 
             System.Windows.Forms.SaveFileDialog sfd = new SaveFileDialog();
             sfd.InitialDirectory = @".\character";
-            sfd.FileName = "character" + DateTime.Now.Year + DateTime.Now.Month + DateTime.Now.Day + "_" + DateTime.Now.Hour + DateTime.Now.Minute + DateTime.Now.Second + ".c2c";
+            sfd.FileName = "character" + DateTime.Now.Year + DateTime.Now.Month + DateTime.Now.Day + "_" + DateTime.Now.Hour + DateTime.Now.Minute + DateTime.Now.Second + ".c3c";
             if (sfd.ShowDialog() == DialogResult.OK)
             {
-                //指定したパスにファイルを保存する
-                Stream fileStream = sfd.OpenFile();
-                BinaryFormatter bF = new BinaryFormatter();
-                if (saveData != null)
+                if (Path.GetExtension(sfd.FileName) == ".c3c")
                 {
-                    bF.Serialize(fileStream, saveData);
-                    Console.WriteLine("save : OKay. Chipping arouuund kick my brains around the floor");
+                    savecharacter3(sfd.FileName,c,"");
                 }
-                fileStream.Close();
+                else
+                {
+                    //指定したパスにファイルを保存する
+                    Stream fileStream = sfd.OpenFile();
+                    BinaryFormatter bF = new BinaryFormatter();
+                    if (saveData != null)
+                    {
+                        bF.Serialize(fileStream, saveData);
+                        Console.WriteLine("save : OKay. Chipping arouuund kick my brains around the floor");
+                    }
+                    fileStream.Close();
+                }
             }
         }
         /// <summary>
@@ -717,6 +735,7 @@ namespace Charamaker2
         /// </summary>
         /// <param name="path">保存するパス</param>
         /// <param name="c">保存するキャラクター</param>
+        [Obsolete("c3cファイルのみ読み込めるloadcharacter3を使用してください。c2cファイルを使用しないでください")]
         static public void savecharacter(string path, character c)
         {
             var saveData = c;
@@ -739,20 +758,110 @@ namespace Charamaker2
         /// </summary>
         /// <param name="reset">既にロードしていた場合もロードし直す</param>
         /// <returns>ロードしたキャラクター</returns>
+        [Obsolete("c3cファイルのみ読み込めるloadcharacter3を使用してください。c2cファイルを使用しないでください")]
         static public character loadcharacter(bool reset = false)
         {
             character res = null;
             System.Windows.Forms.OpenFileDialog sfd = new OpenFileDialog();
             sfd.InitialDirectory = @".\character";
-            sfd.FileName = "character" + DateTime.Now.Year + DateTime.Now.Month + DateTime.Now.Day + "_" + DateTime.Now.Hour + DateTime.Now.Minute + DateTime.Now.Second + ".c2c";
+            sfd.FileName = "character" + DateTime.Now.Year + DateTime.Now.Month + DateTime.Now.Day + "_" + DateTime.Now.Hour + DateTime.Now.Minute + DateTime.Now.Second + ".c3c";
             if (sfd.ShowDialog() == DialogResult.OK)
             {
-                string file = sfd.SafeFileName;
-                if (!characters.ContainsKey(file) || reset)
+                if (Path.GetExtension(sfd.SafeFileName) == ".c3c")
                 {
-                    Object loadedData = null;
+                    res = loadcharacter3(sfd.FileName,path:"");
+                }
+                else
+                {
+                    string file = sfd.SafeFileName;
+                    if (!characters.ContainsKey(file) || reset)
+                    {
+                        Object loadedData = null;
 
-                    string dir = sfd.FileName;
+                        string dir = sfd.FileName;
+
+
+
+                        //ファイルを読込
+                        try
+                        {
+                            BinaryFormatter binaryFormatter = new BinaryFormatter();
+                            using (var fs = File.OpenRead(dir))
+                            {
+
+                                loadedData = binaryFormatter.Deserialize(fs);
+                                fs.Close();
+                            }
+                            if (!characters.ContainsKey(file))
+                            {
+                                characters.Add(file, (character)loadedData);
+                            }
+                            else
+                            {
+                                characters[file] = (character)loadedData;
+                            }
+                        }
+                        catch (Exception e) { Console.WriteLine(e.ToString()); }
+
+                    }
+                    if (characters.ContainsKey(file))
+                    {
+                        res = characters[file];
+                    }
+                }
+            }
+            if (res == null) return null;
+            return new character(res);
+
+        }
+        /// <summary>
+        /// 作成したキャラクターをロードする。
+        /// </summary>
+        /// <param name="file">.\character\*.c2cの*部分.c2cは書いてもいいし</param>
+        /// <param name="scale">キャラクターのスケール</param>
+        /// <param name="reset">再ロードする</param>
+        /// <returns>ロードしたキャラクター</returns>
+        /// 
+        [Obsolete("c3cファイルのみ読み込めるloadcharacter3を使用してください。c2cファイルを使用しないでください")]
+        static public character loadcharacter(string file, float scale = 1, bool reset = false)
+        {
+            {
+                var names = file.Split('.');
+                var name = names[0];
+                for (int i = 1; i < names.Length - 1; i++) 
+                {
+                    if (i != 0) 
+                    {
+                        name += ".";
+                    }
+                    name += names[i];
+                }
+                var c3 = loadcharacter3(name, scale, reset);
+                if (c3 != null)
+                {
+                    return c3;
+                }
+            }
+            var a = Path.GetExtension(file);
+            if (a != ".c2c") file += ".c2c";
+            file = slashformat(file);
+
+            character res = null;
+            if (!characters.ContainsKey(file) || reset)
+            {
+                Object loadedData = null;
+
+                string dir = @".\character\" + file;
+
+                Console.WriteLine(file + " character load");
+                if (!File.Exists(dir))
+                {
+                    Console.WriteLine("character " + dir + " not exists");
+                    return null;
+                }
+
+                if (System.IO.File.Exists(dir))
+                {
 
 
 
@@ -768,30 +877,38 @@ namespace Charamaker2
                         }
                         if (!characters.ContainsKey(file))
                         {
-                            characters.Add(file, (character)loadedData);
+                            characters.Add(file, new character((Character.character)loadedData));
                         }
                         else
                         {
-                            characters[file] = (character)loadedData;
+                            characters[file] = new character((Character.character)loadedData);
                         }
                     }
                     catch (Exception e) { Console.WriteLine(e.ToString()); }
-
-                }
-                if (characters.ContainsKey(file))
-                {
-                    res = characters[file];
                 }
             }
-            if (res == null) return null;
-            return new character(res);
+            if (characters.ContainsKey(file))
+            {
+                res = characters[file];
+            }
 
+            if (res != null)
+            {
+                var ret = new character(res);
+                ret.scalechange(scale);
+                //         res.x = -1000;
+                //         res.y = -1000;
+                return ret;
+            }
+            return res;
         }
         /// <summary>
         /// 作成したモーションをスクリプトと合わせてセーブする。拡張子は.c2mにしなよ
         /// </summary>
         /// <param name="s">モーションを作ったスクリプト</param>
         /// <param name="m">モーション本体</param>
+        [Obsolete("c3mファイルのみ読み込めるloadmotionを使用してください。c2mファイルを使用しないでください")]
+
         static public void savemotion(string s, motion m)
         {
             var saveData = new motionsaveman();
@@ -799,18 +916,24 @@ namespace Charamaker2
             saveData.text = s;
             System.Windows.Forms.SaveFileDialog sfd = new SaveFileDialog();
             sfd.InitialDirectory = @".\motion";
-            sfd.FileName = "motion" + DateTime.Now.Year + DateTime.Now.Month + DateTime.Now.Day + "_" + DateTime.Now.Hour + DateTime.Now.Minute + DateTime.Now.Second + ".c2m";
+            sfd.FileName = "motion" + DateTime.Now.Year + DateTime.Now.Month + DateTime.Now.Day + "_" + DateTime.Now.Hour + DateTime.Now.Minute + DateTime.Now.Second + ".c3m";
             if (sfd.ShowDialog() == DialogResult.OK)
             {
-                //指定したパスにファイルを保存する
-                Stream fileStream = sfd.OpenFile();
-                BinaryFormatter bF = new BinaryFormatter();
-                if (saveData.m != null)
+                if (Path.GetExtension(sfd.FileName) == ".c3m")
                 {
-                    bF.Serialize(fileStream, saveData);
-                    Console.WriteLine("save : OK ");
+                    savemotion3(sfd.FileName,s,m,"");
                 }
-                fileStream.Close();
+                else
+                {//指定したパスにファイルを保存する
+                    Stream fileStream = sfd.OpenFile();
+                    BinaryFormatter bF = new BinaryFormatter();
+                    if (saveData.m != null)
+                    {
+                        bF.Serialize(fileStream, saveData);
+                        Console.WriteLine("save : OK ");
+                    }
+                    fileStream.Close();
+                }
             }
         }
         /// <summary>
@@ -819,6 +942,7 @@ namespace Charamaker2
         /// <param name="path">保存するパス</param>
         /// <param name="s">モーションを作ったスクリプト</param>
         /// <param name="m">モーション本体</param>
+        [Obsolete("c3mファイルのみ読み込めるloadmotionを使用してください。c2mファイルを使用しないでください")]
         static public void savemotion(string path, string s, motion m)
         {
             var saveData = new motionsaveman();
@@ -836,18 +960,53 @@ namespace Charamaker2
             fileStream.Close();
 
         }
+
+        /// <summary>
+        /// 作成したモーションをスクリプトと合わせてセーブする。拡張子は.c3mにしなよ
+        /// </summary>
+        /// <param name="s">モーションを作ったスクリプト</param>
+        /// <param name="m">モーション本体</param>
+        static public void savemotion3(string s, motion m)
+        {
+           
+            System.Windows.Forms.SaveFileDialog sfd = new SaveFileDialog();
+            sfd.InitialDirectory = @".\motion";
+            sfd.FileName = "motion" + DateTime.Now.Year + DateTime.Now.Month + DateTime.Now.Day + "_" + DateTime.Now.Hour + DateTime.Now.Minute + DateTime.Now.Second + ".c3m";
+            if (sfd.ShowDialog() == DialogResult.OK)
+            {
+                savemotion3(sfd.FileName,s,m,"");
+            }
+        }
+        /// <summary>
+        /// 作成したモーションをスクリプトと合わせてセーブする。拡張子は.c3mにしなよ
+        /// </summary>
+        /// <param name="file">ファイルの名前</param>
+        /// <param name="path">保存するパス</param>
+        /// <param name="s">モーションを作ったスクリプト</param>
+        /// <param name="m">モーション本体</param>
+        static public void savemotion3(string file, string s, motion m,string path=@".\motion\")
+        {
+            var saveData = new motionsaveman();
+            saveData.m = m;
+            saveData.text = s;
+
+            saveData.ToSave().saveToPath(path+file, "");
+
+        }
+
         /// <summary>
         /// モーションをダイアログからロードする。
         /// </summary>
         /// <param name="reset">ロードされている場合も再度ロードする</param>
         /// <returns>ロードしたモーション</returns>
+        [Obsolete("c3mファイルのみ読み込めるloadmotionを使用してください。c2mファイルを使用しないでください")]
         static public motionsaveman loadmotion(bool reset = false)
         {
 
             motionsaveman res = null;
             System.Windows.Forms.OpenFileDialog sfd = new OpenFileDialog();
             sfd.InitialDirectory = @".\motion";
-            sfd.FileName = "motion" + DateTime.Now.Year + DateTime.Now.Month + DateTime.Now.Day + "_" + DateTime.Now.Hour + DateTime.Now.Minute + DateTime.Now.Second + ".c2m";
+            sfd.FileName = "motion" + DateTime.Now.Year + DateTime.Now.Month + DateTime.Now.Day + "_" + DateTime.Now.Hour + DateTime.Now.Minute + DateTime.Now.Second + ".c3m";
             if (sfd.ShowDialog() == DialogResult.OK)
             {
                 string file = sfd.SafeFileName;
@@ -856,30 +1015,35 @@ namespace Charamaker2
                     Object loadedData = null;
                     string dir = sfd.FileName;
 
-
-
-                    //ファイルを読込
-                    try
+                    if (Path.GetExtension(dir) == ".c3m")
                     {
-                        BinaryFormatter binaryFormatter = new BinaryFormatter();
-                        using (var fs = File.OpenRead(dir))
-                        {
-
-                            loadedData = binaryFormatter.Deserialize(fs);
-                            fs.Close();
-                        }
-                        if (!motions.ContainsKey(file))
-                        {
-                            motions.Add(file, ((motionsaveman)loadedData));
-                        }
-                        else
-                        {
-                            motions[file] = ((motionsaveman)loadedData);
-                        }
+                        res = loadmotion3(sfd.FileName, path: "");
                     }
+                    else
+                    {
+
+                        //ファイルを読込
+                        try
+                        {
+                            BinaryFormatter binaryFormatter = new BinaryFormatter();
+                            using (var fs = File.OpenRead(dir))
+                            {
+
+                                loadedData = binaryFormatter.Deserialize(fs);
+                                fs.Close();
+                            }
+                            if (!motions.ContainsKey(file))
+                            {
+                                motions.Add(file, ((motionsaveman)loadedData));
+                            }
+                            else
+                            {
+                                motions[file] = ((motionsaveman)loadedData);
+                            }
+                        }
                     catch (Exception e) { Console.WriteLine(e.ToString()); }
                     res = (motionsaveman)loadedData;
-                }
+                } }
 
 
             }
@@ -892,6 +1056,7 @@ namespace Charamaker2
         /// <param name="sp">モーションのスピード</param>
         /// <param name="reset">再ロードする</param>
         /// <returns>ロードしたモーション</returns>
+        [Obsolete("c3mファイルのみ読み込めるloadmotionを使用してください。c2mファイルを使用しないでください")]
         static public motion ldmotion(string file, float sp = 1, bool reset = false)
         {
             var m = loadmotion(file, sp, reset);
@@ -905,9 +1070,26 @@ namespace Charamaker2
         /// <param name="sp">モーションのスピード</param>
         /// <param name="reset">再ロードする</param>
         /// <returns>ロードしたモーションファイル</returns>
+        [Obsolete("c3mファイルのみ読み込めるloadmotionを使用してください。c2mファイルを使用しないでください")]
         static public motionsaveman loadmotion(string file, float sp = 1, bool reset = false)
         {
-
+            {
+                var names = file.Split('.');
+                var name = names[0];
+                for (int i = 1; i < names.Length - 1; i++)
+                {
+                    if (i != 0)
+                    {
+                        name += ".";
+                    }
+                    name += names[i];
+                }
+                var c3 = loadmotion3(name, sp, reset);
+                if (c3 != null)
+                {
+                    return c3;
+                }
+            }
             var a = Path.GetExtension(file);
             if (a != ".c2m") file += ".c2m";
             file = slashformat(file);
@@ -938,6 +1120,98 @@ namespace Charamaker2
                         loadedData = binaryFormatter.Deserialize(fs);
                         fs.Close();
                     }
+                    if (!motions.ContainsKey(file))
+                    {
+                        motions.Add(file, (motionsaveman)loadedData);
+                    }
+                    else
+                    {
+                        motions[file] = (motionsaveman)loadedData;
+                    }
+                }
+                catch (Exception e) { Console.WriteLine(e.ToString()); }
+
+            }
+            if (motions.ContainsKey(file))
+            {
+                res = motions[file];
+            }
+            if (res != null)
+            {
+                var ress = new motionsaveman(res);
+                ress.m.sp = sp;
+                return ress;
+            }
+            else return null;
+        }
+
+
+        /// <summary>
+        /// モーションをダイアログからロードする。
+        /// </summary>
+        /// <param name="reset">ロードされている場合も再度ロードする</param>
+        /// <returns>ロードしたモーション</returns>
+         static public motionsaveman loadmotion3(bool reset = false)
+        {
+
+            motionsaveman res = null;
+            System.Windows.Forms.OpenFileDialog sfd = new OpenFileDialog();
+            sfd.InitialDirectory = @".\motion";
+            sfd.FileName = "motion" + DateTime.Now.Year + DateTime.Now.Month + DateTime.Now.Day + "_" + DateTime.Now.Hour + DateTime.Now.Minute + DateTime.Now.Second + ".c3m";
+            if (sfd.ShowDialog() == DialogResult.OK)
+            {
+                res = loadmotion3(sfd.FileName,reset:reset,path:"");
+
+            }
+            return new motionsaveman(res);
+        }
+        /// <summary>
+        /// モーションファイル(.c2m)をロードし、モーション部分を返す。.c2mは書いても書かなくてもよい
+        /// </summary>
+        /// <param name="file">.\motion\に続くパス</param>
+        /// <param name="sp">モーションのスピード</param>
+        /// <param name="reset">再ロードする</param>
+        /// <returns>ロードしたモーション</returns>
+        static public motion ldmotion3(string file, float sp = 1, bool reset = false)
+        {
+            var m = loadmotion3(file, sp, reset);
+            if (m == null) return null;
+            return m.m;
+        }
+        /// <summary>
+        /// モーションファイル(.c2m)をロードしそのまま返す。モーションの編集するならこっち。
+        /// </summary>
+        /// <param name="file">.\motion\に続くパス.c2mは書かなくてよい</param>
+        /// <param name="sp">モーションのスピード</param>
+        /// <param name="reset">再ロードする</param>
+        /// <returns>ロードしたモーションファイル</returns>
+        static public motionsaveman loadmotion3(string file, float sp = 1, bool reset = false,string path=@".\motion\")
+        {
+
+            var a = Path.GetExtension(file);
+            if (a != ".c3m") file += ".c3m";
+            file = slashformat(file);
+
+            //   Console.WriteLine(file + " motion load");
+            motionsaveman res = null;
+
+            if (!motions.ContainsKey(file) || reset)
+            {
+                Object loadedData = null;
+                string dir = path + file;
+                Console.WriteLine(file + " motion load");
+                if (!File.Exists(dir))
+                {
+                    Console.WriteLine("motion " + dir + " not exists");
+                    return null;
+                }
+
+
+                //ファイルを読込
+                try
+                {
+                    loadedData = motionsaveman.ToLoad(DataSaver.loadFromPath(dir,false,""));
+
                     if (!motions.ContainsKey(file))
                     {
                         motions.Add(file, (motionsaveman)loadedData);
@@ -1057,61 +1331,96 @@ namespace Charamaker2
             }
         }*/
 
+
         /// <summary>
-        /// 作成したキャラクターをロードする。
+        /// キャラクターをダイアログからロードする。.c2cとか関係なくロードできるのかな？
+        /// </summary>
+        /// <param name="reset">既にロードしていた場合もロードし直す</param>
+        /// <returns>ロードしたキャラクター</returns>
+        static public character loadcharacter3(bool reset = false)
+        {
+            character res = null;
+            System.Windows.Forms.OpenFileDialog sfd = new OpenFileDialog();
+            sfd.InitialDirectory = @".\character";
+            sfd.FileName = "character" + DateTime.Now.Year + DateTime.Now.Month + DateTime.Now.Day + "_" + DateTime.Now.Hour + DateTime.Now.Minute + DateTime.Now.Second + ".c3c";
+            if (sfd.ShowDialog() == DialogResult.OK)
+            {
+                string file = sfd.FileName;
+                res = loadcharacter3(file,1,reset,path:"");
+            }
+            if (res == null) return null;
+            return new character(res);
+
+        }
+        /// <summary>
+        /// ダイアログからセーブ
+        /// </summary>
+        /// <param name="c">基準がセーブされる</param>
+        static public void savecharacter3(character c)
+        {
+            System.Windows.Forms.SaveFileDialog sfd = new SaveFileDialog();
+            sfd.InitialDirectory = @".\character";
+            sfd.FileName = "character" + DateTime.Now.Year + DateTime.Now.Month + DateTime.Now.Day + "_" + DateTime.Now.Hour + DateTime.Now.Minute + DateTime.Now.Second + ".c3c";
+            if (sfd.ShowDialog() == DialogResult.OK)
+            {
+                string file = sfd.FileName;
+                savecharacter3(file, c,"");
+            }
+        }
+        /// <summary>
+        /// キャラクターをセーブ。拡張子はc3cになる。
+        /// </summary>
+        /// <param name="file"></param>
+        /// <param name="c">基準がセーブされる</param>
+        static public void savecharacter3(string file, character c,string path=@".\character\")
+        {
+            string ext = ".c3c";
+            if (Path.GetExtension(file) == ext) 
+            {
+                ext = "";
+            }
+            c.getkijyun().ToSave().saveToPath(path+file,ext);
+        }
+        /// <summary>
+        /// 作成したキャラクターをロードする。ロードするのは基準だけ
         /// </summary>
         /// <param name="file">.\character\*.c2cの*部分.c2cは書いてもいいし</param>
         /// <param name="scale">キャラクターのスケール</param>
         /// <param name="reset">再ロードする</param>
+        /// <param name="path">既定のパス</param>
         /// <returns>ロードしたキャラクター</returns>
-        static public character loadcharacter(string file, float scale = 1, bool reset = false)
+        static public character loadcharacter3(string file, float scale = 1, bool reset = false,string path=@".\character\")
         {
-
             var a = Path.GetExtension(file);
-            if (a != ".c2c") file += ".c2c";
-            file = slashformat(file);
+            if (a != ".c3c") file += ".c3c";
+            file = path+slashformat(file);
+
 
             character res = null;
+
+
             if (!characters.ContainsKey(file) || reset)
             {
-                Object loadedData = null;
-
-                string dir = @".\character\" + file;
-
                 Console.WriteLine(file + " character load");
-                if (!File.Exists(dir))
+                if (!File.Exists(file))
                 {
-                    Console.WriteLine("character " + dir + " not exists");
+                    Console.WriteLine("character " + file + " not exists");
                     return null;
                 }
-
-                if (System.IO.File.Exists(dir))
+                var d = DataSaver.loadFromPath(file, ext: "");
+                var loadedData = character.ToLoad(d);
+                
+               
+                if (!characters.ContainsKey(file))
                 {
-
-
-
-                    //ファイルを読込
-                    try
-                    {
-                        BinaryFormatter binaryFormatter = new BinaryFormatter();
-                        using (var fs = File.OpenRead(dir))
-                        {
-
-                            loadedData = binaryFormatter.Deserialize(fs);
-                            fs.Close();
-                        }
-                        if (!characters.ContainsKey(file))
-                        {
-                            characters.Add(file, new character((Character.character)loadedData));
-                        }
-                        else
-                        {
-                            characters[file] = new character((Character.character)loadedData);
-                        }
-                    }
-                    catch (Exception e) { Console.WriteLine(e.ToString()); }
+                    characters.Add(file, new character(loadedData));
+                }
+                else
+                {
+                    characters[file] = new character(loadedData);
                 }
             }
+
             if (characters.ContainsKey(file))
             {
                 res = characters[file];
@@ -1121,12 +1430,15 @@ namespace Charamaker2
             {
                 var ret = new character(res);
                 ret.scalechange(scale);
+                ret.setkijyuns();
                 //         res.x = -1000;
                 //         res.y = -1000;
                 return ret;
             }
             return res;
         }
+
+
         /// <summary>
         /// グローバルボリューム。0＜＝＜＝1
         /// </summary>
@@ -1146,7 +1458,7 @@ namespace Charamaker2
         /// 音をロードする。ロードするだけ
         /// </summary>
         /// <param name="file">.\oto\*.wavの*部分</param>
-        static void loadoto(string file)
+        public static void loadoto(string file)
         {
             var a = Path.GetExtension(file);
             if (a != ".wav") file += ".wav";
@@ -1264,7 +1576,7 @@ namespace Charamaker2
                 var otoman = otos[file];
 
                 int kannin = maxsameoto;
-                
+                /*
                 for (int i = oton.Count-1;i>=0 ; i--) 
                 {
                     if (kannin-- == 0) 
@@ -1274,15 +1586,17 @@ namespace Charamaker2
 
                         kannin++;
                     }
-                }
+                }*/
 
                 var nbuf = audio.CreateSourceVoice(otoman.wvf);
 
-
+                
                 nbuf.SubmitSourceBuffer(otoman.buf);
 
-                // Lock the secondary buffer to write wave data into it.
+                
 
+                // Lock the secondary buffer to write wave data into it.
+                
 
                 nbuf.SetVolume(vol);
                 oton.Add(new otoman(nbuf, otoman.wvf, otoman.buf));
@@ -1294,6 +1608,7 @@ namespace Charamaker2
                     oton[0].dispo();
                     oton.RemoveAt(0);
 
+
                 }
             }
         }
@@ -1302,7 +1617,7 @@ namespace Charamaker2
         /// </summary>
         public static int maxoto = 50;
         /// <summary>
-        /// 同時にならすことのできる同じ音の数
+        /// 同時にならすことのできる同じ音の数.今はマジで意味ない
         /// </summary>
         public static int maxsameoto = 3;
 
@@ -1528,7 +1843,7 @@ namespace Charamaker2
 
 
 
-
+            
             if (Directory.Exists(@".\motion"))
             {
                 string[] filesM = System.IO.Directory.GetFiles(@".\motion", "*.c2m", System.IO.SearchOption.AllDirectories);
@@ -1607,7 +1922,7 @@ namespace Charamaker2
         /// </summary>
         /// <param name="list"></param>
         /// <returns></returns>
-        static public T pickone<T>(T[] list)
+        static public T pickone<T>(params T[] list)
 
         {
             if (list.Length > 0)
@@ -1616,6 +1931,7 @@ namespace Charamaker2
             }
             return default(T);
         }
+     
         /// <summary>
         /// nより小さい自然数数(0含む)を返す
         /// </summary>
@@ -1665,7 +1981,7 @@ namespace Charamaker2
         /// <returns></returns>
         static public bool percentin(float per)
         {
-            var a = r.NextDouble() * 100;
+            var a = (double)r.Next()/(double)int.MaxValue*100;
             return per >= a;
         }
 
@@ -1722,8 +2038,12 @@ namespace Charamaker2
         {
             if (!sorce.IsDisposed)
             {
+                wvf = null;
+                sorce.DestroyVoice();
+
                 buf.Dispose();
                 sorce.Dispose();
+
             }
         }
 
@@ -1744,6 +2064,29 @@ namespace Charamaker2
             text = mm.text;
             m = new motion(mm.m);
         }
+
+        public DataSaver ToSave() 
+        {
+            var d = new DataSaver();
+            d.packAdd("script", text, true);
+            d.linechange();
+            d.packAdd("motion",m.ToSave());
+            return d;
+        }
+        /// <summary>
+        /// escapeせずに渡して
+        /// </summary>
+        /// <param name="d">escapeせずに渡して</param>
+        /// <returns></returns>
+        static public motionsaveman ToLoad(DataSaver d) 
+        {
+            var ms=new motionsaveman();
+
+            ms.text = d.unPackDataS("script");
+            ms.m = motion.ToLoad(d.unPackDataD("motion").escaped());
+            return ms;
+        }
+
     }
     /// <summary>
     /// loadfiletokaのときのイベント

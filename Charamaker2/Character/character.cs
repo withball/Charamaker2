@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Charamaker2.Shapes;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -222,6 +223,53 @@ namespace Charamaker2.Character
         {
             return new setu(this);
         }
+        /// <summary>
+        /// セーブする
+        /// </summary>
+        /// <returns></returns>
+        virtual public DataSaver ToSave()
+        {
+            var d = new DataSaver();
+
+            d.packAdd("name", nm);
+            d.linechange();
+
+            d.packAdd("dx", dx.ToString());
+            d.packAdd("dy", dy.ToString());
+            d.linechange();
+
+            var dd = p.ToSave();
+            dd.indent();
+            d.packAdd("picture",dd);
+            d.linechange();
+
+            var setus = new DataSaver();
+            foreach (var a in sts)
+            {
+                setus.packAdd(a.nm, a.ToSave());
+            }
+            setus.indent(1);
+            d.packAdd("sts", setus);
+            return d;
+        }
+
+        /// <summary>
+        /// ロードする。
+        /// </summary>
+        /// <param name="d"></param>
+        /// <returns></returns>
+        static public setu ToLoad(DataSaver d)
+        {
+            var setus = new List<setu>();
+            var dd = d.unPackDataD("sts");
+            var lis = dd.getAllPacks();
+            foreach (var a in lis)
+            {
+                var set = ToLoad(dd.unPackDataD(a));
+                setus.Add(set);
+            }
+            return new setu(d.unPackDataS("name", "core"), d.unPackDataF("dx",0), d.unPackDataF("dy", 0),picture.ToLoad(d.unPackDataD("picture")),setus);
+        }
 
     }
     /// <summary>
@@ -336,12 +384,22 @@ namespace Charamaker2.Character
         /// <summary>
         /// ラジアン角度。-PI＜＝＜＝Pi
         /// </summary>
-        public double RAD { get { rad = Math.Atan2(Math.Sin(rad), Math.Cos(rad)); return rad; } set { rad = Math.Atan2(Math.Sin(rad), Math.Cos(rad)); float x = gettx(), y = getty(); rad = value; settxy(x, y); } }
+        public double RAD { get { return rad; } set {  float x = gettx(), y = getty(); rad = value; rad = Shape.radseiki(rad); settxy(x, y); } }
 
         /// <summary>
         /// 中心点の位置
         /// </summary>
         public float tx,ty;
+
+
+        /// <summary>
+        /// 画像の中心点xを返す。
+        /// </summary>
+        public float TX { get { if (mirror) return w - tx; else return tx; } }
+        /// <summary>
+        /// 画像の中心点yを返す
+        /// </summary>
+        public float TY { get { return ty; } }
         /// <summary>
         /// 核となる一つの節
         /// </summary>
@@ -381,7 +439,7 @@ namespace Charamaker2.Character
             h = hh;
             tx = ttx;
             ty = tty;
-            rad = sita;
+            rad = Shape.radseiki(sita);
             core = cor;
             setkijyuns();
         }
@@ -399,7 +457,7 @@ namespace Charamaker2.Character
             h = c.h;
             tx = c.tx;
             ty = c.ty;
-            rad = c.rad;
+            rad = c.RAD;
             core = (setu)c.core.clone();
             
             _mirror = c._mirror;
@@ -497,7 +555,7 @@ namespace Charamaker2.Character
             h = c.h;
             tx = c.tx;
             ty = c.ty;
-            rad = c.rad;
+            rad = c.RAD;
             _mirror = c._mirror;
             this.sinu(hyo);
             core =(setu)Activator.CreateInstance(kijyun.core.GetType(),kijyun.core);
@@ -519,7 +577,7 @@ namespace Charamaker2.Character
             h = c.h;
             tx = c.tx;
             ty = c.ty;
-            rad = c.rad;
+            rad = c.RAD;
             _mirror = c._mirror;
             premir = false;
             foreach (var a in kijyun.core.getallsetu())
@@ -587,6 +645,7 @@ namespace Charamaker2.Character
         /// <param name="MIR">反転も同一とするか</param>
         public void refreshtokijyun(bool OPA = true, bool TEX = true,bool MIR=true)
         {
+            var tyusin = gettxy();
             character c = getkijyun();
             w = c.w;
             h = c.h;
@@ -621,6 +680,7 @@ namespace Charamaker2.Character
                     }
                 }
             }
+            settxy(tyusin);
             soroeru();
         }
 
@@ -654,11 +714,15 @@ namespace Charamaker2.Character
         /// <param name="c">コピー元</param>
         public void copykakudo(character c)
         {
-            if (c.mirror != mirror)
+            if (c.premir)
             {
-
-             //   c.kijyuhanten();
+                c.kijyuhanten();
             }
+            if (this.premir)
+            {
+                this.kijyuhanten();
+            }
+
             foreach (var a in c.core.getallsetu())
             {
                 foreach (var b in core.getallsetu())
@@ -670,11 +734,14 @@ namespace Charamaker2.Character
                     }
                 }
             }
-            rad = c.rad;
-            if (c.mirror != mirror)
+            RAD = c.RAD;
+            if (c.premir)
             {
-
-              //  c.kijyuhanten();
+                c.kijyuhanten();
+            }
+            if (this.premir)
+            {
+                this.kijyuhanten();
             }
         }
         /// <summary>
@@ -702,9 +769,9 @@ namespace Charamaker2.Character
             }
         }
         /// <summary>
-        /// 無理やりミラーするときの奴
+        /// 1フレーム前ミラーしてたかどうか。角度コピーとかで操作してね
         /// </summary>
-        private bool premir = false;
+        public bool premir = false;
         /// <summary>
         /// フレームを行う。節を整えて、モーションを行う。
         /// </summary>
@@ -785,17 +852,16 @@ namespace Charamaker2.Character
         /// </summary>
         public void soroeru()
         {
-            float txt = tx, tyt = ty;
-            if (mirror) txt = w - txt;
+            float txt = TX, tyt = TY;
             if (!core.p.mir)
             {
-                core.p.settxy(x + (txt + core.dx) * (float)Math.Cos(rad) - (tyt + core.dy) * (float)Math.Sin(rad)
-                   , y + (txt + core.dx) * (float)Math.Sin(rad) + (tyt + core.dy) * (float)Math.Cos(rad));
+                core.p.settxy(x + (txt + core.dx) * (float)Math.Cos(RAD) - (tyt + core.dy) * (float)Math.Sin(RAD)
+                   , y + (txt + core.dx) * (float)Math.Sin(RAD) + (tyt + core.dy) * (float)Math.Cos(RAD));
             }
             else
             {
-                core.p.settxy(x + (w - txt - core.dx) * (float)Math.Cos(rad) - (tyt + core.dy) * (float)Math.Sin(rad)
-                   , y + (w - txt - core.dx) * (float)Math.Sin(rad) + (tyt + core.dy) * (float)Math.Cos(rad));
+                core.p.settxy(x + (txt - core.dx) * (float)Math.Cos(RAD) - (tyt + core.dy) * (float)Math.Sin(RAD)
+                   , y + (txt - core.dx) * (float)Math.Sin(RAD) + (tyt + core.dy) * (float)Math.Cos(RAD));
             }
 
             core.frame();
@@ -825,6 +891,18 @@ namespace Charamaker2.Character
                 }
             }
         }
+
+        /// <summary>
+        /// キャラクター上の一点のxy座標を取得する(回転の影響を考慮してるってこと)
+        /// </summary>
+        /// <param name="ww">左上を0としたときのキャラクターの点の位置</param>
+        /// <param name="hh">左上を0としたときのキャラクターの点の位置</param>
+        /// <returns>返されるのはxy座標の値</returns>
+        public FXY getcxy(float ww, float hh)
+        {
+
+            return new FXY(getcx(ww,hh),getcy(ww,hh));
+        }
         /// <summary>
         /// キャラクター上の一点のx座標を取得する(回転の影響を考慮してるってこと)
         /// </summary>
@@ -833,8 +911,9 @@ namespace Charamaker2.Character
         /// <returns>返されるのはx座標の値</returns>
         public float getcx(float ww, float hh)
         {
-
-            float rx = x + ww * (float)Math.Cos(rad) - hh * (float)Math.Sin(rad);
+            float W; if (mirror) W = w - ww; else W = ww;
+            float H; if (mirror && 1 == 0) H = h - hh; else H = hh;
+            float rx = x + W * (float)Math.Cos(RAD) - H * (float)Math.Sin(RAD);
             return rx;
         }
         /// <summary>
@@ -846,8 +925,20 @@ namespace Charamaker2.Character
         public float getcy(float ww, float hh)
         {
 
-            float ry = y + ww * (float)Math.Sin(rad) + hh * (float)Math.Cos(rad);
+            float W; if (mirror) W = w - ww; else W = ww;
+            float H; if (mirror && 1 == 0) H = h - hh; else H = hh;
+            float ry = y + W * (float)Math.Sin(RAD) + H * (float)Math.Cos(RAD);
             return ry;
+        
+        }
+        /// <summary>
+        /// 中心点のxy座標を返す。
+        /// </summary>
+        /// <returns>xy座標</returns>
+        public FXY gettxy()
+        {
+            return new FXY(gettx(),getty());
+
         }
         /// <summary>
         /// 中心点のx座標を返す。
@@ -855,7 +946,7 @@ namespace Charamaker2.Character
         /// <returns>x座標</returns>
         public float gettx()
         {
-            return x + tx * (float)Math.Cos(rad) - ty * (float)Math.Sin(rad);
+            return x + TX * (float)Math.Cos(RAD) - TY * (float)Math.Sin(RAD);
 
         }
         /// <summary>
@@ -864,8 +955,8 @@ namespace Charamaker2.Character
         /// <returns>y座標</returns>
         public float getty()
         {
-            return y + tx * (float)Math.Sin(rad) + ty * (float)Math.Cos(rad);
-
+            return y + (TX) * (float)Math.Sin(RAD) + TY * (float)Math.Cos(RAD);
+            
         }
         /// <summary>
         /// 画像上の任意の一点をxy座標にセットする
@@ -881,15 +972,33 @@ namespace Charamaker2.Character
             soroeru();
         }
         /// <summary>
+        /// 画像上の任意の一点をxy座標にセットする
+        /// </summary>
+        /// <param name="xy">セットするxy座標</param>
+        /// <param name="cx">画像上のwの点</param>
+        /// <param name="cy">画像上のhの点</param>
+        public void setcxy(FXY xy, float cx, float cy)
+        {
+            setcxy(xy.X, xy.Y, cx, cy);
+        }
+        /// <summary>
         /// 中心をxy座標にセットする。
         /// </summary>
         /// <param name="xx">セットするx座標</param>
         /// <param name="yy">セットするy座標</param>
         public void settxy(float xx, float yy)
         {
-            x = xx - tx * (float)Math.Cos(rad) + ty * (float)Math.Sin(rad);
-            y = yy - tx * (float)Math.Sin(rad) - ty * (float)Math.Cos(rad);
+            x = xx - TX * (float)Math.Cos(RAD) + TY * (float)Math.Sin(RAD);
+            y = yy - TX * (float)Math.Sin(RAD) - TY * (float)Math.Cos(RAD);
             soroeru();
+        }
+        /// <summary>
+        /// 中心をxy座標にセットする。
+        /// </summary>
+        /// <param name="xy">セットするxy座標</param>
+        public void settxy(FXY xy)
+        {
+            settxy(xy.X, xy.Y);
         }
         /// <summary>
         /// 移動する奴
@@ -903,14 +1012,23 @@ namespace Charamaker2.Character
             soroeru();
         }
         /// <summary>
-        /// 回転している方向に移動する奴
+        /// 移動する奴
+        /// </summary>
+        /// <param name="dxy">xy方向の移動量</param>
+        public void idouxy(FXY dxy)
+        {
+            idouxy(dxy.X,dxy.Y);
+        }
+        /// <summary>
+        /// 回転とミラーしている方向に移動する奴
         /// </summary>
         /// <param name="dx">w方向の移動量</param>
         /// <param name="dy">h方向の移動量</param>
         public void wowidouxy(float dx, float dy)
         {
-            x += dx * (float)Math.Cos(rad) - dy * (float)Math.Sin(rad);
-            y += dx * (float)Math.Sin(rad) + dy * (float)Math.Cos(rad);
+            if (mirror) dx*=-1;
+            x += dx * (float)Math.Cos(RAD) - dy * (float)Math.Sin(RAD);
+            y += dx * (float)Math.Sin(RAD) + dy * (float)Math.Cos(RAD);
             soroeru();
         }
 
@@ -1030,6 +1148,44 @@ namespace Charamaker2.Character
         {
             return new character(this);
         }
+
+        /// <summary>
+        /// セーブする。セーブされるのは基準の方はセーブされない。
+        /// </summary>
+        /// <returns></returns>
+        virtual public DataSaver ToSave()
+        {
+            var d = new DataSaver();
+
+            d.packAdd("x", x.ToString());
+            d.packAdd("y", y.ToString());
+            d.linechange();
+
+            d.packAdd("w", w.ToString());
+            d.packAdd("h", h.ToString());
+            d.linechange();
+            d.packAdd("tx", tx.ToString());
+            d.packAdd("ty", ty.ToString());
+            d.packAdd("rad", rad.ToString());
+            d.linechange();
+            d.packAdd("core", core.ToSave());
+
+            return d;
+        }
+
+        /// <summary>
+        /// ロードする。基準はロード時点のものがセットされる。
+        /// </summary>
+        /// <param name="d"></param>
+        /// <returns></returns>
+        static public character ToLoad(DataSaver d)
+        {
+            return new character(d.unPackDataF("x",0), d.unPackDataF("y", 0)
+                , d.unPackDataF("w", 0), d.unPackDataF("h", 0)
+                , d.unPackDataF("tx", 0), d.unPackDataF("ty", 0) , d.unPackDataF("rad", 0)
+                ,setu.ToLoad(d.unPackDataD("core")));
+        }
+
     }
     /// <summary>
     /// カメラを自動的に追跡してくれるキャラクター。effectcharaのついてくキャラをこいつにして追跡する節をcoreにするといい感じ。

@@ -67,7 +67,18 @@ namespace GameSet1
         /// Wazaがframeされたときのイベント
         /// </summary>
         public event EventHandler<EEventArgs> framed;
-
+        /// <summary>
+        /// 自由に使える奴
+        /// </summary>
+        public event EventHandler<string> freeEvent;
+        /// <summary>
+        ///好きに使っていい奴を発動する奴
+        /// </summary>
+        /// <param name="input"></param>
+        public void freeevent(string input ) 
+        {
+            freeEvent?.Invoke(this, input);
+        }
         /// <summary>
         /// 便利ショトカeのEM
         /// </summary>
@@ -85,7 +96,7 @@ namespace GameSet1
         /// 技の残り時間
         /// </summary>
         public float nokori { get { return end - timer; } }
-
+        bool onEntity = false;
         /// <summary>
         /// 終了時間
         /// </summary>
@@ -110,6 +121,11 @@ namespace GameSet1
         /// この技が追加されてるエンテティ
         /// </summary>
         public Entity e { get { return _e; } }
+
+        /// <summary>
+        /// 好きに操っていいタグ。技探索の時に使える
+        /// </summary>
+        public string tag="";
         /// <summary>
         /// 技をエンテティに追加する。複数のに追加しないでね
         /// 追加できたらOnaddを呼び出す。
@@ -123,6 +139,7 @@ namespace GameSet1
                 this._e = e;
                 
                 onAdd();
+                onEntity = true;
                 return true;
             }
             return false;
@@ -153,7 +170,7 @@ namespace GameSet1
         {
             if (e!=null&&e.removeWaza(this))
             {
-
+                onEntity = false;
                 onRemove();
                 return true;
             }
@@ -195,8 +212,13 @@ namespace GameSet1
             timer += cl;
             if (timer >= end)
             {
-                ended?.Invoke(this, new EEventArgs(e,null,cl));
-                remove();
+                if (onEntity)
+                {
+                    onEntity = false;
+                    ended?.Invoke(this, new EEventArgs(e, null, cl));
+                    remove();
+
+                }
             }
         }
         /// <summary>
@@ -776,20 +798,84 @@ namespace GameSet1
     /// </summary>
     public class jisatukun : Waza 
     {
+        float bkaku;
+        float removeeff;
+        character cent = null;
+        string censetu;
+
         /// <summary>
         /// 普通のコンストラクタ
         /// </summary>
-        /// <param name="end"></param>
-        public jisatukun(float end) : base(end) 
+        /// <param name="end">死ぬ時間</param>
+        /// <param name="remveff">死んだときエフェクトを残す-1で残さない</param>
+        /// <param name="basekaku">速度に合わせて角度を設定471でしない</param>
+        /// <param name="center">追従するキャラクターnullで追従しない</param>
+        /// <param name="censetu">追従する関節""でキャラクター</param>
+        public jisatukun(float end , float remveff = -1,float basekaku = 471, character center = null, string censetu = "") : base(end) 
         {
-        
+            bkaku = basekaku;
+            removeeff = remveff;
+            cent = center;
+            this.censetu = censetu;
+
+        }
+        protected override void onFrame(float cl)
+        {
+            base.onFrame(cl);
+            setcent();
+
+            if (bkaku != 471)
+            {
+                if (cent != null)
+                {
+                    var set = cent.GetSetu(censetu);
+                    if (set == null)
+                    {
+                        e.c.addmotion(new radtoman(cl, "", (cent.RAD) / Math.PI * 180, 360, true, false, bkaku));
+                    }
+                    else
+                    {
+                        e.c.addmotion(new radtoman(cl, "", (set.p.RAD) / Math.PI * 180, 360, true, false, bkaku));
+                    }
+                }
+                else
+                {
+                    e.c.addmotion(new radtoman(cl, "", (Math.Atan2(e.bif.vy, e.bif.vx)) / Math.PI * 180, 360, true, false, bkaku));
+                }
+            }
+        }
+        protected override void onAdd()
+        {
+            base.onAdd();
+            setcent();
         }
         protected override void onRemove()
         {
+            if (removeeff > 0)
+            {
+                new effectchara(e.hyoji, removeeff, e.c).addmotion(new Kopaman(removeeff, "", 0));
+            }
             e.remove();
             base.onRemove();
         }
 
+        protected void setcent()
+        {
+            if (cent != null)
+            {
+                var setu = cent.GetSetu(censetu);
+                if (setu == null)
+                {
+                    e.c.settxy(cent.gettx(), cent.getty());
+                }
+                else
+                {
+                    e.c.settxy(setu.p.gettx(), setu.p.getty());
+
+                    //Console.WriteLine(e.c.getty() + " asflka " + setu.p.getty());
+                }
+            }
+        }
     }
     /// <summary>
     ///  addしたEntityの速度と角度を合わせる奴

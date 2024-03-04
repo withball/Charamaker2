@@ -1,0 +1,94 @@
+[script]{
+// yoshino dead
+float tt=80,sp=5;
+work.addmoves(new Kscalechangeman(tt/2,"",1,0.80f,-1,false));
+work.addmoves(new Kdxychangeman(tt/2,"body",0,0.08f,-1,true));
+work.addmoves(new radtoman(tt,"",0,sp));
+work.addmoves(new setumageman(tt,"body",20,sp));
+work.addmoves(new setumageman(tt,"neck",10,sp));
+work.addmoves(new setumageman(tt,"head",10,sp));
+work.addmoves(new setumageman(tt,"hair",0,sp));
+work.addmoves(new setumageman(tt,"waist",-20,sp));
+work.addmoves(new setumageman(tt,"larm",65,sp));
+work.addmoves(new setumageman(tt,"lhand",30,sp));
+work.addmoves(new setumageman(tt,"lwep",-25,sp));
+work.addmoves(new setumageman(tt,"rarm",-85,sp));
+work.addmoves(new setumageman(tt,"rhand",80,sp));
+work.addmoves(new setumageman(tt,"rwep",0,sp));
+work.addmoves(new setumageman(tt,"lleg",0,sp));
+work.addmoves(new setumageman(tt,"lfoot",85,sp));
+work.addmoves(new setumageman(tt,"rleg",-98,sp));
+work.addmoves(new setumageman(tt,"rfoot",98,sp));
+work.addmoves(new texchangeman("head","itai"));
+
+
+
+
+}
+
+[motion]{
+[sp]{1}[loop]{False}
+[moves]{
+ [Charamaker2.Character.moveman:0]{
+ [time]{0}[stop]{False}}
+ [Charamaker2.Character.Kscalechangeman:1]{
+ [time]{40}[stop]{False}
+ [name]{}[scalex]{1}[scaley]{0.8}
+ [mode]{-1}[kouzokumo]{False}[addsitei]{False}}
+ [Charamaker2.Character.Kdxychangeman:2]{
+ [time]{40}[stop]{False}
+ [name]{body}[scalex]{0}[scaley]{0.08}
+ [mode]{-1}[addsitei]{True}}
+ [Charamaker2.Character.radtoman:3]{
+ [time]{80}[stop]{False}
+ [name]{}[sitato]{0}[sitasp]{5}[saitan]{True}[kijyun]{471}}
+ [Charamaker2.Character.setumageman:4]{
+ [time]{80}[stop]{False}
+ [name]{body}[sitato]{20}[sitasp]{5}[saitan]{True}}
+ [Charamaker2.Character.setumageman:5]{
+ [time]{80}[stop]{False}
+ [name]{neck}[sitato]{10}[sitasp]{5}[saitan]{True}}
+ [Charamaker2.Character.setumageman:6]{
+ [time]{80}[stop]{False}
+ [name]{head}[sitato]{10}[sitasp]{5}[saitan]{True}}
+ [Charamaker2.Character.setumageman:7]{
+ [time]{80}[stop]{False}
+ [name]{hair}[sitato]{0}[sitasp]{5}[saitan]{True}}
+ [Charamaker2.Character.setumageman:8]{
+ [time]{80}[stop]{False}
+ [name]{waist}[sitato]{-20}[sitasp]{5}[saitan]{True}}
+ [Charamaker2.Character.setumageman:9]{
+ [time]{80}[stop]{False}
+ [name]{larm}[sitato]{65}[sitasp]{5}[saitan]{True}}
+ [Charamaker2.Character.setumageman:10]{
+ [time]{80}[stop]{False}
+ [name]{lhand}[sitato]{30}[sitasp]{5}[saitan]{True}}
+ [Charamaker2.Character.setumageman:11]{
+ [time]{80}[stop]{False}
+ [name]{lwep}[sitato]{-25}[sitasp]{5}[saitan]{True}}
+ [Charamaker2.Character.setumageman:12]{
+ [time]{80}[stop]{False}
+ [name]{rarm}[sitato]{-85}[sitasp]{5}[saitan]{True}}
+ [Charamaker2.Character.setumageman:13]{
+ [time]{80}[stop]{False}
+ [name]{rhand}[sitato]{80}[sitasp]{5}[saitan]{True}}
+ [Charamaker2.Character.setumageman:14]{
+ [time]{80}[stop]{False}
+ [name]{rwep}[sitato]{0}[sitasp]{5}[saitan]{True}}
+ [Charamaker2.Character.setumageman:15]{
+ [time]{80}[stop]{False}
+ [name]{lleg}[sitato]{0}[sitasp]{5}[saitan]{True}}
+ [Charamaker2.Character.setumageman:16]{
+ [time]{80}[stop]{False}
+ [name]{lfoot}[sitato]{85}[sitasp]{5}[saitan]{True}}
+ [Charamaker2.Character.setumageman:17]{
+ [time]{80}[stop]{False}
+ [name]{rleg}[sitato]{-98}[sitasp]{5}[saitan]{True}}
+ [Charamaker2.Character.setumageman:18]{
+ [time]{80}[stop]{False}
+ [name]{rfoot}[sitato]{98}[sitasp]{5}[saitan]{True}}
+ [Charamaker2.Character.texchangeman:19]{
+ [name]{head}[tex]{itai}}
+ 
+}
+}

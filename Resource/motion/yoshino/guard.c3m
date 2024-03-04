@@ -1,0 +1,37 @@
+[script]{
+// yoshino guard
+float tt=20,sp=12;
+work.addmoves(new setumageman(tt,"rarm",10,-sp));
+work.addmoves(new setumageman(tt,"rhand",-110,-sp));
+work.addmoves(new setumageman(tt,"rwep",180,-sp));
+
+work.addmoves(new setumageman(tt,"larm",-120,-sp));
+work.addmoves(new setumageman(tt,"lhand",0,-sp));
+work.addmoves(new setumageman(tt,"lwep",200,-sp,true,true));
+
+}
+
+[motion]{
+[sp]{1}[loop]{False}
+[moves]{
+ [Charamaker2.Character.setumageman:0]{
+ [time]{20}[stop]{False}
+ [name]{rarm}[sitato]{10}[sitasp]{-12}[saitan]{True}}
+ [Charamaker2.Character.setumageman:1]{
+ [time]{20}[stop]{False}
+ [name]{rhand}[sitato]{-110}[sitasp]{-12}[saitan]{True}}
+ [Charamaker2.Character.setumageman:2]{
+ [time]{20}[stop]{False}
+ [name]{rwep}[sitato]{180}[sitasp]{-12}[saitan]{True}}
+ [Charamaker2.Character.setumageman:3]{
+ [time]{20}[stop]{False}
+ [name]{larm}[sitato]{-120}[sitasp]{-12}[saitan]{True}}
+ [Charamaker2.Character.setumageman:4]{
+ [time]{20}[stop]{False}
+ [name]{lhand}[sitato]{0}[sitasp]{-12}[saitan]{True}}
+ [Charamaker2.Character.setumageman:5]{
+ [time]{20}[stop]{True}
+ [name]{lwep}[sitato]{200}[sitasp]{-12}[saitan]{True}}
+ 
+}
+}

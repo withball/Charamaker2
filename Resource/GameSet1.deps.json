@@ -548,17 +548,17 @@
           }
         }
       },
-      "SharpGen.Runtime/2.0.0.0": {
+      "SharpGen.Runtime.COM/2.0.0.0": {
         "runtime": {
-          "SharpGen.Runtime.dll": {
+          "SharpGen.Runtime.COM.dll": {
             "assemblyVersion": "2.0.0.0",
             "fileVersion": "2.0.0.0"
           }
         }
       },
-      "SharpGen.Runtime.COM/2.0.0.0": {
+      "SharpGen.Runtime/2.0.0.0": {
         "runtime": {
-          "SharpGen.Runtime.COM.dll": {
+          "SharpGen.Runtime.dll": {
             "assemblyVersion": "2.0.0.0",
             "fileVersion": "2.0.0.0"
           }
@@ -1074,12 +1074,12 @@
       "serviceable": false,
       "sha512": ""
     },
-    "SharpGen.Runtime/2.0.0.0": {
+    "SharpGen.Runtime.COM/2.0.0.0": {
       "type": "reference",
       "serviceable": false,
       "sha512": ""
     },
-    "SharpGen.Runtime.COM/2.0.0.0": {
+    "SharpGen.Runtime/2.0.0.0": {
       "type": "reference",
       "serviceable": false,
       "sha512": ""

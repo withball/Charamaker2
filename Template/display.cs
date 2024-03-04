@@ -37,7 +37,7 @@ namespace Template
             InitializeComponent();
             this.ClientSize=new System.Drawing.Size(size.Width,size.Height);
            
-            fileman.setinguping(this,1/*SD.S.gsit*/);
+            fileman.setinguping(this,size.Width,size.Height,1/*SD.S.gsit*/);
             //SD.S.setvols();
          //  SD.setup<SD>();
           //  SD.savesave<SD>();
@@ -69,7 +69,6 @@ namespace Template
 
         private void clocked(object sender, EventArgs e)
         {
-            
             i.setpointer(sm.s.hyo, this);
             sm.s.frame(i, 1);
             
@@ -129,19 +128,21 @@ namespace Template
          
 
         }
-        Entity me=new Entity(new character(100,101,100,50,50,25,0,new setu("core",0,0,new picture(0,0,1,100,50,50,25,0,false,1,"def",new Dictionary<string, string> { { "def", "redbit" } })))
-            ,new ABrecipie(new List<string> {"" },new List<Shape> {new Triangle(0,0,0,0,0) })
+        Entity me=new Entity(new character(100,101,150,50,0,25,0,new setu("core",0,0
+            ,new picture(0,0,1,150,50,0,25,0,false,1,"def",new Dictionary<string, string> { { "def", "yellowbit" } })))
+            ,new ABrecipie(new List<string> {"" },new List<Shape> {new Triangle() })
             ,new buturiinfo(2,0.00f,1f,0,0,0,0,1,atag:"me"));
         Entity he = new Entity(new character(400, 400, 50, 20, 25, 10, 0, new setu("core", 0, 0, new picture(0, 0, 0, 50, 50, 25, 25, 0, false, 1, "def", new Dictionary<string, string> { { "def", "bluebit" } })))
            , new ABrecipie(new List<string> { "" }, new List<Shape> { new Rectangle(0, 0, 0, 0, 0) }), new buturiinfo(atag: "he"));
        
         protected override void onstart()
         {
+          
             em = new EntityManager(hyo);
             next = new SScene(sm);
             me.add(em);
            he.add(em); 
-           //   new shapedraw().add(me);
+              new shapedraw().add(me);
           //  new shapedraw().add(he);
 
             {
@@ -176,15 +177,17 @@ namespace Template
             }*/
 
             base.onstart();
+            Console.WriteLine("Scene Start!!!" + hyo.pics.Count);
         }
         int ako = 0;
         public override void frame(inputin i, float cl)
         {
-        
+            
+            float sp = 10*2*1.5f;
             base.frame(i, cl);//ここにhyojiman.hyojiがある。
             if (i.ok(Keys.A, itype.ing))
             {
-                me.c.idouxy(-4 * cl, 0);
+                me.c.idouxy(-sp * cl, 0);
             }
             if (i.ok(Keys.W, itype.down))
             {
@@ -197,7 +200,7 @@ namespace Template
             }
             if (i.ok(Keys.D, itype.ing))
             {
-                me.c.idouxy(4 * cl, 0);
+                me.c.idouxy(sp * cl, 0);
             }
             if (i.ok(Keys.D2,itype.down))
             {
@@ -213,9 +216,11 @@ namespace Template
             if (i.ok(Keys.Q, itype.ing))
             {
                 new idouman(1, 0, 0, -1*cl).startAndFrame(me.c, 100);
+                fileman.playoto("kettei",0.01f);
             }
             if (i.ok(Keys.E, itype.ing))
             {
+                fileman.playoto("kettei", 0.01f);
                 new idouman(1, 0, 0, 1 * cl).startAndFrame(me.c, 100);
             }
             if (i.ok(Keys.Z, itype.ing))
@@ -234,9 +239,13 @@ namespace Template
             {
                 me.c.mirror = !me.c.mirror;
             }
+            if (i.ok(Keys.N, itype.down))
+            {
+                me.c.addmotion(new scalechangeman(100,0,"",2,1));
+            }
             if (i.ok(MouseButtons.Left, itype.down))
             {
-                var mom= new Entity(new character(100, 0, 50, 50, 25, 25, 0, new setu("core", 0, 0, new picture(0, 0, 1, 50, 50, 25, 25, 0, false, 1, "def", new Dictionary<string, string> { { "def", "redbit" } })))
+                var mom= new Entity(new character(100, 0, 20, 50, 10, 25, 0, new setu("core", 0, 0, new picture(0, 0, 1, 20, 50, 10, 25, 0, false, 1, "def", new Dictionary<string, string> { { "def", "redbit" } })))
           , new ABrecipie(new List<string> { "" }, new List<Shape> { new Rectangle(0, 0, 0, 0, 0) })
           , new buturiinfo(3, 0.01f, 1f, 0.5f, 0, 0, 0, 1, atag: ako++.ToString()));
                 mom.c.addmotion(new radtoman(1,"",fileman.whrandhani(0),360));
@@ -289,10 +298,18 @@ namespace Template
         protected override void onFrame(float cl)
         {
             base.onFrame(cl);
-            if (e.atariable) 
+            if (e.atariable)
             {
                 //これクソ重いよ。ただあたり判定を把握するのにはヨシ
-                Shape.gousei(e.Acore,e.PAcore).drawshape(hyoji,R,1,1,1,3,true);
+                Shape.gousei(e.Acore, e.PAcore).drawshape(hyoji, R, 1, 1, 1, 3, true);
+            }
+            else if (e.ab.getallatari().Count > 0)
+            {
+                   Shape.gousei(e.ab.getallatari()[0], e.pab.getallatari()[0]).drawshape(hyoji, R, 1, 1, 1, 3, true);
+                /*e.hyoji.begindraw();
+                e.ab.getallatari()[0].drawshape(hyoji, R, 1, 1, 1, 3, false);
+                e.pab.getallatari()[0].drawshape(hyoji, R, 0, 1, 1, 3, false);
+                e.hyoji.enddraw();*/
             }
         }
     }

@@ -340,6 +340,13 @@
             反射されたときのイベント
             </summary>
         </member>
+        <!-- Badly formed XML comment ignored for member "E:GameSet1.EEventer.freeEvent" -->
+        <member name="M:GameSet1.EEventer.freeevent(System.String)">
+             <summary>
+            好きに使っていい奴を発動する奴
+             </summary>
+             <param name="input"></param>
+        </member>
         <member name="M:GameSet1.EEventer.frame(System.Object,System.Single)">
             <summary>
             フレームしたときに呼び出されるやつ。
@@ -405,6 +412,20 @@
             </summary>
             <param name="e">対象</param>
             <param name="EM">地形を入れたマネージャー</param>
+            <param name="s">どの形でやるか(クローンされるから安心！)</param>
+            <param name="zure1x">Xずらす</param>
+            <param name="zure1y">Yずらす</param>
+            <param name="tais">ずらす形のもと(""でキャラクターそのもの)</param>
+            <param name="mode">0でxy両方、1でxのみ、-1でyのみ変化</param>
+            <returns>当たった地形たち</returns>
+        </member>
+        <member name="M:GameSet1.Entity.zuresaseEntity(GameSet1.Entity,System.Collections.Generic.List{GameSet1.Entity},Charamaker2.Shapes.Shape,System.Single,System.Single,System.String,System.Int32)">
+            <summary>
+            エンテティを一方向に動かして地形でずらすメソッド。
+            ワープした扱いになる
+            </summary>
+            <param name="e">対象</param>
+            <param name="elis">地形のリスト</param>
             <param name="s">どの形でやるか(クローンされるから安心！)</param>
             <param name="zure1x">Xずらす</param>
             <param name="zure1y">Yずらす</param>
@@ -615,6 +636,13 @@
         <member name="M:GameSet1.Entity.getwazalis``1">
             <summary>
             タイプで絞り込んで技のリストを取得する
+            </summary>
+            <typeparam name="T">タイプ</typeparam>
+            <returns>技のリスト</returns>
+        </member>
+        <member name="M:GameSet1.Entity.getwazalis``1(System.String)">
+            <summary>
+            タグで絞り込んで技のリストを取得する
             </summary>
             <typeparam name="T">タイプ</typeparam>
             <returns>技のリスト</returns>
@@ -1996,6 +2024,17 @@
             Wazaがframeされたときのイベント
             </summary>
         </member>
+        <member name="E:GameSet1.Waza.freeEvent">
+            <summary>
+            自由に使える奴
+            </summary>
+        </member>
+        <member name="M:GameSet1.Waza.freeevent(System.String)">
+             <summary>
+            好きに使っていい奴を発動する奴
+             </summary>
+             <param name="input"></param>
+        </member>
         <member name="P:GameSet1.Waza.EM">
             <summary>
             便利ショトカeのEM
@@ -2030,6 +2069,11 @@
         <member name="P:GameSet1.Waza.e">
             <summary>
             この技が追加されてるエンテティ
+            </summary>
+        </member>
+        <member name="F:GameSet1.Waza.tag">
+            <summary>
+            好きに操っていいタグ。技探索の時に使える
             </summary>
         </member>
         <member name="M:GameSet1.Waza.add(GameSet1.Entity)">
@@ -2238,11 +2282,15 @@
              addしたEntityを数秒後死に至らしめる劇毒
             </summary>
         </member>
-        <member name="M:GameSet1.jisatukun.#ctor(System.Single)">
+        <member name="M:GameSet1.jisatukun.#ctor(System.Single,System.Single,System.Single,Charamaker2.Character.character,System.String)">
             <summary>
             普通のコンストラクタ
             </summary>
-            <param name="end"></param>
+            <param name="end">死ぬ時間</param>
+            <param name="remveff">死んだときエフェクトを残す-1で残さない</param>
+            <param name="basekaku">速度に合わせて角度を設定471でしない</param>
+            <param name="center">追従するキャラクターnullで追従しない</param>
+            <param name="censetu">追従する関節""でキャラクター</param>
         </member>
         <member name="T:GameSet1.speedkakusoroe">
             <summary>

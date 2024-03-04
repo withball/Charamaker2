@@ -1,0 +1,71 @@
+[script]{
+// inami ending4
+
+
+work.addmoves(new texchangeman("head","ninikkori"));
+work.addmoves(new radtoman(50,"",0,7));
+work.addmoves(new setumageman(50,"body",0,7));
+work.addmoves(new setumageman(50,"neck",0,7));
+work.addmoves(new setumageman(50,"head",0,7));
+work.addmoves(new setumageman(50,"waist",0,7));
+work.addmoves(new setumageman(50,"larm",-5,7));
+work.addmoves(new setumageman(50,"lhand",-8,7));
+work.addmoves(new setumageman(50,"rarm",5,7));
+work.addmoves(new setumageman(50,"rhand",8,7));
+work.addmoves(new setumageman(50,"lleg",-2,7));
+work.addmoves(new setumageman(50,"lfoot",0,7));
+work.addmoves(new setumageman(50,"rleg",2,7));
+work.addmoves(new setumageman(50,"rfoot",0,7));
+
+
+
+
+}
+
+[motion]{
+[sp]{1}[loop]{False}
+[moves]{
+ [Charamaker2.Character.texchangeman:0]{
+ [name]{head}[tex]{ninikkori}}
+ [Charamaker2.Character.radtoman:1]{
+ [time]{50}[stop]{False}
+ [name]{}[sitato]{0}[sitasp]{7}[saitan]{True}[kijyun]{0}}
+ [Charamaker2.Character.setumageman:2]{
+ [time]{50}[stop]{False}
+ [name]{body}[sitato]{0}[sitasp]{7}[saitan]{True}}
+ [Charamaker2.Character.setumageman:3]{
+ [time]{50}[stop]{False}
+ [name]{neck}[sitato]{0}[sitasp]{7}[saitan]{True}}
+ [Charamaker2.Character.setumageman:4]{
+ [time]{50}[stop]{False}
+ [name]{head}[sitato]{0}[sitasp]{7}[saitan]{True}}
+ [Charamaker2.Character.setumageman:5]{
+ [time]{50}[stop]{False}
+ [name]{waist}[sitato]{0}[sitasp]{7}[saitan]{True}}
+ [Charamaker2.Character.setumageman:6]{
+ [time]{50}[stop]{False}
+ [name]{larm}[sitato]{-5}[sitasp]{7}[saitan]{True}}
+ [Charamaker2.Character.setumageman:7]{
+ [time]{50}[stop]{False}
+ [name]{lhand}[sitato]{-8}[sitasp]{7}[saitan]{True}}
+ [Charamaker2.Character.setumageman:8]{
+ [time]{50}[stop]{False}
+ [name]{rarm}[sitato]{5}[sitasp]{7}[saitan]{True}}
+ [Charamaker2.Character.setumageman:9]{
+ [time]{50}[stop]{False}
+ [name]{rhand}[sitato]{8}[sitasp]{7}[saitan]{True}}
+ [Charamaker2.Character.setumageman:10]{
+ [time]{50}[stop]{False}
+ [name]{lleg}[sitato]{-2}[sitasp]{7}[saitan]{True}}
+ [Charamaker2.Character.setumageman:11]{
+ [time]{50}[stop]{False}
+ [name]{lfoot}[sitato]{0}[sitasp]{7}[saitan]{True}}
+ [Charamaker2.Character.setumageman:12]{
+ [time]{50}[stop]{False}
+ [name]{rleg}[sitato]{2}[sitasp]{7}[saitan]{True}}
+ [Charamaker2.Character.setumageman:13]{
+ [time]{50}[stop]{False}
+ [name]{rfoot}[sitato]{0}[sitasp]{7}[saitan]{True}}
+ 
+}
+}

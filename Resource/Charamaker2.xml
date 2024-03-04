@@ -99,13 +99,32 @@
             </summary>
             <param name="s">コピー元</param>
         </member>
+        <member name="M:Charamaker2.Character.setu.clone">
+            <summary>
+            クローンするメソッド
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Charamaker2.Character.setu.ToSave">
+            <summary>
+            セーブする
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Charamaker2.Character.setu.ToLoad(Charamaker2.DataSaver)">
+            <summary>
+            ロードする。
+            </summary>
+            <param name="d"></param>
+            <returns></returns>
+        </member>
         <member name="T:Charamaker2.Character.character">
             <summary>
             キャラクターを構成するためのクラス。
             イメージは棒人間に肉を乗せる感じ。
             </summary>
         </member>
-        <member name="M:Charamaker2.Character.character.onepicturechara(System.String,System.Single,System.Single,System.Boolean,System.Single,System.Single,System.Single,System.Double)">
+        <member name="M:Charamaker2.Character.character.onepicturechara(System.String,System.Single,System.Single,System.Boolean,System.Single,System.Single,System.Single,System.Double,System.Single,System.Single,System.Boolean)">
             <summary>
             ピクチャー一枚だけのキャラクターを作る
             </summary>
@@ -117,7 +136,47 @@
             <param name="typ">中心点の位置y</param>
             <param name="opa">透明度</param>
             <param name="rad">角度</param>
+            <param name="tx">中心の位置x</param>
+            <param name="ty">中心の位置y</param>
+            <param name="mirror">反転</param>
             <returns></returns>
+        </member>
+        <member name="M:Charamaker2.Character.character.onepicturechara(Charamaker2.picture)">
+            <summary>
+            ピクチャー一枚だけのキャラクターを作る
+            </summary>
+            <param name="pic">ピクチャー</param>
+            <returns></returns>
+        </member>
+        <member name="M:Charamaker2.Character.character.kyori(Charamaker2.Character.character)">
+             <summary>
+            図形と図形の重心の距離を測る
+             </summary>
+             <param name="s">その図形の片割れ</param>
+             <returns>距離</returns>
+        </member>
+        <member name="M:Charamaker2.Character.character.kyori(System.Single,System.Single)">
+            <summary>
+            図形の重心とある座標の距離を測る
+            </summary>
+            <param name="px">そのx座標</param>
+            <param name="py">そのy座標</param>
+            <returns>距離</returns>
+        </member>
+        <member name="M:Charamaker2.Character.character.nasukaku(Charamaker2.Character.character)">
+            <summary>
+            図形と図形の重心の紡ぐ線の角度を計る
+            </summary>
+            <param name="s">その図形</param>
+            <returns>角度</returns>
+        </member>
+        <member name="M:Charamaker2.Character.character.nasukaku(System.Single,System.Single)">
+            <summary>
+            図形の重心とある座標の紡ぐ線の角度を測る
+            </summary>
+            <param name="px">そのx座標</param>
+            <param name="py">そのy座標</param>
+            <returns>角度</returns>
         </member>
         <member name="F:Charamaker2.Character.character.x">
             <summary>
@@ -157,6 +216,16 @@
         <member name="F:Charamaker2.Character.character.ty">
             <summary>
             中心点の位置
+            </summary>
+        </member>
+        <member name="P:Charamaker2.Character.character.TX">
+            <summary>
+            画像の中心点xを返す。
+            </summary>
+        </member>
+        <member name="P:Charamaker2.Character.character.TY">
+            <summary>
+            画像の中心点yを返す
             </summary>
         </member>
         <member name="F:Charamaker2.Character.character.core">
@@ -266,19 +335,18 @@
             不透明度のみを基準とそろえる
             </summary>
         </member>
-        <!-- Badly formed XML comment ignored for member "M:Charamaker2.Character.character.refreshmir" -->
-        <member name="M:Charamaker2.Character.character.refreshtokijyun(Charamaker2.hyojiman)">
+        <member name="M:Charamaker2.Character.character.refreshmir">
+            <summary>
+            ピクチャーのミラーのみを基準とそろえる
+            </summary>
+        </member>
+        <member name="M:Charamaker2.Character.character.refreshtokijyun(System.Boolean,System.Boolean,System.Boolean)">
             <summary>
             角度以外の要素を基準に整える
             </summary>
-            <param name="hyo">あると便利</param>
-        </member>
-        <member name="M:Charamaker2.Character.character.refreshtokijyun(System.Boolean,System.Boolean)">
-            <summary>
-            角度や以外の要素を基準に整える
-            </summary>
             <param name="OPA">不透明度も同一とするか</param>
             <param name="TEX">テクスチャーも同一とするか</param>
+            <param name="MIR">反転も同一とするか</param>
         </member>
         <!-- Badly formed XML comment ignored for member "M:Charamaker2.Character.character.copymotion(Charamaker2.Character.character,System.Boolean)" -->
         <member name="M:Charamaker2.Character.character.copykakudo(Charamaker2.Character.character)">
@@ -301,7 +369,7 @@
         </member>
         <member name="F:Charamaker2.Character.character.premir">
             <summary>
-            無理やりミラーするときの奴
+            1フレーム前ミラーしてたかどうか。角度コピーとかで操作してね
             </summary>
         </member>
         <member name="M:Charamaker2.Character.character.frame(System.Single)">
@@ -309,6 +377,18 @@
             フレームを行う。節を整えて、モーションを行う。
             </summary>
             <param name="cl">モーションに使うクロック</param>
+        </member>
+        <member name="M:Charamaker2.Character.character.startmotion(System.Boolean)">
+            <summary>
+            モーションを動かす前に呼ぶじゃないと反転がおかしくなる
+            </summary>
+            <param name="gati">こちらはcharacter.frame内のみで呼びます。ほっといて！</param>
+        </member>
+        <member name="M:Charamaker2.Character.character.endmotion(System.Boolean)">
+            <summary>
+            モーションを動かした後に呼ぶじゃないと反転がおかしくなる
+            </summary>
+            <param name="gati">こちらはcharacter.frame内のみで呼びます。ほっといて！</param>
         </member>
         <member name="M:Charamaker2.Character.character.kijyuhanten">
             <summary>
@@ -327,6 +407,14 @@
             <param name="sc">スケール</param>
             <param name="setkijyun">基準にも拡大を適用するか</param>
         </member>
+        <member name="M:Charamaker2.Character.character.getcxy(System.Single,System.Single)">
+            <summary>
+            キャラクター上の一点のxy座標を取得する(回転の影響を考慮してるってこと)
+            </summary>
+            <param name="ww">左上を0としたときのキャラクターの点の位置</param>
+            <param name="hh">左上を0としたときのキャラクターの点の位置</param>
+            <returns>返されるのはxy座標の値</returns>
+        </member>
         <member name="M:Charamaker2.Character.character.getcx(System.Single,System.Single)">
             <summary>
             キャラクター上の一点のx座標を取得する(回転の影響を考慮してるってこと)
@@ -342,6 +430,12 @@
             <param name="ww">左上を0としたときのキャラクターの点の位置</param>
             <param name="hh">左上を0としたときのキャラクターの点の位置</param>
             <returns>返されるのはy座標の値</returns>
+        </member>
+        <member name="M:Charamaker2.Character.character.gettxy">
+            <summary>
+            中心点のxy座標を返す。
+            </summary>
+            <returns>xy座標</returns>
         </member>
         <member name="M:Charamaker2.Character.character.gettx">
             <summary>
@@ -364,12 +458,26 @@
             <param name="cx">画像上のwの点</param>
             <param name="cy">画像上のhの点</param>
         </member>
+        <member name="M:Charamaker2.Character.character.setcxy(Charamaker2.Shapes.FXY,System.Single,System.Single)">
+            <summary>
+            画像上の任意の一点をxy座標にセットする
+            </summary>
+            <param name="xy">セットするxy座標</param>
+            <param name="cx">画像上のwの点</param>
+            <param name="cy">画像上のhの点</param>
+        </member>
         <member name="M:Charamaker2.Character.character.settxy(System.Single,System.Single)">
             <summary>
             中心をxy座標にセットする。
             </summary>
             <param name="xx">セットするx座標</param>
             <param name="yy">セットするy座標</param>
+        </member>
+        <member name="M:Charamaker2.Character.character.settxy(Charamaker2.Shapes.FXY)">
+            <summary>
+            中心をxy座標にセットする。
+            </summary>
+            <param name="xy">セットするxy座標</param>
         </member>
         <member name="M:Charamaker2.Character.character.idouxy(System.Single,System.Single)">
             <summary>
@@ -378,9 +486,15 @@
             <param name="dx">x方向の移動量</param>
             <param name="dy">y方向の移動量</param>
         </member>
+        <member name="M:Charamaker2.Character.character.idouxy(Charamaker2.Shapes.FXY)">
+            <summary>
+            移動する奴
+            </summary>
+            <param name="dxy">xy方向の移動量</param>
+        </member>
         <member name="M:Charamaker2.Character.character.wowidouxy(System.Single,System.Single)">
             <summary>
-            回転している方向に移動する奴
+            回転とミラーしている方向に移動する奴
             </summary>
             <param name="dx">w方向の移動量</param>
             <param name="dy">h方向の移動量</param>
@@ -430,6 +544,25 @@
             特定のタイプのムーブを全てのモーションから消すE:
             </summary>
             <param name="t">消すmoveのタイプ</param>
+        </member>
+        <member name="M:Charamaker2.Character.character.clone">
+            <summary>
+            クローンするメソッド
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Charamaker2.Character.character.ToSave">
+            <summary>
+            セーブする。セーブされるのは基準の方はセーブされない。
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Charamaker2.Character.character.ToLoad(Charamaker2.DataSaver)">
+            <summary>
+            ロードする。基準はロード時点のものがセットされる。
+            </summary>
+            <param name="d"></param>
+            <returns></returns>
         </member>
         <member name="T:Charamaker2.Character.camchara">
             <summary>
@@ -601,6 +734,11 @@
             いい感じにセリフを表示するためのクラス。使うに堪えない
             </summary>
         </member>
+        <member name="F:Charamaker2.Character.serif.m">
+            <summary>
+            セリフの中身
+            </summary>
+        </member>
         <member name="P:Charamaker2.Character.serif.TIMEA">
             <summary>
             メッセージの方のタイマー
@@ -616,23 +754,10 @@
             サイズと高さ
             </summary>
         </member>
-        <member name="M:Charamaker2.Character.serif.#ctor(Charamaker2.hyojiman,System.Single,Charamaker2.Character.character,System.Int32,System.Single,System.String,System.Single,System.Single,System.String)">
-            <summary>
-            普通のコンストラクタ
-            </summary>
-            <param name="hyo">追加する表示マン</param>
-            <param name="time">生存時間</param>
-            <param name="tuiteku">ついていくキャラクター</param>
-            <param name="habamoji">文字の幅</param>
-            <param name="speed">一文字が表示されるために必要な時間</param>
-            <param name="text">セリフの内容</param>
-            <param name="scale">文字の大きさ（基本はキャラクターの大きさに依存）</param>
-            <param name="takaa">セリフが表示される高さ</param>
-            <param name="textuer">ウィンドウのテクスチャー</param>
-        </member>
+        <!-- Badly formed XML comment ignored for member "M:Charamaker2.Character.serif.#ctor(Charamaker2.hyojiman,System.Single,Charamaker2.Character.character,System.Int32,System.Single,System.String,System.Single,System.Single,System.Single,System.Single,System.Single,System.Single,System.String,System.Boolean)" -->
         <member name="M:Charamaker2.Character.serif.#ctor(Charamaker2.Character.serif,System.Boolean,Charamaker2.hyojiman,System.Boolean,System.Boolean)">
             <summary>
-            コピーするためのコンストラクタ
+            コピーするためのコンストラクタ。フェードがうまくコピーできないかも
             </summary>
             <param name="eff">コピー元</param>
             <param name="addy">追加するか</param>
@@ -650,6 +775,11 @@
             フレーム処理。文字に応じてウィンドウの幅を変えたり
             </summary>
             <param name="cl">クロック</param>
+        </member>
+        <member name="M:Charamaker2.Character.serif.SetSerif">
+            <summary>
+            セリフの座標とかをちゃんとセットする
+            </summary>
         </member>
         <member name="T:Charamaker2.Character.motion">
             <summary>
@@ -709,12 +839,19 @@
             </summary>
             <param name="c">モーション適用対象</param>
         </member>
-        <member name="M:Charamaker2.Character.motion.frame(Charamaker2.Character.character,System.Single)">
+        <member name="M:Charamaker2.Character.motion.startAndFrame(Charamaker2.Character.character,System.Single)">
+            <summary>
+            モーションを始めるためのメソッド
+            </summary>
+            <param name="c">モーション適用対象</param>
+        </member>
+        <member name="M:Charamaker2.Character.motion.frame(Charamaker2.Character.character,System.Single,System.Boolean)">
             <summary>
             モーションを進める
             </summary>
             <param name="c">モーション適用対象</param>
             <param name="cl">時間のスピード</param>
+            <param name="tanitu">falseならc.startmotion,endmotionを忘れずに</param>
         </member>
         <member name="M:Charamaker2.Character.motion.addmoves(Charamaker2.Character.moveman)">
             <summary>
@@ -734,6 +871,30 @@
             特定のタイプのムーブを全て消去する
             </summary>
             <param name="t">そのタイプ</param>
+        </member>
+        <member name="M:Charamaker2.Character.motion.getsuperstop(System.Single,System.Single)">
+            <summary>
+            現在のモーションが終了するまで止まるmovemanを手に入れる
+            
+            </summary>
+            <param name="wari">最大の時間に対する割合</param>
+            <param name="sp">待つ時間をsp倍にする</param>
+        </member>
+        <member name="P:Charamaker2.Character.motion.rawendtime">
+            <summary>
+            現在のモーションが完全に終了する時間(speedは考慮してない)
+            </summary>
+        </member>
+        <member name="P:Charamaker2.Character.motion.endtime">
+            <summary>
+            現在のモーションが完全に終了する時間(speedは考慮してる)
+            </summary>
+        </member>
+        <member name="M:Charamaker2.Character.motion.ToSave">
+            <summary>
+            セーブできる形態に変えます
+            </summary>
+            <returns></returns>
         </member>
         <member name="T:Charamaker2.Character.moveman">
             <summary>
@@ -810,6 +971,19 @@
             </summary>
             <param name="c"></param>
         </member>
+        <member name="M:Charamaker2.Character.moveman.startAndFrame(Charamaker2.Character.character,System.Single)">
+            <summary>
+            即座にムーブを適用する
+            </summary>
+            <param name="c">適用するキャラクター</param>
+            <param name="cl">フレームする時間</param>
+        </member>
+        <member name="M:Charamaker2.Character.moveman.ToSave">
+            <summary>
+            セーブできる形態に変えます
+            </summary>
+            <returns></returns>
+        </member>
         <member name="T:Charamaker2.Character.idouman">
             <summary>
             キャラクターを移動指せるムーブ
@@ -836,6 +1010,12 @@
             空のコンストラクタ
             </summary>
         </member>
+        <member name="M:Charamaker2.Character.idouman.ToSave">
+            <summary>
+            セーブできる形態に変えます
+            </summary>
+            <returns></returns>
+        </member>
         <member name="T:Charamaker2.Character.zureman">
             <summary>
             回転角度とキャラクターの大きさを考慮して移動するムーブ
@@ -861,6 +1041,12 @@
             空のコンストラクタ
             </summary>
         </member>
+        <member name="M:Charamaker2.Character.zureman.ToSave">
+            <summary>
+            セーブできる形態に変えます
+            </summary>
+            <returns></returns>
+        </member>
         <member name="T:Charamaker2.Character.zahyosetman">
             <summary>
             なにがなんでも座標を固定するムーブ
@@ -885,6 +1071,12 @@
             <summary>
             空のコンストラクタ
             </summary>
+        </member>
+        <member name="M:Charamaker2.Character.zahyosetman.ToSave">
+            <summary>
+            セーブできる形態に変えます
+            </summary>
+            <returns></returns>
         </member>
         <member name="T:Charamaker2.Character.setuidouman">
             <summary>
@@ -913,6 +1105,12 @@
             空のコンストラクタ
             </summary>
         </member>
+        <member name="M:Charamaker2.Character.setuidouman.ToSave">
+            <summary>
+            セーブできる形態に変えます
+            </summary>
+            <returns></returns>
+        </member>
         <member name="T:Charamaker2.Character.setumageman">
             <summary>
             関節を指定した角度に曲げるためのムーブ。
@@ -940,12 +1138,18 @@
             空のコンストラクタ
             </summary>
         </member>
+        <member name="M:Charamaker2.Character.setumageman.ToSave">
+            <summary>
+            セーブできる形態に変えます
+            </summary>
+            <returns></returns>
+        </member>
         <member name="T:Charamaker2.Character.radtoman">
             <summary>
             指定した節、キャラクターの角度を絶対的に決めて回転させるムーブ
             </summary>
         </member>
-        <member name="M:Charamaker2.Character.radtoman.#ctor(System.Single,System.String,System.Double,System.Double,System.Boolean,System.Boolean)">
+        <member name="M:Charamaker2.Character.radtoman.#ctor(System.Single,System.String,System.Double,System.Double,System.Boolean,System.Boolean,System.Single)">
             <summary>
             普通のコンストラクタ
             </summary>
@@ -955,6 +1159,7 @@
             <param name="sitasp">回転速度(°)</param>
             <param name="saitan">最短経路で回転するか</param>
             <param name="stop">止める</param>
+            <param name="superkijyun">この角度を基準(0度)として回す471で機能オフ</param>
         </member>
         <member name="M:Charamaker2.Character.radtoman.#ctor(Charamaker2.Character.radtoman)">
             <summary>
@@ -966,6 +1171,12 @@
             <summary>
             空のコンストラクタ
             </summary>
+        </member>
+        <member name="M:Charamaker2.Character.radtoman.ToSave">
+            <summary>
+            セーブできる形態に変えます
+            </summary>
+            <returns></returns>
         </member>
         <member name="T:Charamaker2.Character.texpropman">
             <summary>
@@ -994,9 +1205,15 @@
             空のコンストラクタ
             </summary>
         </member>
+        <member name="M:Charamaker2.Character.texpropman.ToSave">
+            <summary>
+            セーブできる形態に変えます
+            </summary>
+            <returns></returns>
+        </member>
         <member name="T:Charamaker2.Character.Kopaman">
             <summary>
-            テクスチャーの反転、不透明度を操るムーブ
+            テクスチャーの不透明度を操るムーブ
             </summary>
         </member>
         <member name="M:Charamaker2.Character.Kopaman.#ctor(System.Single,System.String,System.Single,System.Boolean,System.Boolean)">
@@ -1006,7 +1223,7 @@
             <param name="t">持続時間</param>
             <param name="name">対象にする節""ですべてを指定する</param>
             <param name="toopabai">-1で変更なし、基準の不透明度から速度を自動的に決める。</param>
-            <param name="kozokumo">下の節にも同じ効果を適用するか。falseかつ""でキャラクターのmirrorを変更できる</param>
+            <param name="kozokumo">下の節にも同じ効果を適用するか。</param>
             <param name="stop">止めるか</param>
         </member>
         <member name="M:Charamaker2.Character.Kopaman.#ctor(Charamaker2.Character.Kopaman)">
@@ -1019,6 +1236,12 @@
             <summary>
             空のコンストラクタ
             </summary>
+        </member>
+        <member name="M:Charamaker2.Character.Kopaman.ToSave">
+            <summary>
+            セーブできる形態に変えます
+            </summary>
+            <returns></returns>
         </member>
         <member name="T:Charamaker2.Character.texchangeman">
             <summary>
@@ -1042,6 +1265,12 @@
             <summary>
             空のコンストラクタ
             </summary>
+        </member>
+        <member name="M:Charamaker2.Character.texchangeman.ToSave">
+            <summary>
+            セーブできる形態に変えます
+            </summary>
+            <returns></returns>
         </member>
         <member name="T:Charamaker2.Character.zchangeman">
             <summary>
@@ -1069,6 +1298,12 @@
             空のコンストラクタ
             </summary>
         </member>
+        <member name="M:Charamaker2.Character.zchangeman.ToSave">
+            <summary>
+            セーブできる形態に変えます
+            </summary>
+            <returns></returns>
+        </member>
         <member name="T:Charamaker2.Character.Kzchangeman">
             <summary>
             基準をもとにzを即座に変更するムーブ
@@ -1093,6 +1328,12 @@
             <summary>
             空のコンストラクタ
             </summary>
+        </member>
+        <member name="M:Charamaker2.Character.Kzchangeman.ToSave">
+            <summary>
+            セーブできる形態に変えます
+            </summary>
+            <returns></returns>
         </member>
         <member name="T:Charamaker2.Character.sizetokaman">
             <summary>
@@ -1122,6 +1363,12 @@
             空のコンストラクタ
             </summary>
         </member>
+        <member name="M:Charamaker2.Character.sizetokaman.ToSave">
+            <summary>
+            セーブできる形態に変えます
+            </summary>
+            <returns></returns>
+        </member>
         <member name="T:Charamaker2.Character.scalechangeman">
             <summary>
             節やキャラクターの大きさを一時的に大きくするムーブ
@@ -1150,6 +1397,12 @@
             空のコンストラクタ
             </summary>
         </member>
+        <member name="M:Charamaker2.Character.scalechangeman.ToSave">
+            <summary>
+            セーブできる形態に変えます
+            </summary>
+            <returns></returns>
+        </member>
         <member name="T:Charamaker2.Character.tyusinchangeman">
             <summary>
             中心点を一時的にずらすムーブ
@@ -1166,6 +1419,12 @@
             <summary>
             空のコンストラクタ
             </summary>
+        </member>
+        <member name="M:Charamaker2.Character.tyusinchangeman.ToSave">
+            <summary>
+            セーブできる形態に変えます
+            </summary>
+            <returns></returns>
         </member>
         <member name="T:Charamaker2.Character.dxchangeman">
             <summary>
@@ -1194,6 +1453,12 @@
             <summary>
             空のコンストラクタ
             </summary>
+        </member>
+        <member name="M:Charamaker2.Character.dxchangeman.ToSave">
+            <summary>
+            セーブできる形態に変えます
+            </summary>
+            <returns></returns>
         </member>
         <member name="T:Charamaker2.Character.Kscalechangeman">
             <summary>
@@ -1224,6 +1489,12 @@
             空のコンストラクタ
             </summary>
         </member>
+        <member name="M:Charamaker2.Character.Kscalechangeman.ToSave">
+            <summary>
+            セーブできる形態に変えます
+            </summary>
+            <returns></returns>
+        </member>
         <member name="T:Charamaker2.Character.Ktyusinchangeman">
             <summary>
             基準をもとに中心の位置を変えるムーブ
@@ -1252,6 +1523,12 @@
             空のコンストラクタ
             </summary>
         </member>
+        <member name="M:Charamaker2.Character.Ktyusinchangeman.ToSave">
+            <summary>
+            セーブできる形態に変えます
+            </summary>
+            <returns></returns>
+        </member>
         <member name="T:Charamaker2.Character.Kdxychangeman">
             <summary>
             基準をもとに関節の位置を変更するムーブ
@@ -1279,6 +1556,12 @@
             <summary>
             空のコンストラクタ
             </summary>
+        </member>
+        <member name="M:Charamaker2.Character.Kdxychangeman.ToSave">
+            <summary>
+            セーブできる形態に変えます
+            </summary>
+            <returns></returns>
         </member>
         <member name="T:Charamaker2.Character.yureman">
             <summary>
@@ -1309,6 +1592,12 @@
             空のコンストラクタ
             </summary>
         </member>
+        <member name="M:Charamaker2.Character.yureman.ToSave">
+            <summary>
+            セーブできる形態に変えます
+            </summary>
+            <returns></returns>
+        </member>
         <member name="T:Charamaker2.Character.zkaitenman">
             <summary>
             回転するかのように大きさを変えるムーブ。
@@ -1337,6 +1626,12 @@
             空のコンストラクタ
             </summary>
         </member>
+        <member name="M:Charamaker2.Character.zkaitenman.ToSave">
+            <summary>
+            セーブできる形態に変えます
+            </summary>
+            <returns></returns>
+        </member>
         <member name="T:Charamaker2.Character.hantenkaitenman">
             <summary>
             反転したときの角度に回転するムーブ
@@ -1362,6 +1657,12 @@
             空のコンストラクタ
             </summary>
         </member>
+        <member name="M:Charamaker2.Character.hantenkaitenman.ToSave">
+            <summary>
+            セーブできる形態に変えます
+            </summary>
+            <returns></returns>
+        </member>
         <member name="T:Charamaker2.Character.stopaman">
             <summary>
             全ての回転を止めるムーブ。直接使わない
@@ -1377,6 +1678,12 @@
             <summary>
             空のコンストラクタ
             </summary>
+        </member>
+        <member name="M:Charamaker2.Character.stopaman.ToSave">
+            <summary>
+            セーブできる形態に変えます
+            </summary>
+            <returns></returns>
         </member>
         <member name="T:Charamaker2.Character.stopaaddman">
             <summary>
@@ -1401,6 +1708,12 @@
             空のコンストラクタ
             </summary>
         </member>
+        <member name="M:Charamaker2.Character.stopaaddman.ToSave">
+            <summary>
+            セーブできる形態に変えます
+            </summary>
+            <returns></returns>
+        </member>
         <member name="T:Charamaker2.Character.playotoman">
             <summary>
             filemanから音を発するムーブ
@@ -1424,6 +1737,40 @@
             <summary>
             空のコンストラクタ
             </summary>
+        </member>
+        <member name="M:Charamaker2.Character.playotoman.ToSave">
+            <summary>
+            セーブできる形態に変えます
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Charamaker2.Character.refreshman">
+            <summary>
+            キャラクターをリフレッシュするムーブ
+            </summary>
+        </member>
+        <member name="M:Charamaker2.Character.refreshman.#ctor(System.Single)">
+            <summary>
+            普通のコンストラクタ
+            </summary>
+            <param name="timer">STOP時間</param>
+        </member>
+        <member name="M:Charamaker2.Character.refreshman.#ctor(Charamaker2.Character.refreshman)">
+            <summary>
+            コピーするためのコンストラクタ。
+            </summary>
+            <param name="s">コピー元</param>
+        </member>
+        <member name="M:Charamaker2.Character.refreshman.#ctor">
+            <summary>
+            空のコンストラクタ
+            </summary>
+        </member>
+        <member name="M:Charamaker2.Character.refreshman.ToSave">
+            <summary>
+            セーブできる形態に変えます
+            </summary>
+            <returns></returns>
         </member>
         <member name="T:Charamaker2.Character.pplayotoman">
             <summary>
@@ -1450,6 +1797,252 @@
             空のコンストラクタ
             </summary>
         </member>
+        <member name="M:Charamaker2.Character.pplayotoman.ToSave">
+            <summary>
+            セーブできる形態に変えます
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Charamaker2.DataSaver">
+            <summary>
+            [name]{naiyou}をロードするクラス。
+            [name]{naiyou2}
+            って感じで二つ並んでたら基本上しか読み取れない。
+            元々セーブデータ用だしね。
+            [name]の方は別に保存されてない
+            []がディレクトリで{}が中に書いてあるファイルorディレクトリのイメージ。
+            </summary>
+        </member>
+        <member name="M:Charamaker2.DataSaver.linechange(System.Int32)">
+            <summary>
+            最後の所に改行を追加する
+            </summary>
+        </member>
+        <member name="M:Charamaker2.DataSaver.indent(System.Int32)">
+            <summary>
+            全体をインデントする
+            </summary>
+        </member>
+        <member name="M:Charamaker2.DataSaver.escapen(System.String)">
+            <summary>
+            改行->消す。
+            \n->改行。
+            に変換する
+            </summary>
+            <param name="s"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Charamaker2.DataSaver.escaped">
+            <summary>
+            データをエスケープする。データを読み取る前に一回行ってね
+            改行->消す。
+            \n->改行。
+            に変換する
+            </summary>
+            <param name="s"></param>
+            <returns>そのまま自分を返す。便利なだけ</returns>
+        </member>
+        <member name="M:Charamaker2.DataSaver.getData">
+            <summary>
+            書いてある内容をもらう。
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Charamaker2.DataSaver.loadFromPath(System.String,System.Boolean,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="path"></param>
+            <param name="escape">読み込んだ奴をエスケープするか</param>
+            <param name="ext">拡張子</param>
+            <returns></returns>
+        </member>
+        <member name="M:Charamaker2.DataSaver.saveToPath(System.String,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="path"></param>
+            <param name="ext">拡張子</param>
+            <returns></returns>
+        </member>
+        <member name="M:Charamaker2.DataSaver.packAdd(System.String,System.String,System.Boolean)">
+            <summary>
+            今のデータに新しいパックを追加する
+            </summary>
+            <param name="name"></param>
+            <param name="data"></param>
+            <param name="kaigyo"></param>
+        </member>
+        <member name="M:Charamaker2.DataSaver.packAdd(System.String,Charamaker2.DataSaver,System.Boolean)">
+            <summary>
+            こっちのバージョンもある
+            </summary>
+            <param name="name"></param>
+            <param name="d"></param>
+            <param name="kaigyo"></param>
+        </member>
+        <member name="M:Charamaker2.DataSaver.packAdd(System.String,System.Boolean,System.Boolean)">
+            <summary>
+            こっちのバージョンもある
+            </summary>
+            <param name="name"></param>
+            <param name="d"></param>
+            <param name="kaigyo"></param>
+        </member>
+        <member name="M:Charamaker2.DataSaver.packAdd``1(System.String,``0,System.Boolean)">
+            <summary>
+            こっちのバージョンもある
+            </summary>
+            <param name="name"></param>
+            <param name="d"></param>
+            <param name="kaigyo"></param>
+        </member>
+        <member name="M:Charamaker2.DataSaver.unPackDataS(System.String,System.String)">
+            <summary>
+            データの中にパックがある前提ね。文字にアンパックする
+            </summary>
+            <param name="name">対象</param>
+            <param name="nothing">もし中身がなかった時に返す値</param>
+            <returns></returns>
+        </member>
+        <member name="M:Charamaker2.DataSaver.unPackDataD(System.String)">
+            <summary>
+            Datasaverにアンパックする
+            最初にロードするときだけescape=trueにする。
+            </summary>
+            <param name="name">対象</param>
+            <param name="escape">\nとかを変換するか</param>
+            <returns></returns>
+        </member>
+        <member name="M:Charamaker2.DataSaver.unPackDataF(System.String,System.Single)">
+            <summary>
+            floatでアンパックする
+            
+            </summary>
+            <param name="name"></param>
+            <param name="Nan">もし中身がなかった時の返す値</param>
+            <param name="escape">\nとかを変換するかどうか</param>
+            <returns></returns>
+        </member>
+        <member name="M:Charamaker2.DataSaver.unPackDataB(System.String,System.Boolean)">
+            <summary>
+            boolでアンパックする
+            
+            </summary>
+            <param name="name"></param>
+            <param name="Nan">もし中身がなかった時の返す値</param>
+            <param name="escape">\nとかを変換するかどうか</param>
+            <returns></returns>
+        </member>
+        <member name="M:Charamaker2.DataSaver.unpackAlldataS">
+            <summary>
+            全てのデータをアンパックする。
+            初めてアンパックするときだけescape=trueに
+            </summary>
+            <param name="escape">\nとかを変換</param>
+            <returns></returns>
+        </member>
+        <member name="M:Charamaker2.DataSaver.unpackAlldataD">
+            <summary>
+            全てのデータをアンパックする。
+            初めてアンパックするときだけescape=trueに
+            </summary>
+            <param name="escape">\nとかを変換</param>
+            <returns></returns>
+        </member>
+        <member name="M:Charamaker2.DataSaver.getAllPacks">
+            <summary>
+            全てのパックを取得する
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Charamaker2.DataSaver.splitData(System.Char)">
+            <summary>
+            データを特定の文字で区切って変換する
+            </summary>
+            <param name="c"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Charamaker2.DataSaver.splitData2(System.Char)">
+            <summary>
+            データを特定の文字で区切って変換する
+            </summary>
+            <param name="c"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Charamaker2.DataSaver.splitOneData(System.Int32,System.String,System.Char)">
+            <summary>
+            データを特定の文字で区切ったのち、idx番目を変換する
+            </summary>
+            <param name="c"></param>
+            <param name="def">idx番目が存在しなかった時の戻り値</param>
+            <returns></returns>
+        </member>
+        <member name="M:Charamaker2.DataSaver.splitOneData2(System.Int32,System.Single,System.Char)">
+            <summary>
+            データを特定の文字で区切ったのち、idx番目を変換する
+            </summary>
+            <param name="c"></param>
+            <param name="def">idx番目が存在しなかった時の戻り値</param>
+            <returns></returns>
+        </member>
+        <member name="M:Charamaker2.DataSaver.getAllkouzou(System.Int32)">
+            <summary>
+            データのすべての構造を取得する。多分呼び出すのは一番上でなのでescape=trueがいいな。
+            </summary>
+            <param name="escape">\nとかを変換するか</param>
+            <param name="indent">0でいいよ</param>
+            <returns></returns>
+        </member>
+        <member name="T:Charamaker2.rendercontainer">
+            <summary>
+            レンダーターゲットを管理するためのクラス
+            </summary>
+        </member>
+        <member name="P:Charamaker2.rendercontainer.isWindow">
+            <summary>
+            ウィンドウに根差したやつか
+            </summary>
+        </member>
+        <member name="P:Charamaker2.rendercontainer.isBitmap">
+            <summary>
+            ビットマップに根差したやつか
+            </summary>
+        </member>
+        <member name="M:Charamaker2.rendercontainer.#ctor(Vortice.Direct2D1.ID2D1RenderTarget,Vortice.Direct2D1.ID2D1RenderTarget,System.String)">
+            <summary>
+            普通のコンストラクタ
+            </summary>
+            <param name="moto"></param>
+            <param name="render"></param>
+            <param name="name"></param>
+        </member>
+        <member name="M:Charamaker2.renderList.getRender(Vortice.Direct2D1.ID2D1RenderTarget,System.String,System.Int32,System.Int32,System.Boolean)">
+            <summary>
+            ビットマップをもらう
+            </summary>
+            <param name="moto">製造元となったレンダー</param>
+            <param name="name"></param>
+            <param name="w">-1ならフリー</param>
+            <param name="h"></param>
+            <param name="window">trueならウィンドウfalseならbitmap</param>
+            <returns>ないならnull</returns>
+        </member>
+        <member name="M:Charamaker2.renderList.addRender(Vortice.Direct2D1.ID2D1RenderTarget,Vortice.Direct2D1.ID2D1RenderTarget,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="moto">製造元となったレンダー</param>
+            <param name="render"></param>
+            <param name="name"></param>
+        </member>
+        <member name="M:Charamaker2.renderList.removeRender(Vortice.Direct2D1.ID2D1RenderTarget)">
+            <summary>
+            
+            </summary>
+            <param name="render">製造元から根こそぎ持ってくよ</param>
+        </member>
         <member name="T:Charamaker2.fileman">
             <summary>
             ファイルの入出力・このシステムのセットアップを扱うクラス。
@@ -1463,14 +2056,9 @@
             なんとなく保存してるファクトリ
             </summary>
         </member>
-        <member name="F:Charamaker2.fileman.rendertarget">
+        <member name="F:Charamaker2.fileman.rendertargets">
             <summary>
             もちろん保存しないといけないレンダーターゲット
-            </summary>
-        </member>
-        <member name="P:Charamaker2.fileman.render">
-            <summary>
-            おおもとのレンダー
             </summary>
         </member>
         <member name="F:Charamaker2.fileman.gasyu">
@@ -1478,14 +2066,14 @@
             ガシーツ
             </summary>
         </member>
-        <member name="P:Charamaker2.fileman.CC">
+        <member name="F:Charamaker2.fileman._CC">
             <summary>
             セットアップされたフォーム
             </summary>
         </member>
-        <member name="P:Charamaker2.fileman.gasitu">
+        <member name="F:Charamaker2.fileman.nothing">
             <summary>
-            画質の倍率
+            何もないことを示す魔法の言葉
             </summary>
         </member>
         <member name="M:Charamaker2.fileman.resizen(System.Single,System.IntPtr,System.Single,System.Single)">
@@ -1497,19 +2085,67 @@
             <param name="wi">画面の幅</param>
             <param name="hei">画面の高さ</param>
         </member>
-        <member name="M:Charamaker2.fileman.makehyojiman">
+        <member name="M:Charamaker2.fileman.makehyojiman(System.Int32)">
             <summary>
             hyojimanを取得する
             </summary>
+            <param name="numberoftarget">何番目の画面か</param>
             <returns>新しいhyojiman</returns>
         </member>
-        <member name="M:Charamaker2.fileman.setinguping(System.Windows.Forms.ContainerControl,System.Single)">
+        <member name="M:Charamaker2.fileman.getBitmapRender(System.String,System.Int32,System.Int32,System.Int32)">
+            <summary>
+                bmprenderをがっちゃする
+            </summary>
+            <param name="name">""でウィンドウの。あとはbitmapに</param>
+            <param name="w">幅(-1で自動)</param>
+            <param name="h">高さ(-1で自動)</param>
+            <param name="numberoftarget">何番目の画面か</param>
+            <returns></returns>
+        </member>
+        <member name="M:Charamaker2.fileman.getBitmapRender(Vortice.Direct2D1.ID2D1RenderTarget,System.String,System.Int32,System.Int32)">
+            <summary>
+                bmprenderをがっちゃする
+            </summary>
+            <param name="name">""でウィンドウのあとはbitmapに</param>
+            <param name="w">幅(-1で自動)</param>
+            <param name="h">高さ(-1で自動)</param>
+            <param name="number">番号の代わりに直接レンダー</param>
+            <returns></returns>
+        </member>
+        <member name="M:Charamaker2.fileman.makePhyojiman(System.String,System.Boolean,System.String,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            ピクチャーとして扱えるPhyojimanを取得する
+            </summary>
+            <param name="tex">ピクチャーのテクスチャ</param>
+            <param name="name">""でウィンドウのあとはbitmapに</param>
+            <param name="w">幅(-1で自動)</param>
+            <param name="h">高さ(-1で自動)</param>
+            <param name="numberoftarget">何番目の画面か</param>
+            <param name="auto">Phuojimanを自動的にhyojiをするか</param>
+            <returns>新しいhyojiman</returns>
+        </member>
+        <member name="M:Charamaker2.fileman.setinguping(System.Windows.Forms.ContainerControl,System.Single,System.Single,System.Single)">
             <summary>
             セットアップをする。
             画像の表示、音の再生が使用可能になる。
             </summary>
             <param name="f">素となるフォームとかユーザーコントロール</param>
+            <param name="risouw">理想のクライアントサイズ</param>
+            <param name="risouh">理想のクライアントサイズ</param>
             <param name="bai">画質の倍率</param>
+        </member>
+        <member name="M:Charamaker2.fileman.setNewWindow(System.Windows.Forms.ContainerControl,System.Single)">
+            <summary>
+            新しいウィンドウに対して画面を操れるようにする。
+            </summary>
+            <param name="f">素となるフォームとかユーザーコントロール</param>
+            <param name="bai">画質の倍率</param>
+        </member>
+        <member name="M:Charamaker2.fileman.deleteOldWindow(System.Windows.Forms.ContainerControl)">
+            <summary>
+            ウィンドウを消したいな
+            </summary>
+            <param name="f">消したいウィンドウ</param>
         </member>
         <member name="F:Charamaker2.fileman.texs">
             <summary>
@@ -1524,6 +2160,21 @@
         <member name="F:Charamaker2.fileman.characters">
             <summary>
             読み込んだキャラクターを保存しとく
+            </summary>
+        </member>
+        <member name="M:Charamaker2.fileman.resetcharacters">
+            <summary>
+            読み込まれたキャラクターをアンロード。表情を追加したときとかに！
+            </summary>
+        </member>
+        <member name="M:Charamaker2.fileman.resetmotions">
+            <summary>
+            読み込まれたモーションをリセット
+            </summary>
+        </member>
+        <member name="M:Charamaker2.fileman.resettextures">
+            <summary>
+            読み込まれたテクスチャーをリセット
             </summary>
         </member>
         <member name="F:Charamaker2.fileman.otos">
@@ -1541,7 +2192,15 @@
             乱数ロット
             </summary>
         </member>
-        <member name="M:Charamaker2.fileman.settextobit(System.String,Vortice.Mathematics.Color)">
+        <member name="M:Charamaker2.fileman.screenShot(Charamaker2.hyojiman,System.String,System.String)">
+            <summary>
+            画面のスクリーンショットを取る。effectcharaがぶれるバグあり！
+            </summary>
+            <param name="h">保存する表示マン</param>
+            <param name="format">保存フォーマット</param>
+            <param name="addname">追加で付ける名前</param>
+        </member>
+        <member name="M:Charamaker2.fileman.settextobit(System.String,System.Drawing.Color)">
             <summary>
             texsに色のついたビットを追加する。
             </summary>
@@ -1560,6 +2219,14 @@
             <param name="file">そのテクスチャー</param>
             <returns></returns>
         </member>
+        <member name="M:Charamaker2.fileman.GetPixels(System.String)">
+            <summary>
+            テクスチャの色を取得する。透過色はA=0;
+             毎回ロードするし、多分重い。redBitとかは無理というかする必要なくね
+            </summary>
+            <param name="file">ファイル</param>
+            <returns></returns>
+        </member>
         <member name="M:Charamaker2.fileman.ldtex(System.String,System.Boolean)">
             <summary>
             bitmapテクスチャーを読み込む。既に読み込んでいた場合は読み込まずに返す。
@@ -1569,10 +2236,47 @@
             <param name="reset">強制的に再読み込みする</param>
             <returns>clmcolを透明にしたビットマップ</returns>
         </member>
+        <member name="M:Charamaker2.fileman.slashformat(System.String)">
+            <summary>
+            スラッシュをバックスラッシュに変換する。
+            だってモーションとかの登録を入力パッスにしてるからさ、
+            \/が混じってると二回ロードしちゃうんだよな
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Charamaker2.fileman.nonbackslash(System.String)">
+            <summary>
+            バックスラッシュをスラッシュに変換する。
+            これでfolder\nantokaが勘違いされなくなる
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Charamaker2.fileman.dotset(System.String)">
+            <summary>
+            .bmpをつける。.pngならそのまま
+            </summary>
+            <param name="name"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Charamaker2.fileman.regestBmp(System.String,Vortice.Direct2D1.ID2D1Bitmap,System.Boolean)">
+            <summary>
+            bmpをtexsに登録する
+            </summary>
+            <param name="name"></param>
+            <param name="bmp"></param>
+            <param name="dispouwagaki">同じ名前のbmpを登録するときdisposeするか。Renderからのbmpを登録してる場所にはfalseじゃないとだめ</param>
+        </member>
         <member name="M:Charamaker2.fileman.savecharacter(Charamaker2.Character.character)">
             <summary>
             作成したキャラクターをダイアログから保存する。拡張子は.c2cにしなよ
             </summary>
+            <param name="c">保存するキャラクター</param>
+        </member>
+        <member name="M:Charamaker2.fileman.savecharacter(System.String,Charamaker2.Character.character)">
+            <summary>
+            作成したキャラクターをダイアログから保存する。拡張子は.c2cにしなよ
+            </summary>
+            <param name="path">保存するパス</param>
             <param name="c">保存するキャラクター</param>
         </member>
         <member name="M:Charamaker2.fileman.loadcharacter(System.Boolean)">
@@ -1582,10 +2286,44 @@
             <param name="reset">既にロードしていた場合もロードし直す</param>
             <returns>ロードしたキャラクター</returns>
         </member>
+        <member name="M:Charamaker2.fileman.loadcharacter(System.String,System.Single,System.Boolean)">
+            <summary>
+            作成したキャラクターをロードする。
+            </summary>
+            <param name="file">.\character\*.c2cの*部分.c2cは書いてもいいし</param>
+            <param name="scale">キャラクターのスケール</param>
+            <param name="reset">再ロードする</param>
+            <returns>ロードしたキャラクター</returns>
+            
+        </member>
         <member name="M:Charamaker2.fileman.savemotion(System.String,Charamaker2.Character.motion)">
             <summary>
             作成したモーションをスクリプトと合わせてセーブする。拡張子は.c2mにしなよ
             </summary>
+            <param name="s">モーションを作ったスクリプト</param>
+            <param name="m">モーション本体</param>
+        </member>
+        <member name="M:Charamaker2.fileman.savemotion(System.String,System.String,Charamaker2.Character.motion)">
+            <summary>
+            作成したモーションをスクリプトと合わせてセーブする。拡張子は.c2mにしなよ
+            </summary>
+            <param name="path">保存するパス</param>
+            <param name="s">モーションを作ったスクリプト</param>
+            <param name="m">モーション本体</param>
+        </member>
+        <member name="M:Charamaker2.fileman.savemotion3(System.String,Charamaker2.Character.motion)">
+            <summary>
+            作成したモーションをスクリプトと合わせてセーブする。拡張子は.c3mにしなよ
+            </summary>
+            <param name="s">モーションを作ったスクリプト</param>
+            <param name="m">モーション本体</param>
+        </member>
+        <member name="M:Charamaker2.fileman.savemotion3(System.String,System.String,Charamaker2.Character.motion,System.String)">
+            <summary>
+            作成したモーションをスクリプトと合わせてセーブする。拡張子は.c3mにしなよ
+            </summary>
+            <param name="file">ファイルの名前</param>
+            <param name="path">保存するパス</param>
             <param name="s">モーションを作ったスクリプト</param>
             <param name="m">モーション本体</param>
         </member>
@@ -1614,13 +2352,59 @@
             <param name="reset">再ロードする</param>
             <returns>ロードしたモーションファイル</returns>
         </member>
-        <member name="M:Charamaker2.fileman.loadcharacter(System.String,System.Single,System.Boolean)">
+        <member name="M:Charamaker2.fileman.loadmotion3(System.Boolean)">
             <summary>
-            作成したキャラクターをロードする。
+            モーションをダイアログからロードする。
+            </summary>
+            <param name="reset">ロードされている場合も再度ロードする</param>
+            <returns>ロードしたモーション</returns>
+        </member>
+        <member name="M:Charamaker2.fileman.ldmotion3(System.String,System.Single,System.Boolean)">
+            <summary>
+            モーションファイル(.c2m)をロードし、モーション部分を返す。.c2mは書いても書かなくてもよい
+            </summary>
+            <param name="file">.\motion\に続くパス</param>
+            <param name="sp">モーションのスピード</param>
+            <param name="reset">再ロードする</param>
+            <returns>ロードしたモーション</returns>
+        </member>
+        <member name="M:Charamaker2.fileman.loadmotion3(System.String,System.Single,System.Boolean,System.String)">
+            <summary>
+            モーションファイル(.c2m)をロードしそのまま返す。モーションの編集するならこっち。
+            </summary>
+            <param name="file">.\motion\に続くパス.c2mは書かなくてよい</param>
+            <param name="sp">モーションのスピード</param>
+            <param name="reset">再ロードする</param>
+            <returns>ロードしたモーションファイル</returns>
+        </member>
+        <member name="M:Charamaker2.fileman.loadcharacter3(System.Boolean)">
+            <summary>
+            キャラクターをダイアログからロードする。.c2cとか関係なくロードできるのかな？
+            </summary>
+            <param name="reset">既にロードしていた場合もロードし直す</param>
+            <returns>ロードしたキャラクター</returns>
+        </member>
+        <member name="M:Charamaker2.fileman.savecharacter3(Charamaker2.Character.character)">
+            <summary>
+            ダイアログからセーブ
+            </summary>
+            <param name="c">基準がセーブされる</param>
+        </member>
+        <member name="M:Charamaker2.fileman.savecharacter3(System.String,Charamaker2.Character.character,System.String)">
+            <summary>
+            キャラクターをセーブ。拡張子はc3cになる。
+            </summary>
+            <param name="file"></param>
+            <param name="c">基準がセーブされる</param>
+        </member>
+        <member name="M:Charamaker2.fileman.loadcharacter3(System.String,System.Single,System.Boolean,System.String)">
+            <summary>
+            作成したキャラクターをロードする。ロードするのは基準だけ
             </summary>
             <param name="file">.\character\*.c2cの*部分.c2cは書いてもいいし</param>
             <param name="scale">キャラクターのスケール</param>
             <param name="reset">再ロードする</param>
+            <param name="path">既定のパス</param>
             <returns>ロードしたキャラクター</returns>
         </member>
         <member name="P:Charamaker2.fileman.glovol">
@@ -1651,11 +2435,26 @@
             <param name="file">.\oto\*.wavの*部分</param>
             <param name="vol">この音のボリューム</param>
         </member>
+        <member name="F:Charamaker2.fileman.maxoto">
+            <summary>
+            同時にならすことのできる音の数
+            </summary>
+        </member>
+        <member name="F:Charamaker2.fileman.maxsameoto">
+            <summary>
+            同時にならすことのできる同じ音の数.今はマジで意味ない
+            </summary>
+        </member>
+        <member name="F:Charamaker2.fileman.stopbgm">
+            <summary>
+            bgmを止めるためのbgm
+            </summary>
+        </member>
         <member name="M:Charamaker2.fileman.playbgm(System.String,System.Boolean)">
             <summary>
             bgmを流す。bgmは一つしか流せない
             </summary>
-            <param name="file">.\oto\bgm\*.wavの*部分。""とすることで無音にできる</param>
+            <param name="file">.\oto\bgm\*.wavの*部分。stopbgmとすることで無音にできる</param>
             <param name="butu">おなじbgmを流したときに最初から再生するか</param>
         </member>
         <member name="F:Charamaker2.fileman.audio">
@@ -1691,16 +2490,59 @@
             <param name="file">.\movie\*.txtの*部分</param>
             <returns>ロードしたムービー</returns>
         </member>
+        <member name="F:Charamaker2.fileman.loading">
+            <summary>
+            loadfiketokaの時に呼び出されるイベント。
+            </summary>
+        </member>
         <member name="M:Charamaker2.fileman.loadfiletoka">
             <summary>
             tex,oto,character,motionフォルダにあるアイテムを全てロードする
+            event
             </summary>
         </member>
-        <member name="M:Charamaker2.fileman.whrandhani(System.Single)">
+        <member name="M:Charamaker2.fileman.whrandhani(System.Single,System.Boolean)">
             <summary>
             0~wの範囲でランダムな整数を発生させる
             </summary>
             <param name="w"></param>
+            <param name="minusToo">-w~wの範囲にする</param>
+            <returns></returns>
+        </member>
+        <member name="M:Charamaker2.fileman.pickone``1(System.Collections.Generic.List{``0})">
+            <summary>
+            Listからランダムに一つピックする
+            </summary>
+            <param name="list"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Charamaker2.fileman.pickone``1(``0[])">
+            <summary>
+            配列からランダムに一つピックする
+            </summary>
+            <param name="list"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Charamaker2.fileman.randmods(System.Int32)">
+            <summary>
+            nより小さい自然数数(0含む)を返す
+            </summary>
+            <param name="w"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Charamaker2.fileman.plusminus(System.Single)">
+            <summary>
+            +1か-1を返す
+            </summary>
+            <param name="per">+1を返す確率</param>
+            <returns></returns>
+        </member>
+        <member name="M:Charamaker2.fileman.plusminus(System.Boolean,System.Boolean)">
+            <summary>
+            +1か-1を返す
+            </summary>
+            <param name="ok">+1を返すか</param>
+            <param name="plus">ok=trueの解き返すほう</param>
             <returns></returns>
         </member>
         <member name="M:Charamaker2.fileman.percentin(System.Single)">
@@ -1708,6 +2550,15 @@
             なんとなくの確率でTrueを返す
             </summary>
             <param name="per">パーセント(100で確実よもちろん)</param>
+            <returns></returns>
+        </member>
+        <member name="M:Charamaker2.fileman.buildMotion(System.String,System.Single)">
+            <summary>
+            モーションをスクリプトから作る
+            </summary>
+            <param name="script">スクリプトか？</param>
+            <param name="speed">再生速度</param>
+            <param name="yobidasi">呼び出してくれるクラス</param>
             <returns></returns>
         </member>
         <member name="T:Charamaker2.otoman">
@@ -1720,21 +2571,60 @@
             モーションをセーブするためのクラス
             </summary>
         </member>
-        <member name="F:Charamaker2.disp.components">
+        <member name="M:Charamaker2.motionsaveman.ToLoad(Charamaker2.DataSaver)">
             <summary>
-            必要なデザイナー変数です。
+            escapeせずに渡して
+            </summary>
+            <param name="d">escapeせずに渡して</param>
+            <returns></returns>
+        </member>
+        <member name="T:Charamaker2.loadfileEventArgs">
+            <summary>
+            loadfiletokaのときのイベント
             </summary>
         </member>
-        <member name="M:Charamaker2.disp.Dispose(System.Boolean)">
+        <member name="M:Charamaker2.loadfileEventArgs.#ctor(System.Int32,System.Int32,System.Int32,System.String)">
             <summary>
-            使用中のリソースをすべてクリーンアップします。
+            普通のコンストラクタ
             </summary>
-            <param name="disposing">マネージド リソースを破棄する場合は true を指定し、その他の場合は false を指定します。</param>
+            <param name="max">最大ファイルの数</param>
+            <param name="num">今ロードしたファイルの数</param>
+            <param name="loaded">ロードを終えたファイルの数</param>
+            <param name="filename">ロードしたファイルの名前の代表</param>
         </member>
-        <member name="M:Charamaker2.disp.InitializeComponent">
+        <member name="F:Charamaker2.loadfileEventArgs.max">
             <summary>
-            デザイナー サポートに必要なメソッドです。このメソッドの内容を
-            コード エディターで変更しないでください。
+            ロードするファイルの総数
+            </summary>
+        </member>
+        <member name="F:Charamaker2.loadfileEventArgs.num">
+            <summary>
+            ロードしたファイルの数
+            </summary>
+        </member>
+        <member name="F:Charamaker2.loadfileEventArgs.loaded">
+            <summary>
+            ロードを終えたファイルの数
+            </summary>
+        </member>
+        <member name="F:Charamaker2.loadfileEventArgs.name">
+            <summary>
+            ロードしたファイルの名前の代表
+            </summary>
+        </member>
+        <member name="F:Charamaker2.loadfileEventArgs.type">
+            <summary>
+            ロードしたファイルの拡張子
+            </summary>
+        </member>
+        <member name="P:Charamaker2.loadfileEventArgs.loadedhi">
+            <summary>
+            既にロードしたファイルの比
+            </summary>
+        </member>
+        <member name="P:Charamaker2.loadfileEventArgs.numhi">
+            <summary>
+            今ロードしたファイルの比
             </summary>
         </member>
         <member name="T:Charamaker2.drawings">
@@ -1806,9 +2696,61 @@
             </summary>
             <param name="d">コピー元</param>
         </member>
+        <member name="M:Charamaker2.drawings.clone">
+            <summary>
+            クローンするためのメソッド
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Charamaker2.drawings.inHyoji(Charamaker2.hyojiman)">
+            <summary>
+            表示マンにて表示されている範囲に入っているか調べる
+            </summary>
+            <param name="hyo"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Charamaker2.drawings.ToSave">
+            <summary>
+            セーブする
+            </summary>
+            <returns></returns>
+        </member>
         <member name="T:Charamaker2.PBHman">
             <summary>
             PBHに仕えるクラス
+            </summary>
+        </member>
+        <member name="T:Charamaker2.messagepicture">
+            <summary>
+            めっさーじを持つピクチャー
+            </summary>
+        </member>
+        <member name="F:Charamaker2.messagepicture.m">
+            <summary>
+            メッセージ
+            </summary>
+        </member>
+        <member name="M:Charamaker2.messagepicture.#ctor(Charamaker2.picture,Charamaker2.message)">
+            <summary>
+            普通のコンストラクタ
+            </summary>
+            <param name="p"></param>
+            <param name="m"></param>
+        </member>
+        <member name="M:Charamaker2.messagepicture.#ctor(Charamaker2.messagepicture)">
+            <summary>
+            ピクチャーをコピーするときのコンストラクタ
+            </summary>
+            <param name="p">コピー元</param>
+        </member>
+        <member name="M:Charamaker2.messagepicture.#ctor">
+            <summary>
+            空のコンストラクタ
+            </summary>
+        </member>
+        <member name="M:Charamaker2.messagepicture.setmessage">
+            <summary>
+            メッセージを整える
             </summary>
         </member>
         <member name="T:Charamaker2.picture">
@@ -1881,6 +2823,23 @@
             テクスチャーの塊
             </summary>
         </member>
+        <member name="M:Charamaker2.picture.onetexpic(System.String,System.Single,System.Single,System.Boolean,System.Single,System.Single,System.Single,System.Double,System.Single,System.Single,System.Boolean)">
+            <summary>
+            一枚のテクスチャでピクチャーを生成する
+            </summary>
+            <param name="tex">テクスチャー</param>
+            <param name="z">Z</param>
+            <param name="widthscale">横幅をここにそろえる</param>
+            <param name="hin">やっぱ縦幅にする</param>
+            <param name="txp">中心点の位置x</param>
+            <param name="typ">中心点の位置y</param>
+            <param name="opa">透明度</param>
+            <param name="rad">角度</param>
+            <param name="tx">中心の位置x</param>
+            <param name="ty">中心の位置y</param>
+            <param name="mirror">反転</param>
+            <returns></returns>
+        </member>
         <member name="M:Charamaker2.picture.#ctor(System.Single,System.Single,System.Single,System.Single,System.Single,System.Single,System.Single,System.Double,System.Boolean,System.Single,System.String,System.Collections.Generic.Dictionary{System.String,System.String})">
             <summary>
             ピクチャーを作るためのコンストラクタ
@@ -1909,6 +2868,14 @@
             空のコンストラクタ
             </summary>
         </member>
+        <member name="M:Charamaker2.picture.getcxy(System.Single,System.Single)">
+            <summary>
+            図形上の一点のx座標を取得する(回転の影響を考慮してるってこと)
+            </summary>
+            <param name="ww">左上を0としたときの図形の点の位置</param>
+            <param name="hh">左上を0としたときの図形の点の位置</param>
+            <returns>返されるのはxy座標の値</returns>
+        </member>
         <member name="M:Charamaker2.picture.getcx(System.Single,System.Single)">
             <summary>
             図形上の一点のx座標を取得する(回転の影響を考慮してるってこと)
@@ -1924,6 +2891,12 @@
             <param name="ww">左上を0としたときの図形の点の位置</param>
             <param name="hh">左上を0としたときの図形の点の位置</param>
             <returns>返されるのはy座標の値</returns>
+        </member>
+        <member name="M:Charamaker2.picture.gettxy">
+            <summary>
+            中心のxy座標を返す
+            </summary>
+            <returns></returns>
         </member>
         <member name="M:Charamaker2.picture.gettx">
             <summary>
@@ -1944,12 +2917,32 @@
             <param name="xx">セットするx座標</param>
             <param name="yy">セットするy座標</param>
         </member>
+        <member name="M:Charamaker2.picture.settxy(Charamaker2.Shapes.FXY)">
+            <summary>
+            中心をxy座標にセットする。
+            </summary>
+            <param name="xy">セットするxy座標</param>
+        </member>
+        <member name="M:Charamaker2.picture.scale(System.Single)">
+            <summary>
+            スケールする
+            </summary>
+            <param name="sc">倍率</param>
+        </member>
         <member name="M:Charamaker2.picture.setcxy(System.Single,System.Single,System.Single,System.Single)">
             <summary>
             画像上の任意の一点をxy座標にセットする
             </summary>
             <param name="xx">セットするx座標</param>
             <param name="yy">セットするy座標</param>
+            <param name="cx">画像上のwの点</param>
+            <param name="cy">画像上のhの点</param>
+        </member>
+        <member name="M:Charamaker2.picture.setcxy(Charamaker2.Shapes.FXY,System.Single,System.Single)">
+            <summary>
+            画像上の任意の一点をxy座標にセットする
+            </summary>
+            <param name="xy">セットするxy座標</param>
             <param name="cx">画像上のwの点</param>
             <param name="cy">画像上のhの点</param>
         </member>
@@ -1969,11 +2962,39 @@
             <param name="draw"> 描画するか</param>
              <returns>描画したか</returns>
         </member>
+        <member name="M:Charamaker2.picture.inHyoji(Charamaker2.hyojiman)">
+            <summary>
+            表示の範囲に入っているかチェックする
+            </summary>
+            <param name="hyo">どの表示マンか</param>
+            <returns></returns>
+        </member>
+        <member name="M:Charamaker2.picture.drawbitmap(Vortice.Direct2D1.ID2D1Bitmap,Charamaker2.hyojiman)">
+            <summary>
+            ビットマップを描画するぞ
+            </summary>
+            <param name="bitmap"></param>
+            <param name="hyo"></param>
+            <returns>完全な画面外だと描画しない</returns>
+        </member>
         <member name="M:Charamaker2.picture.copy(Charamaker2.picture)">
             <summary>
             コピーするためのメソッド
             </summary>
             <param name="p">コピー元</param>
+        </member>
+        <member name="M:Charamaker2.picture.ToSave">
+            <summary>
+            セーブする
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Charamaker2.picture.ToLoad(Charamaker2.DataSaver)">
+            <summary>
+            ロードする。
+            </summary>
+            <param name="d"></param>
+            <returns></returns>
         </member>
         <member name="T:Charamaker2.haikeidraws">
             <summary>
@@ -2046,6 +3067,19 @@
             <param name="draw"> 描画するか</param>
              <returns></returns>
         </member>
+        <member name="M:Charamaker2.haikeidraws.inHyoji(Charamaker2.hyojiman)">
+            <summary>
+            表示マンの表示できる範囲に入っているか調べる
+            </summary>
+            <param name="hyo"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Charamaker2.haikeidraws.clone">
+            <summary>
+            頑張ってクローン
+            </summary>
+            <returns></returns>
+        </member>
         <member name="T:Charamaker2.timehaikeidraws">
             <summary>
             時間経過で消える背景
@@ -2070,20 +3104,72 @@
             コピーするためのコンストラクタ
              </summary>
         </member>
+        <member name="T:Charamaker2.Phyojiman">
+            <summary>
+            表示マンが書ける
+            </summary>
+        </member>
+        <member name="F:Charamaker2.Phyojiman.hj">
+            <summary>
+            表示マン
+            </summary>
+        </member>
+        <member name="F:Charamaker2.Phyojiman.auto">
+            <summary>
+            自動的に表示マンを進める
+            </summary>
+        </member>
+        <member name="M:Charamaker2.Phyojiman.#ctor(Charamaker2.picture,Charamaker2.hyojiman,System.Boolean)">
+            <summary>
+            普通のコンストラクタ
+            </summary>
+            <param name="p"></param>
+            <param name="h"></param>
+            <param name="auto">自動的にフレームするか</param>
+        </member>
+        <member name="M:Charamaker2.Phyojiman.#ctor(Charamaker2.Phyojiman)">
+            <summary>
+            ピクチャーをコピーするときのコンストラクタ
+            </summary>
+            <param name="p">コピー元</param>
+        </member>
+        <member name="M:Charamaker2.Phyojiman.#ctor">
+            <summary>
+            空のコンストラクタ
+            </summary>
+        </member>
         <member name="T:Charamaker2.hyojiman">
             <summary>
             画面を描画したり、音を出したり、そういうのを行う
             </summary>
         </member>
-        <member name="M:Charamaker2.hyojiman.begindraw">
+        <member name="M:Charamaker2.hyojiman.begindraw(System.Boolean)">
             <summary>
             レンダーの描画を開始する。enddrawの間に描画を記述する
+            </summary>
+            <param name="resethaikei">resethaikeiも呼び出すか</param>
+        </member>
+        <member name="M:Charamaker2.hyojiman.resethaikei">
+            <summary>
+            背景をリセットする。begindrawは呼び出しといてね
             </summary>
         </member>
         <member name="M:Charamaker2.hyojiman.enddraw">
             <summary>
             レンダーの描画を終了するbegindrawの間に描画を記述する。
             </summary>
+        </member>
+        <member name="M:Charamaker2.hyojiman.ikiutusi(Vortice.Direct2D1.ID2D1RenderTarget)">
+            <summary>
+            この表示マンの表示を別レンダーに生き写す
+            </summary>
+            <returns>このビットマップはDisposeしてね</returns>
+        </member>
+        <member name="M:Charamaker2.hyojiman.getbitmap">
+            <summary>
+            ビットマップレンダーならビットマップをもらう。
+            </summary>
+            <returns>ないならnull</returns>
         </member>
         <member name="F:Charamaker2.hyojiman.otos">
             <summary>
@@ -2093,6 +3179,11 @@
         <member name="F:Charamaker2.hyojiman.otovols">
             <summary>
             再生す音の音量
+            </summary>
+        </member>
+        <member name="F:Charamaker2.hyojiman.volume">
+            <summary>
+            この表示マンの音量
             </summary>
         </member>
         <member name="F:Charamaker2.hyojiman.bgm">
@@ -2178,9 +3269,24 @@
             背景色
             </summary>
         </member>
+        <member name="F:Charamaker2.hyojiman.HOpa">
+            <summary>
+            背景色
+            </summary>
+        </member>
         <member name="F:Charamaker2.hyojiman.bairitu">
             <summary>
-            拡大率
+            拡大率。オブジェクトの大きさを一定にしたいときはこっちを参照
+            </summary>
+        </member>
+        <member name="P:Charamaker2.hyojiman.Tbai">
+            <summary>
+            画面の画質も含めた本当の拡大率。ガチ描画の時には使う
+            </summary>
+        </member>
+        <member name="F:Charamaker2.hyojiman.gasitu">
+            <summary>
+            画質
             </summary>
         </member>
         <member name="F:Charamaker2.hyojiman.tag">
@@ -2208,6 +3314,16 @@
             ウィンドウの座標での高さ
             </summary>
         </member>
+        <member name="P:Charamaker2.hyojiman.gasituSize">
+            <summary>
+            画質を考慮したピクセルサイズ
+            </summary>
+        </member>
+        <member name="P:Charamaker2.hyojiman.TrueSize">
+            <summary>
+            本来のピクセルサイズ
+            </summary>
+        </member>
         <member name="F:Charamaker2.hyojiman.maxdraws">
             <summary>
             同時に表示できる描画オブジェクトの限界量
@@ -2220,23 +3336,25 @@
             <param name="w">その幅</param>
             <param name="h">高さにするか</param>
         </member>
-        <member name="M:Charamaker2.hyojiman.#ctor(Vortice.Direct2D1.ID2D1RenderTarget)">
+        <member name="M:Charamaker2.hyojiman.#ctor(Vortice.Direct2D1.ID2D1RenderTarget,System.Single,System.Boolean)">
             <summary>
             表示マンのコンストラクタ
             </summary>
             <param name="ren"></param>
-        </member>
-        <member name="M:Charamaker2.hyojiman.#ctor(Charamaker2.hyojiman)">
-            <summary>
-            コピーのためのコンストラクタ
-            </summary>
-            <param name="h">コピー元</param>
+            <param name="gasitu"></param>
+            <param name="destroyRender">レンダーを死ぬとき破壊するか</param>
         </member>
         <member name="M:Charamaker2.hyojiman.tusinhyoji(Charamaker2.hyojiman)">
             <summary>
             通信を受け取ったときにコピーするためのメソッド。
             </summary>
             <param name="moto">コピー元</param>
+        </member>
+        <member name="M:Charamaker2.hyojiman.truecopy(Charamaker2.hyojiman)">
+            <summary>
+            別の表示マンをちゃんとコピーする
+            </summary>
+            <param name="h">コピー元</param>
         </member>
         <member name="M:Charamaker2.hyojiman.copy(Charamaker2.hyojiman)">
             <summary>
@@ -2255,7 +3373,44 @@
             </summary>
             <param name="cl">クロック</param>
         </member>
-        <member name="M:Charamaker2.hyojiman.hyoji(System.Single,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Boolean)">
+        <member name="F:Charamaker2.hyojiman.otoOptin.ordinal">
+            <summary>
+            普通
+            </summary>
+        </member>
+        <member name="F:Charamaker2.hyojiman.otoOptin.PlayandDontRemove">
+            <summary>
+            再生するけどそのまんま。録画を再生するときに。
+            </summary>
+        </member>
+        <member name="F:Charamaker2.hyojiman.otoOptin.Dont">
+            <summary>
+            何もしない。保存される
+            </summary>
+        </member>
+        <member name="F:Charamaker2.hyojiman.otoOptin.OnlyBgm">
+            <summary>
+            BGMだけ再生し、残りは破棄する。シーンのスキップに。
+            </summary>
+        </member>
+        <member name="F:Charamaker2.hyojiman.otoOptin.BreakAll">
+            <summary>
+            全てを破棄する
+            </summary>
+        </member>
+        <member name="M:Charamaker2.hyojiman.hyoji2(Vortice.Direct2D1.ID2D1RenderTarget,System.Single,System.Boolean,System.Boolean,System.Boolean,Charamaker2.hyojiman.otoOptin,System.Boolean)">
+            <summary>
+            別のレンダーに描画する
+            </summary>
+            <param name="cl">クロック</param>
+            <param name="begin">描画開始をするか</param>
+            <param name="end">描画終了をするか</param>
+            <param name="doEffectframe">エフェクトのフレームを行うか</param>
+            <param name="oO">音を再生した後その情報を消すか(録画を再生するときのみdontremove,撮影はDontで?)</param>
+            <param name="draw">描画とか音再生するか</param>
+            <param name="rend">別のレンダーに書きたい場合はこれ</param>
+        </member>
+        <member name="M:Charamaker2.hyojiman.hyoji(System.Single,System.Boolean,System.Boolean,System.Boolean,Charamaker2.hyojiman.otoOptin,System.Boolean)">
             <summary>
             表示を行う
             </summary>
@@ -2263,7 +3418,7 @@
             <param name="begin">描画開始をするか</param>
             <param name="end">描画終了をするか</param>
             <param name="doEffectframe">エフェクトのフレームを行うか</param>
-            <param name="playotonkesi">音を再生した後その情報を消すか(録画を再生するときのみfalseで?)</param>
+            <param name="oO">音を再生した後その情報を消すか(録画を再生するときのみdontremove,撮影はDontで?)</param>
             <param name="draw">描画とか音再生するか</param>
         </member>
         <member name="M:Charamaker2.hyojiman.resetpics">
@@ -2280,6 +3435,21 @@
             <summary>
             リセットするメソッド。
             これよりfileman.gethyojimanのほうがいいよ
+            </summary>
+        </member>
+        <member name="M:Charamaker2.hyojiman.resetoto">
+            <summary>
+            音、BGMをリセットする
+            </summary>
+        </member>
+        <member name="M:Charamaker2.hyojiman.clearpics">
+            <summary>
+            追加されてるdrawingsを全部消す
+            </summary>
+        </member>
+        <member name="M:Charamaker2.hyojiman.clearhaikeipics">
+            <summary>
+            追加されてるhaikeidrawingsを全部消す
             </summary>
         </member>
         <member name="M:Charamaker2.hyojiman.addpicture(Charamaker2.drawings)">
@@ -2343,17 +3513,66 @@
             <param name="hyo">変換するバイト列</param>
             <returns>表示マン</returns>
         </member>
+        <member name="M:Charamaker2.hyojiman.drawLine(System.Single,System.Single,System.Single,System.Single,Vortice.Mathematics.Color4,System.Single)">
+            <summary>
+            線を描く
+            </summary>
+            <param name="X"></param>
+            <param name="Y"></param>
+            <param name="X2"></param>
+            <param name="Y2"></param>
+            <param name="col"></param>
+            <param name="hutosa"></param>
+        </member>
+        <member name="M:Charamaker2.hyojiman.ZahyoconvertToX(Charamaker2.hyojiman,System.Single)">
+            <summary>
+            座標を引数表示マンの座標に変える
+            </summary>
+            <param name="hyo"></param>
+            <param name="x"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Charamaker2.hyojiman.ZahyoconvertToY(Charamaker2.hyojiman,System.Single)">
+            <summary>
+            座標を引数表示マンの座標に変える
+            </summary>
+            <param name="hyo"></param>
+            <param name="y"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Charamaker2.hyojiman.ToShape">
+            <summary>
+            表示マンを図形に変換する。
+            表示領域にキャラクターが含まれるか判定したいときに使ってね
+            </summary>
+            <returns></returns>
+        </member>
         <member name="T:Charamaker2.message">
             <summary>
             文字を書くためのクラス
             </summary>
         </member>
-        <member name="F:Charamaker2.message.nmoji">
+        <member name="F:Charamaker2.message.maxmoji">
+            <summary>
+            メッセージに記述できる最大の文字数
+            </summary>
+        </member>
+        <member name="F:Charamaker2.message._nmoji">
             <summary>
             何文字の幅か
             </summary>
         </member>
-        <member name="F:Charamaker2.message.tyusin">
+        <member name="F:Charamaker2.message._tyusin">
+            <summary>
+            文字数で表す文字列の中心
+            </summary>
+        </member>
+        <member name="P:Charamaker2.message.nmoji">
+            <summary>
+            何文字の幅か
+            </summary>
+        </member>
+        <member name="P:Charamaker2.message.tyusin">
             <summary>
             文字数で表す文字列の中心
             </summary>
@@ -2437,6 +3656,11 @@
             バイト的なカウント
             </summary>
         </member>
+        <member name="P:Charamaker2.message.maxbytecount">
+            <summary>
+            最大の横幅のバイト的な文字数のカウント
+            </summary>
+        </member>
         <member name="P:Charamaker2.message.W">
             <summary>
             横幅の長さ
@@ -2462,6 +3686,11 @@
         <member name="P:Charamaker2.message.H">
             <summary>
             文字列の高さ
+            </summary>
+        </member>
+        <member name="P:Charamaker2.message.sitazoroeman">
+            <summary>
+            下ぞろえをするときに移動する距離
             </summary>
         </member>
         <member name="P:Charamaker2.message.mx">
@@ -2552,6 +3781,11 @@
         <member name="M:Charamaker2.message.sinanu">
             <summary>
             一時的に死なないようにする
+            </summary>
+        </member>
+        <member name="P:Charamaker2.message.texthyojitime">
+            <summary>
+            テキストを表示しきるのにかかる時間。
             </summary>
         </member>
         <member name="M:Charamaker2.message.textoraa">
@@ -2691,6 +3925,16 @@
             </summary>
             <param name="i">離すボタン</param>
         </member>
+        <member name="M:Charamaker2.input.inputin.upall">
+            <summary>
+            今の全てのボタンを上げる
+            </summary>
+        </member>
+        <member name="M:Charamaker2.input.inputin.preupall">
+            <summary>
+            前の全てのボタンを上げる
+            </summary>
+        </member>
         <member name="M:Charamaker2.input.inputin.down(System.Windows.Forms.Keys,System.Collections.Generic.List{Charamaker2.input.IPC})">
             <summary>
             変換器をもとにキーを押す。変換器にない入力はそのままになる。
@@ -2724,9 +3968,23 @@
             入力を過去のものとする。ゲームのティックに伴って呼び出す。さもなくばitypeが機能しない
             </summary>
         </member>
+        <member name="M:Charamaker2.input.inputin.rawX(Charamaker2.hyojiman)">
+            <summary>
+            生の入力から座標をもらってくる。UI座標の時使え
+            </summary>
+            <param name="hyo"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Charamaker2.input.inputin.rawY(Charamaker2.hyojiman)">
+            <summary>
+            生の入力から座標をもらってくる。UI座標の時使え
+            </summary>
+            <param name="hyo"></param>
+            <returns></returns>
+        </member>
         <member name="M:Charamaker2.input.inputin.setpointer(Charamaker2.hyojiman,System.Windows.Forms.Form,System.Boolean)">
             <summary>
-            マウスの座標をカーソルからセットする。
+            マウスの座標をカーソルからセットする。rawにもセットされる
             </summary>
             <param name="hyojiman">活動制限のためのhyojiman</param>
             <param name="f">座標変換のためのフォーム</param>
@@ -2819,6 +4077,11 @@
             </summary>
             <param name="i">バイト列</param>
             <returns>インプット</returns>
+        </member>
+        <member name="F:Charamaker2.input.inputin.tag">
+            <summary>
+            通信するときとかに情報を乗せる用
+            </summary>
         </member>
         <member name="M:Charamaker2.input.inputin.getConvertmaeinput(System.Windows.Forms.Keys,System.Collections.Generic.List{Charamaker2.input.IPC})">
             <summary>
@@ -2969,6 +4232,18 @@
             <param name="mo">変換する文字列</param>
             <returns>変換した文字列</returns>
         </member>
+        <member name="M:Charamaker2.maker.motionmaker.setmotionjouhou(Charamaker2.Character.motion)">
+            <summary>
+            モーションの情報を表示する
+            </summary>
+            <param name="m"></param>
+        </member>
+        <member name="M:Charamaker2.maker.motionmaker.setmotionjouhou(Charamaker2.motionsaveman)">
+            <summary>
+            モーションの情報を表示する
+            </summary>
+            <param name="m"></param>
+        </member>
         <member name="F:Charamaker2.maker.motionmaker.components">
             <summary>
             Required designer variable.
@@ -3013,10 +4288,149 @@
             アプリケーションのメイン エントリ ポイントです。
             </summary>
         </member>
+        <member name="T:Charamaker2.Shapes.FXY">
+            <summary>
+            ポイント,ベクトルを表すためのクラス
+            </summary>
+        </member>
+        <member name="T:Charamaker2.Shapes.lineX">
+            <summary>
+            接触したライン等表すクラス
+            </summary>
+        </member>
+        <member name="M:Charamaker2.Shapes.lineX.#ctor(Charamaker2.Shapes.FXY,Charamaker2.Shapes.FXY,Charamaker2.Shapes.FXY)">
+            <summary>
+            普通のコンストラクタ
+            </summary>
+            <param name="a">始まりの点</param>
+            <param name="b">終わりの点</param>
+            <param name="kijyun">辺の内側の中心点</param>
+        </member>
+        <member name="M:Charamaker2.Shapes.lineX.#ctor(System.Single,System.Single,System.Single,System.Single,System.Single,System.Single)">
+            <summary>
+            普通のコンストラクタ
+            </summary>
+            <param name="bx">開始点x</param>
+            <param name="by">開始点y</param>
+            <param name="ex">終了店x</param>
+            <param name="ey">終了店y</param>
+            <param name="kx">基準点(内側の点)x</param>
+            <param name="ky">基準点y</param>
+        </member>
+        <member name="P:Charamaker2.Shapes.lineX.center">
+            <summary>
+            線の中間地点
+            </summary>
+        </member>
+        <member name="M:Charamaker2.Shapes.lineX.onInside(Charamaker2.Shapes.FXY)">
+            <summary>
+            その点が辺の内側にあるか検知する
+            </summary>
+            <param name="poi">その点</param>
+            <returns>内側であればtrue</returns>
+        </member>
+        <member name="M:Charamaker2.Shapes.lineX.getkyori(System.Single,System.Single)">
+            <summary>
+            点と直線の距離を求めてくれる
+            </summary>
+            <param name="px"></param>
+            <param name="py"></param>
+            <returns>.lengthでちゃんとした距離</returns>
+        </member>
         <member name="T:Charamaker2.Shapes.Shape">
             <summary>
             図形の基底クラス
             </summary>
+        </member>
+        <member name="M:Charamaker2.Shapes.Shape.atarun(Charamaker2.Shapes.Shape,Charamaker2.Shapes.Shape)">
+            <summary>
+            図形二つの重なり。両側からやるよ
+            </summary>
+            <param name="a"></param>
+            <param name="b"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Charamaker2.Shapes.Shape.atarun(Charamaker2.Shapes.Shape,Charamaker2.Shapes.Shape,Charamaker2.Shapes.Shape,Charamaker2.Shapes.Shape)">
+            <summary>
+            図形2つとそれぞれの位置フレーム前での重なり
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Charamaker2.Shapes.Shape.gousei(Charamaker2.Shapes.Shape,Charamaker2.Shapes.Shape)">
+            <summary>
+            二つの図形を合成する。結果は最大の面積を持つ図形になる
+            </summary>
+            <param name="a"></param>
+            <param name="b"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Charamaker2.Shapes.Shape.radseiki(System.Double)">
+            <summary>
+            ラジアンの正規化
+            </summary>
+            <param name="r">正規化するラジアン</param>
+            <returns>-PI~PI正規化されたラジアン</returns>
+        </member>
+        <member name="M:Charamaker2.Shapes.Shape.radseiki2(System.Double)">
+            <summary>
+            ラジアンの正規化2
+            </summary>
+            <param name="r">正規化するラジアン</param>
+            <returns>0~2PIに正規化されたラジアン</returns>
+        </member>
+        <member name="M:Charamaker2.Shapes.Shape.radkatamuki(System.Double)">
+            <summary>
+            ラジアンを-90~90度に直す
+            </summary>
+            <param name="r"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Charamaker2.Shapes.Shape.crosses(System.Double[],System.Double[])">
+            <summary>
+            線がクロスしているのかを判定する
+            </summary>
+            <param name="mom">{x1,y1,x2,y2}</param>
+            <param name="mom2">{x1,y1,x2,y2}</param>
+            <returns></returns>
+        </member>
+        <member name="M:Charamaker2.Shapes.Shape.crosses(Charamaker2.Shapes.FXY,Charamaker2.Shapes.FXY,Charamaker2.Shapes.FXY,Charamaker2.Shapes.FXY)">
+            <summary>
+            線がクロスしているのかを判定する
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Charamaker2.Shapes.Shape.crosses(System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double)">
+            <summary>
+            線がクロスしているのかを判定する
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Charamaker2.Shapes.Shape.getinnerpoint(System.Double,System.Single,System.Boolean)">
+            <summary>
+            図形内部の点を割り出す
+            </summary>
+            <param name="kaku">中心からの角度</param>
+            <param name="nagwari">長さの割合</param>
+            <param name="kaiten">trueならkakuが図形の回転型されたものになる</param>
+            <returns></returns>
+        </member>
+        <member name="M:Charamaker2.Shapes.Shape.getzurasi(Charamaker2.Shapes.FXY,Charamaker2.Shapes.lineX,System.Boolean,System.Boolean)">
+            <summary>
+            点を線と重なるようにずらす幅を教えてくれる。どうしても重ならない場合は(0,0)
+            </summary>
+            <param name="point"></param>
+            <param name="l"></param>
+            <param name="yokomugen">線が無限の長さだと解釈する</param>
+            <param name="outer">外側の点だとしてもずらす</param>
+            <returns></returns>
+        </member>
+        <member name="M:Charamaker2.Shapes.Shape.op_Addition(Charamaker2.Shapes.Shape,Charamaker2.Shapes.Shape)">
+            <summary>
+            図形を合成する
+            </summary>
+            <param name="a"></param>
+            <param name="b"></param>
+            <returns></returns>
         </member>
         <member name="F:Charamaker2.Shapes.Shape.x">
             <summary>
@@ -3048,7 +4462,65 @@
             セットする際は-Pi＜＝rad＜＝Piの範囲にする。そして重心で回転させる
             </summary>
         </member>
-        <member name="M:Charamaker2.Shapes.Shape.#ctor(System.Single,System.Single,System.Single,System.Single,System.Double)">
+        <member name="F:Charamaker2.Shapes.Shape.points">
+            <summary>
+            図形の頂点の相対座標ども
+            </summary>
+        </member>
+        <member name="M:Charamaker2.Shapes.Shape.getzettaipoints(System.Boolean)">
+            <summary>
+            絶対座標に直した各頂点を取得する
+            </summary>
+            <param name="kaburinasi">被らない範囲のやつだけ</param>
+            <returns></returns>
+        </member>
+        <member name="M:Charamaker2.Shapes.Shape.getSoutaiPoints(System.Boolean)">
+            <summary>
+            各頂点の相対座標を取得する
+            </summary>
+            <param name="kaburinasi">被らない範囲のやつだけ</param>
+            <returns></returns>
+        </member>
+        <member name="M:Charamaker2.Shapes.Shape.atarun2(Charamaker2.Shapes.Shape,Charamaker2.Shapes.Shape,Charamaker2.Shapes.Shape)">
+            <summary>
+            図形が当たっているか
+            </summary>
+            <param name="p">1フレーム前の自分</param>
+            <param name="e">相手</param>
+            <param name="pe">1フレーム前の相手</param>
+            <returns></returns>
+        </member>
+        <member name="M:Charamaker2.Shapes.Shape.atarun(Charamaker2.Shapes.Shape)">
+            <summary>
+            図形が当たっているか
+            </summary>
+            <param name="e"></param>
+        </member>
+        <member name="P:Charamaker2.Shapes.Shape.gaisyuu">
+            <summary>
+            図形の外周の長さを返す
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:Charamaker2.Shapes.Shape.menseki">
+            <summary>
+            図形の面積を返す
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Charamaker2.Shapes.Shape.setpoints(System.Collections.Generic.List{Charamaker2.Shapes.FXY})">
+            <summary>
+            頂点の座標をセットする
+            </summary>
+            <param name="points"></param>
+        </member>
+        <member name="M:Charamaker2.Shapes.Shape.setMirror(System.Int32)">
+            <summary>
+            図形をいい感じに反転させる(方向を決める)メソッド大体のやつは左右等しいので意味ないけど
+            </summary>
+            <param name="mir">1で右向き、-1で左向きに0で普通の反転</param>
+        </member>
+        <member name="M:Charamaker2.Shapes.Shape.#ctor(System.Single,System.Single,System.Single,System.Single,System.Double,System.Collections.Generic.List{Charamaker2.Shapes.FXY})">
             <summary>
             普通のコンストラクタ
             </summary>
@@ -3057,6 +4529,7 @@
             <param name="ww">幅</param>
             <param name="hh">高さ</param>
             <param name="radd">角度</param>
+            <param name="points">図形の頂点の相対座標(w,hに対する比)ども(0~1)</param>
         </member>
         <member name="M:Charamaker2.Shapes.Shape.getcx(System.Single,System.Single)">
             <summary>
@@ -3073,6 +4546,18 @@
             <param name="ww">左上を0としたときの図形の点の位置</param>
             <param name="hh">左上を0としたときの図形の点の位置</param>
             <returns>返されるのはy座標の値</returns>
+        </member>
+        <member name="M:Charamaker2.Shapes.Shape.getCenter">
+            <summary>
+            中心の絶対座標を求める
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Charamaker2.Shapes.Shape.getSoutaiCenter">
+            <summary>
+            中心の相対座標を求める
+            </summary>
+            <returns></returns>
         </member>
         <member name="M:Charamaker2.Shapes.Shape.gettx">
             <summary>
@@ -3122,7 +4607,13 @@
             </summary>
             <param name="p"></param>
         </member>
-        <member name="M:Charamaker2.Shapes.Shape.drawshape(Charamaker2.hyojiman,System.Single,System.Single,System.Single,System.Single,System.Boolean)">
+        <member name="M:Charamaker2.Shapes.Shape.scale(System.Single)">
+            <summary>
+            中心の座標を変えずにサイズを拡大縮小する
+            </summary>
+            <param name="sc">スケール</param>
+        </member>
+        <member name="M:Charamaker2.Shapes.Shape.drawshape(Charamaker2.hyojiman,System.Single,System.Single,System.Single,System.Single,System.Single,System.Boolean)">
             <summary>
             図形を描画する
             </summary>
@@ -3131,21 +4622,32 @@
             <param name="G">線の色</param>
             <param name="B">線の色</param>
             <param name="A">線の不透明度</param>
+            <param name="hutosa">線のふとさ</param>
             <param name="begin">hyojimanのbegindrawをついでにするか(すると重くなるので外部でやるのがおススメ)</param>
         </member>
-        <member name="M:Charamaker2.Shapes.Shape.drawn(Vortice.Mathematics.Color4,Charamaker2.hyojiman)">
+        <member name="M:Charamaker2.Shapes.Shape.drawn(Vortice.Mathematics.Color4,System.Single,Charamaker2.hyojiman)">
             <summary>
             図形それぞれの描画の部分の本体
             </summary>
             <param name="col">カラー</param>
             <param name="hyo">表示する画面</param>
+            <param name="hutosa">線の太さ</param>
         </member>
-        <member name="M:Charamaker2.Shapes.Shape.onhani(System.Single,System.Single)">
+        <member name="M:Charamaker2.Shapes.Shape.onhani(Charamaker2.Shapes.Shape,System.Single)">
+            <summary>
+            その図形が図形内にあるかのどうかの判定。両側からやってくれる
+            </summary>
+            <param name="s">その図形</param>
+            <param name="onis">1.0001とかでちょっとアバウトに判定してくれる</param>
+            <returns>あるか</returns>
+        </member>
+        <member name="M:Charamaker2.Shapes.Shape.onhani(System.Single,System.Single,System.Single)">
             <summary>
             その点が図形内にあるかのどうかの判定
             </summary>
             <param name="px">その点のx座標</param>
             <param name="py">その点のy座標</param>
+            <param name="onis">1.0001とかでちょっとアバウトに判定してくれる</param>
             <returns>あるか</returns>
         </member>
         <member name="M:Charamaker2.Shapes.Shape.onhani(System.Single,System.Single,System.Single,System.Single)">
@@ -3160,11 +4662,11 @@
         </member>
         <member name="M:Charamaker2.Shapes.Shape.getgaisyuus(System.Single,System.Single,System.Double)">
             <summary>
-            図形の外周の辺のリストを手に入れる。引数無しで相対座標で出してくれる
+            図形の外周の辺のリストを手に入れる。引数無しで重心を中心とした相対座標で出してくれる
             </summary>
             <param name="x">中心座標x</param>>
             <param name="y">中心座標y</param>>
-            <param name="rad">回転角</param>>
+            <param name="rad">重心を中心とした回転角</param>>
             <returns>外周のリスト(相対座標){{x1,y1,x2,y2},{x1,y1,x2,y2}}</returns>
         </member>
         <member name="M:Charamaker2.Shapes.Shape.getgaisyuus2">
@@ -3172,6 +4674,12 @@
             外周を絶対座標にして返す
             </summary>
             <returns>外周のリスト(絶対座標)</returns>
+        </member>
+        <member name="M:Charamaker2.Shapes.Shape.clonepoints">
+            <summary>
+            頂点を複製する
+            </summary>
+            <returns></returns>
         </member>
         <member name="M:Charamaker2.Shapes.Shape.clone">
             <summary>
@@ -3215,18 +4723,28 @@
             <param name="py">そのy座標</param>
             <returns>角度</returns>
         </member>
-        <member name="M:Charamaker2.Shapes.Shape.getpoints(System.Single,System.Single,System.Single)">
+        <member name="M:Charamaker2.Shapes.Shape.atattenai(Charamaker2.Shapes.Shape)">
             <summary>
-            指定した点に必要であろう図形を構成する頂点を返す。
+            接触していないことを判定する。接触していること判定できない
             </summary>
-            <param name="px">その点のx座標</param>
-            <param name="py">その点のy座標</param>
-            <param name="syatei">何かに使えるかなと思ってたけど使ってないやーつ</param>
-            <returns>ポイントの束</returns>
+            <param name="s"></param>
+            <returns>絶対に接触していないか</returns>
         </member>
-        <member name="M:Charamaker2.Shapes.Shape.gethosen(System.Single,System.Single)">
+        <member name="M:Charamaker2.Shapes.Shape.kasanari(Charamaker2.Shapes.Shape)">
             <summary>
-            指定した点に適した法線ベクトルを返す
+            図形同士が重なっているか調べる。両側からやる
+            </summary>
+            <param name="s"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Charamaker2.Shapes.Shape.getnearestline(Charamaker2.Shapes.FXY)">
+            <summary>
+            指定した点に最もふさわしい辺を見つける
+            </summary>
+        </member>
+        <member name="M:Charamaker2.Shapes.Shape.getnearestline(System.Single,System.Single)">
+            <summary>
+            指定した点に最もふさわしい辺を見つける
             </summary>
             <param name="px"></param>
             <param name="py"></param>
@@ -3253,109 +4771,12 @@
             <param name="taisyo"></param>
             <returns></returns>
         </member>
-        <member name="M:Charamaker2.Shapes.Shape.tasuuketun(Charamaker2.Shapes.Shape,System.Collections.Generic.List{System.Double[]})">
-            <summary>
-            gethosen2のための角度割り出しマン
-            </summary>
-            <param name="s">相手の図形</param>
-            <param name="gaisyu">自分の絶対外周</param>
-            <param name="hoss">絶対外周の法線ベクトルが外側を向くための補正角度</param>
-            <returns></returns>
-        </member>
-        <member name="M:Charamaker2.Shapes.Shape.gethosen2(Charamaker2.Shapes.Shape)">
-            <summary>
-            相手のgetpointsをも呼び出していい感じの法線ベクトルを返す。おそらく物理的な奴向き？
-            </summary>
-            <param name="s"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Charamaker2.Shapes.Shape.atarin(Charamaker2.Shapes.Shape)">
-            <summary>
-            相手の図形と接触しているかを調べる
-            </summary>
-            <param name="s"></param>
-            <returns>当たってるか</returns>
-        </member>
-        <member name="M:Charamaker2.Shapes.Shape.atarin2(Charamaker2.Shapes.Shape,Charamaker2.Shapes.Shape)">
-            <summary>
-            過去の相手も考慮して接触しているか調べる
-            </summary>
-            <param name="now">今の相手</param>
-            <param name="pre">昔の相手</param>
-            <returns></returns>
-        </member>
-        <member name="M:Charamaker2.Shapes.Shape.getsaipreidou(Charamaker2.Shapes.Shape)">
-            <summary>
-            過去の点と今の点を比較して最も移動した点の移動距離を返す。使い道は謎である。
-            </summary>
-            <param name="pre"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Charamaker2.Shapes.Shape.atarun(Charamaker2.Shapes.Shape)">
-            <summary>
-            図形が互いに接触しているか調べる。結局atarinを双方向で呼び出してるだけ。
-            </summary>
-            <param name="s"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Charamaker2.Shapes.Shape.kagenbomb(Charamaker2.Shapes.Shape,Charamaker2.Shapes.Shape)">
-            <summary>
-            自分の過去との動きを相手に適用し、それを影として受け取る
-            </summary>
-            <param name="pre">過去の自分</param>
-            <param name="shadow">影にする相手</param>
-            <returns>影</returns>
-        </member>
-        <member name="M:Charamaker2.Shapes.Shape.atarun2(Charamaker2.Shapes.Shape,Charamaker2.Shapes.Shape,Charamaker2.Shapes.Shape)">
-            <summary>
-            図形がお互いに接触しているか過去の姿も見て調べる
-            </summary>
-            <param name="pre">過去の自分</param>
-            <param name="snow">今の相手</param>
-            <param name="spre">過去の相手</param>
-            <returns></returns>
-        </member>
         <member name="M:Charamaker2.Shapes.Shape.idou(System.Single,System.Single)">
             <summary>
             図形を単純に移動させる
             </summary>
             <param name="dx">移動するxの距離</param>
             <param name="dy">移動するyの距離</param>
-        </member>
-        <member name="M:Charamaker2.Shapes.Shape.getsaikyo(System.Double)">
-            <summary>
-            重心を通る角度方向と垂直な直線を考える。その線が図形と接触している間角度方向に線を動かす。
-            その線と重心の距離を返す。
-            </summary>
-            <param name="kaku">任意の角度</param>
-            <returns>重心と線の距離</returns>
-        </member>
-        <member name="M:Charamaker2.Shapes.Shape.gethokyo(System.Double)">
-            <summary>
-            重心から辺までの法線ベクトルの距離を返す
-            </summary>
-            <param name="kaku">法線ベクトル(自分のgethosenで手に入れた奴で)</param>
-            <returns>距離</returns>
-        </member>
-        <member name="M:Charamaker2.Shapes.Shape.crosses(System.Double[],System.Double[])">
-            <summary>
-            線がクロスしているのかを判定する
-            </summary>
-            <param name="mom">{x1,y1,x2,y2}</param>
-            <param name="mom2">{x1,y1,x2,y2}</param>
-            <returns></returns>
-        </member>
-        <member name="M:Charamaker2.Shapes.Shape.crosses(System.Double,System.Double,System.Double,System.Double,System.Collections.Generic.List{System.Double[]},System.Boolean)">
-            <summary>
-            一本の辺と辺の集合がクロスしているかを判定する
-            </summary>
-            <param name="px">x1</param>
-            <param name="py">y1</param>
-            <param name="ppx">x2</param>
-            <param name="ppy">y2</param>
-            <param name="mom">相対座標の辺の集合{{x1,y1,x2,y2},{x1,y1,x2,y2},{x1,y1,x2,y2}}こんなの</param>
-            <param name="soutaika">x1~y2を図形からの相対座標にするか</param>>
-            <returns></returns>
         </member>
         <member name="T:Charamaker2.Shapes.Rectangle">
             <summary>
@@ -3384,7 +4805,7 @@
             しかし|>こういう左の辺がy軸と平行で右の先端が左の辺のy座標の間にあるな形の三角形しか作れない。
             </summary>
         </member>
-        <member name="P:Charamaker2.Shapes.Triangle.houkou">
+        <member name="P:Charamaker2.Shapes.Triangle.basehoukou">
             <summary>
             三角形の先の方向。1で右-1で左2で下
             </summary>
@@ -3402,22 +4823,24 @@
             <param name="hou">三角形の先端の方向1で右-1で左2で下</param>
             <param name="radd">回転角度</param>
         </member>
-        <member name="M:Charamaker2.Shapes.Triangle.settxy(System.Single,System.Single)">
+        <member name="M:Charamaker2.Shapes.Triangle.changehoukou">
             <summary>
-            重心をxy座標にセットする。
+            三角形の方向を変えたり変えなかったり
             </summary>
-            <param name="xx">セットするx座標</param>
-            <param name="yy">セットするy座標</param>
-        </member>
-        <member name="M:Charamaker2.Shapes.Triangle.getsaikyo(System.Double)">
-            <summary>
-            中心からの天の位置を取得する
-            </summary>
-            <returns></returns>
         </member>
         <member name="T:Charamaker2.Shapes.Circle">
             <summary>
             円を表すクラス
+            </summary>
+        </member>
+        <member name="P:Charamaker2.Shapes.Circle.onerad">
+            <summary>
+            1角の角度
+            </summary>
+        </member>
+        <member name="P:Charamaker2.Shapes.Circle.onelen">
+            <summary>
+            1辺の長さ
             </summary>
         </member>
         <member name="M:Charamaker2.Shapes.Circle.#ctor(System.Single,System.Single,System.Single,System.Single,System.Double,System.Int32)">
@@ -3431,15 +4854,62 @@
             <param name="radd">回転角</param>
             <param name="pointkinji">近似する多角形の画数</param>
         </member>
-        <member name="M:Charamaker2.Shapes.Circle.getpoints(System.Single,System.Single,System.Single)">
+        <member name="F:Charamaker2.sortnode`1.o">
             <summary>
-            指定した点に必要であろうこの円を構成する頂点を返す。
-            点の表側のみ多角形で近似し反対側は点一個で済ませている
+            ソート対象のオブジェクト
             </summary>
-            <param name="px">その点のx座標</param>
-            <param name="py">その点のy座標</param>
-            <param name="syatei">何かに使えるかなと思ってたけど使ってないやーつ</param>
-            <returns>ポイントの束</returns>
+        </member>
+        <member name="F:Charamaker2.sortnode`1.v">
+            <summary>
+            ソートするための値
+            </summary>
+        </member>
+        <member name="M:Charamaker2.sortnode`1.#ctor(`0,System.Single)">
+            <summary>
+            普通のコンストラクタ
+            </summary>
+            <param name="obj">ソートするオブジェクト</param>
+            <param name="value">その値</param>
+        </member>
+        <member name="T:Charamaker2.supersort`1">
+            <summary>
+            任意の物体をソートするためのクラス
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="M:Charamaker2.supersort`1.add(`0,System.Single)">
+            <summary>
+            ソートするものを追加する
+            </summary>
+            <param name="obj">物体</param>
+            <param name="value">ソートするための値</param>
+        </member>
+        <member name="M:Charamaker2.supersort`1.sort(System.Boolean)">
+            <summary>
+            ソートを行う
+            </summary>
+            <param name="ookiijyunn">大きい順に並べるか</param>
+        </member>
+        <member name="M:Charamaker2.supersort`1.swap(System.Int32,System.Int32)">
+            <summary>
+            物体を交換する
+            </summary>
+            <param name="x"></param>
+            <param name="y"></param>
+        </member>
+        <member name="M:Charamaker2.supersort`1.conveyor(System.Int32,System.Int32)">
+            <summary>
+            物体を指定位置に挿入するように移動させる
+            </summary>
+            <param name="koitu">物体のインデックス</param>
+            <param name="kokoni">挿入する位置</param>
+        </member>
+        <member name="M:Charamaker2.supersort`1.getresult(System.Boolean)">
+            <summary>
+            ソートされたベクトルを受け取る
+            </summary>
+            <param name="back">逆にして受け取るか</param>
+            <returns></returns>
         </member>
         <member name="T:Charamaker2.Properties.Resources">
             <summary>

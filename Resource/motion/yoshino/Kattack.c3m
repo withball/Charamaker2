@@ -1,0 +1,161 @@
+[script]{
+//yoshino Kattack
+work.addmoves(new radtoman(30,"",0,10));
+work.addmoves(new setumageman(20,"body",-20,10));
+work.addmoves(new setumageman(20,"neck",-10,10));
+work.addmoves(new setumageman(20,"head",-10,10));
+
+work.addmoves(new setumageman(20,"waist",20,10f));
+work.addmoves(new setumageman(20,"lleg",20,10f));
+work.addmoves(new setumageman(20,"lfoot",30,10f));
+work.addmoves(new setumageman(20,"rleg",-40,10f));
+work.addmoves(new setumageman(20,"rfoot",60,10f));
+
+work.addmoves(new setumageman(20,"rarm",-180,10f));
+work.addmoves(new setumageman(20,"rhand",-90,10f));
+work.addmoves(new setumageman(20,"rwep",0,10f));
+
+work.addmoves(new setumageman(20,"larm",-180,10f));
+work.addmoves(new setumageman(20,"lhand",-90,10f));
+work.addmoves(new setumageman(20,"lwep",30,10f,true,true));
+
+work.addmoves(new setumageman(20,"rarm",-20,20,false));
+work.addmoves(new setumageman(20,"rhand",0,20,false));
+work.addmoves(new setumageman(20,"rwep",90,20,false));
+
+work.addmoves(new setumageman(20,"larm",-20,20,false));
+work.addmoves(new setumageman(20,"lhand",0,20,false));
+work.addmoves(new setumageman(20,"lwep",90,20,false));
+
+
+work.addmoves(new setumageman(20,"body",30,10));
+work.addmoves(new setumageman(20,"neck",0,10));
+work.addmoves(new setumageman(20,"head",0,10));
+work.addmoves(new setumageman(20,"waist",-20,10f));
+work.addmoves(new setumageman(20,"lleg",-10,10f));
+work.addmoves(new setumageman(20,"lfoot",0,10f));
+work.addmoves(new setumageman(20,"rleg",-20,10f));
+work.addmoves(new setumageman(20,"rfoot",0,10f,true,true));
+
+
+work.addmoves(new setumageman(10,"body",9,4f));
+work.addmoves(new setumageman(10,"waist",-6,4f));
+work.addmoves(new setumageman(10,"lleg",0,4f));
+work.addmoves(new setumageman(10,"lfoot",0,4f));
+work.addmoves(new setumageman(10,"rleg",-12,4f));
+work.addmoves(new setumageman(10,"rfoot",0,4f));
+}
+
+[motion]{
+[sp]{1}[loop]{False}
+[moves]{
+ [Charamaker2.Character.moveman:0]{
+ [time]{0}[stop]{False}}
+ [Charamaker2.Character.radtoman:1]{
+ [time]{30}[stop]{False}
+ [name]{}[sitato]{0}[sitasp]{10}[saitan]{True}[kijyun]{471}}
+ [Charamaker2.Character.setumageman:2]{
+ [time]{20}[stop]{False}
+ [name]{body}[sitato]{-20}[sitasp]{10}[saitan]{True}}
+ [Charamaker2.Character.setumageman:3]{
+ [time]{20}[stop]{False}
+ [name]{neck}[sitato]{-10}[sitasp]{10}[saitan]{True}}
+ [Charamaker2.Character.setumageman:4]{
+ [time]{20}[stop]{False}
+ [name]{head}[sitato]{-10}[sitasp]{10}[saitan]{True}}
+ [Charamaker2.Character.setumageman:5]{
+ [time]{20}[stop]{False}
+ [name]{waist}[sitato]{20}[sitasp]{10}[saitan]{True}}
+ [Charamaker2.Character.setumageman:6]{
+ [time]{20}[stop]{False}
+ [name]{lleg}[sitato]{20}[sitasp]{10}[saitan]{True}}
+ [Charamaker2.Character.setumageman:7]{
+ [time]{20}[stop]{False}
+ [name]{lfoot}[sitato]{30}[sitasp]{10}[saitan]{True}}
+ [Charamaker2.Character.setumageman:8]{
+ [time]{20}[stop]{False}
+ [name]{rleg}[sitato]{-40}[sitasp]{10}[saitan]{True}}
+ [Charamaker2.Character.setumageman:9]{
+ [time]{20}[stop]{False}
+ [name]{rfoot}[sitato]{60}[sitasp]{10}[saitan]{True}}
+ [Charamaker2.Character.setumageman:10]{
+ [time]{20}[stop]{False}
+ [name]{rarm}[sitato]{-180}[sitasp]{10}[saitan]{True}}
+ [Charamaker2.Character.setumageman:11]{
+ [time]{20}[stop]{False}
+ [name]{rhand}[sitato]{-90}[sitasp]{10}[saitan]{True}}
+ [Charamaker2.Character.setumageman:12]{
+ [time]{20}[stop]{False}
+ [name]{rwep}[sitato]{0}[sitasp]{10}[saitan]{True}}
+ [Charamaker2.Character.setumageman:13]{
+ [time]{20}[stop]{False}
+ [name]{larm}[sitato]{-180}[sitasp]{10}[saitan]{True}}
+ [Charamaker2.Character.setumageman:14]{
+ [time]{20}[stop]{False}
+ [name]{lhand}[sitato]{-90}[sitasp]{10}[saitan]{True}}
+ [Charamaker2.Character.setumageman:15]{
+ [time]{20}[stop]{True}
+ [name]{lwep}[sitato]{30}[sitasp]{10}[saitan]{True}}
+ [Charamaker2.Character.setumageman:16]{
+ [time]{20}[stop]{False}
+ [name]{rarm}[sitato]{-20}[sitasp]{20}[saitan]{False}}
+ [Charamaker2.Character.setumageman:17]{
+ [time]{20}[stop]{False}
+ [name]{rhand}[sitato]{0}[sitasp]{20}[saitan]{False}}
+ [Charamaker2.Character.setumageman:18]{
+ [time]{20}[stop]{False}
+ [name]{rwep}[sitato]{90}[sitasp]{20}[saitan]{False}}
+ [Charamaker2.Character.setumageman:19]{
+ [time]{20}[stop]{False}
+ [name]{larm}[sitato]{-20}[sitasp]{20}[saitan]{False}}
+ [Charamaker2.Character.setumageman:20]{
+ [time]{20}[stop]{False}
+ [name]{lhand}[sitato]{0}[sitasp]{20}[saitan]{False}}
+ [Charamaker2.Character.setumageman:21]{
+ [time]{20}[stop]{False}
+ [name]{lwep}[sitato]{90}[sitasp]{20}[saitan]{False}}
+ [Charamaker2.Character.setumageman:22]{
+ [time]{20}[stop]{False}
+ [name]{body}[sitato]{30}[sitasp]{10}[saitan]{True}}
+ [Charamaker2.Character.setumageman:23]{
+ [time]{20}[stop]{False}
+ [name]{neck}[sitato]{0}[sitasp]{10}[saitan]{True}}
+ [Charamaker2.Character.setumageman:24]{
+ [time]{20}[stop]{False}
+ [name]{head}[sitato]{0}[sitasp]{10}[saitan]{True}}
+ [Charamaker2.Character.setumageman:25]{
+ [time]{20}[stop]{False}
+ [name]{waist}[sitato]{-20}[sitasp]{10}[saitan]{True}}
+ [Charamaker2.Character.setumageman:26]{
+ [time]{20}[stop]{False}
+ [name]{lleg}[sitato]{-10}[sitasp]{10}[saitan]{True}}
+ [Charamaker2.Character.setumageman:27]{
+ [time]{20}[stop]{False}
+ [name]{lfoot}[sitato]{0}[sitasp]{10}[saitan]{True}}
+ [Charamaker2.Character.setumageman:28]{
+ [time]{20}[stop]{False}
+ [name]{rleg}[sitato]{-20}[sitasp]{10}[saitan]{True}}
+ [Charamaker2.Character.setumageman:29]{
+ [time]{20}[stop]{True}
+ [name]{rfoot}[sitato]{0}[sitasp]{10}[saitan]{True}}
+ [Charamaker2.Character.setumageman:30]{
+ [time]{10}[stop]{False}
+ [name]{body}[sitato]{9}[sitasp]{4}[saitan]{True}}
+ [Charamaker2.Character.setumageman:31]{
+ [time]{10}[stop]{False}
+ [name]{waist}[sitato]{-6}[sitasp]{4}[saitan]{True}}
+ [Charamaker2.Character.setumageman:32]{
+ [time]{10}[stop]{False}
+ [name]{lleg}[sitato]{0}[sitasp]{4}[saitan]{True}}
+ [Charamaker2.Character.setumageman:33]{
+ [time]{10}[stop]{False}
+ [name]{lfoot}[sitato]{0}[sitasp]{4}[saitan]{True}}
+ [Charamaker2.Character.setumageman:34]{
+ [time]{10}[stop]{False}
+ [name]{rleg}[sitato]{-12}[sitasp]{4}[saitan]{True}}
+ [Charamaker2.Character.setumageman:35]{
+ [time]{10}[stop]{False}
+ [name]{rfoot}[sitato]{0}[sitasp]{4}[saitan]{True}}
+ 
+}
+}

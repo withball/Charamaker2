@@ -703,6 +703,7 @@ namespace GameSet1
                 a.frame(cl);
                // Console.WriteLine(a.Acore.getCenter().ToString() + " Qaaa");
             }
+            EDB.frame();
            // Console.WriteLine("framed!");
            
                 //Console.WriteLine(aslfka+"asl:kgaso "+aslfka);

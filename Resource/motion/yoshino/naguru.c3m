@@ -1,0 +1,67 @@
+[script]{
+// yoshino naguru
+float tt=15,sp=12;
+
+work.addmoves(new setumageman(tt,"rarm",-170,-sp,false));
+work.addmoves(new setumageman(tt,"rhand",-140,-sp,false));
+work.addmoves(new setumageman(tt,"rwep",20,-sp,false));
+
+work.addmoves(new setumageman(tt,"larm",-170,-sp,false));
+work.addmoves(new setumageman(tt,"lhand",-140,-sp,false));
+work.addmoves(new setumageman(tt,"lwep",20,-sp,false,true));
+
+
+tt=10;sp=22;
+
+work.addmoves(new setumageman(tt,"rarm",-20,sp,false));
+work.addmoves(new setumageman(tt,"rhand",0,sp,false));
+work.addmoves(new setumageman(tt,"rwep",90,sp,false));
+
+work.addmoves(new setumageman(tt,"larm",-20,sp,false));
+work.addmoves(new setumageman(tt,"lhand",0,sp,false));
+work.addmoves(new setumageman(tt,"lwep",90,sp,false,true));
+
+}
+
+[motion]{
+[sp]{1}[loop]{False}
+[moves]{
+ [Charamaker2.Character.setumageman:0]{
+ [time]{15}[stop]{False}
+ [name]{rarm}[sitato]{-170}[sitasp]{-12}[saitan]{False}}
+ [Charamaker2.Character.setumageman:1]{
+ [time]{15}[stop]{False}
+ [name]{rhand}[sitato]{-140}[sitasp]{-12}[saitan]{False}}
+ [Charamaker2.Character.setumageman:2]{
+ [time]{15}[stop]{False}
+ [name]{rwep}[sitato]{20}[sitasp]{-12}[saitan]{False}}
+ [Charamaker2.Character.setumageman:3]{
+ [time]{15}[stop]{False}
+ [name]{larm}[sitato]{-170}[sitasp]{-12}[saitan]{False}}
+ [Charamaker2.Character.setumageman:4]{
+ [time]{15}[stop]{False}
+ [name]{lhand}[sitato]{-140}[sitasp]{-12}[saitan]{False}}
+ [Charamaker2.Character.setumageman:5]{
+ [time]{15}[stop]{True}
+ [name]{lwep}[sitato]{20}[sitasp]{-12}[saitan]{False}}
+ [Charamaker2.Character.setumageman:6]{
+ [time]{10}[stop]{False}
+ [name]{rarm}[sitato]{-20}[sitasp]{22}[saitan]{False}}
+ [Charamaker2.Character.setumageman:7]{
+ [time]{10}[stop]{False}
+ [name]{rhand}[sitato]{0}[sitasp]{22}[saitan]{False}}
+ [Charamaker2.Character.setumageman:8]{
+ [time]{10}[stop]{False}
+ [name]{rwep}[sitato]{90}[sitasp]{22}[saitan]{False}}
+ [Charamaker2.Character.setumageman:9]{
+ [time]{10}[stop]{False}
+ [name]{larm}[sitato]{-20}[sitasp]{22}[saitan]{False}}
+ [Charamaker2.Character.setumageman:10]{
+ [time]{10}[stop]{False}
+ [name]{lhand}[sitato]{0}[sitasp]{22}[saitan]{False}}
+ [Charamaker2.Character.setumageman:11]{
+ [time]{10}[stop]{True}
+ [name]{lwep}[sitato]{90}[sitasp]{22}[saitan]{False}}
+ 
+}
+}

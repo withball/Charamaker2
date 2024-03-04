@@ -1,0 +1,86 @@
+[script]{
+// yoshino thinking
+float tt=1,sp=7;
+work.addmoves(new radtoman(tt,"",0,sp));
+work.addmoves(new radtoman(tt,"body",0,sp));
+work.addmoves(new radtoman(tt,"neck",20,sp));
+work.addmoves(new radtoman(tt,"head",30,sp));
+work.addmoves(new radtoman(tt,"hair",30,sp));
+work.addmoves(new radtoman(tt,"waist",0,sp));
+work.addmoves(new radtoman(tt,"larm",-75,sp));
+work.addmoves(new radtoman(tt,"lhand",-120,sp));
+work.addmoves(new radtoman(tt,"lwep",120,sp));
+work.addmoves(new radtoman(tt,"rarm",-90,sp));
+work.addmoves(new radtoman(tt,"rhand",-215,sp));
+work.addmoves(new radtoman(tt,"rwep",0,sp));
+work.addmoves(new radtoman(tt,"lleg",0,sp));
+work.addmoves(new radtoman(tt,"lfoot",0,sp));
+work.addmoves(new radtoman(tt,"rleg",0,sp));
+work.addmoves(new radtoman(tt,"rfoot",0,sp));
+work.addmoves(new zchangeman(tt,"rarm",4,true,true));
+work.addmoves(new zchangeman(tt,"rarm",-4,true));
+
+
+
+}
+
+[motion]{
+[sp]{1}[loop]{False}
+[moves]{
+ [Charamaker2.Character.radtoman:0]{
+ [time]{1}[stop]{False}
+ [name]{}[sitato]{0}[sitasp]{7}[saitan]{True}[kijyun]{0}}
+ [Charamaker2.Character.radtoman:1]{
+ [time]{1}[stop]{False}
+ [name]{body}[sitato]{0}[sitasp]{7}[saitan]{True}[kijyun]{0}}
+ [Charamaker2.Character.radtoman:2]{
+ [time]{1}[stop]{False}
+ [name]{neck}[sitato]{20}[sitasp]{7}[saitan]{True}[kijyun]{0}}
+ [Charamaker2.Character.radtoman:3]{
+ [time]{1}[stop]{False}
+ [name]{head}[sitato]{30}[sitasp]{7}[saitan]{True}[kijyun]{0}}
+ [Charamaker2.Character.radtoman:4]{
+ [time]{1}[stop]{False}
+ [name]{hair}[sitato]{30}[sitasp]{7}[saitan]{True}[kijyun]{0}}
+ [Charamaker2.Character.radtoman:5]{
+ [time]{1}[stop]{False}
+ [name]{waist}[sitato]{0}[sitasp]{7}[saitan]{True}[kijyun]{0}}
+ [Charamaker2.Character.radtoman:6]{
+ [time]{1}[stop]{False}
+ [name]{larm}[sitato]{-75}[sitasp]{7}[saitan]{True}[kijyun]{0}}
+ [Charamaker2.Character.radtoman:7]{
+ [time]{1}[stop]{False}
+ [name]{lhand}[sitato]{-120}[sitasp]{7}[saitan]{True}[kijyun]{0}}
+ [Charamaker2.Character.radtoman:8]{
+ [time]{1}[stop]{False}
+ [name]{lwep}[sitato]{120}[sitasp]{7}[saitan]{True}[kijyun]{0}}
+ [Charamaker2.Character.radtoman:9]{
+ [time]{1}[stop]{False}
+ [name]{rarm}[sitato]{-90}[sitasp]{7}[saitan]{True}[kijyun]{0}}
+ [Charamaker2.Character.radtoman:10]{
+ [time]{1}[stop]{False}
+ [name]{rhand}[sitato]{-215}[sitasp]{7}[saitan]{True}[kijyun]{0}}
+ [Charamaker2.Character.radtoman:11]{
+ [time]{1}[stop]{False}
+ [name]{rwep}[sitato]{0}[sitasp]{7}[saitan]{True}[kijyun]{0}}
+ [Charamaker2.Character.radtoman:12]{
+ [time]{1}[stop]{False}
+ [name]{lleg}[sitato]{0}[sitasp]{7}[saitan]{True}[kijyun]{0}}
+ [Charamaker2.Character.radtoman:13]{
+ [time]{1}[stop]{False}
+ [name]{lfoot}[sitato]{0}[sitasp]{7}[saitan]{True}[kijyun]{0}}
+ [Charamaker2.Character.radtoman:14]{
+ [time]{1}[stop]{False}
+ [name]{rleg}[sitato]{0}[sitasp]{7}[saitan]{True}[kijyun]{0}}
+ [Charamaker2.Character.radtoman:15]{
+ [time]{1}[stop]{False}
+ [name]{rfoot}[sitato]{0}[sitasp]{7}[saitan]{True}[kijyun]{0}}
+ [Charamaker2.Character.zchangeman:16]{
+ [time]{1}[stop]{True}
+ [name]{rarm}[dz]{4}[kouzokumo]{True}}
+ [Charamaker2.Character.zchangeman:17]{
+ [time]{1}[stop]{False}
+ [name]{rarm}[dz]{-4}[kouzokumo]{True}}
+ 
+}
+}

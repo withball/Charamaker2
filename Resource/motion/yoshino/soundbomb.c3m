@@ -1,0 +1,40 @@
+[script]{
+// yoshino soundbomb
+float tt=80,sp=12;
+
+
+work.addmoves(new texchangeman("head","talk"));
+work.addmoves(new setumageman(tt,"rarm",-40,-sp));
+work.addmoves(new setumageman(tt,"rhand",90,-sp));
+work.addmoves(new setumageman(tt,"rwep",20,-sp));
+
+work.addmoves(new setuidouman(tt,"lwep",sp*3));
+work.addmoves(new moveman(tt,true));
+
+work.addmoves(new texchangeman("head","def"));
+}
+
+[motion]{
+[sp]{1}[loop]{False}
+[moves]{
+ [Charamaker2.Character.texchangeman:0]{
+ [name]{head}[tex]{talk}}
+ [Charamaker2.Character.setumageman:1]{
+ [time]{80}[stop]{False}
+ [name]{rarm}[sitato]{-40}[sitasp]{-12}[saitan]{True}}
+ [Charamaker2.Character.setumageman:2]{
+ [time]{80}[stop]{False}
+ [name]{rhand}[sitato]{90}[sitasp]{-12}[saitan]{True}}
+ [Charamaker2.Character.setumageman:3]{
+ [time]{80}[stop]{False}
+ [name]{rwep}[sitato]{20}[sitasp]{-12}[saitan]{True}}
+ [Charamaker2.Character.setuidouman:4]{
+ [time]{80}[stop]{False}
+ [name]{lwep}[vsita]{36}[vdx]{0}[vdy]{0}}
+ [Charamaker2.Character.moveman:5]{
+ [time]{80}[stop]{True}}
+ [Charamaker2.Character.texchangeman:6]{
+ [name]{head}[tex]{def}}
+ 
+}
+}

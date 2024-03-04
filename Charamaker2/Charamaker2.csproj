@@ -137,6 +137,7 @@
   <ItemGroup>
     <Compile Include="Character\character.cs" />
     <Compile Include="Character\motiontoka.cs" />
+    <Compile Include="DataSaver.cs" />
     <Compile Include="fileman.cs" />
     <Compile Include="hyojiman.cs" />
     <Compile Include="inputin.cs" />

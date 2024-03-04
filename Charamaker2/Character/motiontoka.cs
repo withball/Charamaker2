@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -78,11 +79,12 @@ namespace Charamaker2.Character
         /// <param name="c">モーション適用対象</param>
         public void startAndFrame(character c,float time)
         {
-
+            c.startmotion(true);
             idx = 0;
             sidx = 0;
             if (!owari) moves[idx].start(c);
             frame(c, time);
+            c.endmotion(true);
         }
         /// <summary>
         /// モーションを進める
@@ -220,6 +222,50 @@ namespace Charamaker2.Character
                 return rawendtime/sp;
             }
         }
+        /// <summary>
+        /// セーブできる形態に変えます
+        /// </summary>
+        /// <returns></returns>
+        public DataSaver ToSave()
+        {
+            var d = new DataSaver();
+
+            d.packAdd("sp", sp);
+            d.packAdd("loop", loop);
+            var mv = new DataSaver();
+            int cou = 0;
+            foreach (var a in moves) 
+            {
+                var dd=a.ToSave();
+                mv.packAdd(a.GetType().ToString()+":"+(cou++), dd);     
+            }
+            mv.indent();
+            d.linechange();
+            d.packAdd("moves", mv);
+            return d;
+        }
+        public static motion ToLoad(DataSaver d)
+        {
+            var m = new motion();
+            m.sp = d.unPackDataF("sp", 1);
+            m.loop = d.unPackDataB("loop", false);
+
+            var mv = d.unPackDataD("moves");
+            var lis = mv.getAllPacks();
+            foreach (var a in lis)
+            {
+                var name = new DataSaver(a);
+                var n = name.splitOneData(0, "moveman", ':');
+
+
+                var dd = mv.unPackDataD(a);
+                var type = Type.GetType(n);
+                var meth = type.GetMethod("ToLoad");
+                m.addmoves((moveman)(meth.Invoke(m, new object[] { dd })));
+            }
+
+            return m;
+        }
     }
     /// <summary>
     /// 基底のムーブ。持ってる機能はモーションの読み込みを止めるだけ。
@@ -331,10 +377,28 @@ namespace Charamaker2.Character
         /// <param name="cl">フレームする時間</param>
         public void startAndFrame(character c,float cl) 
         {
-            c.startmotion();
+            c.startmotion(true);
             this.start(c);
             this.frame(c, cl);
-            c.endmotion();
+            c.endmotion(true);
+
+
+        }
+        /// <summary>
+        /// セーブできる形態に変えます
+        /// </summary>
+        /// <returns></returns>
+        public virtual DataSaver ToSave() 
+        {
+            var d = new DataSaver();
+            d.packAdd("time",time.ToString());
+            d.packAdd("stop", st.ToString());
+
+            return d;
+        }
+        public static moveman ToLoad(DataSaver d) 
+        {
+            return new moveman(d.unPackDataF("time",0),d.unPackDataB("stop",false));
         }
     }
     /// <summary>
@@ -412,8 +476,47 @@ namespace Charamaker2.Character
 
             base.frame(c, cl);
         }
-
+        /// <summary>
+        /// セーブできる形態に変えます
+        /// </summary>
+        /// <returns></returns>
+        public override DataSaver ToSave()
+        {
+            var d = base.ToSave();
+            d.linechange();
+            d.packAdd("vx", vx);
+            d.packAdd("vy", vy);
+            d.packAdd("vsita", vrad/Math.PI*180);
+            return d;
+        }
+        public static idouman ToLoad(DataSaver d)
+        {
+            return new idouman(d.unPackDataF("time", 0)
+                , d.unPackDataF("vx", 0), d.unPackDataF("vy", 0)
+                ,d.unPackDataF("vsita", 0)
+                , d.unPackDataB("stop", false));
+        }
     }
+    /*
+        /// <summary>
+        /// セーブできる形態に変えます
+        /// </summary>
+        /// <returns></returns>
+        public override DataSaver ToSave()
+        {
+            var d = base.ToSave();
+            d.linechange();
+            d.packAdd("",);
+            return d;
+        }
+        public static  ToLoad(DataSaver d)
+        {
+            return new (d.unPackDataF("time", 0)
+                , d.unPackDataF("",)
+                , d.unPackDataB("stop", false));
+        }
+     
+     */
     /// <summary>
     /// 回転角度とキャラクターの大きさを考慮して移動するムーブ
     /// </summary>
@@ -463,7 +566,24 @@ namespace Charamaker2.Character
 
             base.frame(c, cl);
         }
-
+        /// <summary>
+        /// セーブできる形態に変えます
+        /// </summary>
+        /// <returns></returns>
+        public override DataSaver ToSave()
+        {
+            var d = base.ToSave();
+            d.linechange();
+            d.packAdd("vx", vx);
+            d.packAdd("vy", vy);
+            return d;
+        }
+       public  static zureman ToLoad(DataSaver d)
+        {
+            return new zureman(d.unPackDataF("time", 0)
+                ,d.unPackDataF("vx",0),d.unPackDataF("vy",0)
+                , d.unPackDataB("stop", false));
+        }
     }
     /// <summary>
     /// なにがなんでも座標を固定するムーブ
@@ -512,7 +632,24 @@ namespace Charamaker2.Character
             c.settxy(x, y);
 
         }
-
+        /// <summary>
+        /// セーブできる形態に変えます
+        /// </summary>
+        /// <returns></returns>
+        public override DataSaver ToSave()
+        {
+            var d = base.ToSave();
+            d.linechange();
+            d.packAdd("x",x);
+            d.packAdd("y", y);
+            return d;
+        }
+      public   static zahyosetman ToLoad(DataSaver d)
+        {
+            return new zahyosetman(d.unPackDataF("time", 0)
+                , d.unPackDataF("x",0),d.unPackDataF("y",0)
+                , d.unPackDataB("stop", false));
+        }
     }
     /// <summary>
     /// 関節を移動、回転させるためのムーブ
@@ -607,7 +744,26 @@ namespace Charamaker2.Character
             base.frame(c, cl);
 
         }
-
+        /// <summary>
+        /// セーブできる形態に変えます
+        /// </summary>
+        /// <returns></returns>
+        public override DataSaver ToSave()
+        {
+            var d = base.ToSave();
+            d.linechange();
+            d.packAdd("name",nm);
+            d.packAdd("vsita", vrad * 180 / Math.PI);
+            d.packAdd("vdx", vdx);
+            d.packAdd("vdy", vdy);
+            return d;
+        }
+        public static setuidouman ToLoad(DataSaver d)
+        {
+            return new setuidouman(d.unPackDataF("time", 0)
+                , d.unPackDataS("name"),d.unPackDataF("vsita",0),d.unPackDataF("vdx",0),d.unPackDataF("vdy",0)
+                , d.unPackDataB("stop", false));
+        }
 
 
     }
@@ -711,7 +867,7 @@ namespace Charamaker2.Character
 
                 {
 
-                    if (Math.Abs(Math.Atan2(Math.Sin(tag.p.RAD - rkaku - radto), Math.Cos(tag.p.RAD - rkaku - radto))) <= Math.Abs(radsp * 1.1 * t) /*&& (sai||radsp*(tag.p.RAD - rkaku - radto)<=Math.Abs(radsp)*0.01f)*/)
+                    if (Math.Abs(Shapes.Shape.radseiki(tag.p.RAD - rkaku - radto)) <= Math.Abs(radsp * 1.1 * t) /*&& (sai||radsp*(tag.p.RAD - rkaku - radto)<=Math.Abs(radsp)*0.01f)*/)
                     {
                         double sp = tag.p.RAD - rkaku - radto;
 
@@ -726,7 +882,7 @@ namespace Charamaker2.Character
                         if (sai)
                         {
 
-                            if (Math.Atan2(Math.Sin(tag.p.RAD - rkaku - radto), Math.Cos(tag.p.RAD - rkaku - radto)) < 0)
+                            if (Shapes.Shape.radseiki(tag.p.RAD - rkaku - radto) < 0)
                             {
                                 radsp = Math.Abs(radsp);
 
@@ -752,7 +908,7 @@ namespace Charamaker2.Character
             }
             else if(nm=="")
             {
-                if (Math.Abs(Math.Atan2(Math.Sin(c.RAD - radto), Math.Cos(c.RAD - radto))) <= Math.Abs(radsp * 1.1 * t))
+                if (Math.Abs(Shapes.Shape.radseiki(c.RAD - radto)) <= Math.Abs(radsp * 1.1 * t))
                 {
 
                     double sp = c.RAD - radto;
@@ -767,7 +923,7 @@ namespace Charamaker2.Character
                 {
                     if (sai)
                     {
-                        if (Math.Atan2(Math.Sin(c.RAD - radto), Math.Cos(c.RAD - radto)) < 0)
+                        if (Shapes.Shape.radseiki(c.RAD - radto) < 0)
                         {
                             radsp = Math.Abs(radsp);
 
@@ -792,7 +948,27 @@ namespace Charamaker2.Character
 
         }
 
-
+        /// <summary>
+        /// セーブできる形態に変えます
+        /// </summary>
+        /// <returns></returns>
+        public override DataSaver ToSave()
+        {
+            var d = base.ToSave();
+            d.linechange();
+            d.packAdd("name",nm);
+            d.packAdd("sitato", radto/Math.PI*180);
+            d.packAdd("sitasp", radsp / Math.PI * 180);
+            d.packAdd("saitan", sai.ToString());
+            return d;
+        }
+        public static setumageman ToLoad(DataSaver d)
+        {
+            return new setumageman(d.unPackDataF("time", 0)
+                , d.unPackDataS("name",""),d.unPackDataF("sitato",0), d.unPackDataF("sitasp", 0)
+                , d.unPackDataB("saitan", true)
+                , d.unPackDataB("stop", false));
+        }
 
     }
     /// <summary>
@@ -903,7 +1079,7 @@ namespace Charamaker2.Character
             {
 
                 {
-                    if (Math.Abs(Math.Atan2(Math.Sin(tag.p.RAD - radto), Math.Cos(tag.p.RAD - radto))) <= Math.Abs(radsp * 1.1 * t) /*&& (sai || radsp * (tag.p.RAD - radto) <= Math.Abs(radsp) * 0.01f)*/)
+                    if (Math.Abs(Shapes.Shape.radseiki(tag.p.RAD - radto)) <= Math.Abs(radsp * 1.1 * t) /*&& (sai || radsp * (tag.p.RAD - radto) <= Math.Abs(radsp) * 0.01f)*/)
                     {
                         double sp = tag.p.RAD - radto;
 
@@ -917,7 +1093,7 @@ namespace Charamaker2.Character
                     {
                         if (sai)
                         {
-                            if (Math.Atan2(Math.Sin(tag.p.RAD - radto), Math.Cos(tag.p.RAD - radto)) < 0)
+                            if (Shapes.Shape.radseiki(tag.p.RAD - radto) < 0)
                             {
                                 radsp = Math.Abs(radsp);
 
@@ -946,7 +1122,7 @@ namespace Charamaker2.Character
             {
 
 
-                if (Math.Abs(Math.Atan2(Math.Sin(c.RAD - radto), Math.Cos(c.RAD - radto))) <= Math.Abs(radsp * 1.1 * t))
+                if (Math.Abs(Shapes.Shape.radseiki(c.RAD - radto)) <= Math.Abs(radsp * 1.1 * t))
                 {
 
                     double sp = c.RAD - radto;
@@ -961,7 +1137,7 @@ namespace Charamaker2.Character
                 {
                     if (sai)
                     {
-                        if (Math.Atan2(Math.Sin(c.RAD - radto), Math.Cos(c.RAD - radto)) < 0)
+                        if (Shapes.Shape.radseiki(c.RAD - radto) < 0)
                         {
                             radsp = Math.Abs(radsp);
 
@@ -989,7 +1165,28 @@ namespace Charamaker2.Character
             }
             base.frame(c, cl);
         }
-
+        /// <summary>
+        /// セーブできる形態に変えます
+        /// </summary>
+        /// <returns></returns>
+        public override DataSaver ToSave()
+        {
+            var d = base.ToSave();
+            d.linechange();
+            d.packAdd("name", nm);
+            d.packAdd("sitato", radto / Math.PI * 180);
+            d.packAdd("sitasp", radsp / Math.PI * 180);
+            d.packAdd("saitan", sai.ToString());
+            d.packAdd("kijyun", kijyun / Math.PI * 180);
+            return d;
+        }
+        public static radtoman ToLoad(DataSaver d)
+        {
+            return new radtoman(d.unPackDataF("time", 0)
+                , d.unPackDataS("name", ""), d.unPackDataF("sitato", 0), d.unPackDataF("sitasp", 0)
+                , d.unPackDataB("saitan", true)
+                , d.unPackDataB("stop", false),d.unPackDataF("kijyun",471));
+        }
     }
 
     /// <summary>
@@ -1140,9 +1337,29 @@ namespace Charamaker2.Character
             }
             base.frame(c, cl);
         }
-
+        /// <summary>
+        /// セーブできる形態に変えます
+        /// </summary>
+        /// <returns></returns>
+        public override DataSaver ToSave()
+        {
+            var d = base.ToSave();
+            d.linechange();
+            d.packAdd("name", nm);
+            d.packAdd("mirhow", how);
+            d.packAdd("opa", opa);
+            d.packAdd("kouzokumo", kzk);
+            return d;
+        }
+        public static texpropman ToLoad(DataSaver d)
+        {
+            return new texpropman(d.unPackDataF("time", 0)
+                , d.unPackDataS("name", ""), (int)d.unPackDataF("mirhow", 471), d.unPackDataF("opa", 0)
+                , d.unPackDataB("kouzokumo", true)
+                , d.unPackDataB("stop", false));
+        }
     }    /// <summary>
-         /// テクスチャーの反転、不透明度を操るムーブ
+         /// テクスチャーの不透明度を操るムーブ
          /// </summary>
     [Serializable]
     public class Kopaman: moveman
@@ -1159,7 +1376,7 @@ namespace Charamaker2.Character
         /// <param name="t">持続時間</param>
         /// <param name="name">対象にする節""ですべてを指定する</param>
         /// <param name="toopabai">-1で変更なし、基準の不透明度から速度を自動的に決める。</param>
-        /// <param name="kozokumo">下の節にも同じ効果を適用するか。falseかつ""でキャラクターのmirrorを変更できる</param>
+        /// <param name="kozokumo">下の節にも同じ効果を適用するか。</param>
         /// <param name="stop">止めるか</param>
         public Kopaman(float t, string name,  float toopabai = -1, bool kozokumo = true, bool stop = false) : base(t, stop)
         {
@@ -1259,6 +1476,26 @@ namespace Charamaker2.Character
                 tag[i].p.OPA += opasp[i] * t;
             }
             base.frame(c, cl);
+        } 
+        /// <summary>
+           /// セーブできる形態に変えます
+           /// </summary>
+           /// <returns></returns>
+        public override DataSaver ToSave()
+        {
+            var d = base.ToSave();
+            d.linechange();
+            d.packAdd("name", nm);
+            d.packAdd("opabai", opabai);
+            d.packAdd("kouzokumo", kzk);
+            return d;
+        }
+        public static Kopaman ToLoad(DataSaver d)
+        {
+            return new Kopaman(d.unPackDataF("time", 0)
+                , d.unPackDataS("name", ""),  d.unPackDataF("opabai", 0)
+                , d.unPackDataB("kouzokumo", true)
+                , d.unPackDataB("stop", false));
         }
 
     }
@@ -1303,7 +1540,21 @@ namespace Charamaker2.Character
 
             }
         }
-
+        /// <summary>
+        /// セーブできる形態に変えます
+        /// </summary>
+        /// <returns></returns>
+        public override DataSaver ToSave()
+        {
+            var d = new DataSaver();
+            d.packAdd("name", nm);
+            d.packAdd("tex", tex);
+            return d;
+        }
+        public static texchangeman ToLoad(DataSaver d)
+        {
+            return new texchangeman(d.unPackDataS("name", ""), d.unPackDataS("tex", ""));
+        }
     }
     /// <summary>
     /// zを即座に変更するムーブ
@@ -1384,7 +1635,26 @@ namespace Charamaker2.Character
         {
             base.frame(c, cl);
         }
-
+        /// <summary>
+        /// セーブできる形態に変えます
+        /// </summary>
+        /// <returns></returns>
+        public override DataSaver ToSave()
+        {
+            var d = base.ToSave();
+            d.linechange();
+            d.packAdd("name", nm);
+            d.packAdd("dz",vz);
+            d.packAdd("kouzokumo", kzk);
+            return d;
+        }
+        public static zchangeman ToLoad(DataSaver d)
+        {
+            return new zchangeman(d.unPackDataF("time", 0)
+                , d.unPackDataS("name", ""), d.unPackDataF("dz", 0)
+                , d.unPackDataB("kouzokumo", true)
+                , d.unPackDataB("stop", false));
+        }
     }
     /// <summary>
     /// 基準をもとにzを即座に変更するムーブ
@@ -1403,7 +1673,7 @@ namespace Charamaker2.Character
         /// <param name="toname">基準の節の名前</param>
         /// <param name="dz">基準の節から定数で更に移動する</param>
         /// <param name="kouzokumo">最終的な移動を下の節にも適用するか</param>
-        public Kzchangeman(string name, string toname,float dz, bool kouzokumo = true) : base(1, false)
+        public Kzchangeman(string name, string toname,float dz, bool kouzokumo = true) : base(0, false)
         {
             nm = name;
             tonm = toname;
@@ -1458,7 +1728,6 @@ namespace Charamaker2.Character
             }
             else
             {
-              
 
                 
                 if (kzk)
@@ -1483,7 +1752,28 @@ namespace Charamaker2.Character
            
             //hyojiman.resetpics();
         }
-
+        /// <summary>
+        /// セーブできる形態に変えます
+        /// </summary>
+        /// <returns></returns>
+        public override DataSaver ToSave()
+        {
+            var d = new DataSaver();
+            d.linechange();
+            d.packAdd("name", nm);
+            d.packAdd("toname", tonm);
+            d.packAdd("dz", vz);
+            d.linechange();
+            d.packAdd("kouzokumo", kzk);
+            return d;
+        }
+        public static Kzchangeman ToLoad(DataSaver d)
+        {
+            return new Kzchangeman(
+                 d.unPackDataS("name", ""), d.unPackDataS("toname", ""), d.unPackDataF("dz", 0)
+                , d.unPackDataB("kouzokumo", true)
+                );
+        }
     }
     /// <summary>
     /// サイズと中心点を移動するように変化させるムーブ
@@ -1563,6 +1853,29 @@ namespace Charamaker2.Character
                 c.ty += ty * t;
             }
         }
+        /// <summary>
+        /// セーブできる形態に変えます
+        /// </summary>
+        /// <returns></returns>
+        public override DataSaver ToSave()
+        {
+            var d = base.ToSave();
+            d.linechange();
+            d.packAdd("name", nm);
+            d.packAdd("vtx", tx);
+            d.packAdd("vty", ty);
+            d.linechange();
+            d.packAdd("vw", w);
+            d.packAdd("vh", h);
+            return d;
+        }
+        public static sizetokaman ToLoad(DataSaver d)
+        {
+            return new sizetokaman(d.unPackDataF("time", 0)
+                , d.unPackDataS("name", ""), d.unPackDataF("vtx", 0), d.unPackDataF("vty", 0)
+                , d.unPackDataF("w", 0), d.unPackDataF("h", 0)
+                , d.unPackDataB("stop", false));
+        }
     }
     /// <summary>
     /// 節やキャラクターの大きさを一時的に大きくするムーブ
@@ -1582,7 +1895,7 @@ namespace Charamaker2.Character
         protected List<float> spdx = new List<float>();
         protected List<float> spdy = new List<float>();
 
-
+        float rawtime;
         protected setu tag;
         protected float count;
         protected List<setu> tags = new List<setu>();
@@ -1600,8 +1913,10 @@ namespace Charamaker2.Character
         /// <param name="changescaley">高さ方向のスケール</param>
         /// <param name="kouzokumo">下の節にも同じ割合の効果を適用するか</param>
         /// <param name="stop">止めるか</param>
-        public scalechangeman(float t, float middletime, string name, float changescalex, float changescaley, bool kouzokumo = true, bool stop = false) : base(t, stop)
+        public scalechangeman(float t, float middletime, string name, float changescalex, float changescaley
+            , bool kouzokumo = true, bool stop = false) : base(t, stop)
         {
+            rawtime = t;
             middle = middletime;
             time += t;
             if (middle >= 0) time += middle;
@@ -1616,6 +1931,7 @@ namespace Charamaker2.Character
         /// <param name="s">コピー元</param>
         public scalechangeman(scalechangeman s) : base(s)
         {
+            rawtime = s.rawtime;
             middle = s.middle;
             kzk = s.kzk;
             nm = s.nm;
@@ -1788,9 +2104,9 @@ namespace Charamaker2.Character
                     }
                     else if (nm == "")
                     {
+                        var txy = c.gettxy();
                         c.w += spw[0] * p;
                         c.h += sph[0] * p;
-                        c.wowidouxy(-sptx[0] * p, -spty[0] * p);
                         c.tx += sptx[0] * p;
                         c.ty += spty[0] * p;
                         for (int i = 0; i < tags.Count(); i++)
@@ -1802,6 +2118,7 @@ namespace Charamaker2.Character
                             tags[i].dx += spdx[i + 1] * p;
                             tags[i].dy += spdy[i + 1] * p;
                         }
+                        c.settxy(txy);
                     }
                 }
                 else if (syukusyo)
@@ -1824,9 +2141,9 @@ namespace Charamaker2.Character
                     }
                     else if (nm == "")
                     {
+                        var txy = c.gettxy();
                         c.w -= spw[0] * p;
                         c.h -= sph[0] * p;
-                        c.wowidouxy(sptx[0] * p, spty[0] * p);
                         c.tx -= sptx[0] * p;
                         c.ty -= spty[0] * p;
                         for (int i = 0; i < tags.Count(); i++)
@@ -1839,6 +2156,7 @@ namespace Charamaker2.Character
                             tags[i].dy -= spdy[i + 1] * p;
 
                         }
+                        c.settxy(txy);
                     }
                 }
                 if (owari && middle >= 0)
@@ -1861,9 +2179,10 @@ namespace Charamaker2.Character
                     }
                     else if (nm == "")
                     {
+                        var txy = c.gettxy();
                         c.w += spw[0] * count;
                         c.h += sph[0] * count;
-                        c.wowidouxy(-sptx[0] * count, -spty[0] * count);
+                      
                         c.tx += sptx[0] * count;
                         c.ty += spty[0] * count;
                         for (int i = 0; i < tags.Count(); i++)
@@ -1875,12 +2194,38 @@ namespace Charamaker2.Character
                             tags[i].dx += spdx[i + 1] * count;
                             tags[i].dy += spdy[i + 1] * count;
                         }
+                        c.settxy(txy);
                     }
                 }
 
 
 
             }
+        }
+        /// <summary>
+        /// セーブできる形態に変えます
+        /// </summary>
+        /// <returns></returns>
+        public override DataSaver ToSave()
+        {
+            var d = base.ToSave();
+            d.linechange();
+            d.packAdd("rawtime", rawtime);
+            d.packAdd("middle", middle);
+            d.packAdd("name", nm);
+            d.linechange();
+            d.packAdd("scalex", scalex+1);
+            d.packAdd("scaley", scaley+1);
+            d.packAdd("kouzokumo", kzk);
+            return d;
+        }
+        public static scalechangeman ToLoad(DataSaver d)
+        {
+            return new scalechangeman(d.unPackDataF("rawtime", 0)
+                , d.unPackDataF("middle", 0), d.unPackDataS("name", "")
+                , d.unPackDataF("scalex", 0), d.unPackDataF("scaley", 0)
+                , d.unPackDataB("kouzokumo", true)
+                , d.unPackDataB("stop", false));
         }
     }
 
@@ -1905,6 +2250,8 @@ namespace Charamaker2.Character
 
         public bool kakudai { get { return (time - middle) / 2 >= timer; } }
         public bool syukusyo { get { return ((time - middle) / 2 + middle < timer) && middle >= 0; } }
+
+        float rawtime;
         /// <summary>
         ///  普通のコンストラクタ
         /// </summary>
@@ -1915,8 +2262,10 @@ namespace Charamaker2.Character
         /// <param name="Ynisuru">Y方向に変更させる/param>
         /// <param name="addsitei">現在の中心点から足すように変化させる</param>
         /// <param name="stop">止めるか</param>
-        public tyusinchangeman(float t, float middletime, string name, float totyusinx, bool Ynisuru = false, bool addsitei = false, bool stop = false) : base(t, stop)
+        public tyusinchangeman(float t, float middletime, string name, float totyusinx
+            , bool Ynisuru = false, bool addsitei = false, bool stop = false) : base(t, stop)
         {
+            rawtime = t;
             middle = middletime;
             time += t;
             if (middle >= 0) time += middle;
@@ -1931,6 +2280,7 @@ namespace Charamaker2.Character
         /// <param name="s">コピー元</param>
         public tyusinchangeman(tyusinchangeman s) : base(s)
         {
+            rawtime = s.rawtime;
             middle = s.middle;
             add = s.add;
             nm = s.nm;
@@ -2077,7 +2427,31 @@ namespace Charamaker2.Character
                 }
             }
         }
-
+        /// <summary>
+        /// セーブできる形態に変えます
+        /// </summary>
+        /// <returns></returns>
+        public override DataSaver ToSave()
+        {
+            var d = base.ToSave();
+            d.linechange();
+            d.packAdd("rawtime", rawtime);
+            d.packAdd("middle", middle);
+            d.packAdd("name", nm);
+            d.linechange();
+            d.packAdd("tyusinx", tyusinx);
+            d.packAdd("ynisuru", Y);
+            d.packAdd("addsitei", add);
+            return d;
+        }
+        public static tyusinchangeman ToLoad(DataSaver d)
+        {
+            return new tyusinchangeman(d.unPackDataF("rawtime", 0)
+                , d.unPackDataF("middle", 0), d.unPackDataS("name", "")
+                , d.unPackDataF("scalex", 0), d.unPackDataB("ynisuru", false)
+                , d.unPackDataB("addsitei", false)
+                , d.unPackDataB("stop", false));
+        }
     }
  
     /// <summary>
@@ -2100,6 +2474,7 @@ namespace Charamaker2.Character
         public float middlen { get { return (time - middle) / 2 + middle; } }
         public bool kakudai { get { return (time - middle) / 2 >= timer; } }
         public bool syukusyo { get { return ((time - middle) / 2 + middle < timer) && middle >= 0; } }
+        float rawtime;
         /// <summary>
         /// 
         /// </summary>
@@ -2110,8 +2485,10 @@ namespace Charamaker2.Character
         /// <param name="Ynisuru">Y方向に適用する</param>
         /// <param name="addsitei">現在のdx空追加するように変化させる</param>
         /// <param name="stop">止める</param>
-        public dxchangeman(float t, float middletime, string name, float todx, bool Ynisuru = false, bool addsitei = false, bool stop = false) : base(t, stop)
+        public dxchangeman(float t, float middletime, string name, float todx, bool Ynisuru = false
+            , bool addsitei = false, bool stop = false) : base(t, stop)
         {
+            rawtime = t;
             middle = middletime;
             time += t;
             if (middle >= 0) time += middle;
@@ -2126,6 +2503,7 @@ namespace Charamaker2.Character
         /// <param name="s">コピー元</param>
         public dxchangeman(dxchangeman s) : base(s)
         {
+            rawtime = s.rawtime;
             middle = s.middle;
             add = s.add;
             nm = s.nm;
@@ -2282,7 +2660,31 @@ namespace Charamaker2.Character
                 }
             }
         }
-
+        /// <summary>
+        /// セーブできる形態に変えます
+        /// </summary>
+        /// <returns></returns>
+        public override DataSaver ToSave()
+        {
+            var d = base.ToSave();
+            d.linechange();
+            d.packAdd("rawtime", rawtime);
+            d.packAdd("middle", middle);
+            d.packAdd("name", nm);
+            d.linechange();
+            d.packAdd("dx", dx);
+            d.packAdd("ynisuru", Y);
+            d.packAdd("addsitei", add);
+            return d;
+        }
+        public static dxchangeman ToLoad(DataSaver d)
+        {
+            return new dxchangeman(d.unPackDataF("rawtime", 0)
+                , d.unPackDataF("middle", 0), d.unPackDataS("name", "")
+                , d.unPackDataF("dx", 0), d.unPackDataB("ynisuru", false)
+                , d.unPackDataB("addsitei", false)
+                , d.unPackDataB("stop", false));
+        }
     }
 
     /// <summary>
@@ -2319,7 +2721,8 @@ namespace Charamaker2.Character
         /// <param name="addin">現在の中心点から追加するように変化させる</param>
         /// <param name="kouzokumo">後続にも同じ割合で効果を適用するか</param>
         /// <param name="stop">止めるか</param>
-        public Kscalechangeman(float t, string name, float changescalex, float changescaley, int mode = 0, bool kouzokumo = true, bool addin = false, bool stop = false) : base(t, stop)
+        public Kscalechangeman(float t, string name, float changescalex, float changescaley
+            , int mode = 0, bool kouzokumo = true, bool addin = false, bool stop = false) : base(t, stop)
         {
             md = mode;
 
@@ -2589,9 +2992,9 @@ namespace Charamaker2.Character
             }
             else if (nm == "")
             {
+                var txy = c.gettxy();
                 c.w += spw[0] * p;
                 c.h += sph[0] * p;
-                c.wowidouxy(-sptx[0] * p, -spty[0] * p);
                 c.tx += sptx[0] * p;
                 c.ty += spty[0] * p;
                 for (int i = 0; i < tags.Count(); i++)
@@ -2603,8 +3006,35 @@ namespace Charamaker2.Character
                     tags[i].dx += spdx[i + 1] * p;
                     tags[i].dy += spdy[i + 1] * p;
                 }
+               c.settxy(txy);
             }
 
+        }
+        /// <summary>
+        /// セーブできる形態に変えます
+        /// </summary>
+        /// <returns></returns>
+        public override DataSaver ToSave()
+        {
+            var d = base.ToSave();
+            d.linechange();
+            d.packAdd("name", nm);
+            d.packAdd("scalex", scalex);
+            d.packAdd("scaley", scaley);
+            d.linechange();
+            d.packAdd("mode", md);
+            d.packAdd("kouzokumo", kzk);
+            d.packAdd("addsitei", add);
+            return d;
+        }
+        public static Kscalechangeman ToLoad(DataSaver d)
+        {
+            return new Kscalechangeman(d.unPackDataF("time", 0)
+                , d.unPackDataS("name", "")
+                , d.unPackDataF("scalex", 0), d.unPackDataF("scaley", 0)
+                ,(int) d.unPackDataF("mode", 0)
+                ,d.unPackDataB("kouzokumo"), d.unPackDataB("addsitei")
+                , d.unPackDataB("stop", false));
         }
     }
 
@@ -2636,7 +3066,8 @@ namespace Charamaker2.Character
         /// <param name="mode">0で両方、1でxのみ,-1でyのみ変更</param>
         /// <param name="addin">現在の中心点から追加するように変化させる</param>
         /// <param name="stop">止めるか</param>
-        public Ktyusinchangeman(float t, string name, float changescalex, float changescaley, int mode = 0, bool addin = false, bool stop = false) : base(t, stop)
+        public Ktyusinchangeman(float t, string name, float changescalex, float changescaley
+            , int mode = 0, bool addin = false, bool stop = false) : base(t, stop)
         {
 
 
@@ -2753,6 +3184,31 @@ namespace Charamaker2.Character
             }
 
         }
+        /// <summary>
+        /// セーブできる形態に変えます
+        /// </summary>
+        /// <returns></returns>
+        public override DataSaver ToSave()
+        {
+            var d = base.ToSave();
+            d.linechange();
+            d.packAdd("name", nm);
+            d.packAdd("scalex", scalex);
+            d.packAdd("scaley", scaley);
+            d.linechange();
+            d.packAdd("mode", md);
+            d.packAdd("addsitei", add);
+            return d;
+        }
+        public static Ktyusinchangeman ToLoad(DataSaver d)
+        {
+            return new Ktyusinchangeman(d.unPackDataF("time", 0)
+                , d.unPackDataS("name", "")
+                , d.unPackDataF("scalex", 0), d.unPackDataF("scaley", 0)
+                , (int)d.unPackDataF("mode", 0)
+                , d.unPackDataB("addsitei")
+                , d.unPackDataB("stop", false));
+        }
     }
     /// <summary>
     /// 基準をもとに関節の位置を変更するムーブ
@@ -2781,7 +3237,8 @@ namespace Charamaker2.Character
         /// <param name="mode">0で両方、1でxのみ,-1でyのみ変更</param>
         /// <param name="addin">現在の中心点から突かするように変化させる</param>
         /// <param name="stop">止めるか</param>
-        public Kdxychangeman(float t, string name, float changescalex, float changescaley, int mode = 0, bool addin = false, bool stop = false) : base(t, stop)
+        public Kdxychangeman(float t, string name, float changescalex, float changescaley
+            , int mode = 0, bool addin = false, bool stop = false) : base(t, stop)
         {
 
             add = addin;
@@ -2898,6 +3355,31 @@ namespace Charamaker2.Character
             }
 
         }
+        /// <summary>
+        /// セーブできる形態に変えます
+        /// </summary>
+        /// <returns></returns>
+        public override DataSaver ToSave()
+        {
+            var d = base.ToSave();
+            d.linechange();
+            d.packAdd("name", nm);
+            d.packAdd("scalex", scalex);
+            d.packAdd("scaley", scaley);
+            d.linechange();
+            d.packAdd("mode", md);
+            d.packAdd("addsitei", add);
+            return d;
+        }
+        public static Kdxychangeman ToLoad(DataSaver d)
+        {
+            return new Kdxychangeman(d.unPackDataF("time", 0)
+                , d.unPackDataS("name", "")
+                , d.unPackDataF("scalex", 0), d.unPackDataF("scaley", 0)
+                , (int)d.unPackDataF("mode", 0)
+                , d.unPackDataB("addsitei")
+                , d.unPackDataB("stop", false));
+        }
     }
     /*揺れの正しい使い方
               var yuren = new motion();
@@ -2939,7 +3421,8 @@ namespace Charamaker2.Character
         /// <param name="izonnu">揺れる幅を定数から大きさ依存にする</param>
         /// <param name="soutaikaku">揺れる方向を相対角にする</param>
         /// <param name="stop">止めるか</param>
-        public yureman(int kaisuu, float speed, float kakudo, float haban, string tai, bool izonnu = false, bool soutaikaku = false, bool stop = false) : base(360 * kaisuu / speed, stop)
+        public yureman(int kaisuu, float speed, float kakudo, float haban, string tai
+            , bool izonnu = false, bool soutaikaku = false, bool stop = false) : base(360 * kaisuu / speed, stop)
         {
             cou = kaisuu;
             haba = haban;
@@ -3052,6 +3535,34 @@ namespace Charamaker2.Character
                 }
             }
         }
+        /// <summary>
+        /// セーブできる形態に変えます
+        /// </summary>
+        /// <returns></returns>
+        public override DataSaver ToSave()
+        {
+            var d = base.ToSave();
+            d.linechange();
+            d.packAdd("kaisuu", cou);
+            d.packAdd("speed", sp);
+            d.packAdd("kakudo", kaku);
+            d.packAdd("haba", haba);
+            d.linechange();
+            d.packAdd("name", nm);
+            d.packAdd("izon", izonn);
+            d.packAdd("soutaikaku", soutai);
+            return d;
+        }
+        public static yureman ToLoad(DataSaver d)
+        {
+            return new yureman((int)d.unPackDataF("kaisuu", 0)
+                , d.unPackDataF("speed", 0)
+                , d.unPackDataF("kakudo", 0), d.unPackDataF("haba", 0)
+                , d.unPackDataS("name", "")
+                , d.unPackDataB("izon",false)
+                , d.unPackDataB("soutai", false)
+                , d.unPackDataB("stop", false));
+        }
     }
     /// <summary>
     /// 回転するかのように大きさを変えるムーブ。
@@ -3077,7 +3588,8 @@ namespace Charamaker2.Character
         /// <param name="mode">0でwh両方,1でwのみ,-1でhのみ回転させる</param>
         /// <param name="kouzoku">後続にも同じ効果を適用するか</param>
         /// <param name="stop">止めるか</param>
-        public zkaitenman(float time, string name, float strsita, float endsita, int mode = 1, bool kouzoku = false, bool stop = false) : base(time, stop)
+        public zkaitenman(float time, string name, float strsita, float endsita, int mode = 1
+            , bool kouzoku = false, bool stop = false) : base(time, stop)
         {
             nm = name;
             sta = strsita / 180 * Math.PI;
@@ -3309,6 +3821,31 @@ namespace Charamaker2.Character
 
 
         }
+        /// <summary>
+        /// セーブできる形態に変えます
+        /// </summary>
+        /// <returns></returns>
+        public override DataSaver ToSave()
+        {
+            var d = base.ToSave();
+            d.linechange();
+            d.packAdd("name", nm);
+            d.packAdd("startsita", sta*180/Math.PI);
+            d.packAdd("endsita", sta * 180 / Math.PI);
+            d.linechange();
+            d.packAdd("mode", md);
+            d.packAdd("kouzoku", kzk);
+            return d;
+        }
+        public static zkaitenman ToLoad(DataSaver d)
+        {
+            return new zkaitenman(d.unPackDataF("time", 0)
+                , d.unPackDataS("name", "")
+                , d.unPackDataF("startsita", 0), d.unPackDataF("endsita", 0)
+                , (int)d.unPackDataF("mode", 1)
+                , d.unPackDataB("kouzoku", false)
+                , d.unPackDataB("stop", false));
+        }
     }
     /// <summary>
     /// 反転したときの角度に回転するムーブ
@@ -3375,7 +3912,7 @@ namespace Charamaker2.Character
 
                 }
                 var dd = (to - setu.p.RAD);
-                dd = Math.Atan2(Math.Sin(dd), Math.Cos(dd));
+                dd = Shapes.Shape.radseiki(dd);
                 if (md == 1)
                 {
                     if (dd < 0) dd = Math.PI * 2 + dd;
@@ -3399,7 +3936,7 @@ namespace Charamaker2.Character
 
                 }
                 var dd = (to - c.RAD);
-                dd = Math.Atan2(Math.Sin(dd), Math.Cos(dd));
+                dd = Shapes.Shape.radseiki(dd);
                 if (md == 1)
                 {
                     if (dd < 0) dd = Math.PI * 2 + dd;
@@ -3439,6 +3976,26 @@ namespace Charamaker2.Character
             {
                 a.p.RAD += sp * p;
             }
+        }
+
+        /// <summary>
+        /// セーブできる形態に変えます
+        /// </summary>
+        /// <returns></returns>
+        public override DataSaver ToSave()
+        {
+            var d = base.ToSave();
+            d.linechange();
+            d.packAdd("name", nm);
+            d.packAdd("mode", md);
+            return d;
+        }
+        public static hantenkaitenman ToLoad(DataSaver d)
+        {
+            return new hantenkaitenman(d.unPackDataF("time", 0)
+                , d.unPackDataS("name", "")
+                , (int)d.unPackDataF("mode", 1)
+                , d.unPackDataB("stop", false));
         }
     }
     /// <summary>
@@ -3484,6 +4041,22 @@ namespace Charamaker2.Character
                 a[i].p.RAD = rads[i + 1];
             }
         }
+
+        /// <summary>
+        /// セーブできる形態に変えます
+        /// </summary>
+        /// <returns></returns>
+        public override DataSaver ToSave()
+        {
+            var d = base.ToSave();
+            d.linechange();
+            return d;
+        }
+        public static stopaman ToLoad(DataSaver d)
+        {
+            return new stopaman(d.unPackDataF("time", 0)
+                );
+        }
     }
     /// <summary>
     /// 全ての回転を止めるムーブやつを扱うムーブ
@@ -3516,7 +4089,21 @@ namespace Charamaker2.Character
             base.start(c);
             c.addmotion(new motion(new stopaman(time)), true);
         }
-
+        /// <summary>
+        /// セーブできる形態に変えます
+        /// </summary>
+        /// <returns></returns>
+        public override DataSaver ToSave()
+        {
+            var d = base.ToSave();
+            d.linechange();
+            return d;
+        }
+        public static stopaaddman ToLoad(DataSaver d)
+        {
+            return new stopaaddman(d.unPackDataF("time", 0), d.unPackDataB("stop", false)
+                );
+        }
     }
     /// <summary>
     /// filemanから音を発するムーブ
@@ -3561,6 +4148,26 @@ namespace Charamaker2.Character
             }
             else { bool butu = vol < 0; fileman.playbgm(oto,butu); }
         }
+
+
+        /// <summary>
+        /// セーブできる形態に変えます
+        /// </summary>
+        /// <returns></returns>
+        public override DataSaver ToSave()
+        {
+            var d = new DataSaver();
+            d.packAdd("oto", fileman.nonbackslash(oto));
+            d.packAdd("vol", vol);
+            d.packAdd("bgm", bgmn);
+            return d;
+        }
+        public static playotoman ToLoad(DataSaver d)
+        {
+            return new playotoman(d.unPackDataS("oto",""), d.unPackDataF("vol",0)
+                , d.unPackDataB("bgm",false));
+        }
+
     }
     /// <summary>
     /// キャラクターをリフレッシュするムーブ
@@ -3599,6 +4206,20 @@ namespace Charamaker2.Character
             {
                 c.refreshtokijyun();
             }
+        }
+        /// <summary>
+        /// セーブできる形態に変えます
+        /// </summary>
+        /// <returns></returns>
+        public override DataSaver ToSave()
+        {
+            var d = new DataSaver();
+            d.packAdd("time",time);
+            return d;
+        }
+        public static refreshman ToLoad(DataSaver d)
+        {
+            return new refreshman(d.unPackDataF("time",0));
         }
     }
     /// <summary>
@@ -3652,6 +4273,23 @@ namespace Charamaker2.Character
                 hyo.playoto(oto, vol);
             }
             else { bool butu = vol < 0; hyo.playbgm(oto, butu); }
+        }
+        /// <summary>
+        /// セーブできる形態に変えます
+        /// </summary>
+        /// <returns></returns>
+        public override DataSaver ToSave()
+        {
+            var d = new DataSaver();
+            d.packAdd("oto", fileman.nonbackslash(oto));
+            d.packAdd("vol", vol);
+            d.packAdd("bgm", bgmn);
+            return d;
+        }
+        public static pplayotoman ToLoad(DataSaver d)
+        {
+            return new pplayotoman(null,d.unPackDataS("oto",""), d.unPackDataF("vol",1)
+                , d.unPackDataB("bgm",false));
         }
     }
 

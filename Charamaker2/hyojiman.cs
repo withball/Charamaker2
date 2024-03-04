@@ -99,6 +99,27 @@ namespace Charamaker2
         {
             return true;
         }
+
+        /// <summary>
+        /// セーブする
+        /// </summary>
+        /// <returns></returns>
+        virtual public DataSaver ToSave() 
+        {
+            DataSaver d= new DataSaver();
+
+            d.packAdd("x", x.ToString());
+            d.packAdd("y", y.ToString());
+            d.packAdd("z", z.ToString());
+            d.linechange();
+
+            return d;
+        }
+        /*
+        static public drawings ToLoad(DataSaver d) 
+        {
+            return new drawings(d.unPackDataF("x",0), d.unPackDataF("y", 0), d.unPackDataF("z", 0));
+        }*/
     }
 
     /// <summary>
@@ -240,7 +261,8 @@ namespace Charamaker2
         /// <summary>
         /// 角度。-Pi＜＝＜＝Pi
         /// </summary>
-        public double RAD { get { return rad; } set { rad = Math.Atan2(Math.Sin(rad), Math.Cos(rad)); float x = gettx(), y = getty(); rad = value; settxy(x, y); rad = Math.Atan2(Math.Sin(rad), Math.Cos(rad)); } }
+        public double RAD { get { return rad; } set { rad = Shapes.Shape.radseiki(rad); float x = gettx(), y = getty(); rad = value; settxy(x, y); 
+                rad = Shapes.Shape.radseiki(rad); } }
         /// <summary>
         /// テクスチャーの塊
         /// </summary>
@@ -328,6 +350,17 @@ namespace Charamaker2
         /// 空のコンストラクタ
         /// </summary>
         public picture() { }
+
+        /// <summary>
+        /// 図形上の一点のx座標を取得する(回転の影響を考慮してるってこと)
+        /// </summary>
+        /// <param name="ww">左上を0としたときの図形の点の位置</param>
+        /// <param name="hh">左上を0としたときの図形の点の位置</param>
+        /// <returns>返されるのはxy座標の値</returns>
+        public FXY getcxy(float ww, float hh)
+        {   
+            return new FXY(getcx(ww,hh),getcy(ww,hh));
+        }
         /// <summary>
         /// 図形上の一点のx座標を取得する(回転の影響を考慮してるってこと)
         /// </summary>
@@ -353,6 +386,14 @@ namespace Charamaker2
             float H; if (mir && 1 == 0) H = h - hh; else H = hh;
             float ry = y + W * (float)Math.Sin(rad) + H * (float)Math.Cos(rad);
             return ry;
+        }
+        /// <summary>
+        /// 中心のxy座標を返す
+        /// </summary>
+        /// <returns></returns>
+        public FXY gettxy() 
+        {
+            return new FXY(gettx(),getty());
         }
         /// <summary>
         /// 中心点のx座標を返す。
@@ -384,6 +425,14 @@ namespace Charamaker2
             y = yy - TX * (float)Math.Sin(rad) - TY * (float)Math.Cos(rad);
         }
         /// <summary>
+        /// 中心をxy座標にセットする。
+        /// </summary>
+        /// <param name="xy">セットするxy座標</param>
+        public void settxy(FXY xy)
+        {
+            settxy(xy.X, xy.Y);
+        }
+        /// <summary>
         /// スケールする
         /// </summary>
         /// <param name="sc">倍率</param>
@@ -410,6 +459,17 @@ namespace Charamaker2
         {
             x += xx - getcx(cx, cy);
             y += yy - getcy(cx, cy);
+        }
+
+        /// <summary>
+        /// 画像上の任意の一点をxy座標にセットする
+        /// </summary>
+        /// <param name="xy">セットするxy座標</param>
+        /// <param name="cx">画像上のwの点</param>
+        /// <param name="cy">画像上のhの点</param>
+        public void setcxy(FXY xy, float cx, float cy)
+        {
+            setcxy(xy.X, xy.Y, cx, cy);
         }
         /// <summary>
         /// 回転している方向に移動する奴
@@ -694,6 +754,60 @@ namespace Charamaker2
                   bts[(int)(b.Size.Width)].Add(b);
             }
         }*/
+
+        /// <summary>
+        /// セーブする
+        /// </summary>
+        /// <returns></returns>
+        override public DataSaver ToSave()
+        {
+            var d=base.ToSave();
+            
+            d.packAdd("w", w.ToString());
+            d.packAdd("h", h.ToString());
+            d.linechange();
+
+            d.packAdd("tx", tx.ToString());
+            d.packAdd("ty", ty.ToString());
+            d.linechange();
+
+            d.packAdd("rad", rad.ToString());
+            d.packAdd("mir", mir.ToString());
+            d.packAdd("opa", opa.ToString());
+            d.linechange();
+
+            d.packAdd("texname", texname);
+            d.linechange();
+            var texs = new DataSaver();
+            foreach (var a in textures)
+            {
+                texs.packAdd(a.Key,fileman.nonbackslash(a.Value));
+            }
+            texs.indent();
+            d.packAdd("textures", texs);
+            return d;
+        }
+        
+        /// <summary>
+        /// ロードする。
+        /// </summary>
+        /// <param name="d"></param>
+        /// <returns></returns>
+        static public picture ToLoad(DataSaver d) 
+        {
+            var Dic = new Dictionary<string, string>();
+            var dd = d.unPackDataD("textures");
+            var lis=dd.getAllPacks();
+            foreach (var a in lis) 
+            {
+                Dic.Add(a,dd.unPackDataS(a));
+            }
+            return new picture(d.unPackDataF("x",0), d.unPackDataF("y", 0), d.unPackDataF("z", 0)
+                , d.unPackDataF("w", 0), d.unPackDataF("h", 0)
+                , d.unPackDataF("tx", 0), d.unPackDataF("ty", 0)
+                , d.unPackDataF("rad", 0), d.unPackDataB("mir", false), d.unPackDataF("opa", 1)
+                , d.unPackDataS("texname", "def"),Dic);
+        }
     }
     /// <summary>
     /// 内部にdrawingを格納し、背景画像として描画するクラス
@@ -934,7 +1048,7 @@ namespace Charamaker2
                 }
               
 
-            //    Console.WriteLine(hj.ww+"aksgdja"+hj.render.PixelSize.Width);
+            //    Console.WriteLine(hj.ww+"aksgdja"+hj.render.Size.Width);
             //    Console.WriteLine(x+"::"+y + "aksgdja" + w);
             }
             return res;
@@ -1130,22 +1244,22 @@ namespace Charamaker2
         /// <summary>
         /// ウィンドウの座標での幅
         /// </summary>
-        public float ww { get { return render.PixelSize.Width / Tbai; } }
+        public float ww { get { return render.Size.Width / Tbai; } }
         /// <summary>
         /// ウィンドウの座標での高さ
         /// </summary>
-        public float wh { get { return render.PixelSize.Height / Tbai; } }
+        public float wh { get { return render.Size.Height / Tbai; } }
 
         /// <summary>
         /// 画質を考慮したピクセルサイズ
         /// </summary>
-        public Size gasituSize { get { return render.PixelSize ; } }
+        public SizeF gasituSize { get { return render.Size ; } }
 
         /// <summary>
         /// 本来のピクセルサイズ
         /// </summary>
-        public Size TrueSize { get { return new Size((int)Math.Round(render.PixelSize.Width/gasitu)
-            , (int)Math.Round(render.PixelSize.Height / gasitu)); } }
+        public Size TrueSize { get { return new Size((int)Math.Round(render.Size.Width/gasitu)
+            , (int)Math.Round(render.Size.Height / gasitu)); } }
 
         /// <summary>
         /// 同時に表示できる描画オブジェクトの限界量
@@ -1163,11 +1277,11 @@ namespace Charamaker2
             if (w == 0) return;
             if (h)
             {
-                bairitu = render.PixelSize.Height/gasitu  /w;
+                bairitu = render.Size.Height/gasitu  /w;
             }
             else
             {
-                bairitu = render.PixelSize.Width / gasitu / w;
+                bairitu = render.Size.Width / gasitu / w;
             }
         }
 
@@ -2079,7 +2193,7 @@ namespace Charamaker2
         /// <summary>
         /// 角度
         /// </summary>
-        public double rad { get { return _rad; } set { _rad = value; _rad = Math.Atan2(Math.Sin(_rad), Math.Cos(_rad)); } }
+        public double rad { get { return _rad; } set { _rad = value; _rad = Shapes.Shape.radseiki(_rad); } }
         float _opa = 1;
         double _rad = 0;
         /// <summary>

@@ -25,7 +25,7 @@ namespace Charamaker2.Shapes
         public float X, Y;
 
         public float length { get { return (float)Math.Sqrt(Math.Pow(X, 2) + Math.Pow(Y, 2)); }
-            set { X = value * (float)Math.Cos(rad); Y = value * (float)Math.Sin(rad); } }
+            set {var rrad= rad; X = value * (float)Math.Cos(rrad); Y = value * (float)Math.Sin(rrad); } }
         public double rad { get { return Math.Atan2(Y, X); }
             set { var input = Shape.radseiki(value); X = length * (float)Math.Cos(input); Y = length * (float)Math.Sin(input); } }
 
@@ -269,9 +269,16 @@ namespace Charamaker2.Shapes
         /// <returns></returns>
         public static bool atarun(Shape a,Shape pa, Shape b,Shape pb)
         {
-            return atarun(gousei(a,pa), gousei(b, pb));
+            //  var t = Task.Run(() => { return gousei(a, pa); });
+            //  var t2 = Task.Run(() => { return gousei(b, pb); });
+
+            //  t.Wait();
+            // t2.Wait();
+
+            //  return atarun(t.Result, t2.Result);
+            return atarun(gousei(a, pa),  gousei(b, pb));
         }
-        
+
         /// <summary>
         /// 二つの図形を合成する。結果は最大の面積を持つ図形になる
         /// </summary>
@@ -307,10 +314,11 @@ namespace Charamaker2.Shapes
                 tm = lis.First();
                 for (int i=lis.Count-1;i>=0;i--) 
                 {
+                    //今の点から注目点への角度
                     double rad = radseiki2((lis[i] - now).rad-kaku);
                     if (lis[i] != now) 
                     {
-                        if (radseiki2((tm - now).rad - kaku) > rad)
+                        if (radseiki2((tm - now).rad - kaku) > rad || tm == now)
                         {
                             tm = lis[i];
                             removes.Clear();
@@ -374,6 +382,12 @@ namespace Charamaker2.Shapes
         /// <returns>-PI~PI正規化されたラジアン</returns>
         public static double radseiki(double r)
         {
+            int i = 1;
+            if (r < 0) i = -1;
+            var a=(r*i) % (Math.PI * 2);
+
+            if (a >= Math.PI) return -(Math.PI*2 - a)*i;
+            return a*i;
             return Math.Atan2(Math.Sin(r), Math.Cos(r));
         }
         /// <summary>
@@ -759,7 +773,7 @@ namespace Charamaker2.Shapes
             y = yy;
             w = ww;
             h = hh;
-            _rad = Math.Atan2(Math.Sin(radd), Math.Cos(radd));
+            _rad = radseiki(radd);
 
 
                 setpoints(points);
@@ -878,7 +892,7 @@ namespace Charamaker2.Shapes
         /// <param name="ch">図形上のhの点</param>
         public void setradcxy(double trad, float cw, float ch)
         {
-            trad = Math.Atan2(Math.Cos(trad), Math.Cos(trad));
+            trad = radseiki(trad);
             float x = getcx(cw, ch);
             float y = getcy(cw, ch);
             rad = trad;
@@ -1223,6 +1237,37 @@ namespace Charamaker2.Shapes
         /// <returns></returns>
         public bool kasanari(Shape s)
         {
+            /*
+            var no = Task.Run(() => { return atattenai(s); });
+
+            var ons = new List<Task<bool>>();
+            ons.Add(Task.Run(() => { return onhani(s); }));
+
+            var points = getzettaipoints(false);
+            var spoints = s.getzettaipoints(false);
+            for (int i = 1; i < points.Count - 1; i++)
+            {
+
+                ons.Add(Task.Run(() => { return s.onhani(points[i - 1].X, points[i - 1].Y, points[i].X, points[i].Y); }));
+
+            }
+            no.Wait();
+            if (no.Result) return false;
+            while (ons.Count > 0) 
+            {
+                for (int i = ons.Count - 1; i >= 0; i--) 
+                {
+                    if (ons[i].IsCompleted) 
+                    {
+                        if (ons[i].Result) 
+                        {
+                            return true;
+                        }
+                        ons.RemoveAt(i);
+                    }
+                }
+            }
+            return false;*/
             if (atattenai(s))
             {
                 //Console.WriteLine("当たるわけねーだろ！");
@@ -1343,7 +1388,7 @@ namespace Charamaker2.Shapes
             {
                 var a = Math.Atan2(gaisyuu[0][3] - gaisyuu[0][1], gaisyuu[0][2] - gaisyuu[0][0]);
                 var b = Math.Atan2(gaisyuu[1][3] - gaisyuu[1][1], gaisyuu[1][2] - gaisyuu[1][0]);
-                return Math.Atan2(Math.Sin(b - a), Math.Cos(b - a)) >= 0;
+                return radseiki(b - a) >= 0;
             }
             return true;
         }
@@ -1357,11 +1402,11 @@ namespace Charamaker2.Shapes
         {
             if (tokeimawari(gaisyuu))
             {
-                return Math.Atan2(Math.Sin(taisyo - Math.PI), Math.Cos(taisyo - Math.PI));
+                return radseiki(taisyo - Math.PI);
             }
             else
             {
-                return Math.Atan2(Math.Sin(taisyo + Math.PI), Math.Cos(taisyo + Math.PI));
+                return radseiki(taisyo + Math.PI);
             }
         }
         /// <summary>
@@ -1419,8 +1464,8 @@ namespace Charamaker2.Shapes
         /// <summary>
         /// 三角形の先の方向。1で右-1で左2で下
         /// </summary>
-        int basehoukou { get { return _basehoukou; } set { if (-2 <= value && value <= 2 && value != 0) _basehoukou = value; } }
-        int houkou { get { return _houkou; } 
+        public int basehoukou { get { return _basehoukou; } set { if (-2 <= value && value <= 2 && value != 0) _basehoukou = value; } }
+        public int houkou { get { return _houkou; } 
             set {
                 int pre = _houkou;
                 if (-2 <= value && value <= 2 && value != 0) _houkou = value;
@@ -1435,7 +1480,7 @@ namespace Charamaker2.Shapes
             {
                 if (mir > 0)
                 {
-                    houkou = basehoukou*1;
+                    houkou = basehoukou * 1;
                 }
                 else if (mir < 0)
                 {

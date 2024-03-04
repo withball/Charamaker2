@@ -1,0 +1,77 @@
+[script]{
+//yoshino hanten
+work.addmoves(new zkaitenman(0.0001f,"neck",0,180,1,true));
+work.addmoves(new zkaitenman(0.0001f,"body",0,180,1,false));
+work.addmoves(new zkaitenman(0.0001f,"waist",0,180,1,true));
+
+/*
+work.addmoves(new zkaitenman(0.0001f,"rarm",0,180,-1,false));
+work.addmoves(new zkaitenman(0.0001f,"rhand",0,180,-1,false));
+work.addmoves(new zkaitenman(0.0001f,"larm",0,180,-1,false));
+work.addmoves(new zkaitenman(0.0001f,"lhand",0,180,-1,false));
+*/
+work.addmoves(new texpropman(1,"",0,-1,false));
+
+work.addmoves(new hantenkaitenman(0.0001f,"rarm",0));
+work.addmoves(new hantenkaitenman(0.0001f,"larm",0,true));
+
+
+work.addmoves(new hantenkaitenman(5f,"rarm",0));
+work.addmoves(new hantenkaitenman(5f,"larm",0));
+
+work.addmoves(new zkaitenman(10,"neck",0,180,1,true));
+work.addmoves(new zkaitenman(10,"body",0,180,1,false));
+/*
+work.addmoves(new zkaitenman(10f,"rarm",0,180,-1,false));
+work.addmoves(new zkaitenman(10f,"rhand",0,180,-1,false));
+work.addmoves(new zkaitenman(10f,"larm",0,180,-1,false));
+work.addmoves(new zkaitenman(10f,"lhand",0,180,-1,false));
+*/
+work.addmoves(new zkaitenman(10,"waist",0,180,1,true,true));
+}
+
+[motion]{
+[sp]{1}[loop]{False}
+[moves]{
+ [Charamaker2.Character.zkaitenman:0]{
+ [time]{0.0001}[stop]{False}
+ [name]{neck}[startsita]{0}[endsita]{0}
+ [mode]{1}[kouzoku]{True}}
+ [Charamaker2.Character.zkaitenman:1]{
+ [time]{0.0001}[stop]{False}
+ [name]{body}[startsita]{0}[endsita]{0}
+ [mode]{1}[kouzoku]{False}}
+ [Charamaker2.Character.zkaitenman:2]{
+ [time]{0.0001}[stop]{False}
+ [name]{waist}[startsita]{0}[endsita]{0}
+ [mode]{1}[kouzoku]{True}}
+ [Charamaker2.Character.texpropman:3]{
+ [time]{1}[stop]{False}
+ [name]{}[mirhow]{0}[opa]{-1}[kouzokumo]{False}}
+ [Charamaker2.Character.hantenkaitenman:4]{
+ [time]{0.0001}[stop]{False}
+ [name]{rarm}[mode]{0}}
+ [Charamaker2.Character.hantenkaitenman:5]{
+ [time]{0.0001}[stop]{True}
+ [name]{larm}[mode]{0}}
+ [Charamaker2.Character.hantenkaitenman:6]{
+ [time]{5}[stop]{False}
+ [name]{rarm}[mode]{0}}
+ [Charamaker2.Character.hantenkaitenman:7]{
+ [time]{5}[stop]{False}
+ [name]{larm}[mode]{0}}
+ [Charamaker2.Character.zkaitenman:8]{
+ [time]{10}[stop]{False}
+ [name]{neck}[startsita]{0}[endsita]{0}
+ [mode]{1}[kouzoku]{True}}
+ [Charamaker2.Character.zkaitenman:9]{
+ [time]{10}[stop]{False}
+ [name]{body}[startsita]{0}[endsita]{0}
+ [mode]{1}[kouzoku]{False}}
+ [Charamaker2.Character.zkaitenman:10]{
+ [time]{10}[stop]{True}
+ [name]{waist}[startsita]{0}[endsita]{0}
+ [mode]{1}[kouzoku]{True}}
+ 
+}
+}

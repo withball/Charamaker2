@@ -77,7 +77,17 @@ namespace GameSet1
         /// 反射されたときのイベント
         /// </summary>
         public event EventHandler<EEventArgs> hansyad;
-
+        /// 自由に使える奴
+        /// </summary>
+        public event EventHandler<string> freeEvent;
+        /// <summary>
+        ///好きに使っていい奴を発動する奴
+        /// </summary>
+        /// <param name="input"></param>
+        public void freeevent(string input)
+        {
+            freeEvent?.Invoke(this, input);
+        }
 
         /// <summary>
         /// フレームしたときに呼び出されるやつ。
@@ -243,6 +253,25 @@ namespace GameSet1
         /// <returns>当たった地形たち</returns>
         static public List<Entity> zuresaseEntity(Entity e, EntityManager EM, Shape s, float zure1x, float zure1y, string tais = "", int mode = 0)
         {
+            
+            var lis = EM.overweights;
+          
+            return zuresaseEntity(e,lis,s,zure1x,zure1y,tais,mode);
+        }
+        /// <summary>
+        /// エンテティを一方向に動かして地形でずらすメソッド。
+        /// ワープした扱いになる
+        /// </summary>
+        /// <param name="e">対象</param>
+        /// <param name="elis">地形のリスト</param>
+        /// <param name="s">どの形でやるか(クローンされるから安心！)</param>
+        /// <param name="zure1x">Xずらす</param>
+        /// <param name="zure1y">Yずらす</param>
+        /// <param name="tais">ずらす形のもと(""でキャラクターそのもの)</param>
+        /// <param name="mode">0でxy両方、1でxのみ、-1でyのみ変化</param>
+        /// <returns>当たった地形たち</returns>
+        static public List<Entity> zuresaseEntity(Entity e, List<Entity>elis, Shape s, float zure1x, float zure1y, string tais = "", int mode = 0)
+        {
             var tt = e.c.GetSetu(tais);
             float x = e.c.x, y = e.c.y;
             if (tais == "") tt = null;
@@ -265,9 +294,9 @@ namespace GameSet1
             {
                 ssss.setto(tt.p);
             }
-            var lis = EM.overweights;
+            var lis = elis;
             Waza.atypefilter(lis, e.bif);
-           var res= e.zurentekiyou(lis, ssss, psss);
+            var res = e.zurentekiyou(lis, ssss, psss);
             if (mode == 1)
             {
                 e.c.y = y;
@@ -622,6 +651,7 @@ namespace GameSet1
             }
             return lis;
         }
+     
         /// <summary>
         /// タイプで絞り込んで技のリストを取得する
         /// </summary>
@@ -645,6 +675,39 @@ namespace GameSet1
             {
                 tt = a.GetType();
                 if (tt == typeof(T) || tt.IsSubclassOf(typeof(T)))
+                {
+                    res.Add((T)a);
+                }
+            }
+            return res;
+        }
+
+        /// <summary>
+        /// タグで絞り込んで技のリストを取得する
+        /// </summary>
+        /// <typeparam name="T">タイプ</typeparam>
+        /// <returns>技のリスト</returns>
+        public List<T> getwazalis<T>(string tag)
+        where T : Waza
+        {
+            var res = new List<T>();
+            if (typeof(T) == typeof(Waza))
+            {
+                foreach (var a in _wazas)
+                {
+                    if (tag == a.tag)
+                    {
+                        res.Add((T)a);
+                    }
+                }
+                return res;
+            }
+
+            Type tt;
+            foreach (var a in _wazas)
+            {
+                tt = a.GetType();
+                if ((tt == typeof(T) || tt.IsSubclassOf(typeof(T)) )&& tag==a.tag)
                 {
                     res.Add((T)a);
                 }
@@ -943,11 +1006,15 @@ namespace GameSet1
             if (_core != null)
             {
                 c.RAD = _core.rad;
-                //  if (!c.mirror)
+                if (!c.mirror)
                 {
                     c.setcxy(_core.getcx(0, 0), _core.getcy(0, 0), 0, 0);
                 }
-              
+                else 
+                {
+                    c.setcxy(_core.getcx(0, 0), _core.getcy(0, 0), c.w, 0);
+                }
+
             }
         }
         /// <summary>
@@ -960,30 +1027,14 @@ namespace GameSet1
                 if (set[i] != null)
                 {
                     rec.shapes[i].setMirror((int)fileman.plusminus(set[i].p.mir, false));
-                    rec.shapes[i].w = set[i].p.w;
-                    rec.shapes[i].h = set[i].p.h;
-                    rec.shapes[i].rad = set[i].p.RAD;
-                    if (!c.mirror)
-                    {
-                        rec.shapes[i].setcxy(set[i].p.getcx(0, 0), set[i].p.getcy(0, 0), 0, 0);
-                    }
-                    else 
-                    {
-                        rec.shapes[i].setcxy(set[i].p.getcx(set[i].p.w, 0), set[i].p.getcy(set[i].p.w, 0), 0, 0);
-                    }
-                    
+                    rec.shapes[i].setto(set[i].p);
                 }
                 else
                 {
                     rec.shapes[i].setMirror((int)fileman.plusminus(c.mirror, false));
                   //  if (!c.mirror)
                     {
-                        rec.shapes[i].w = c.w;
-                        rec.shapes[i].h = c.h;
-                        rec.shapes[i].rad = c.RAD;
-
-
-                        rec.shapes[i].setcxy(c.getcx(0, 0), c.getcy(0, 0), 0, 0);
+                        rec.shapes[i].setto(c);
                     }
                    
                 }
@@ -1296,7 +1347,7 @@ namespace GameSet1
         /// <returns>ずらしたかどうか</returns>
         public lineX zuren(Entity thiis,Entity e,bool group)
         {
-            //return zuren2(thiis, e, group);
+          //  return zuren2(thiis, e, group);
             if (!e.atariable || !thiis.atariable || (thiis.bif.ovw && e.bif.ovw))
             {
 
@@ -1316,9 +1367,11 @@ namespace GameSet1
 
             FXY idou = new FXY(0, 0);
             FXY idou2 = new FXY(0, 0);
-            lineX line1, line2;
+            FXY idou1 = new FXY(0, 0);
+            lineX line,line1, line2;
+            FXY prekan = e.PAcore.getCenter()- thiis.PAcore.getCenter();
             {
-                line1 = e.Acore.getnearestline(thiis.PAcore.getCenter());
+                line1 = e.Acore.getnearestline(e.Acore.getCenter() - prekan);//thiis.PAcore.getCenter());
                 var points = thiis.Acore.getzettaipoints(false);
 
                 // Console.WriteLine(line1.ToString() + " asd ");
@@ -1329,12 +1382,22 @@ namespace GameSet1
                     var tmp = Shape.getzurasi(points[i], line1);
                     //Console.WriteLine(points[i].ToString()+" :thiis");
                     //  Console.WriteLine(tmp.X + " soy " + tmp.Y);
-                    if (!float.IsNaN(tmp.X) && tmp.length >= idou.length)
+                    if (!float.IsNaN(tmp.X) && tmp.length >= idou1.length)
                     {
-                        idou.X = tmp.X;
-                        idou.Y = tmp.Y;
-                        ok1 = true;
-                        ok12 = true;
+                        var kakusa = tmp.rad - line1.hosen;
+                        kakusa = Shape.radseiki(kakusa);
+                        if (Math.Abs(kakusa) <= Math.PI/2)
+                        {
+                          
+                            idou1.X = tmp.X;
+                            idou1.Y = tmp.Y;
+                            ok1 = true;
+                            ok12 = true;
+                        }
+                        else 
+                        {
+                            ok12 = true;
+                        }
                     }
                     else if (!float.IsNaN(tmp.Y))
                     {
@@ -1345,23 +1408,34 @@ namespace GameSet1
             }
             //TRACE(_T("!!!!!!!!!!!!!\n"));
             {
-                line2 = thiis.Acore.getnearestline(e.PAcore.getCenter());
+                line2 = thiis.Acore.getnearestline(thiis.Acore.getCenter() + prekan);//e.PAcore.getCenter());
+                var points = e.Acore.getzettaipoints(false);
 
                 //Console.WriteLine(line2.ToString()+" asd ");
-                var points = e.Acore.getzettaipoints(false);
                 for (int i = 1; i < points.Count - 1; i++)
                 {
 
                     // Console.WriteLine(points[i].ToString() + " :E");
                     var tmp = Shape.getzurasi(points[i], line2);
+
+
                     //  Console.WriteLine(tmp.X + " sey " + tmp.Y);
                     if (!float.IsNaN(tmp.X) && tmp.length >= idou2.length)
                     {
 
-                        idou2.X = -tmp.X;
-                        idou2.Y = -tmp.Y;
-                        ok2 = true;
-                        ok22 = true;
+                        var kakusa = tmp.rad - line2.hosen;
+                        kakusa = Shape.radseiki(kakusa);
+                        if (Math.Abs(kakusa) >= Math.PI/2)
+                        {
+                            idou2.X = -tmp.X;
+                            idou2.Y = -tmp.Y;
+                            ok2 = true;
+                            ok22 = true;
+                        }
+                        else 
+                        {
+                            ok22 = true;
+                        }
                     }
                     else if (!float.IsNaN(tmp.Y))
                     {
@@ -1386,19 +1460,32 @@ namespace GameSet1
             if (ok1 && ok2)
             {
                 //Console.WriteLine(idou.ToString()+"double" +idou2.ToString());
-                if (Math.Pow(idou2.X, 2) + Math.Pow(idou2.Y, 2) < Math.Pow(idou.X, 2) + Math.Pow(idou.Y, 2))
+                if (Math.Pow(idou2.X, 2) + Math.Pow(idou2.Y, 2) < Math.Pow(idou1.X, 2) + Math.Pow(idou1.Y, 2))
                 {
                     idou.X = idou2.X;
                     idou.Y = idou2.Y;
-                    line1 = line2;
+                    line = line2;
+                }
+                else
+                {
+                    idou.X = idou1.X;
+                    idou.Y = idou1.Y;
+                    line = line1;
                 }
             }
             else if (!ok1)
             {
                 idou.X = idou2.X;
                 idou.Y = idou2.Y;
-                line1 = line2;
+                line = line2;
             }
+            else 
+            {
+                idou.X = idou1.X;
+                idou.Y = idou1.Y;
+                line = line1;
+            }
+
             //  if (idou.X == 0 && idou.Y == 0) return null;
             //   if(thiis.bif.ovw||e.bif.ovw)
             //  Console.WriteLine("idou:->" +idou.ToString());
@@ -1462,6 +1549,10 @@ namespace GameSet1
             }
             else
             {
+                //Console.WriteLine(thiis.c.gettx()+" <-this x e-> "+e.c.gettx());
+                //Console.WriteLine(line.ToString() + " yapaa00000 " + idou.ToString());
+                //Console.WriteLine(line1.ToString() + " yapaa11111 "+ idou1.ToString());
+                //Console.WriteLine(line2.ToString() + " yapaa22222 "+ idou2.ToString());
                 // Console.WriteLine(thiis.PAcore.gettx() + " :XY: " + thiis.PAcore.getty() + " <PRE> "
                 //  + e.PAcore.gettx() + " :XY: " + e.PAcore.getty());
                 //  Console.WriteLine(thiis.Acore.gettx() + " :XY: " + thiis.Acore.getty() + " <bef> "
@@ -1489,9 +1580,9 @@ namespace GameSet1
                 //    Console.WriteLine(thiis.Acore.gettx() + " :XY: " + thiis.Acore.getty() + " <aft> "
                 //        + e.Acore.gettx() + " :XY: " + e.Acore.getty());
 
+                //Console.WriteLine(thiis.c.gettx() + " <-this afterx e-> " + e.c.gettx());
                 //	TRACE(_T("%f ZOY %f + %f\n"),idou.x, (1 - hi) * idou.x, (hi) * idou.x);
             }
-
             // Console.WriteLine(idou.X + " a:fkl " + idou.Y + " :: " + thisweight + " -> " + eweight);
             // Console.WriteLine(line1.ToString()+"  ::linee");
 

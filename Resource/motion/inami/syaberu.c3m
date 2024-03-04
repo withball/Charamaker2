@@ -1,0 +1,64 @@
+[script]{
+// inami syaberu
+
+work.addmoves(new texchangeman("head","def"));
+work.addmoves(new moveman(5,true));
+work.addmoves(new texchangeman("head","syaberu"));
+work.addmoves(new moveman(5,true));
+work.addmoves(new texchangeman("head","def"));
+work.addmoves(new moveman(5,true));
+work.addmoves(new texchangeman("head","syaberu"));
+work.addmoves(new moveman(5,true));
+work.addmoves(new texchangeman("head","def"));
+work.addmoves(new moveman(5,true));
+work.addmoves(new texchangeman("head","syaberu"));
+work.addmoves(new moveman(5,true));
+work.addmoves(new texchangeman("head","def"));
+work.addmoves(new moveman(5,true));
+work.addmoves(new texchangeman("head","syaberu"));
+work.addmoves(new moveman(5,true));
+work.addmoves(new texchangeman("head","def"));
+
+
+}
+
+[motion]{
+[sp]{1}[loop]{False}
+[moves]{
+ [Charamaker2.Character.texchangeman:0]{
+ [name]{head}[tex]{def}}
+ [Charamaker2.Character.moveman:1]{
+ [time]{5}[stop]{True}}
+ [Charamaker2.Character.texchangeman:2]{
+ [name]{head}[tex]{syaberu}}
+ [Charamaker2.Character.moveman:3]{
+ [time]{5}[stop]{True}}
+ [Charamaker2.Character.texchangeman:4]{
+ [name]{head}[tex]{def}}
+ [Charamaker2.Character.moveman:5]{
+ [time]{5}[stop]{True}}
+ [Charamaker2.Character.texchangeman:6]{
+ [name]{head}[tex]{syaberu}}
+ [Charamaker2.Character.moveman:7]{
+ [time]{5}[stop]{True}}
+ [Charamaker2.Character.texchangeman:8]{
+ [name]{head}[tex]{def}}
+ [Charamaker2.Character.moveman:9]{
+ [time]{5}[stop]{True}}
+ [Charamaker2.Character.texchangeman:10]{
+ [name]{head}[tex]{syaberu}}
+ [Charamaker2.Character.moveman:11]{
+ [time]{5}[stop]{True}}
+ [Charamaker2.Character.texchangeman:12]{
+ [name]{head}[tex]{def}}
+ [Charamaker2.Character.moveman:13]{
+ [time]{5}[stop]{True}}
+ [Charamaker2.Character.texchangeman:14]{
+ [name]{head}[tex]{syaberu}}
+ [Charamaker2.Character.moveman:15]{
+ [time]{5}[stop]{True}}
+ [Charamaker2.Character.texchangeman:16]{
+ [name]{head}[tex]{def}}
+ 
+}
+}

@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Charamaker2.Character;
 using Charamaker2.maker;
+using System.IO;
 
 namespace Charamaker2.maker
 {
@@ -33,7 +34,7 @@ namespace Charamaker2.maker
             InitializeComponent();
             this.ClientSize = new System.Drawing.Size(size.Width, size.Height);
             
-            fileman.setinguping(this);
+            fileman.setinguping(this,size.Width,size.Height);
 
             hyojiman = fileman.makehyojiman();
 
@@ -153,6 +154,8 @@ namespace Charamaker2.maker
             if (rootselll != null) newsetubox.Text = rootselll.nm;
         }
 
+        float autoload = 0;
+
         private void frame(object sender, EventArgs e)
         {
             if (resizeddd > 0) 
@@ -164,7 +167,18 @@ namespace Charamaker2.maker
                     resizeddd = 0;
                 }
             }
-
+            if (autoloadCB.Checked) 
+            {
+                if (autoload < 0)
+                {
+                    quickload(this,new KeyEventArgs(Keys.A));
+                    autoload = 60;
+                }
+                else 
+                {
+                    autoload -= 1;
+                }
+            }
 
             //pic.rad += 0.01;
             if (movie == null || movie.ended)
@@ -560,6 +574,23 @@ namespace Charamaker2.maker
             {
                 sel.resettokijyun();
                 /*
+                fileman.loadfiletoka();
+                foreach (var a in fileman.characters) 
+                {
+                    var names = a.Key.Split('.');
+                    var name = "";
+                    for (int i = 0; i < names.Length - 1; i++)
+                    {
+                        if (i != 0)
+                        {
+                            name += ".";
+                        }
+                        name += names[i];
+                    }
+                    fileman.savecharacter3(name+".c3c",a.Value);
+                }*/
+                
+                /*
                 sel.sinu();
                 sel = loaded;
 
@@ -615,33 +646,38 @@ namespace Charamaker2.maker
 
         private void quickload(object sender, KeyEventArgs e)
         {
-            var l = fileman.loadcharacter(quickloadB.Text, reset: true);
-            if (l != null)
+            if (e.KeyCode == Keys.Enter)
             {
-                var a = l.core.dx;
-                sel.sinu(hyojiman);
-                sel = l;
+                var l = fileman.loadcharacter3(quickloadB.Text, reset: true);
+                if (l == null) l = fileman.loadcharacter(quickloadB.Text, reset: true);
 
-                sel.resethyoji(hyojiman);
-
-
-                loaded = new character(sel);
-                sentaku(sel);
-                hyojiman.resetpics();
-                motionmakerwow();
-            }
-            else 
-            {
-                var ssou=fileman.ldtex(quickloadB.Text);
-                if (ssou != null)
+                if (l != null)
                 {
+                    var a = l.core.dx;
                     sel.sinu(hyojiman);
-                    var si = fileman.gettexsize(quickloadB.Text);
-                    loaded = character.onepicturechara(quickloadB.Text, si.Width);
-                    sel = loaded;
+                    sel = l;
+
                     sel.resethyoji(hyojiman);
+
+
+                    loaded = new character(sel);
                     sentaku(sel);
+                    hyojiman.resetpics();
                     motionmakerwow();
+                }
+                else
+                {
+                    var ssou = fileman.ldtex(quickloadB.Text);
+                    if (ssou != null)
+                    {
+                        sel.sinu(hyojiman);
+                        var si = fileman.gettexsize(quickloadB.Text);
+                        loaded = character.onepicturechara(quickloadB.Text, si.Width);
+                        sel = loaded;
+                        sel.resethyoji(hyojiman);
+                        sentaku(sel);
+                        motionmakerwow();
+                    }
                 }
             }
         }

@@ -1,0 +1,364 @@
+[x]{500}[y]{500}
+[w]{29}[h]{300}
+[tx]{14.5}[ty]{150}[rad]{0}
+[core]{
+[name]{body}
+[dx]{-1}[dy]{-104}
+[picture]{
+ [x]{499}[y]{528}[z]{0}
+ [w]{29}[h]{36}
+ [tx]{14.5}[ty]{18}
+ [rad]{0}[mir]{False}[opa]{1}
+ [texname]{def}
+ [textures]{
+  [def]{inami2/body}
+ }
+ 
+}
+
+[sts]{
+ [neck]{
+ [name]{neck}
+ [dx]{13}[dy]{2}
+ [picture]{
+  [x]{507.78}[y]{521.66}[z]{-0.01}
+  [w]{9.545002}[h]{11.05}
+  [tx]{4.22}[ty]{8.339999}
+  [rad]{0}[mir]{False}[opa]{1}
+  [texname]{def}
+  [textures]{
+   [def]{inami2/neck}
+  }
+  
+ }
+ 
+ [sts]{
+  [head]{
+  [name]{head}
+  [dx]{4.9}[dy]{2.1}
+  [picture]{
+   [x]{497.0603}[y]{496.3093}[z]{0.02}
+   [w]{31.42146}[h]{30.52373}
+   [tx]{15.61971}[ty]{27.45063}
+   [rad]{0}[mir]{False}[opa]{1}
+   [texname]{def}
+   [textures]{
+    [def]{inami2/head}[sleep]{inami2/headsleep}[magao]{inami2/headmagao}[nikkori]{inami2/headnikkori}[nikkoritalk]{inami2/headnikkoritalk}[niyari]{inami2/headniyari}[talk]{inami2/headtalk}
+   }
+   
+  }
+  
+  [sts]{
+   [ring]{
+   [name]{ring}
+   [dx]{15.5}[dy]{-13}
+   [picture]{
+    [x]{443.5603}[y]{481.8093}[z]{0.03}
+    [w]{137.9999}[h]{27}
+    [tx]{68.99998}[ty]{1.5}
+    [rad]{0}[mir]{False}[opa]{1}
+    [texname]{def}
+    [textures]{
+     [def]{inami2/ring}
+    }
+    
+   }
+   
+   [sts]{
+    [backring]{
+    [name]{backring}
+    [dx]{68.99998}[dy]{0}
+    [picture]{
+     [x]{443.5603}[y]{459.3093}[z]{0.01}
+     [w]{138}[h]{24}
+     [tx]{68.99998}[ty]{22.5}
+     [rad]{0}[mir]{False}[opa]{1}
+     [texname]{def}
+     [textures]{
+      [def]{inami2/backring}
+     }
+     
+    }
+    
+    [sts]{
+     
+    }
+    }
+    
+   }
+   }
+   [hair]{
+   [name]{hair}
+   [dx]{15.62}[dy]{0}
+   [picture]{
+    [x]{497.0603}[y]{496.3093}[z]{-0.02}
+    [w]{31.42}[h]{30.52}
+    [tx]{15.62}[ty]{0}
+    [rad]{0}[mir]{False}[opa]{1}
+    [texname]{def}
+    [textures]{
+     [def]{inami2/hair}
+    }
+    
+   }
+   
+   [sts]{
+    
+   }
+   }
+   
+  }
+  }
+  
+ }
+ }
+ [lwing]{
+ [name]{lwing}
+ [dx]{10}[dy]{10}
+ [picture]{
+  [x]{509}[y]{18}[z]{-0.3}
+  [w]{496.0001}[h]{520}
+  [tx]{0}[ty]{520}
+  [rad]{0}[mir]{False}[opa]{0.8}
+  [texname]{def}
+  [textures]{
+   [def]{inami2/wing}
+  }
+  
+ }
+ 
+ [sts]{
+  
+ }
+ }
+ [rwing]{
+ [name]{rwing}
+ [dx]{40}[dy]{20}
+ [picture]{
+  [x]{539}[y]{28}[z]{0.05}
+  [w]{496.0001}[h]{520}
+  [tx]{0}[ty]{520}
+  [rad]{0}[mir]{False}[opa]{0.8}
+  [texname]{def}
+  [textures]{
+   [def]{inami2/wing}
+  }
+  
+ }
+ 
+ [sts]{
+  
+ }
+ }
+ [larm]{
+ [name]{larm}
+ [dx]{1.5}[dy]{5.5}
+ [picture]{
+  [x]{494}[y]{530.5}[z]{-0.2}
+  [w]{9}[h]{24}
+  [tx]{6.5}[ty]{3}
+  [rad]{0}[mir]{False}[opa]{1}
+  [texname]{def}
+  [textures]{
+   [def]{inami2/larm}
+  }
+  
+ }
+ 
+ [sts]{
+  [lhand]{
+  [name]{lhand}
+  [dx]{4}[dy]{22.5}
+  [picture]{
+   [x]{494}[y]{551}[z]{-0.21}
+   [w]{8}[h]{28}
+   [tx]{4}[ty]{2}
+   [rad]{0}[mir]{False}[opa]{1}
+   [texname]{def}
+   [textures]{
+    [def]{inami2/lhand}
+   }
+   
+  }
+  
+  [sts]{
+   [lwep]{
+   [name]{lwep}
+   [dx]{4}[dy]{36}
+   [picture]{
+    [x]{458}[y]{577}[z]{-0.22}
+    [w]{63.99997}[h]{356.0001}
+    [tx]{40}[ty]{10}
+    [rad]{0}[mir]{False}[opa]{0.9}
+    [texname]{def}
+    [textures]{
+     [def]{inami2/sword}
+    }
+    
+   }
+   
+   [sts]{
+    
+   }
+   }
+   
+  }
+  }
+  
+ }
+ }
+ [rarm]{
+ [name]{rarm}
+ [dx]{27.5}[dy]{5.5}
+ [picture]{
+  [x]{524}[y]{530.5}[z]{0.2}
+  [w]{9}[h]{24}
+  [tx]{2.5}[ty]{3}
+  [rad]{0}[mir]{False}[opa]{1}
+  [texname]{def}
+  [textures]{
+   [def]{inami2/rarm}
+  }
+  
+ }
+ 
+ [sts]{
+  [rhand]{
+  [name]{rhand}
+  [dx]{5}[dy]{22.5}
+  [picture]{
+   [x]{525}[y]{551}[z]{0.21}
+   [w]{8}[h]{28}
+   [tx]{4}[ty]{2}
+   [rad]{0}[mir]{False}[opa]{1}
+   [texname]{def}
+   [textures]{
+    [def]{inami2/rhand}
+   }
+   
+  }
+  
+  [sts]{
+   [rwep]{
+   [name]{rwep}
+   [dx]{4}[dy]{36}
+   [picture]{
+    [x]{489}[y]{577}[z]{0.22}
+    [w]{64.00001}[h]{355.9999}
+    [tx]{40}[ty]{10}
+    [rad]{0}[mir]{False}[opa]{0.9}
+    [texname]{def}
+    [textures]{
+     [def]{inami2/sword}
+    }
+    
+   }
+   
+   [sts]{
+    
+   }
+   }
+   
+  }
+  }
+  
+ }
+ }
+ [waist]{
+ [name]{waist}
+ [dx]{13.5}[dy]{31}
+ [picture]{
+  [x]{496.5}[y]{555}[z]{0.2}
+  [w]{34}[h]{30}
+  [tx]{16}[ty]{4}
+  [rad]{0}[mir]{False}[opa]{1}
+  [texname]{def}
+  [textures]{
+   [def]{inami2/waist}
+  }
+  
+ }
+ 
+ [sts]{
+  [lleg]{
+  [name]{lleg}
+  [dx]{11}[dy]{13.5}
+  [picture]{
+   [x]{501.5}[y]{566}[z]{-0.15}
+   [w]{12}[h]{25}
+   [tx]{6}[ty]{2.5}
+   [rad]{0}[mir]{False}[opa]{1}
+   [texname]{def}
+   [textures]{
+    [def]{inami2/lleg}
+   }
+   
+  }
+  
+  [sts]{
+   [lfoot]{
+   [name]{lfoot}
+   [dx]{6}[dy]{22.5}
+   [picture]{
+    [x]{501.5}[y]{586}[z]{-0.14}
+    [w]{12}[h]{32}
+    [tx]{6}[ty]{2.5}
+    [rad]{0}[mir]{False}[opa]{1}
+    [texname]{def}
+    [textures]{
+     [def]{inami2/lfoot}
+    }
+    
+   }
+   
+   [sts]{
+    
+   }
+   }
+   
+  }
+  }
+  [rleg]{
+  [name]{rleg}
+  [dx]{24}[dy]{13.5}
+  [picture]{
+   [x]{514.5}[y]{566}[z]{-0.11}
+   [w]{12}[h]{25}
+   [tx]{6}[ty]{2.5}
+   [rad]{0}[mir]{False}[opa]{1}
+   [texname]{def}
+   [textures]{
+    [def]{inami2/rleg}
+   }
+   
+  }
+  
+  [sts]{
+   [rfoot]{
+   [name]{rfoot}
+   [dx]{6}[dy]{22.5}
+   [picture]{
+    [x]{514.5}[y]{586}[z]{-0.1}
+    [w]{12}[h]{32}
+    [tx]{6}[ty]{2.5}
+    [rad]{0}[mir]{False}[opa]{1}
+    [texname]{def}
+    [textures]{
+     [def]{inami2/rfoot}
+    }
+    
+   }
+   
+   [sts]{
+    
+   }
+   }
+   
+  }
+  }
+  
+ }
+ }
+ 
+}
+}
