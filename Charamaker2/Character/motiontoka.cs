@@ -1873,7 +1873,7 @@ namespace Charamaker2.Character
         {
             return new sizetokaman(d.unPackDataF("time", 0)
                 , d.unPackDataS("name", ""), d.unPackDataF("vtx", 0), d.unPackDataF("vty", 0)
-                , d.unPackDataF("w", 0), d.unPackDataF("h", 0)
+                , d.unPackDataF("vw", 0), d.unPackDataF("vh", 0)
                 , d.unPackDataB("stop", false));
         }
     }
@@ -1895,7 +1895,7 @@ namespace Charamaker2.Character
         protected List<float> spdx = new List<float>();
         protected List<float> spdy = new List<float>();
 
-        float rawtime;
+        float rawtime=0;
         protected setu tag;
         protected float count;
         protected List<setu> tags = new List<setu>();
@@ -2251,7 +2251,7 @@ namespace Charamaker2.Character
         public bool kakudai { get { return (time - middle) / 2 >= timer; } }
         public bool syukusyo { get { return ((time - middle) / 2 + middle < timer) && middle >= 0; } }
 
-        float rawtime;
+        float rawtime=0;
         /// <summary>
         ///  普通のコンストラクタ
         /// </summary>
@@ -2474,7 +2474,7 @@ namespace Charamaker2.Character
         public float middlen { get { return (time - middle) / 2 + middle; } }
         public bool kakudai { get { return (time - middle) / 2 >= timer; } }
         public bool syukusyo { get { return ((time - middle) / 2 + middle < timer) && middle >= 0; } }
-        float rawtime;
+        float rawtime = 0;
         /// <summary>
         /// 
         /// </summary>
@@ -3831,7 +3831,7 @@ namespace Charamaker2.Character
             d.linechange();
             d.packAdd("name", nm);
             d.packAdd("startsita", sta*180/Math.PI);
-            d.packAdd("endsita", sta * 180 / Math.PI);
+            d.packAdd("endsita", end * 180 / Math.PI);
             d.linechange();
             d.packAdd("mode", md);
             d.packAdd("kouzoku", kzk);

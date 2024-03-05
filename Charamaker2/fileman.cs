@@ -1073,6 +1073,7 @@ namespace Charamaker2
         [Obsolete("c3mファイルのみ読み込めるloadmotionを使用してください。c2mファイルを使用しないでください")]
         static public motionsaveman loadmotion(string file, float sp = 1, bool reset = false)
         {
+            if(1==1)
             {
                 var names = file.Split('.');
                 var name = names[0];

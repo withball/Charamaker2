@@ -575,7 +575,7 @@ namespace Charamaker2.maker
                 sel.resettokijyun();
                 /*
                 fileman.loadfiletoka();
-                foreach (var a in fileman.characters) 
+                foreach (var a in fileman.motions) 
                 {
                     var names = a.Key.Split('.');
                     var name = "";
@@ -587,7 +587,8 @@ namespace Charamaker2.maker
                         }
                         name += names[i];
                     }
-                    fileman.savecharacter3(name+".c3c",a.Value);
+                    var m=fileman.buildMotion(a.Value.text);
+                    fileman.savemotion3(name+".c3m",a.Value.text,m);
                 }*/
                 
                 /*
